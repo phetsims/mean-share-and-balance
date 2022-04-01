@@ -1,0 +1,25 @@
+{
+  "name": "mean-share-and-balance",
+  "version": "1.0.0-dev.0",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phetsims/mean-share-and-balance.git"
+  },
+  "devDependencies": {
+    "grunt": "~1.4.0"
+  },
+  "phet": {
+    "requirejsNamespace": "MEAN_SHARE_AND_BALANCE",
+    "simulation": true,
+    "runnable": true,
+    "supportedBrands": [
+      "phet",
+      "adapted-from-phet"
+    ],
+    "supportsOutputJS": true
+  },
+  "eslintConfig": {
+    "extends": "../chipper/eslint/sim_eslintrc.js"
+  }
+}
