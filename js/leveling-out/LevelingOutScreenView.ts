@@ -8,9 +8,9 @@
  */
 
 import { ScreenViewOptions } from '../../../joist/js/ScreenView.js';
-import MeanShareAndBalanceScreenView from "../common/view/MeanShareAndBalanceScreenView.js";
+import MeanShareAndBalanceScreenView from '../common/view/MeanShareAndBalanceScreenView.js';
 import VerticalCheckboxGroup from '../../../sun/js/VerticalCheckboxGroup.js';
-import MeanShareAndBalanceModel from "../common/model/MeanShareAndBalanceModel.js";
+import MeanShareAndBalanceModel from '../common/model/MeanShareAndBalanceModel.js';
 import optionize from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import { HBox, VBox } from '../../../scenery/js/imports.js';
@@ -35,11 +35,11 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     super( model, options );
 
-    const predictMeanString = new Text( 'Predict Mean' )
+    const predictMeanString = new Text( 'Predict Mean' );
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
-      node: new HBox( { children: [ predictMeanString ]}),
+      node: new HBox( { children: [ predictMeanString ] } ),
       property: new BooleanProperty( false )
-    }]
+    } ]
     );
 
     const levelingOutOptionsVBox = new VBox( {
@@ -47,7 +47,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
         levelingOutOptionsCheckboxGroup
       ],
       align: 'left'
-    });
+    } );
 
     this.addChild( levelingOutOptionsVBox );
   }

@@ -14,7 +14,7 @@ import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from './model/MeanShareAndBalanceModel.js';
 import MeanShareAndBalanceScreenView from './view/MeanShareAndBalanceScreenView.js';
-import LevelingOutScreenView from '../leveling-out/LevelingOutScreen.js';
+import LevelingOutScreenView from '../leveling-out/LevelingOutScreenView.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceScreen here
