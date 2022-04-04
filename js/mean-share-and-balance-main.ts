@@ -10,7 +10,7 @@
 import Sim from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import MeanShareAndBalanceScreen from './mean-share-and-balance/MeanShareAndBalanceScreen.js';
+import MeanShareAndBalanceScreen from './common/MeanShareAndBalanceScreen.js';
 import meanShareAndBalanceStrings from './meanShareAndBalanceStrings.js';
 
 const meanShareAndBalanceTitleString = meanShareAndBalanceStrings[ 'mean-share-and-balance' ].title;
@@ -20,7 +20,7 @@ const simOptions = {
   //TODO fill in credits, all of these fields are optional, see joist.CreditsNode
   credits: {
     leadDesign: '',
-    softwareDevelopment: '',
+    softwareDevelopment: 'Marla Schulz, Sam Reid',
     team: '',
     qualityAssurance: '',
     graphicArts: '',
