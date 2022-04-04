@@ -15,7 +15,6 @@ import optionize from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import { HBox, VBox } from '../../../scenery/js/imports.js';
 import { Text } from '../../../scenery/js/imports.js';
-import BooleanProperty from '../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = {
 
@@ -36,10 +35,21 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     super( model, options );
 
     const predictMeanString = new Text( 'Predict Mean' );
+    const showMeanString = new Text( 'Show Mean' );
+    const tickMarksString = new Text( 'Tick Marks' );
+
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
       node: new HBox( { children: [ predictMeanString ] } ),
-      property: new BooleanProperty( false )
-    } ]
+      property: model.predictMean
+      },
+      {
+        node: new HBox( { children: [ showMeanString ] } ),
+        property: model.showMean
+      },
+      {
+        node: new HBox( { children: [ tickMarksString ] } ),
+        property: model.tickMarks
+      } ]
     );
 
     const levelingOutOptionsVBox = new VBox( {
