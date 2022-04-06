@@ -1,5 +1,17 @@
 {
   "mean-share-and-balance.title": {
     "value": "Mean Share And Balance"
+  },
+  "predictMean": {
+    "value": "Predict Mean"
+  },
+  "showMean": {
+    "value": "Show Mean"
+  },
+  "tickMarks": {
+    "value": "Tick Marks"
+  },
+  "numberOfCups": {
+    "value": "Number of Cups"
   }
 }

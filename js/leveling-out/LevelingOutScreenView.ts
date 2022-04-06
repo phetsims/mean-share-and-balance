@@ -16,6 +16,7 @@ import { HBox, VBox } from '../../../scenery/js/imports.js';
 import { Text } from '../../../scenery/js/imports.js';
 import NumberPicker from '../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from './LevelingOutModel.js';
+import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
 
 type SelfOptions = {
 
@@ -34,10 +35,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     }, providedOptions );
 
     super( model, options );
-    const predictMeanString = new Text( 'Predict Mean' );
-    const showMeanString = new Text( 'Show Mean' );
-    const tickMarksString = new Text( 'Tick Marks' );
-    const numberOfCupsString = new Text( 'Number of Cups' );
+    const predictMeanString = new Text( meanShareAndBalanceStrings.predictMean );
+    const showMeanString = new Text( meanShareAndBalanceStrings.showMean );
+    const tickMarksString = new Text( meanShareAndBalanceStrings.tickMarks );
+    const numberOfCupsString = new Text( meanShareAndBalanceStrings.numberOfCups );
 
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
       node: new HBox( { children: [ predictMeanString ] } ),
