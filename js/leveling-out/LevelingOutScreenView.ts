@@ -10,11 +10,11 @@
 import { ScreenViewOptions } from '../../../joist/js/ScreenView.js';
 import MeanShareAndBalanceScreenView from '../common/view/MeanShareAndBalanceScreenView.js';
 import VerticalCheckboxGroup from '../../../sun/js/VerticalCheckboxGroup.js';
-import MeanShareAndBalanceModel from '../common/model/MeanShareAndBalanceModel.js';
 import optionize from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import { HBox, VBox } from '../../../scenery/js/imports.js';
 import { Text } from '../../../scenery/js/imports.js';
+import LevelingOutModel from './LevelingOutModel.js';
 
 type SelfOptions = {
 
@@ -23,7 +23,7 @@ type SelfOptions = {
 type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
-  constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  constructor( model: LevelingOutModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
 
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>( {
 
@@ -40,15 +40,15 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
       node: new HBox( { children: [ predictMeanString ] } ),
-      property: model.predictMean
+      property: model.predictMeanProperty
       },
       {
         node: new HBox( { children: [ showMeanString ] } ),
-        property: model.showMean
+        property: model.showMeanProperty
       },
       {
         node: new HBox( { children: [ tickMarksString ] } ),
-        property: model.tickMarks
+        property: model.tickMarksProperty
       } ]
     );
 
@@ -61,6 +61,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     this.addChild( levelingOutOptionsVBox );
   }
+
 }
 
 export default LevelingOutScreenView;

@@ -10,7 +10,6 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -19,14 +18,9 @@ type SelfOptions = {
 type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 class MeanShareAndBalanceModel {
-  predictMean: BooleanProperty;
-  showMean: BooleanProperty;
-  tickMarks: BooleanProperty;
 
   constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
-    this.predictMean = new BooleanProperty( false );
-    this.showMean = new BooleanProperty( false );
-    this.tickMarks = new BooleanProperty( false );
+
   }
 
   /**
