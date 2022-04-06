@@ -14,6 +14,7 @@ import optionize from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import { HBox, VBox } from '../../../scenery/js/imports.js';
 import { Text } from '../../../scenery/js/imports.js';
+import NumberPicker from '../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from './LevelingOutModel.js';
 
 type SelfOptions = {
@@ -33,10 +34,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     }, providedOptions );
 
     super( model, options );
-
     const predictMeanString = new Text( 'Predict Mean' );
     const showMeanString = new Text( 'Show Mean' );
     const tickMarksString = new Text( 'Tick Marks' );
+    const numberOfCupsString = new Text( 'Number of Cups' );
 
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
       node: new HBox( { children: [ predictMeanString ] } ),
@@ -52,14 +53,35 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       } ]
     );
 
+
+    const levelingOutNumberPicker = new NumberPicker(
+      model.initialValueProperty, model.levelingOutRangeProperty,
+      {
+        yMargin: 10,
+        xMargin: 10,
+        arrowHeight: 10
+      }
+    );
+
     const levelingOutOptionsVBox = new VBox( {
       children: [
         levelingOutOptionsCheckboxGroup
       ],
       align: 'left'
+
+    } );
+
+    const levelingOutNumberPickerVBox = new VBox( {
+      children: [
+        numberOfCupsString,
+        levelingOutNumberPicker
+      ],
+      align: 'center',
+      right: this.layoutBounds.right
     } );
 
     this.addChild( levelingOutOptionsVBox );
+    this.addChild( levelingOutNumberPickerVBox );
   }
 
 }
