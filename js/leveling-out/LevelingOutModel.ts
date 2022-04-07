@@ -32,7 +32,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
 
   }
 
-  public reset(): void {
+  public override reset(): void {
     this.predictMeanProperty.reset();
     this.showMeanProperty.reset();
     this.tickMarksProperty.reset();
