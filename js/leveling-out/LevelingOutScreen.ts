@@ -13,6 +13,7 @@ type SelfOptions = {
 }
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
 
+// REVIEW: extend MeanShareAndBalanceScreen instead of Screen directly
 class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
   constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>( {

@@ -35,6 +35,8 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     }, providedOptions );
 
     super( model, options );
+
+    // REVIEW: Change suffix to Text instead of String
     const predictMeanString = new Text( meanShareAndBalanceStrings.predictMean );
     const showMeanString = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksString = new Text( meanShareAndBalanceStrings.tickMarks );
@@ -54,7 +56,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       } ]
     );
 
-
+    // REVIEW: Name variable numberOfCupsNumberPicker
     const levelingOutNumberPicker = new NumberPicker(
       model.initialValueProperty, model.levelingOutRangeProperty,
       {
@@ -64,6 +66,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
+    // REVIEW: Unnecessary VBox, delete it and just use levelingOutOptionsCheckboxGroup directly
     const levelingOutOptionsVBox = new VBox( {
       children: [
         levelingOutOptionsCheckboxGroup
