@@ -14,6 +14,7 @@ import optionize from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import { HBox, VBox } from '../../../scenery/js/imports.js';
 import { Text } from '../../../scenery/js/imports.js';
+import { Rectangle } from '../../../scenery/js/imports.js';
 import NumberPicker from '../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from './LevelingOutModel.js';
 import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
@@ -52,8 +53,17 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       {
         node: new HBox( { children: [ tickMarksText ] } ),
         property: model.tickMarksProperty
-      } ]
+      } ],
+      {
+        right: this.layoutBounds.right - 100
+      }
     );
+
+    const rectangleOptions = {
+      stroke: 'black',
+      fill: '#51CEF4'
+    };
+    const waterLevelRectangle = new Rectangle( 50, 200, 50, 100, rectangleOptions );
 
     const numberOfCupsNumberPicker = new NumberPicker(
       model.initialValueProperty, model.levelingOutRangeProperty,
@@ -70,11 +80,13 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
         numberOfCupsNumberPicker
       ],
       align: 'center',
-      right: this.layoutBounds.right
+      right: 900,
+      bottom: this.layoutBounds.bottom
     } );
 
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
+    this.addChild( waterLevelRectangle );
   }
 
 }
