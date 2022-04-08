@@ -36,28 +36,26 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     super( model, options );
 
-    // REVIEW: Change suffix to Text instead of String
-    const predictMeanString = new Text( meanShareAndBalanceStrings.predictMean );
-    const showMeanString = new Text( meanShareAndBalanceStrings.showMean );
-    const tickMarksString = new Text( meanShareAndBalanceStrings.tickMarks );
-    const numberOfCupsString = new Text( meanShareAndBalanceStrings.numberOfCups );
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean );
+    const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups );
 
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
-      node: new HBox( { children: [ predictMeanString ] } ),
+      node: new HBox( { children: [ predictMeanText ] } ),
       property: model.predictMeanProperty
       },
       {
-        node: new HBox( { children: [ showMeanString ] } ),
+        node: new HBox( { children: [ showMeanText ] } ),
         property: model.showMeanProperty
       },
       {
-        node: new HBox( { children: [ tickMarksString ] } ),
+        node: new HBox( { children: [ tickMarksText ] } ),
         property: model.tickMarksProperty
       } ]
     );
 
-    // REVIEW: Name variable numberOfCupsNumberPicker
-    const levelingOutNumberPicker = new NumberPicker(
+    const numberOfCupsNumberPicker = new NumberPicker(
       model.initialValueProperty, model.levelingOutRangeProperty,
       {
         yMargin: 10,
@@ -66,25 +64,16 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    // REVIEW: Unnecessary VBox, delete it and just use levelingOutOptionsCheckboxGroup directly
-    const levelingOutOptionsVBox = new VBox( {
-      children: [
-        levelingOutOptionsCheckboxGroup
-      ],
-      align: 'left'
-
-    } );
-
     const levelingOutNumberPickerVBox = new VBox( {
       children: [
-        numberOfCupsString,
-        levelingOutNumberPicker
+        numberOfCupsText,
+        numberOfCupsNumberPicker
       ],
       align: 'center',
       right: this.layoutBounds.right
     } );
 
-    this.addChild( levelingOutOptionsVBox );
+    this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
   }
 

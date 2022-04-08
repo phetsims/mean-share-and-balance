@@ -18,14 +18,14 @@ import MeanShareAndBalanceScreenView from './view/MeanShareAndBalanceScreenView.
 // import LevelingOutModel from '../leveling-out/LevelingOutModel.js';
 
 type SelfOptions = {
-  //TODO add options that are specific to MeanShareAndBalanceScreen here
+  //TODO add options that are specific to MeanSh≥areAndBalanceScreen here
 };
 
 type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-class MeanShareAndBalanceScreen extends Screen<MeanShareAndBalanceModel, MeanShareAndBalanceScreenView> {
+class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends MeanShareAndBalanceScreenView> extends Screen<T, V> {
 
-  constructor( providedOptions: MeanShareAndBalanceScreenOptions ) {
+  constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
 
     const options = optionize<MeanShareAndBalanceScreenOptions, SelfOptions, ScreenOptions>( {
 
@@ -36,11 +36,7 @@ class MeanShareAndBalanceScreen extends Screen<MeanShareAndBalanceModel, MeanSha
     }, providedOptions );
 
     //TODO add LevelingOutScreen
-    super(
-      () => new MeanShareAndBalanceModel( { tandem: options.tandem.createTandem( 'model' ) } ),
-      model => new MeanShareAndBalanceScreenView( model, { tandem: options.tandem.createTandem( 'view' ) } ),
-      options
-    );
+    super( createModel, createView, options );
   }
 }
 
