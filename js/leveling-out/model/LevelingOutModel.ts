@@ -39,16 +39,6 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.levelingOutRange = new Range( 1, 7 );
     this.waterCups = [ new WaterCup2DModel() ];
 
-  this.numberOfCupsProperty.link( value => {
-    if ( value > this.waterCups.length ) {
-      this.waterCups.push( new WaterCup2DModel() );
-    }
-    else if ( value < this.waterCups.length ) {
-      this.waterCups.pop();
-    }
-
-    // console.log( this.waterCups );
-  } );
   }
 
   public override reset(): void {
@@ -60,8 +50,16 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.waterCups = this.waterCups.slice( 0, 1 );
   }
 
+  // Updates waterCups array based on NumberPicker value
   public handleIncrement( value: number ): void {
+    if ( value > this.waterCups.length ) {
+      this.waterCups.push( new WaterCup2DModel( new NumberProperty( value * 100 ) ) );
+    }
+    else if ( value < this.waterCups.length ) {
+      this.waterCups.pop();
+    }
 
+    console.log( this.waterCups );
   }
 
 

@@ -60,7 +60,18 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    const waterCup2DNode = new WaterCup2DNode( model.waterCups[ model.waterCups.length - 1 ] );
+    const waterCup2DNode = new WaterCup2DNode( model.waterCups[ 0 ] );
+
+    model.numberOfCupsProperty.link( value => {
+      model.handleIncrement( value );
+      if ( value > this.children.length - 4 ) {
+        this.addChild( new WaterCup2DNode( model.waterCups[ model.waterCups.length - 1 ] ) );
+      }
+      else if ( value < this.children.length - 4 ) {
+        this.removeChildAt( this.children.length - 1 );
+      }
+      console.log( this.children );
+    } );
 
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty, new Property( model.levelingOutRange ),
