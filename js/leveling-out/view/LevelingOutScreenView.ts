@@ -7,17 +7,17 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { ScreenViewOptions } from '../../../joist/js/ScreenView.js';
-import MeanShareAndBalanceScreenView from '../common/view/MeanShareAndBalanceScreenView.js';
-import VerticalCheckboxGroup from '../../../sun/js/VerticalCheckboxGroup.js';
-import optionize from '../../../phet-core/js/optionize.js';
-import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import { HBox, VBox } from '../../../scenery/js/imports.js';
-import { Text } from '../../../scenery/js/imports.js';
-import { Rectangle } from '../../../scenery/js/imports.js';
-import NumberPicker from '../../../scenery-phet/js/NumberPicker.js';
-import LevelingOutModel from './LevelingOutModel.js';
-import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
+import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
+import MeanShareAndBalanceScreenView from '../../common/view/MeanShareAndBalanceScreenView.js';
+import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import { HBox, VBox, Text } from '../../../../scenery/js/imports.js';
+import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
+import LevelingOutModel from '../model/LevelingOutModel.js';
+import Property from '../../../../axon/js/Property.js';
+import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import WaterCup2DNode from './WaterCup2DNode.js';
 
 type SelfOptions = {
 
@@ -59,14 +59,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    const rectangleOptions = {
-      stroke: 'black',
-      fill: '#51CEF4'
-    };
-    const waterLevelRectangle = new Rectangle( 50, 200, 50, 100, rectangleOptions );
+    const waterCup2DNode = new WaterCup2DNode( model.waterCup );
 
     const numberOfCupsNumberPicker = new NumberPicker(
-      model.initialValueProperty, model.levelingOutRangeProperty,
+      model.initialValueProperty, new Property( model.levelingOutRange ),
       {
         yMargin: 10,
         xMargin: 10,
@@ -86,9 +82,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
-    this.addChild( waterLevelRectangle );
+    this.addChild( waterCup2DNode );
   }
 
 }
 
+//Review: add namespace registration
 export default LevelingOutScreenView;
