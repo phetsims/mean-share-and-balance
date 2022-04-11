@@ -60,10 +60,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    const waterCup2DNode = new WaterCup2DNode( model.waterCup );
+    const waterCup2DNode = new WaterCup2DNode( model.waterCups[ model.waterCups.length - 1 ] );
 
     const numberOfCupsNumberPicker = new NumberPicker(
-      model.initialValueProperty, new Property( model.levelingOutRange ),
+      model.numberOfCupsProperty, new Property( model.levelingOutRange ),
       {
         yMargin: 10,
         xMargin: 10,

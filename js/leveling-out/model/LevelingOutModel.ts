@@ -25,9 +25,9 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly predictMeanProperty: BooleanProperty;
   readonly showMeanProperty: BooleanProperty;
   readonly tickMarksProperty: BooleanProperty;
-  readonly initialValueProperty: NumberProperty;
+  readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
-  readonly waterCup: WaterCup2DModel;
+  waterCups: Array<WaterCup2DModel>;
 
   constructor( providedOptions: LevelingOutModelOptions ) {
     super( providedOptions );
@@ -35,9 +35,20 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.predictMeanProperty = new BooleanProperty( false );
     this.showMeanProperty = new BooleanProperty( false );
     this.tickMarksProperty = new BooleanProperty( false );
-    this.initialValueProperty = new NumberProperty( 1 );
+    this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
-    this.waterCup = new WaterCup2DModel();
+    this.waterCups = [ new WaterCup2DModel() ];
+
+  this.numberOfCupsProperty.link( value => {
+    if ( value > this.waterCups.length ) {
+      this.waterCups.push( new WaterCup2DModel() );
+    }
+    else if ( value < this.waterCups.length ) {
+      this.waterCups.pop();
+    }
+
+    // console.log( this.waterCups );
+  } );
   }
 
   public override reset(): void {
@@ -45,7 +56,12 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.predictMeanProperty.reset();
     this.showMeanProperty.reset();
     this.tickMarksProperty.reset();
-    this.initialValueProperty.reset();
+    this.numberOfCupsProperty.reset();
+    this.waterCups = this.waterCups.slice( 0, 1 );
+  }
+
+  public handleIncrement( value: number ): void {
+
   }
 
 
