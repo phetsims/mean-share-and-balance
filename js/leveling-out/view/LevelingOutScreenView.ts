@@ -18,6 +18,7 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import Property from '../../../../axon/js/Property.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
 
@@ -87,5 +88,5 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
 }
 
-//Review: add namespace registration
+meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );
 export default LevelingOutScreenView;

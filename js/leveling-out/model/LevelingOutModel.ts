@@ -1,12 +1,19 @@
 // Copyright 2022, University of Colorado Boulder
 
+/**
+ * Base class for LevelingOut view
+ * @author Marla Schulz (PhET Interactive Simulations)
+ * @author Sam Reid (PhET Interactive Simulations)
+ */
+
 import MeanShareAndBalanceModel from '../../common/model/MeanShareAndBalanceModel.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
-import WaterCup2DNodeModel from './WaterCup2DNodeModel.js';
+import WaterCup2DModel from './WaterCup2DModel.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -20,8 +27,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly tickMarksProperty: BooleanProperty;
   readonly initialValueProperty: NumberProperty;
   readonly levelingOutRange: Range;
-  //Review: remove Node out of model name
-  readonly waterCup: WaterCup2DNodeModel;
+  readonly waterCup: WaterCup2DModel;
 
   constructor( providedOptions: LevelingOutModelOptions ) {
     super( providedOptions );
@@ -31,7 +37,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.tickMarksProperty = new BooleanProperty( false );
     this.initialValueProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
-    this.waterCup = new WaterCup2DNodeModel();
+    this.waterCup = new WaterCup2DModel();
   }
 
   public override reset(): void {
@@ -45,4 +51,5 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
 
 }
 
+meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );
 export default LevelingOutModel;

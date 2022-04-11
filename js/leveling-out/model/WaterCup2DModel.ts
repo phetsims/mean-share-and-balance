@@ -1,11 +1,16 @@
 // Copyright 2022, University of Colorado Boulder
+
+/**
+ * Base class for the 2D water cup, containing water level data point
+ * @author Marla Schulz (PhET Interactive Simulations)
+ * @author Sam Reid (PhET Interactive Simulations)
+ */
+
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-//Review: rename model and filename to remove Node
-//Review: Add JSDoc comment to describe model
-
-class WaterCup2DNodeModel {
+class WaterCup2DModel {
   readonly xProperty: NumberProperty;
   readonly y: number;
   readonly waterLevelProperty: NumberProperty;
@@ -20,5 +25,5 @@ class WaterCup2DNodeModel {
   }
 }
 
-//Review: add namespace (check other files for register method)
-export default WaterCup2DNodeModel;
+meanShareAndBalance.register( 'WaterCup2DModel', WaterCup2DModel );
+export default WaterCup2DModel;
