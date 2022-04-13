@@ -98,16 +98,37 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     //Predict Mean Line
-    // x1: static, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
-    const predictMeanLine = new Line( 50, 250, 300, 250, {
-      stroke: 'purple',
-      lineWidth: 2
+    // x1: static, y1: dependent on draggable prediction, x2: dependent on numberOfCups, y2: same as y1
+    const predictMeanLine = new Line( 50, 225, 300, 225, {
+      stroke: 'purple'
+    } );
+
+    model.predictMeanProperty.link( value => {
+      value && predictMeanLine.setLineWidth( 2 );
+      !value && predictMeanLine.setLineWidth( 0 );
+    } );
+
+    //Show Mean Line
+    //x1: start of 2D cup, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
+    const showMeanLine = new Line( 50, 250, 300, 250, {
+      stroke: 'red'
+    } );
+
+    model.showMeanProperty.link( value => {
+      value && showMeanLine.setLineWidth( 2 );
+      !value && showMeanLine.setLineWidth( 0 );
+    } );
+
+    //TODO adjust tickMarks visibility on waterCup2DNodes based on tickMarksProperty
+    model.tickMarksProperty.link( value => {
+
     } );
 
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( waterCup2DNode );
     this.addChild( predictMeanLine );
+    this.addChild( showMeanLine );
   }
 
 }
