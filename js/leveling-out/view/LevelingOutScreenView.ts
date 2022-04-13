@@ -12,7 +12,7 @@ import MeanShareAndBalanceScreenView from '../../common/view/MeanShareAndBalance
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { HBox, VBox, Text } from '../../../../scenery/js/imports.js';
+import { HBox, VBox, Text, Line } from '../../../../scenery/js/imports.js';
 import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -61,22 +61,6 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
-    const waterCup2DNode = new WaterCup2DNode( model.waterCups[ 0 ] );
-    waterCupMap.set( model.waterCups[ 0 ], waterCup2DNode );
-
-    model.waterCups.addItemAddedListener( waterCupModel => {
-        const waterCupNode = new WaterCup2DNode( waterCupModel );
-        this.addChild( waterCupNode );
-        waterCupMap.set( waterCupModel, waterCupNode );
-    } );
-
-    model.waterCups.addItemRemovedListener( waterCupModel => {
-      //Is this the proper implementation of typescript Non-null assertion operator?
-        const waterCupNode = waterCupMap.get( waterCupModel )!;
-        this.removeChild( waterCupNode );
-    } );
-
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty, new Property( model.levelingOutRange ),
       {
@@ -96,9 +80,34 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       bottom: this.layoutBounds.bottom
     } );
 
+    // 2D water cup nodes addition and removal
+    const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
+    const waterCup2DNode = new WaterCup2DNode( model.waterCups[ 0 ] );
+    waterCupMap.set( model.waterCups[ 0 ], waterCup2DNode );
+
+    model.waterCups.addItemAddedListener( waterCupModel => {
+        const waterCupNode = new WaterCup2DNode( waterCupModel );
+        this.addChild( waterCupNode );
+        waterCupMap.set( waterCupModel, waterCupNode );
+    } );
+
+    model.waterCups.addItemRemovedListener( waterCupModel => {
+      //Is this the proper implementation of typescript Non-null assertion operator?
+        const waterCupNode = waterCupMap.get( waterCupModel )!;
+        this.removeChild( waterCupNode );
+    } );
+
+    //Predict Mean Line
+    // x1: static, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
+    const predictMeanLine = new Line( 50, 250, 300, 250, {
+      stroke: 'purple',
+      lineWidth: 2
+    } );
+
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( waterCup2DNode );
+    this.addChild( predictMeanLine );
   }
 
 }
