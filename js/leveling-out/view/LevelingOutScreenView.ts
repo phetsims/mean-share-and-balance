@@ -19,6 +19,7 @@ import Property from '../../../../axon/js/Property.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import WaterCup2DModel from '../model/WaterCup2DModel.js';
 
 type SelfOptions = {
 
@@ -60,17 +61,20 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
+    const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     const waterCup2DNode = new WaterCup2DNode( model.waterCups[ 0 ] );
+    waterCupMap.set( model.waterCups[ 0 ], waterCup2DNode );
 
-    model.numberOfCupsProperty.link( value => {
-      model.handleIncrement( value );
-      if ( value > this.children.length - 4 ) {
-        this.addChild( new WaterCup2DNode( model.waterCups[ model.waterCups.length - 1 ] ) );
-      }
-      else if ( value < this.children.length - 4 ) {
-        this.removeChildAt( this.children.length - 1 );
-      }
-      console.log( this.children );
+    model.waterCups.addItemAddedListener( waterCupModel => {
+        const waterCupNode = new WaterCup2DNode( waterCupModel );
+        this.addChild( waterCupNode );
+        waterCupMap.set( waterCupModel, waterCupNode );
+    } );
+
+    model.waterCups.addItemRemovedListener( waterCupModel => {
+      //Is this the proper implementation of typescript Non-null assertion operator?
+        const waterCupNode = waterCupMap.get( waterCupModel )!;
+        this.removeChild( waterCupNode );
     } );
 
     const numberOfCupsNumberPicker = new NumberPicker(

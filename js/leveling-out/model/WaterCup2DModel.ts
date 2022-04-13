@@ -15,8 +15,8 @@ class WaterCup2DModel {
   readonly y: number;
   readonly waterLevelProperty: NumberProperty;
 
-  constructor( xProperty = new NumberProperty( 50 ) ) {
-    this.xProperty = xProperty;
+  constructor( x = 50 ) {
+    this.xProperty = new NumberProperty( x );
     this.y = 200;
     //TODO update variables in other files
     this.waterLevelProperty = new NumberProperty( 0.5, {

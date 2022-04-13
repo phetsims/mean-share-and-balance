@@ -14,6 +14,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import WaterCup2DModel from './WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -27,7 +28,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly tickMarksProperty: BooleanProperty;
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
-  waterCups: Array<WaterCup2DModel>;
+  readonly waterCups: ObservableArray<WaterCup2DModel>;
 
   constructor( providedOptions: LevelingOutModelOptions ) {
     super( providedOptions );
@@ -37,8 +38,19 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.tickMarksProperty = new BooleanProperty( false );
     this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
-    this.waterCups = [ new WaterCup2DModel() ];
+    this.waterCups = createObservableArray();
 
+    this.waterCups.push( new WaterCup2DModel() );
+
+    this.numberOfCupsProperty.link( value => {
+      while ( value > this.waterCups.length ) {
+        const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
+        this.waterCups.push( new WaterCup2DModel( lastWaterCup.xProperty.value + 100 ) );
+      }
+      while ( value < this.waterCups.length ) {
+        this.waterCups.pop();
+      }
+    } );
   }
 
   public override reset(): void {
@@ -47,22 +59,11 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.showMeanProperty.reset();
     this.tickMarksProperty.reset();
     this.numberOfCupsProperty.reset();
-    this.waterCups = this.waterCups.slice( 0, 1 );
+
+    const firstCup = this.waterCups[ 0 ];
+    this.waterCups.length = 0;
+    this.waterCups.push( firstCup );
   }
-
-  // Updates waterCups array based on NumberPicker value
-  public handleIncrement( value: number ): void {
-    if ( value > this.waterCups.length ) {
-      this.waterCups.push( new WaterCup2DModel( new NumberProperty( value * 100 ) ) );
-    }
-    else if ( value < this.waterCups.length ) {
-      this.waterCups.pop();
-    }
-
-    console.log( this.waterCups );
-  }
-
-
 }
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );
