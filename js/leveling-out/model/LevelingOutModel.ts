@@ -50,6 +50,8 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
       while ( value < this.waterCups.length ) {
         this.waterCups.pop();
       }
+
+      assert && assert( value === this.waterCups.length, `The value returned is: ${value}, but the waterCups length is: ${this.waterCups.length}.` );
     } );
   }
 
