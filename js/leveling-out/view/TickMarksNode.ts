@@ -8,39 +8,30 @@
 
 import { Line, Node } from '../../../../scenery/js/imports.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
-import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 class TickMarksNode extends Node {
+  readonly parentNode: WaterCup2DNode;
 
-  // REVIEW: Probably better to access the WaterCup2DModel via parentNode.waterCup
-  constructor( parentNode: WaterCup2DNode, parentModel: WaterCup2DModel ) {
+  constructor( parentNode: WaterCup2DNode ) {
     super();
+    this.parentNode = parentNode;
 
-    // REVIEW: Let's use a tickLevels array and loop
+    const tickLevels = [ 0.25, 0.5, 0.75 ];
+    tickLevels.forEach( tickLevel => {
+      const fraction = parentNode.model.y + ( parentNode.cupHeight * tickLevel );
 
-    const quarter = parentModel.y + ( parentNode.cupHeight * 0.75 );
-    const half = parentModel.y + ( parentNode.cupHeight * 0.5 );
-    const threeQuarters = parentModel.y + ( parentNode.cupHeight * 0.25 );
+      this.addTickMark( fraction );
+    } );
+  }
 
-    const quarterTickMark = new Line( parentModel.xProperty.value, quarter, parentModel.xProperty.value + 5, quarter, {
+  //creates and adds tick mark to node
+  addTickMark( fraction: number ): void {
+    const tickMark = new Line( this.parentNode.model.xProperty.value, fraction, this.parentNode.model.xProperty.value + 5, fraction, {
       stroke: 'black',
       lineWidth: 2
     } );
-
-    const halfTickMark = new Line( parentModel.xProperty.value, half, parentModel.xProperty.value + 5, half, {
-      stroke: 'black',
-      lineWidth: 2
-    } );
-
-    const threeQuartersTickMark = new Line( parentModel.xProperty.value, threeQuarters, parentModel.xProperty.value + 5, threeQuarters, {
-      stroke: 'black',
-      lineWidth: 2
-    } );
-
-    this.addChild( quarterTickMark );
-    this.addChild( halfTickMark );
-    this.addChild( threeQuartersTickMark );
+    this.addChild( tickMark );
   }
 }
 

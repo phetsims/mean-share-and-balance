@@ -15,16 +15,18 @@ import TickMarksNode from './TickMarksNode.js';
 class WaterCup2DNode extends Node {
 
   readonly cupHeight: number;
+  readonly model: WaterCup2DModel;
   readonly tickMarks: TickMarksNode;
 
   constructor( model: WaterCup2DModel ) {
 
     super();
     this.cupHeight = 100;
+    this.model = model;
     const cupWidth = 50;
     //0 is empty, 1 is full
     const y = Utils.linear( 0, 1, model.y + this.cupHeight, model.y, model.waterLevelProperty.value );
-    this.tickMarks = new TickMarksNode( this, model );
+    this.tickMarks = new TickMarksNode( this );
 
     const waterCupRectangle = new Rectangle( model.xProperty.value, model.y, cupWidth, this.cupHeight, { stroke: 'black' } );
     const waterLevelRectangle = new Rectangle( model.xProperty.value, y, cupWidth, this.cupHeight * model.waterLevelProperty.value, { fill: '#51CEF4' } );

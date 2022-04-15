@@ -24,10 +24,9 @@ type LevelingOutModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, '
 
 class LevelingOutModel extends MeanShareAndBalanceModel {
 
-  // REVIEW: Please rename isShowingMeanPredictionProperty?  Same for other Properties.
-  readonly predictMeanProperty: BooleanProperty;
-  readonly showMeanProperty: BooleanProperty;
-  readonly tickMarksProperty: BooleanProperty;
+  readonly isShowingPredictMeanProperty: BooleanProperty;
+  readonly isShowingMeanProperty: BooleanProperty;
+  readonly isShowingTickMarksProperty: BooleanProperty;
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
   readonly waterCups: ObservableArray<WaterCup2DModel>;
@@ -35,19 +34,19 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   constructor( providedOptions: LevelingOutModelOptions ) {
     super( providedOptions );
 
-    this.predictMeanProperty = new BooleanProperty( false );
-    this.showMeanProperty = new BooleanProperty( false );
-    this.tickMarksProperty = new BooleanProperty( false );
+    this.isShowingPredictMeanProperty = new BooleanProperty( false );
+    this.isShowingMeanProperty = new BooleanProperty( false );
+    this.isShowingTickMarksProperty = new BooleanProperty( false );
     this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
     this.waterCups = createObservableArray();
 
-    this.waterCups.push( new WaterCup2DModel() );
+    this.waterCups.push( new WaterCup2DModel( { x: 50 } ) );
 
     this.numberOfCupsProperty.link( value => {
       while ( value > this.waterCups.length ) {
         const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
-        this.waterCups.push( new WaterCup2DModel( lastWaterCup.xProperty.value + 100 ) );
+        this.waterCups.push( new WaterCup2DModel( { x: lastWaterCup.xProperty.value + 100 } ) );
       }
       while ( value < this.waterCups.length ) {
         this.waterCups.pop();
@@ -59,15 +58,14 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public override reset(): void {
     super.reset();
-    this.predictMeanProperty.reset();
-    this.showMeanProperty.reset();
-    this.tickMarksProperty.reset();
+    this.isShowingPredictMeanProperty.reset();
+    this.isShowingMeanProperty.reset();
+    this.isShowingTickMarksProperty.reset();
     this.numberOfCupsProperty.reset();
 
-    // REVIEW: Maybe pop until there only one left?
-    const firstCup = this.waterCups[ 0 ];
-    this.waterCups.length = 0;
-    this.waterCups.push( firstCup );
+    while ( this.waterCups.length > 1 ) {
+      this.waterCups.pop();
+    }
   }
 }
 

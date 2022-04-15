@@ -46,17 +46,17 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [
         {
           node: new HBox( { children: [ predictMeanText ] } ),
-          property: model.predictMeanProperty,
+          property: model.isShowingPredictMeanProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
         },
         {
           node: new HBox( { children: [ showMeanText ] } ),
-          property: model.showMeanProperty,
+          property: model.isShowingMeanProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' )
         },
         {
           node: new HBox( { children: [ tickMarksText ] } ),
-          property: model.tickMarksProperty,
+          property: model.isShowingTickMarksProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
         } ],
       {
@@ -87,9 +87,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     // 2D water cup nodes addition and removal
     const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
 
-    // REVIEW: Please iterate over pre-existing elements
-    const waterCup2DNode = new WaterCup2DNode( model.waterCups[ 0 ] );
-    waterCupMap.set( model.waterCups[ 0 ], waterCup2DNode );
+    model.waterCups.forEach( cup => {
+      const waterCup2DNode = new WaterCup2DNode( cup );
+      waterCupMap.set( cup, waterCup2DNode );
+    } );
 
     model.waterCups.addItemAddedListener( waterCupModel => {
       const waterCupNode = new WaterCup2DNode( waterCupModel );
@@ -98,7 +99,6 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
-      //Is this the proper implementation of typescript Non-null assertion operator?
       const waterCupNode = waterCupMap.get( waterCupModel )!;
       this.removeChild( waterCupNode );
 
@@ -107,42 +107,41 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     //Predict Mean Line
     // x1: static, y1: dependent on draggable prediction, x2: dependent on numberOfCups, y2: same as y1
-    // REVIEW: Check with the designer about whether it spans all the cups or spans the screen?
     const predictMeanLine = new Line( 50, 225, 300, 225, {
-      stroke: 'purple'
+      stroke: 'purple',
+      lineWidth: 2
     } );
 
-    // REVIEW rename value => isShowingMeanPrediction
-    model.predictMeanProperty.link( value => {
-      value && predictMeanLine.setLineWidth( 2 );
-
-      // REVIEW: use predictMeanLine.visible = value
-      !value && predictMeanLine.setLineWidth( 0 );
+    model.isShowingPredictMeanProperty.link( showingPredictMean => {
+      predictMeanLine.visible = showingPredictMean;
     } );
 
     //Show Mean Line
     //x1: start of 2D cup, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
     const showMeanLine = new Line( 50, 250, 300, 250, {
-      stroke: 'red'
+      stroke: 'red',
+      lineWidth: 2
     } );
 
-    model.showMeanProperty.link( value => {
-      value && showMeanLine.setLineWidth( 2 );
-      !value && showMeanLine.setLineWidth( 0 );
+    model.isShowingMeanProperty.link( showingMean => {
+      showMeanLine.visible = showingMean;
     } );
 
     //TODO adjust tickMarks visibility on waterCup2DNodes based on tickMarksProperty
-    model.tickMarksProperty.link( value => {
+    model.isShowingTickMarksProperty.link( value => {
 
     } );
 
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
-    this.addChild( waterCup2DNode );
+
+    for ( const node of waterCupMap.values() ) {
+      this.addChild( node );
+    }
+
     this.addChild( predictMeanLine );
     this.addChild( showMeanLine );
   }
-
 }
 
 meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );
