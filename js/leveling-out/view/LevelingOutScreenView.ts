@@ -41,18 +41,23 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups );
+    const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
 
-    const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
-        node: new HBox( { children: [ predictMeanText ] } ),
-        property: model.predictMeanProperty
-      },
+    const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [
+        {
+          node: new HBox( { children: [ predictMeanText ] } ),
+          property: model.predictMeanProperty,
+          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
+        },
         {
           node: new HBox( { children: [ showMeanText ] } ),
-          property: model.showMeanProperty
+          property: model.showMeanProperty,
+          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' )
         },
         {
           node: new HBox( { children: [ tickMarksText ] } ),
-          property: model.tickMarksProperty
+          property: model.tickMarksProperty,
+          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
         } ],
       {
         right: this.layoutBounds.right - 100
