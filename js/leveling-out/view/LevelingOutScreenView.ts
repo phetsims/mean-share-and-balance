@@ -21,9 +21,7 @@ import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
 
-type SelfOptions = {
-
-}
+type SelfOptions = {}
 
 type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
@@ -45,17 +43,17 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups );
 
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
-      node: new HBox( { children: [ predictMeanText ] } ),
-      property: model.predictMeanProperty
+        node: new HBox( { children: [ predictMeanText ] } ),
+        property: model.predictMeanProperty
       },
-      {
-        node: new HBox( { children: [ showMeanText ] } ),
-        property: model.showMeanProperty
-      },
-      {
-        node: new HBox( { children: [ tickMarksText ] } ),
-        property: model.tickMarksProperty
-      } ],
+        {
+          node: new HBox( { children: [ showMeanText ] } ),
+          property: model.showMeanProperty
+        },
+        {
+          node: new HBox( { children: [ tickMarksText ] } ),
+          property: model.tickMarksProperty
+        } ],
       {
         right: this.layoutBounds.right - 100
       }
@@ -88,15 +86,15 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     waterCupMap.set( model.waterCups[ 0 ], waterCup2DNode );
 
     model.waterCups.addItemAddedListener( waterCupModel => {
-        const waterCupNode = new WaterCup2DNode( waterCupModel );
-        this.addChild( waterCupNode );
-        waterCupMap.set( waterCupModel, waterCupNode );
+      const waterCupNode = new WaterCup2DNode( waterCupModel );
+      this.addChild( waterCupNode );
+      waterCupMap.set( waterCupModel, waterCupNode );
     } );
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
       //Is this the proper implementation of typescript Non-null assertion operator?
-        const waterCupNode = waterCupMap.get( waterCupModel )!;
-        this.removeChild( waterCupNode );
+      const waterCupNode = waterCupMap.get( waterCupModel )!;
+      this.removeChild( waterCupNode );
 
       waterCupMap.delete( waterCupModel );
     } );

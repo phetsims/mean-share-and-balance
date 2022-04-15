@@ -16,7 +16,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = {
- //TODO add options that are specific to MeanShareAndBalanceScreenView here
+  //TODO add options that are specific to MeanShareAndBalanceScreenView here
 };
 
 type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
