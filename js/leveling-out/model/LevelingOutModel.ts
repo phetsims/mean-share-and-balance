@@ -23,6 +23,8 @@ type SelfOptions = {
 type LevelingOutModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 class LevelingOutModel extends MeanShareAndBalanceModel {
+
+  // REVIEW: Please rename isShowingMeanPredictionProperty?  Same for other Properties.
   readonly predictMeanProperty: BooleanProperty;
   readonly showMeanProperty: BooleanProperty;
   readonly tickMarksProperty: BooleanProperty;
@@ -62,6 +64,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.tickMarksProperty.reset();
     this.numberOfCupsProperty.reset();
 
+    // REVIEW: Maybe pop until there only one left?
     const firstCup = this.waterCups[ 0 ];
     this.waterCups.length = 0;
     this.waterCups.push( firstCup );

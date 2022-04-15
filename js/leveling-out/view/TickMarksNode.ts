@@ -12,8 +12,13 @@ import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 class TickMarksNode extends Node {
+
+  // REVIEW: Probably better to access the WaterCup2DModel via parentNode.waterCup
   constructor( parentNode: WaterCup2DNode, parentModel: WaterCup2DModel ) {
     super();
+
+    // REVIEW: Let's use a tickLevels array and loop
+
     const quarter = parentModel.y + ( parentNode.cupHeight * 0.75 );
     const half = parentModel.y + ( parentNode.cupHeight * 0.5 );
     const threeQuarters = parentModel.y + ( parentNode.cupHeight * 0.25 );

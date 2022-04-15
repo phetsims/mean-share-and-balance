@@ -15,6 +15,7 @@ class WaterCup2DModel {
   readonly y: number;
   readonly waterLevelProperty: NumberProperty;
 
+  // REVIEW should we use PhET optionize pattern?  Perhaps see MedianBarNode.ts
   constructor( x = 50 ) {
     this.xProperty = new NumberProperty( x );
     this.y = 200;

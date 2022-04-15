@@ -82,6 +82,8 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     // 2D water cup nodes addition and removal
     const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
+
+    // REVIEW: Please iterate over pre-existing elements
     const waterCup2DNode = new WaterCup2DNode( model.waterCups[ 0 ] );
     waterCupMap.set( model.waterCups[ 0 ], waterCup2DNode );
 
@@ -95,16 +97,22 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       //Is this the proper implementation of typescript Non-null assertion operator?
         const waterCupNode = waterCupMap.get( waterCupModel )!;
         this.removeChild( waterCupNode );
+
+      waterCupMap.delete( waterCupModel );
     } );
 
     //Predict Mean Line
     // x1: static, y1: dependent on draggable prediction, x2: dependent on numberOfCups, y2: same as y1
+    // REVIEW: Check with the designer about whether it spans all the cups or spans the screen?
     const predictMeanLine = new Line( 50, 225, 300, 225, {
       stroke: 'purple'
     } );
 
+    // REVIEW rename value => isShowingMeanPrediction
     model.predictMeanProperty.link( value => {
       value && predictMeanLine.setLineWidth( 2 );
+
+      // REVIEW: use predictMeanLine.visible = value
       !value && predictMeanLine.setLineWidth( 0 );
     } );
 
