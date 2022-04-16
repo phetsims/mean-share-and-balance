@@ -20,12 +20,15 @@ import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
+import PredictMeanNode from './PredictMeanNode.js';
 
 type SelfOptions = {}
 
 type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
+  readonly model: LevelingOutModel;
+
   constructor( model: LevelingOutModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
 
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>( {
@@ -37,6 +40,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     super( model, options );
 
+    this.model = model;
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
@@ -106,11 +110,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     //Predict Mean Line
-    // x1: static, y1: dependent on draggable prediction, x2: dependent on numberOfCups, y2: same as y1
-    const predictMeanLine = new Line( 50, 225, 300, 225, {
-      stroke: 'purple',
-      lineWidth: 2
-    } );
+    const predictMeanLine = new PredictMeanNode( this );
 
     model.isShowingPredictMeanProperty.link( showingPredictMean => {
       predictMeanLine.visible = showingPredictMean;
