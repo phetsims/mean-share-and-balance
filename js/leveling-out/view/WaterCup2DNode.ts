@@ -19,14 +19,15 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 type SelfOptions = {};
 
 type WaterCup2DNodeOptions = SelfOptions & NodeOptions;
+
 class WaterCup2DNode extends Node {
 
   readonly cupHeight: number;
   readonly waterCup: WaterCup2DModel;
-  readonly showMeanLine: Line;
 
   constructor( waterCup: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
-               isShowingTickMarksProperty: BooleanProperty, providedOptions?: WaterCup2DNodeOptions ) {
+               isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
+               providedOptions?: WaterCup2DNodeOptions ) {
     const options = optionize<WaterCup2DNodeOptions, SelfOptions, NodeOptions>( {
       //TODO add default values for options
     }, providedOptions );
@@ -43,18 +44,17 @@ class WaterCup2DNode extends Node {
     const waterCupRectangle = new Rectangle( 0, 0, cupWidth, this.cupHeight, { stroke: 'black' } );
     const waterLevelRectangle = new Rectangle( 0, y, cupWidth, this.cupHeight * waterCup.waterLevelProperty.value, { fill: '#51CEF4' } );
 
+    const showMeanLine = new Line( 0, this.cupHeight * meanProperty.value, cupWidth, this.cupHeight * meanProperty.value, {
+      stroke: 'red',
+      lineWidth: 2,
+      visibleProperty: isShowingMeanProperty
+    } );
+
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
     this.addChild( tickMarks );
+    this.addChild( showMeanLine );
 
-
-    //Show Mean Line
-    this.showMeanLine = new Line( waterCup.xProperty.value, modelViewTransform.modelToViewY( meanProperty.value ), waterCup.xProperty.value + 10, modelViewTransform.modelToViewY( meanProperty.value ), {
-      stroke: 'red',
-      lineWidth: 2
-    } );
-
-    this.addChild( this.showMeanLine );
     this.x = waterCup.xProperty.value;
     this.y = waterCup.y;
     this.bottom = modelViewTransform.modelToViewY( 0 );

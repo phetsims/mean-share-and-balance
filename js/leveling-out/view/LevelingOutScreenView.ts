@@ -116,33 +116,17 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     //Predict Mean Line
-    const predictMeanLine = new PredictMeanNode( this, this.modelViewTransform );
-
-    model.isShowingPredictMeanProperty.link( showingPredictMean => {
-      predictMeanLine.visible = showingPredictMean;
-    } );
-
-    //Show Mean Line
-    //x1: start of 2D cup, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
-    //TODO add to waterCupNode
-    // const showMeanLine = new Line( 50, 250, 300, 250, {
-    //   stroke: 'red',
-    //   lineWidth: 2
-    // } );
-    //
-    // model.isShowingMeanProperty.link( showingMean => {
-    //   showMeanLine.visible = showingMean;
-    // } );
+    const predictMeanLine = new PredictMeanNode( this, this.modelViewTransform, { visibleProperty: model.isShowingPredictMeanProperty } );
 
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
-
     this.addChild( predictMeanLine );
   }
 
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
-    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty, this.model.isShowingTickMarksProperty );
+    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
+      this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
     this.waterCupMap.set( cupModel, waterCupNode );
     this.addChild( waterCupNode );
   }

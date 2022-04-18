@@ -6,15 +6,20 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { DragListener, Line, Node } from '../../../../scenery/js/imports.js';
+import { DragListener, Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import LevelingOutScreenView from './LevelingOutScreenView.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+
+type SelfOptions = {};
+type PredictMeanNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty'>
 
 class PredictMeanNode extends Node {
-  constructor( parentNode: LevelingOutScreenView, modelViewTransform: ModelViewTransform2 ) {
-    super();
+  constructor( parentNode: LevelingOutScreenView, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
+    super( providedOptions );
+
     const predictMeanLine = new Line( 50, 0, 300, 0, {
       stroke: 'purple',
       lineWidth: 2

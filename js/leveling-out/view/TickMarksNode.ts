@@ -12,6 +12,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {};
 type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty'>;
+
 class TickMarksNode extends Node {
 
   constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
