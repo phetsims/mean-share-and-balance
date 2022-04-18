@@ -21,10 +21,6 @@ type SelfOptions = {};
 type WaterCup2DNodeOptions = SelfOptions & NodeOptions;
 
 class WaterCup2DNode extends Node {
-
-  readonly cupHeight: number;
-  readonly waterCup: WaterCup2DModel;
-
   constructor( waterCup: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: WaterCup2DNodeOptions ) {
@@ -34,17 +30,16 @@ class WaterCup2DNode extends Node {
 
     super( options );
 
-    this.cupHeight = 100;
-    this.waterCup = waterCup;
-    const tickMarks = new TickMarksNode( this.cupHeight, { visibleProperty: isShowingTickMarksProperty } );
+    const cupHeight = 100;
+    const tickMarks = new TickMarksNode( cupHeight, { visibleProperty: isShowingTickMarksProperty } );
     const cupWidth = 50;
 
     //0 is empty, 1 is full
-    const y = Utils.linear( 0, 1, this.cupHeight, 0, waterCup.waterLevelProperty.value );
-    const waterCupRectangle = new Rectangle( 0, 0, cupWidth, this.cupHeight, { stroke: 'black' } );
-    const waterLevelRectangle = new Rectangle( 0, y, cupWidth, this.cupHeight * waterCup.waterLevelProperty.value, { fill: '#51CEF4' } );
+    const y = Utils.linear( 0, 1, cupHeight, 0, waterCup.waterLevelProperty.value );
+    const waterCupRectangle = new Rectangle( 0, 0, cupWidth, cupHeight, { stroke: 'black' } );
+    const waterLevelRectangle = new Rectangle( 0, y, cupWidth, cupHeight * waterCup.waterLevelProperty.value, { fill: '#51CEF4' } );
 
-    const showMeanLine = new Line( 0, this.cupHeight * meanProperty.value, cupWidth, this.cupHeight * meanProperty.value, {
+    const showMeanLine = new Line( 0, cupHeight * meanProperty.value, cupWidth, cupHeight * meanProperty.value, {
       stroke: 'red',
       lineWidth: 2,
       visibleProperty: isShowingMeanProperty

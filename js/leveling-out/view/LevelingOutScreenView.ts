@@ -116,7 +116,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     //Predict Mean Line
-    const predictMeanLine = new PredictMeanNode( this, this.modelViewTransform, { visibleProperty: model.isShowingPredictMeanProperty } );
+    const predictMeanLine = new PredictMeanNode( model, this.modelViewTransform, { visibleProperty: model.isShowingPredictMeanProperty } );
 
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
