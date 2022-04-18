@@ -13,16 +13,18 @@ import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { HBox, VBox, Text, Line } from '../../../../scenery/js/imports.js';
+import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Property from '../../../../axon/js/Property.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import PredictMeanNode from './PredictMeanNode.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import merge from '../../../../phet-core/js/merge.js';
 
 type SelfOptions = {}
 
@@ -49,8 +51,13 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups );
-    const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
 
+    const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
+      tandem: options.tandem.createTandem( 'questionBar' )
+    }, { labelText: 'What is the average amount of water per cup?' } ) );
+
+    //Checkbox Group
+    const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [
         {
           node: new HBox( { children: [ predictMeanText ] } ),
@@ -113,6 +120,12 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       waterCupMap.delete( waterCupModel );
     } );
 
+    model.isShowingTickMarksProperty.link( value => {
+      waterCupMap.forEach( cup => {
+        cup.tickMarks.visible = value;
+      } );
+    } );
+
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode( this, this.modelViewTransform );
 
@@ -122,6 +135,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
     //Show Mean Line
     //x1: start of 2D cup, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
+    //TODO add to waterCupNode
     const showMeanLine = new Line( 50, 250, 300, 250, {
       stroke: 'red',
       lineWidth: 2
@@ -131,11 +145,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       showMeanLine.visible = showingMean;
     } );
 
-    //TODO adjust tickMarks visibility on waterCup2DNodes based on tickMarksProperty
-    model.isShowingTickMarksProperty.link( value => {
-
-    } );
-
+    this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
 
