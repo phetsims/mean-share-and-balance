@@ -21,6 +21,8 @@ import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import PredictMeanNode from './PredictMeanNode.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 type SelfOptions = {}
 
@@ -28,6 +30,7 @@ type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenVie
 
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   readonly model: LevelingOutModel;
+  readonly modelViewTransform: ModelViewTransform2;
 
   constructor( model: LevelingOutModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
 
@@ -41,6 +44,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     super( model, options );
 
     this.model = model;
+    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 200 ), 100 );
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
@@ -92,12 +96,12 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
 
     model.waterCups.forEach( cup => {
-      const waterCup2DNode = new WaterCup2DNode( cup );
+      const waterCup2DNode = new WaterCup2DNode( cup, this.modelViewTransform );
       waterCupMap.set( cup, waterCup2DNode );
     } );
 
     model.waterCups.addItemAddedListener( waterCupModel => {
-      const waterCupNode = new WaterCup2DNode( waterCupModel );
+      const waterCupNode = new WaterCup2DNode( waterCupModel, this.modelViewTransform );
       this.addChild( waterCupNode );
       waterCupMap.set( waterCupModel, waterCupNode );
     } );
@@ -110,7 +114,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     //Predict Mean Line
-    const predictMeanLine = new PredictMeanNode( this );
+    const predictMeanLine = new PredictMeanNode( this, this.modelViewTransform );
 
     model.isShowingPredictMeanProperty.link( showingPredictMean => {
       predictMeanLine.visible = showingPredictMean;

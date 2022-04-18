@@ -11,6 +11,7 @@ import { Rectangle, Node } from '../../../../scenery/js/imports.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TickMarksNode from './TickMarksNode.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 class WaterCup2DNode extends Node {
 
@@ -18,7 +19,7 @@ class WaterCup2DNode extends Node {
   readonly model: WaterCup2DModel;
   readonly tickMarks: TickMarksNode;
 
-  constructor( model: WaterCup2DModel ) {
+  constructor( model: WaterCup2DModel, modelViewTransform: ModelViewTransform2 ) {
 
     super();
     this.cupHeight = 100;
@@ -34,6 +35,7 @@ class WaterCup2DNode extends Node {
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
     this.addChild( this.tickMarks );
+    this.bottom = modelViewTransform.modelToViewY( 0 );
   }
 }
 

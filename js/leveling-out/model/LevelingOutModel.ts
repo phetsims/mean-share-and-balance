@@ -29,6 +29,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly isShowingTickMarksProperty: BooleanProperty;
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
+  readonly dragRange: Range;
   readonly waterCups: ObservableArray<WaterCup2DModel>;
   readonly predictionProperty: NumberProperty;
 
@@ -41,6 +42,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.predictionProperty = new NumberProperty( 0.5 );
     this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
+    this.dragRange = new Range( 0, 1 );
     this.waterCups = createObservableArray();
 
     this.waterCups.push( new WaterCup2DModel( { x: 50 } ) );
