@@ -23,6 +23,8 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import PredictMeanNode from './PredictMeanNode.js';
 import merge from '../../../../phet-core/js/merge.js';
+import PipeNode from './PipeNode.js';
+import PipeModel from '../model/PipeModel.js';
 
 type SelfOptions = {};
 
@@ -122,6 +124,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( predictMeanLine );
+    this.addChild( new PipeNode( new PipeModel() ) );
   }
 
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
