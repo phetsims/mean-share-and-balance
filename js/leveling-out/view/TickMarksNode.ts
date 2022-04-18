@@ -6,20 +6,20 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Line, Node } from '../../../../scenery/js/imports.js';
-import WaterCup2DNode from './WaterCup2DNode.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
+type SelfOptions = {};
+type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty'>;
 class TickMarksNode extends Node {
-  readonly parentNode: WaterCup2DNode;
 
-  constructor( parentNode: WaterCup2DNode ) {
-    super();
-    this.parentNode = parentNode;
+  constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
+    super( providedOptions );
 
     const tickLevels = [ 0.25, 0.5, 0.75 ];
     tickLevels.forEach( tickLevel => {
-      const fraction = parentNode.model.y + ( parentNode.cupHeight * tickLevel );
+      const fraction = cupHeight * tickLevel;
 
       this.addTickMark( fraction );
     } );
@@ -27,7 +27,7 @@ class TickMarksNode extends Node {
 
   //creates and adds tick mark to node
   addTickMark( fraction: number ): void {
-    const tickMark = new Line( this.parentNode.model.xProperty.value, fraction, this.parentNode.model.xProperty.value + 5, fraction, {
+    const tickMark = new Line( 0, fraction, 5, fraction, {
       stroke: 'black',
       lineWidth: 2
     } );

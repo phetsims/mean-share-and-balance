@@ -7,12 +7,10 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
-import MeanShareAndBalanceScreenView from '../../common/view/MeanShareAndBalanceScreenView.js';
+import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { HBox, VBox, Text, Line } from '../../../../scenery/js/imports.js';
+import { HBox, VBox, Text } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
@@ -26,18 +24,18 @@ import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import PredictMeanNode from './PredictMeanNode.js';
 import merge from '../../../../phet-core/js/merge.js';
 
-type SelfOptions = {}
+type SelfOptions = {};
 
-type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
+type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   readonly model: LevelingOutModel;
   readonly modelViewTransform: ModelViewTransform2;
   readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
 
-  constructor( model: LevelingOutModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
-    const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>( {
+    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>( {
 
       //TODO add default values for optional SelfOptions here
 
@@ -117,12 +115,6 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
       this.waterCupMap.delete( waterCupModel );
     } );
 
-    model.isShowingTickMarksProperty.link( value => {
-      this.waterCupMap.forEach( cup => {
-        cup.tickMarks.visible = value;
-      } );
-    } );
-
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode( this, this.modelViewTransform );
 
@@ -133,26 +125,24 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     //Show Mean Line
     //x1: start of 2D cup, y1: dependent on mean, x2: dependent on numberOfCups, y2: same as y1
     //TODO add to waterCupNode
-    const showMeanLine = new Line( 50, 250, 300, 250, {
-      stroke: 'red',
-      lineWidth: 2
-    } );
-
-    model.isShowingMeanProperty.link( showingMean => {
-      showMeanLine.visible = showingMean;
-    } );
+    // const showMeanLine = new Line( 50, 250, 300, 250, {
+    //   stroke: 'red',
+    //   lineWidth: 2
+    // } );
+    //
+    // model.isShowingMeanProperty.link( showingMean => {
+    //   showMeanLine.visible = showingMean;
+    // } );
 
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
 
     this.addChild( predictMeanLine );
-    this.addChild( showMeanLine );
   }
 
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
-    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform );
-    waterCupNode.tickMarks.visible = this.model.isShowingTickMarksProperty.value;
+    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty, this.model.isShowingTickMarksProperty );
     this.waterCupMap.set( cupModel, waterCupNode );
     this.addChild( waterCupNode );
   }

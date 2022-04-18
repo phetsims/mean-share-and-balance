@@ -7,34 +7,56 @@
  */
 
 import Utils from '../../../../dot/js/Utils.js';
-import { Rectangle, Node } from '../../../../scenery/js/imports.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import { Rectangle, Node, Line, NodeOptions } from '../../../../scenery/js/imports.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCup2DModel from '../model/WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TickMarksNode from './TickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
+type SelfOptions = {};
+
+type WaterCup2DNodeOptions = SelfOptions & NodeOptions;
 class WaterCup2DNode extends Node {
 
   readonly cupHeight: number;
-  readonly model: WaterCup2DModel;
-  readonly tickMarks: TickMarksNode;
+  readonly waterCup: WaterCup2DModel;
+  readonly showMeanLine: Line;
 
-  constructor( model: WaterCup2DModel, modelViewTransform: ModelViewTransform2 ) {
+  constructor( waterCup: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
+               isShowingTickMarksProperty: BooleanProperty, providedOptions?: WaterCup2DNodeOptions ) {
+    const options = optionize<WaterCup2DNodeOptions, SelfOptions, NodeOptions>( {
+      //TODO add default values for options
+    }, providedOptions );
 
-    super();
+    super( options );
+
     this.cupHeight = 100;
-    this.model = model;
+    this.waterCup = waterCup;
+    const tickMarks = new TickMarksNode( this.cupHeight, { visibleProperty: isShowingTickMarksProperty } );
     const cupWidth = 50;
-    //0 is empty, 1 is full
-    const y = Utils.linear( 0, 1, model.y + this.cupHeight, model.y, model.waterLevelProperty.value );
-    this.tickMarks = new TickMarksNode( this );
 
-    const waterCupRectangle = new Rectangle( model.xProperty.value, model.y, cupWidth, this.cupHeight, { stroke: 'black' } );
-    const waterLevelRectangle = new Rectangle( model.xProperty.value, y, cupWidth, this.cupHeight * model.waterLevelProperty.value, { fill: '#51CEF4' } );
+    //0 is empty, 1 is full
+    const y = Utils.linear( 0, 1, this.cupHeight, 0, waterCup.waterLevelProperty.value );
+    const waterCupRectangle = new Rectangle( 0, 0, cupWidth, this.cupHeight, { stroke: 'black' } );
+    const waterLevelRectangle = new Rectangle( 0, y, cupWidth, this.cupHeight * waterCup.waterLevelProperty.value, { fill: '#51CEF4' } );
 
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
-    this.addChild( this.tickMarks );
+    this.addChild( tickMarks );
+
+
+    //Show Mean Line
+    this.showMeanLine = new Line( waterCup.xProperty.value, modelViewTransform.modelToViewY( meanProperty.value ), waterCup.xProperty.value + 10, modelViewTransform.modelToViewY( meanProperty.value ), {
+      stroke: 'red',
+      lineWidth: 2
+    } );
+
+    this.addChild( this.showMeanLine );
+    this.x = waterCup.xProperty.value;
+    this.y = waterCup.y;
     this.bottom = modelViewTransform.modelToViewY( 0 );
   }
 }

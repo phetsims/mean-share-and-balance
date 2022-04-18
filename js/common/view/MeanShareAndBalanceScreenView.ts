@@ -19,7 +19,7 @@ type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceScreenView here
 };
 
-type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
+export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
 class MeanShareAndBalanceScreenView extends ScreenView {
 
