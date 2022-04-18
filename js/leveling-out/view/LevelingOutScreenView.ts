@@ -33,6 +33,7 @@ type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenVie
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   readonly model: LevelingOutModel;
   readonly modelViewTransform: ModelViewTransform2;
+  readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
 
   constructor( model: LevelingOutModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
 
@@ -100,28 +101,24 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // 2D water cup nodes addition and removal
-    const waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
+    this.waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
 
-    model.waterCups.forEach( cup => {
-      const waterCup2DNode = new WaterCup2DNode( cup, this.modelViewTransform );
-      waterCupMap.set( cup, waterCup2DNode );
+    model.waterCups.forEach( waterCupModel => {
+      this.addWaterCupNode( waterCupModel );
     } );
 
     model.waterCups.addItemAddedListener( waterCupModel => {
-      const waterCupNode = new WaterCup2DNode( waterCupModel, this.modelViewTransform );
-      this.addChild( waterCupNode );
-      waterCupMap.set( waterCupModel, waterCupNode );
+      this.addWaterCupNode( waterCupModel );
     } );
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
-      const waterCupNode = waterCupMap.get( waterCupModel )!;
+      const waterCupNode = this.waterCupMap.get( waterCupModel )!;
       this.removeChild( waterCupNode );
-
-      waterCupMap.delete( waterCupModel );
+      this.waterCupMap.delete( waterCupModel );
     } );
 
     model.isShowingTickMarksProperty.link( value => {
-      waterCupMap.forEach( cup => {
+      this.waterCupMap.forEach( cup => {
         cup.tickMarks.visible = value;
       } );
     } );
@@ -149,12 +146,15 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
 
-    for ( const node of waterCupMap.values() ) {
-      this.addChild( node );
-    }
-
     this.addChild( predictMeanLine );
     this.addChild( showMeanLine );
+  }
+
+  private addWaterCupNode( cupModel: WaterCup2DModel ): void {
+    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform );
+    waterCupNode.tickMarks.visible = this.model.isShowingTickMarksProperty.value;
+    this.waterCupMap.set( cupModel, waterCupNode );
+    this.addChild( waterCupNode );
   }
 }
 
