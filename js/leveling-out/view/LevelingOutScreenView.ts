@@ -37,7 +37,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
-    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>( {
+    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {
 
       //TODO add default values for optional SelfOptions here
 

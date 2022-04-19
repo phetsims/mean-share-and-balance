@@ -24,7 +24,7 @@ class WaterCup2DNode extends Node {
   constructor( waterCup: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: WaterCup2DNodeOptions ) {
-    const options = optionize<WaterCup2DNodeOptions, SelfOptions, NodeOptions>( {
+    const options = optionize<WaterCup2DNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default values for options
     }, providedOptions );
 

@@ -22,7 +22,7 @@ class WaterCup2DModel {
   readonly waterLevelProperty: NumberProperty;
 
   constructor( providedOptions: WaterCup2DModelOptions ) {
-    const options = optionize<WaterCup2DModelOptions, SelfOptions>( {
+    const options = optionize<WaterCup2DModelOptions, SelfOptions>()( {
       x: 50
     }, providedOptions );
 

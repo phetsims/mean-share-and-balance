@@ -27,7 +27,7 @@ class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends Me
 
   constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
 
-    const options = optionize<MeanShareAndBalanceScreenOptions, SelfOptions, ScreenOptions>( {
+    const options = optionize<MeanShareAndBalanceScreenOptions, SelfOptions, ScreenOptions>()( {
 
       //TODO add default values for optional SelfOptions here
 

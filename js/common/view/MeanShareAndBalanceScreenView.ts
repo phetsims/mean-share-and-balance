@@ -25,7 +25,7 @@ class MeanShareAndBalanceScreenView extends ScreenView {
 
   constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
 
-    const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>( {
+    const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {
 
       //TODO add default values for optional SelfOptions here
 
