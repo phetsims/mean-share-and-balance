@@ -33,6 +33,11 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   readonly model: LevelingOutModel;
   readonly modelViewTransform: ModelViewTransform2;
+
+  // TODO: Split this up into 2 maps, using this structure:
+  // readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
+  // readonly pipeMap: Map<PipeModel, PipeNode>;
+  // TODO: Mark all attributes as private where possible in all files
   readonly waterCupMap: Map<WaterCup2DModel, Array<PipeNode | WaterCup2DNode>>;
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
@@ -61,6 +66,8 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [
         {
+
+          // TODO: Let's remove HBox wrappers since they don't do anything at the moment
           node: new HBox( { children: [ predictMeanText ] } ),
           property: model.isShowingPredictMeanProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
@@ -77,12 +84,14 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
         } ],
       {
         right: this.layoutBounds.right - 100
+
+        // TODO: Position the levelingOutOptionsCheckboxGroup beneath the QuestionBar.  Will the position need to update as the screen shape changes?
       }
     );
 
     const numberOfCupsNumberPicker = new NumberPicker(
-      model.numberOfCupsProperty, new Property( model.levelingOutRange ),
-      {
+      model.numberOfCupsProperty,
+      new Property( model.levelingOutRange ), {
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
         yMargin: 10,
         xMargin: 10,
@@ -123,10 +132,12 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
-    //TODO fix z-index
+    //TODO fix z-index by adding something like `this.waterNodeLayer = new Node()`.  Don't forget to import Node
     this.addChild( predictMeanLine );
   }
 
+  // TODO: The water cups should be centered on the screen
+  // TODO: After changes in LevelingOutModel with pipes observable array, we probably won't need index here any more
   private addWaterCupNode( cupModel: WaterCup2DModel, index: number ): void {
     const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );

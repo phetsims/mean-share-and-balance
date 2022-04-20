@@ -18,6 +18,8 @@ type SelfOptions = {};
 type PipeNodeOptions = SelfOptions & NodeOptions;
 
 class PipeNode extends Node {
+
+  // TODO: It's conventional in our project to x before y, width before height, etc.
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, y: number, x: number, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default values for options

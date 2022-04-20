@@ -16,18 +16,15 @@ type SelfOptions = {
 };
 export type WaterCup2DModelOptions = SelfOptions;
 
-class WaterCup2DModel {
+export default class WaterCup2DModel {
   readonly xProperty: NumberProperty;
-  readonly y: number;
+  readonly y = 200;
   readonly waterLevelProperty: NumberProperty;
 
   constructor( providedOptions: WaterCup2DModelOptions ) {
-    const options = optionize<WaterCup2DModelOptions, SelfOptions>()( {
-      x: 50
-    }, providedOptions );
+    const options = optionize<WaterCup2DModelOptions, SelfOptions>()( {}, providedOptions );
 
     this.xProperty = new NumberProperty( options.x );
-    this.y = 200;
     this.waterLevelProperty = new NumberProperty( 0.5, {
       range: new Range( 0, 1 )
     } );
@@ -35,4 +32,3 @@ class WaterCup2DModel {
 }
 
 meanShareAndBalance.register( 'WaterCup2DModel', WaterCup2DModel );
-export default WaterCup2DModel;

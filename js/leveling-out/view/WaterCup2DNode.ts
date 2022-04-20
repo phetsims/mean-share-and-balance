@@ -34,7 +34,7 @@ class WaterCup2DNode extends Node {
     const tickMarks = new TickMarksNode( cupHeight, { visibleProperty: isShowingTickMarksProperty } );
     const cupWidth = 50;
 
-    //0 is empty, 1 is full
+    // 0 is empty, 1 is full
     const y = Utils.linear( 0, 1, cupHeight, 0, waterCup.waterLevelProperty.value );
     const waterCupRectangle = new Rectangle( 0, 0, cupWidth, cupHeight, { stroke: 'black' } );
     const waterLevelRectangle = new Rectangle( 0, y, cupWidth, cupHeight * waterCup.waterLevelProperty.value, { fill: '#51CEF4' } );
@@ -47,6 +47,8 @@ class WaterCup2DNode extends Node {
 
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
+
+    // TODO: Maybe the tick marks should be front of the tick marks
     this.addChild( tickMarks );
     this.addChild( showMeanLine );
 

@@ -18,6 +18,8 @@ type PredictMeanNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visiblePr
 
 class PredictMeanNode extends Node {
   constructor( model: LevelingOutModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
+
+    // TODO: User cursor: 'pointer' to show a hand so the user knows it is interactive
     super( providedOptions );
 
     const predictMeanLine = new Line( 50, 0, 300, 0, {

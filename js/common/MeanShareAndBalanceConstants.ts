@@ -9,10 +9,12 @@
 
 import meanShareAndBalance from '../meanShareAndBalance.js';
 
+const DEFAULT_MARGIN = 15;
+
 const MeanShareAndBalanceConstants = {
 
-  SCREEN_VIEW_X_MARGIN: 15,
-  SCREEN_VIEW_Y_MARGIN: 15
+  SCREEN_VIEW_X_MARGIN: DEFAULT_MARGIN,
+  SCREEN_VIEW_Y_MARGIN: DEFAULT_MARGIN
 
   //TODO
 };

@@ -29,8 +29,14 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly isShowingTickMarksProperty: BooleanProperty;
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
-  readonly dragRange: Range;
+
+  // TODO: Allocate things at their declaration site where possible.  Don't moving things that will need tandems though
+  readonly dragRange = new Range( 0, 1 );
   readonly waterCups: ObservableArray<WaterCup2DModel>;
+
+  // TODO: Add a pipeModel observable array
+
+  // TODO: maybe name this meanPredictionProperty?
   readonly predictionProperty: NumberProperty;
   readonly meanProperty: NumberProperty;
 
@@ -40,14 +46,20 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.isShowingPredictMeanProperty = new BooleanProperty( false );
     this.isShowingMeanProperty = new BooleanProperty( false );
     this.isShowingTickMarksProperty = new BooleanProperty( false );
+
     this.predictionProperty = new NumberProperty( 0 );
+
     //TODO based on mean of cup water levels
     this.meanProperty = new NumberProperty( 0.5 );
     this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
     this.dragRange = new Range( 0, 1 );
-    this.waterCups = createObservableArray();
 
+    // TODO: Specify the type arg like createObservableArray<WaterCup2DModel>()
+    this.waterCups = createObservableArray<WaterCup2DModel>();
+
+    // The sim starts with one water cup
+    // TODO: There will probably be other code that centers the cups when the number of cups changes
     this.waterCups.push( new WaterCup2DModel( { x: 50 } ) );
 
     this.numberOfCupsProperty.link( value => {

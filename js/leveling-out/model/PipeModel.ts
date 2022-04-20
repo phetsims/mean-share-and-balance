@@ -9,7 +9,8 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 class PipeModel {
-  readonly isOpenProperty: BooleanProperty
+
+  readonly isOpenProperty: BooleanProperty;
 
   constructor() {
     this.isOpenProperty = new BooleanProperty( false );
