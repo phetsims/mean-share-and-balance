@@ -33,7 +33,7 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   readonly model: LevelingOutModel;
   readonly modelViewTransform: ModelViewTransform2;
-  readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
+  readonly waterCupMap: Map<WaterCup2DModel, Array<PipeNode | WaterCup2DNode>>;
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -47,7 +47,7 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     super( model, options );
 
     this.model = model;
-    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 200 ), 100 );
+    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
@@ -101,19 +101,19 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // 2D water cup nodes addition and removal
-    this.waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
-
-    model.waterCups.forEach( waterCupModel => {
-      this.addWaterCupNode( waterCupModel );
-    } );
+    this.waterCupMap = new Map<WaterCup2DModel, Array<PipeNode | WaterCup2DNode>>();
+    for ( let i = 0; i < model.waterCups.length; i += 1 ) {
+      this.addWaterCupNode( model.waterCups[ i ], i );
+    }
 
     model.waterCups.addItemAddedListener( waterCupModel => {
-      this.addWaterCupNode( waterCupModel );
+      const index = model.waterCups.findIndex( waterCup => waterCup === waterCupModel );
+      this.addWaterCupNode( waterCupModel, index );
     } );
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
-      const waterCupNode = this.waterCupMap.get( waterCupModel )!;
-      this.removeChild( waterCupNode );
+      const nodes = this.waterCupMap.get( waterCupModel )!;
+      nodes.forEach( node => this.removeChild( node ) );
       this.waterCupMap.delete( waterCupModel );
     } );
 
@@ -123,14 +123,19 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
+    //TODO fix z-index
     this.addChild( predictMeanLine );
-    this.addChild( new PipeNode( new PipeModel() ) );
   }
 
-  private addWaterCupNode( cupModel: WaterCup2DModel ): void {
+  private addWaterCupNode( cupModel: WaterCup2DModel, index: number ): void {
     const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
-    this.waterCupMap.set( cupModel, waterCupNode );
+    this.waterCupMap.set( cupModel, [ waterCupNode ] );
+    if ( index !== 0 ) {
+      const pipeNode = new PipeNode( new PipeModel(), this.modelViewTransform, waterCupNode.bottom, waterCupNode.x );
+      this.waterCupMap.get( cupModel )!.push( pipeNode );
+      this.addChild( pipeNode );
+    }
     this.addChild( waterCupNode );
   }
 }

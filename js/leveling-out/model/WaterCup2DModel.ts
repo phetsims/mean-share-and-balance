@@ -28,7 +28,6 @@ class WaterCup2DModel {
 
     this.xProperty = new NumberProperty( options.x );
     this.y = 200;
-    //TODO update variables in other files
     this.waterLevelProperty = new NumberProperty( 0.5, {
       range: new Range( 0, 1 )
     } );

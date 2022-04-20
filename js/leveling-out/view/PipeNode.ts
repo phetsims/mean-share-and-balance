@@ -7,13 +7,24 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { Circle, Node, Rectangle } from '../../../../scenery/js/imports.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import { Circle, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 
+type SelfOptions = {};
+
+type PipeNodeOptions = SelfOptions & NodeOptions;
+
 class PipeNode extends Node {
-  constructor( pipeModel: PipeModel ) {
-    super();
+  constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, y: number, x: number, providedOptions?: PipeNodeOptions ) {
+    const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
+      //TODO add default values for options
+    }, providedOptions );
+
+    super( options );
+
     const pipeLength = 50;
     const pipeHeight = 5;
     const pipeCenter = new Vector2( pipeLength / 2, pipeHeight / 2 );
@@ -29,6 +40,9 @@ class PipeNode extends Node {
     this.addChild( pipeRectangle );
     this.addChild( valveCircle );
     this.addChild( valveRectangle );
+    //Pass in cup width?
+    this.x = x - 50;
+    this.y = y - pipeHeight;
   }
 
 }

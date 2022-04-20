@@ -51,7 +51,6 @@ class WaterCup2DNode extends Node {
     this.addChild( showMeanLine );
 
     this.x = waterCup.xProperty.value;
-    this.y = waterCup.y;
     this.bottom = modelViewTransform.modelToViewY( 0 );
   }
 }
