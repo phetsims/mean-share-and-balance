@@ -14,7 +14,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import WaterCup2DModel from './WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import PipeModel from './PipeModel.js';
 
 type SelfOptions = {
@@ -23,24 +23,23 @@ type SelfOptions = {
 
 type LevelingOutModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-class LevelingOutModel extends MeanShareAndBalanceModel {
+export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   readonly isShowingPredictMeanProperty: BooleanProperty;
   readonly isShowingMeanProperty: BooleanProperty;
   readonly isShowingTickMarksProperty: BooleanProperty;
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
-
-  // TODO: Allocate things at their declaration site where possible.  Don't moving things that will need tandems though
   readonly dragRange = new Range( 0, 1 );
-  readonly waterCups: ObservableArray<WaterCup2DModel>;
-  readonly pipes: ObservableArray<PipeModel>;
+  readonly waterCups = createObservableArray<WaterCup2DModel>();
+  readonly pipes = createObservableArray<PipeModel>();
 
   // TODO: Add a pipeModel observable array
 
   // TODO: maybe name this meanPredictionProperty?
-  readonly predictionProperty: NumberProperty;
-  readonly meanProperty: NumberProperty;
+  readonly meanPredictionProperty: NumberProperty;
+  //TODO based on mean of cup water levels
+  readonly meanProperty = new NumberProperty( 0.5 );
 
   constructor( providedOptions: LevelingOutModelOptions ) {
     super( providedOptions );
@@ -48,18 +47,9 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
     this.isShowingPredictMeanProperty = new BooleanProperty( false );
     this.isShowingMeanProperty = new BooleanProperty( false );
     this.isShowingTickMarksProperty = new BooleanProperty( false );
-
-    this.predictionProperty = new NumberProperty( 0 );
-
-    //TODO based on mean of cup water levels
-    this.meanProperty = new NumberProperty( 0.5 );
+    this.meanPredictionProperty = new NumberProperty( 0 );
     this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
-    this.dragRange = new Range( 0, 1 );
-
-    // TODO: Specify the type arg like createObservableArray<WaterCup2DModel>()
-    this.waterCups = createObservableArray<WaterCup2DModel>();
-    this.pipes = createObservableArray<PipeModel>();
 
     // The sim starts with one water cup
     // TODO: There will probably be other code that centers the cups when the number of cups changes
@@ -93,9 +83,9 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
 
     while ( this.waterCups.length > 1 ) {
       this.waterCups.pop();
+      this.pipes.pop();
     }
   }
 }
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );
-export default LevelingOutModel;

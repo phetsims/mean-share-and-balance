@@ -10,7 +10,7 @@
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import { HBox, VBox, Text } from '../../../../scenery/js/imports.js';
+import { VBox, Text } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
@@ -30,13 +30,11 @@ type SelfOptions = {};
 
 type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
-class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
-  readonly model: LevelingOutModel;
-  readonly modelViewTransform: ModelViewTransform2;
-
-  // TODO: Mark all attributes as private where possible in all files
+export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   private readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
   private readonly pipeMap: Map<PipeModel, PipeNode>
+  readonly model: LevelingOutModel;
+  readonly modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -50,7 +48,6 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     super( model, options );
 
     this.model = model;
-    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
@@ -64,28 +61,26 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
     const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [
         {
-
-          // TODO: Let's remove HBox wrappers since they don't do anything at the moment
-          node: new HBox( { children: [ predictMeanText ] } ),
+          node: predictMeanText,
           property: model.isShowingPredictMeanProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
         },
         {
-          node: new HBox( { children: [ showMeanText ] } ),
+          node: showMeanText,
           property: model.isShowingMeanProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' )
         },
         {
-          node: new HBox( { children: [ tickMarksText ] } ),
+          node: tickMarksText,
           property: model.isShowingTickMarksProperty,
           tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
         } ],
       {
-        right: this.layoutBounds.right - 100
-
-        // TODO: Position the levelingOutOptionsCheckboxGroup beneath the QuestionBar.  Will the position need to update as the screen shape changes?
+        right: this.layoutBounds.right - 100,
+        top: questionBar.boundsProperty.value.maxY + 20
       }
     );
+
 
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty,
@@ -108,11 +103,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // 2D water cup nodes addition and removal
-    // TODO change back to foreach
     this.waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
-    for ( let i = 0; i < model.waterCups.length; i += 1 ) {
-      this.addWaterCupNode( model.waterCups[ i ] );
-    }
+    model.waterCups.forEach( waterCup => {
+      this.addWaterCupNode( waterCup );
+    } );
 
     model.waterCups.addItemAddedListener( waterCupModel => {
       this.addWaterCupNode( waterCupModel );
@@ -149,7 +143,6 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   }
 
   // TODO: The water cups should be centered on the screen
-  // TODO: After changes in LevelingOutModel with pipes observable array, we probably won't need index here any more
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
     const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
@@ -159,4 +152,3 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 }
 
 meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );
-export default LevelingOutScreenView;

@@ -8,8 +8,9 @@
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-class PipeModel {
+export default class PipeModel {
 
   readonly isOpenProperty: BooleanProperty;
   readonly xProperty: NumberProperty;
@@ -22,4 +23,4 @@ class PipeModel {
   }
 }
 
-export default PipeModel;
+meanShareAndBalance.register( 'PipeModel', PipeModel );

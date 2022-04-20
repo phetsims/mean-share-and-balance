@@ -20,7 +20,7 @@ type SelfOptions = {};
 
 type WaterCup2DNodeOptions = SelfOptions & NodeOptions;
 
-class WaterCup2DNode extends Node {
+export default class WaterCup2DNode extends Node {
   constructor( waterCup: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: WaterCup2DNodeOptions ) {
@@ -59,4 +59,3 @@ class WaterCup2DNode extends Node {
 }
 
 meanShareAndBalance.register( 'WaterCup2DNode', WaterCup2DNode );
-export default WaterCup2DNode;
