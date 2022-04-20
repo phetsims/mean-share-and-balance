@@ -15,6 +15,7 @@ import Range from '../../../../dot/js/Range.js';
 import WaterCup2DModel from './WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import PipeModel from './PipeModel.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -33,6 +34,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
   // TODO: Allocate things at their declaration site where possible.  Don't moving things that will need tandems though
   readonly dragRange = new Range( 0, 1 );
   readonly waterCups: ObservableArray<WaterCup2DModel>;
+  readonly pipes: ObservableArray<PipeModel>;
 
   // TODO: Add a pipeModel observable array
 
@@ -57,6 +59,7 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
 
     // TODO: Specify the type arg like createObservableArray<WaterCup2DModel>()
     this.waterCups = createObservableArray<WaterCup2DModel>();
+    this.pipes = createObservableArray<PipeModel>();
 
     // The sim starts with one water cup
     // TODO: There will probably be other code that centers the cups when the number of cups changes
@@ -66,9 +69,15 @@ class LevelingOutModel extends MeanShareAndBalanceModel {
       while ( value > this.waterCups.length ) {
         const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
         this.waterCups.push( new WaterCup2DModel( { x: lastWaterCup.xProperty.value + 100 } ) );
+        if ( value > 1 ) {
+          this.pipes.push( new PipeModel( lastWaterCup.xProperty, lastWaterCup.y ) );
+        }
       }
       while ( value < this.waterCups.length ) {
         this.waterCups.pop();
+        if ( value > 0 ) {
+          this.pipes.pop();
+        }
       }
 
       assert && assert( value === this.waterCups.length, `The value returned is: ${value}, but the waterCups length is: ${this.waterCups.length}.` );

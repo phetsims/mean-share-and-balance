@@ -20,7 +20,7 @@ type PipeNodeOptions = SelfOptions & NodeOptions;
 class PipeNode extends Node {
 
   // TODO: It's conventional in our project to x before y, width before height, etc.
-  constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, y: number, x: number, providedOptions?: PipeNodeOptions ) {
+  constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default values for options
     }, providedOptions );
@@ -43,8 +43,8 @@ class PipeNode extends Node {
     this.addChild( valveCircle );
     this.addChild( valveRectangle );
     //Pass in cup width?
-    this.x = x - 50;
-    this.y = y - pipeHeight;
+    this.x = pipeModel.xProperty.value + 50;
+    this.y = modelViewTransform.modelToViewY( 0 ) - pipeHeight;
   }
 
 }

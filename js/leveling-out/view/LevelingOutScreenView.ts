@@ -34,11 +34,9 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   readonly model: LevelingOutModel;
   readonly modelViewTransform: ModelViewTransform2;
 
-  // TODO: Split this up into 2 maps, using this structure:
-  // readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
-  // readonly pipeMap: Map<PipeModel, PipeNode>;
   // TODO: Mark all attributes as private where possible in all files
-  readonly waterCupMap: Map<WaterCup2DModel, Array<PipeNode | WaterCup2DNode>>;
+  private readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
+  private readonly pipeMap: Map<PipeModel, PipeNode>
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -110,20 +108,34 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // 2D water cup nodes addition and removal
-    this.waterCupMap = new Map<WaterCup2DModel, Array<PipeNode | WaterCup2DNode>>();
+    // TODO change back to foreach
+    this.waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     for ( let i = 0; i < model.waterCups.length; i += 1 ) {
-      this.addWaterCupNode( model.waterCups[ i ], i );
+      this.addWaterCupNode( model.waterCups[ i ] );
     }
 
     model.waterCups.addItemAddedListener( waterCupModel => {
-      const index = model.waterCups.findIndex( waterCup => waterCup === waterCupModel );
-      this.addWaterCupNode( waterCupModel, index );
+      this.addWaterCupNode( waterCupModel );
     } );
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
-      const nodes = this.waterCupMap.get( waterCupModel )!;
-      nodes.forEach( node => this.removeChild( node ) );
+      const waterCupNode = this.waterCupMap.get( waterCupModel )!;
+      this.removeChild( waterCupNode );
       this.waterCupMap.delete( waterCupModel );
+    } );
+
+    // Pipe nodes addition and removal
+    this.pipeMap = new Map<PipeModel, PipeNode>();
+    model.pipes.addItemAddedListener( pipe => {
+      const pipeNode = new PipeNode( pipe, this.modelViewTransform );
+      this.pipeMap.set( pipe, pipeNode );
+      this.addChild( pipeNode );
+    } );
+
+    model.pipes.addItemRemovedListener( pipe => {
+      const pipeNode = this.pipeMap.get( pipe )!;
+      this.removeChild( pipeNode );
+      this.pipeMap.delete( pipe );
     } );
 
     //Predict Mean Line
@@ -138,15 +150,10 @@ class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
   // TODO: The water cups should be centered on the screen
   // TODO: After changes in LevelingOutModel with pipes observable array, we probably won't need index here any more
-  private addWaterCupNode( cupModel: WaterCup2DModel, index: number ): void {
+  private addWaterCupNode( cupModel: WaterCup2DModel ): void {
     const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
-    this.waterCupMap.set( cupModel, [ waterCupNode ] );
-    if ( index !== 0 ) {
-      const pipeNode = new PipeNode( new PipeModel(), this.modelViewTransform, waterCupNode.bottom, waterCupNode.x );
-      this.waterCupMap.get( cupModel )!.push( pipeNode );
-      this.addChild( pipeNode );
-    }
+    this.waterCupMap.set( cupModel, waterCupNode );
     this.addChild( waterCupNode );
   }
 }

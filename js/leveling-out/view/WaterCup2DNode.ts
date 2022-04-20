@@ -30,9 +30,10 @@ class WaterCup2DNode extends Node {
 
     super( options );
 
+    //TODO add cupWidth and cupHeight to global constants
+    const cupWidth = 50;
     const cupHeight = 100;
     const tickMarks = new TickMarksNode( cupHeight, { visibleProperty: isShowingTickMarksProperty } );
-    const cupWidth = 50;
 
     // 0 is empty, 1 is full
     const y = Utils.linear( 0, 1, cupHeight, 0, waterCup.waterLevelProperty.value );
@@ -53,7 +54,7 @@ class WaterCup2DNode extends Node {
     this.addChild( showMeanLine );
 
     this.x = waterCup.xProperty.value;
-    this.bottom = modelViewTransform.modelToViewY( 0 );
+    this.y = modelViewTransform.modelToViewY( 0 ) - cupHeight;
   }
 }
 
