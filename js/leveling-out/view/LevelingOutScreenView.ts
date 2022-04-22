@@ -138,7 +138,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     //Predict Mean Line
-    const predictMeanLine = new PredictMeanNode( model, this.modelViewTransform, { visibleProperty: model.isShowingPredictMeanProperty } );
+    const predictMeanLine = new PredictMeanNode( model, this.modelViewTransform,
+      { visibleProperty: model.isShowingPredictMeanProperty, tandem: options.tandem.createTandem( 'predictMeanLine' ) } );
 
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );

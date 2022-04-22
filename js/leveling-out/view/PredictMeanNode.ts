@@ -15,7 +15,7 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {};
-type PredictMeanNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty'>
+type PredictMeanNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>
 
 class PredictMeanNode extends Node {
   constructor( model: LevelingOutModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
@@ -46,7 +46,8 @@ class PredictMeanNode extends Node {
 
     this.addInputListener( new DragListener( {
       positionProperty: predictMeanPositionProperty,
-      transform: modelViewTransform
+      transform: modelViewTransform,
+      tandem: options.tandem.createTandem( 'predictMeanDragListener' )
     } ) );
 
     this.addChild( predictMeanLine );
