@@ -35,6 +35,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   private readonly pipeMap: Map<PipeModel, PipeNode>
   // This also includes the pipes that connect the cups
   private readonly waterCup2DLayerNode = new Node();
+  private readonly cupsAreaCenter: number;
   readonly model: LevelingOutModel;
   readonly modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
 
@@ -83,6 +84,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       }
     );
 
+    this.cupsAreaCenter = this.layoutBounds.centerX - levelingOutOptionsCheckboxGroup.width;
 
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty,
@@ -117,6 +119,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     model.waterCups.addItemRemovedListener( waterCupModel => {
       const waterCupNode = this.waterCupMap.get( waterCupModel )!;
       this.waterCup2DLayerNode.removeChild( waterCupNode );
+      this.waterCup2DLayerNode.centerX = this.cupsAreaCenter;
       this.waterCupMap.delete( waterCupModel );
     } );
 
@@ -150,6 +153,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
     this.waterCupMap.set( cupModel, waterCupNode );
     this.waterCup2DLayerNode.addChild( waterCupNode );
+    this.waterCup2DLayerNode.centerX = this.cupsAreaCenter;
   }
 }
 
