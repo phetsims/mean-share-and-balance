@@ -33,10 +33,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly dragRange = new Range( 0, 1 );
   readonly waterCups = createObservableArray<WaterCup2DModel>();
   readonly pipes = createObservableArray<PipeModel>();
-
-  // TODO: Add a pipeModel observable array
-
-  // TODO: maybe name this meanPredictionProperty?
   readonly meanPredictionProperty: NumberProperty;
   //TODO based on mean of cup water levels
   readonly meanProperty = new NumberProperty( 0.5 );
@@ -74,7 +70,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  public override reset(): void {
+  override reset(): void {
     super.reset();
     this.isShowingPredictMeanProperty.reset();
     this.isShowingMeanProperty.reset();

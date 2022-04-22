@@ -48,10 +48,8 @@ export default class WaterCup2DNode extends Node {
 
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
-
-    // TODO: Maybe the tick marks should be front of the tick marks
-    this.addChild( tickMarks );
     this.addChild( showMeanLine );
+    this.addChild( tickMarks );
 
     this.x = waterCup.xProperty.value;
     this.y = modelViewTransform.modelToViewY( 0 ) - cupHeight;

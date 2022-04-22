@@ -10,7 +10,7 @@
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import { VBox, Text } from '../../../../scenery/js/imports.js';
+import { VBox, Text, Node } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
@@ -33,6 +33,8 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
   private readonly waterCupMap: Map<WaterCup2DModel, WaterCup2DNode>;
   private readonly pipeMap: Map<PipeModel, PipeNode>
+  // This also includes the pipes that connect the cups
+  private readonly waterCup2DLayerNode = new Node();
   readonly model: LevelingOutModel;
   readonly modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
 
@@ -114,7 +116,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
       const waterCupNode = this.waterCupMap.get( waterCupModel )!;
-      this.removeChild( waterCupNode );
+      this.waterCup2DLayerNode.removeChild( waterCupNode );
       this.waterCupMap.delete( waterCupModel );
     } );
 
@@ -123,12 +125,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     model.pipes.addItemAddedListener( pipe => {
       const pipeNode = new PipeNode( pipe, this.modelViewTransform );
       this.pipeMap.set( pipe, pipeNode );
-      this.addChild( pipeNode );
+      this.waterCup2DLayerNode.addChild( pipeNode );
     } );
 
     model.pipes.addItemRemovedListener( pipe => {
       const pipeNode = this.pipeMap.get( pipe )!;
-      this.removeChild( pipeNode );
+      this.waterCup2DLayerNode.removeChild( pipeNode );
       this.pipeMap.delete( pipe );
     } );
 
@@ -138,7 +140,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
-    //TODO fix z-index by adding something like `this.waterNodeLayer = new Node()`.  Don't forget to import Node
+    this.addChild( this.waterCup2DLayerNode );
     this.addChild( predictMeanLine );
   }
 
@@ -147,7 +149,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
     this.waterCupMap.set( cupModel, waterCupNode );
-    this.addChild( waterCupNode );
+    this.waterCup2DLayerNode.addChild( waterCupNode );
   }
 }
 
