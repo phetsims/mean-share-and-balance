@@ -35,7 +35,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   private readonly pipeMap: Map<PipeModel, PipeNode>
   // This also includes the pipes that connect the cups
   private readonly waterCup2DLayerNode = new Node();
-  private readonly cupsAreaCenter: number;
+  private readonly cupsAreaCenterX: number;
+  private readonly predictMeanLine: PredictMeanNode;
   readonly model: LevelingOutModel;
   readonly modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
 
@@ -84,8 +85,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       }
     );
 
-    this.cupsAreaCenter = this.layoutBounds.centerX - levelingOutOptionsCheckboxGroup.width;
-
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty,
       new Property( model.levelingOutRange ), {
@@ -106,7 +105,16 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       bottom: this.layoutBounds.bottom
     } );
 
+    //Predict Mean Line
+    this.predictMeanLine = new PredictMeanNode( model, this.modelViewTransform, {
+        visibleProperty: model.isShowingPredictMeanProperty,
+        tandem: options.tandem.createTandem( 'predictMeanLine' )
+      }
+    );
+
     // 2D water cup nodes addition and removal
+    this.cupsAreaCenterX = this.layoutBounds.centerX - levelingOutOptionsCheckboxGroup.width;
+
     this.waterCupMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     model.waterCups.forEach( waterCup => {
       this.addWaterCupNode( waterCup );
@@ -119,7 +127,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     model.waterCups.addItemRemovedListener( waterCupModel => {
       const waterCupNode = this.waterCupMap.get( waterCupModel )!;
       this.waterCup2DLayerNode.removeChild( waterCupNode );
-      this.waterCup2DLayerNode.centerX = this.cupsAreaCenter;
+      this.waterCup2DLayerNode.centerX = this.cupsAreaCenterX;
+      this.predictMeanLine.x = this.waterCup2DLayerNode.x;
       this.waterCupMap.delete( waterCupModel );
     } );
 
@@ -137,15 +146,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       this.pipeMap.delete( pipe );
     } );
 
-    //Predict Mean Line
-    const predictMeanLine = new PredictMeanNode( model, this.modelViewTransform,
-      { visibleProperty: model.isShowingPredictMeanProperty, tandem: options.tandem.createTandem( 'predictMeanLine' ) } );
-
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( this.waterCup2DLayerNode );
-    this.addChild( predictMeanLine );
+    this.addChild( this.predictMeanLine );
   }
 
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
@@ -153,7 +158,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
     this.waterCupMap.set( cupModel, waterCupNode );
     this.waterCup2DLayerNode.addChild( waterCupNode );
-    this.waterCup2DLayerNode.centerX = this.cupsAreaCenter;
+    this.waterCup2DLayerNode.centerX = this.cupsAreaCenterX;
+    this.predictMeanLine.x = this.waterCup2DLayerNode.x;
   }
 }
 

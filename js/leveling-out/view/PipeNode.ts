@@ -50,14 +50,14 @@ export default class PipeNode extends Node {
     this.y = modelViewTransform.modelToViewY( 0 ) - pipeWidth;
   }
 
-  createCircle( radius: number, rectangleWidth: number ): Shape {
+  private createCircle( radius: number, rectangleWidth: number ): Shape {
     const circle = Shape.circle( radius );
     const rectangle = Shape.rectangle( -rectangleWidth / 2, -radius - 5, rectangleWidth, ( radius + 5 ) * 2 );
 
     return circle.shapeDifference( rectangle );
   }
 
-  pipeClipArea( bounds: Bounds2, radius: number ): Shape {
+  private pipeClipArea( bounds: Bounds2, radius: number ): Shape {
     const clipAreaRectangle = Shape.bounds( bounds );
     const clipAreaCircle = Shape.circle( bounds.center, radius );
 
