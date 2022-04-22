@@ -9,9 +9,11 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import { Circle, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
+import { Shape } from '../../../../kite/js/imports.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 type SelfOptions = {};
 
@@ -26,24 +28,40 @@ export default class PipeNode extends Node {
 
     super( options );
 
+    const strokeWidth = 1;
     const pipeLength = 50;
-    const pipeHeight = 5;
-    const pipeCenter = new Vector2( pipeLength / 2, pipeHeight / 2 );
-    const pipeRectangle = new Rectangle( 0, 0, pipeLength, pipeHeight, { stroke: 'black', fill: '#51CEF4' } );
+    const pipeWidth = 5;
+    const pipeCenter = new Vector2( pipeLength / 2, pipeWidth / 2 );
+    const pipeRectangle = new Rectangle( 0, 0, pipeLength, pipeWidth, { stroke: 'black', fill: '#51CEF4' } );
 
     const valveRadius = 10;
-    const valveCircle = new Circle( valveRadius, { stroke: 'black', fill: 'grey' } );
-    const valveRectangle = new Rectangle( 0, 0, pipeHeight, valveRadius * 2, { fill: 'white' } );
-
-    valveRectangle.center = pipeCenter;
-    valveCircle.center = pipeCenter;
+    const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + strokeWidth * 2 ), { fill: 'grey' } );
+    const outerValve = new Path( this.createCircle( valveRadius + strokeWidth, pipeWidth ), { fill: 'black' } );
+    const valveNode = new Node( { children: [ outerValve, innerValve ] } );
+    valveNode.center = pipeCenter;
+    // To turn off set clipArea to null
+    // Change valve node rotation to Math.PI/2
+    pipeRectangle.clipArea = this.pipeClipArea( pipeRectangle.localBounds, valveRadius );
 
     this.addChild( pipeRectangle );
-    this.addChild( valveCircle );
-    this.addChild( valveRectangle );
+    this.addChild( valveNode );
     //TODO grab cupWidth from global Constant
     this.x = pipeModel.xProperty.value + 50;
-    this.y = modelViewTransform.modelToViewY( 0 ) - pipeHeight;
+    this.y = modelViewTransform.modelToViewY( 0 ) - pipeWidth;
+  }
+
+  createCircle( radius: number, rectangleWidth: number ): Shape {
+    const circle = Shape.circle( radius );
+    const rectangle = Shape.rectangle( -rectangleWidth / 2, -radius - 5, rectangleWidth, ( radius + 5 ) * 2 );
+
+    return circle.shapeDifference( rectangle );
+  }
+
+  pipeClipArea( bounds: Bounds2, radius: number ): Shape {
+    const clipAreaRectangle = Shape.bounds( bounds );
+    const clipAreaCircle = Shape.circle( bounds.center, radius );
+
+    return clipAreaRectangle.shapeDifference( clipAreaCircle );
   }
 
 }
