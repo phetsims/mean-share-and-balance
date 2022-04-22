@@ -48,8 +48,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.levelingOutRange = new Range( 1, 7 );
 
     // The sim starts with one water cup
-    // TODO: There will probably be other code that centers the cups when the number of cups changes
-    this.waterCups.push( new WaterCup2DModel( { x: 50 } ) );
+    this.waterCups.push( new WaterCup2DModel() );
 
     this.numberOfCupsProperty.link( value => {
       while ( value > this.waterCups.length ) {

@@ -13,5 +13,8 @@
   },
   "numberOfCups": {
     "value": "Number of Cups"
+  },
+  "levelingOutQuestion": {
+    "value": "What is the average amount of water per cup?"
   }
 }

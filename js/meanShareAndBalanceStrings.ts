@@ -14,7 +14,8 @@ type StringsType = {
   'predictMean': string,
   'showMean': string,
   'tickMarks': string,
-  'numberOfCups': string
+  'numberOfCups': string,
+  'levelingOutQuestion': string
 };
 
 const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

@@ -58,7 +58,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
       tandem: options.tandem.createTandem( 'questionBar' )
-    }, { labelText: 'What is the average amount of water per cup?' } ) );
+    }, { labelText: meanShareAndBalanceStrings.levelingOutQuestion, barFill: '#2496D6' } ) );
 
     //Checkbox Group
     const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
@@ -148,7 +148,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     this.addChild( predictMeanLine );
   }
 
-  // TODO: The water cups should be centered on the screen
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
     const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );

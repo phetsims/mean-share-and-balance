@@ -21,8 +21,10 @@ export default class WaterCup2DModel {
   readonly y = 200;
   readonly waterLevelProperty: NumberProperty;
 
-  constructor( providedOptions: WaterCup2DModelOptions ) {
-    const options = optionize<WaterCup2DModelOptions, SelfOptions>()( {}, providedOptions );
+  constructor( providedOptions?: WaterCup2DModelOptions ) {
+    const options = optionize<WaterCup2DModelOptions, SelfOptions>()( {
+      x: 0
+    }, providedOptions );
 
     this.xProperty = new NumberProperty( options.x );
     this.waterLevelProperty = new NumberProperty( 0.5, {
