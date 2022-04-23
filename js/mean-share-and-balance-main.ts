@@ -7,7 +7,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import Sim from '../../joist/js/Sim.js';
+import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import meanShareAndBalanceStrings from './meanShareAndBalanceStrings.js';
@@ -15,7 +15,7 @@ import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
 
 const meanShareAndBalanceTitleString = meanShareAndBalanceStrings[ 'mean-share-and-balance' ].title;
 
-const simOptions = {
+const simOptions: SimOptions = {
 
   //TODO fill in credits, all of these fields are optional, see joist.CreditsNode
   credits: {
