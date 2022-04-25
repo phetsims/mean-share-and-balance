@@ -25,6 +25,8 @@ import PredictMeanNode from './PredictMeanNode.js';
 import merge from '../../../../phet-core/js/merge.js';
 import PipeNode from './PipeNode.js';
 import PipeModel from '../model/PipeModel.js';
+import WaterCup3DNode from './WaterCup3DNode.js';
+import WaterCup3DModel from '../model/WaterCup3DModel.js';
 
 type SelfOptions = {};
 
@@ -35,6 +37,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   private readonly pipeMap: Map<PipeModel, PipeNode>
   // This also includes the pipes that connect the cups
   private readonly waterCup2DLayerNode = new Node();
+  // This also includes the draggable triangle for water level
+  private readonly waterCup3DLayerNode = new Node();
   private readonly cupsAreaCenterX: number;
   private readonly predictMeanLine: PredictMeanNode;
   readonly model: LevelingOutModel;
@@ -146,10 +150,16 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       this.pipeMap.delete( pipe );
     } );
 
+    // 3D water cups
+    const waterCup3DNode = new WaterCup3DNode( new WaterCup3DModel(), this.modelViewTransform );
+    this.waterCup3DLayerNode.addChild( waterCup3DNode );
+    this.waterCup3DLayerNode.centerX = this.cupsAreaCenterX;
+
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( this.waterCup2DLayerNode );
+    this.addChild( this.waterCup3DLayerNode );
     this.addChild( this.predictMeanLine );
   }
 
