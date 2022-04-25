@@ -42,7 +42,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   private readonly cupsAreaCenterX: number;
   private readonly predictMeanLine: PredictMeanNode;
   readonly model: LevelingOutModel;
-  readonly modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
+  readonly modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
+  readonly modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 500 ), 100 );
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -110,7 +111,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     //Predict Mean Line
-    this.predictMeanLine = new PredictMeanNode( model, this.modelViewTransform, {
+    this.predictMeanLine = new PredictMeanNode( model, this.modelViewTransform2DCups, {
         visibleProperty: model.isShowingPredictMeanProperty,
         tandem: options.tandem.createTandem( 'predictMeanLine' )
       }
@@ -139,7 +140,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // Pipe nodes addition and removal
     this.pipeMap = new Map<PipeModel, PipeNode>();
     model.pipes.addItemAddedListener( pipe => {
-      const pipeNode = new PipeNode( pipe, this.modelViewTransform );
+      const pipeNode = new PipeNode( pipe, this.modelViewTransform2DCups );
       this.pipeMap.set( pipe, pipeNode );
       this.waterCup2DLayerNode.addChild( pipeNode );
     } );
@@ -151,7 +152,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     // 3D water cups
-    const waterCup3DNode = new WaterCup3DNode( new WaterCup3DModel(), this.modelViewTransform );
+    const waterCup3DNode = new WaterCup3DNode( new WaterCup3DModel(), this.modelViewTransform3DCups );
     this.waterCup3DLayerNode.addChild( waterCup3DNode );
     this.waterCup3DLayerNode.centerX = this.cupsAreaCenterX;
 
@@ -164,7 +165,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   }
 
   private addWaterCupNode( cupModel: WaterCup2DModel ): void {
-    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform, this.model.meanProperty,
+    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform2DCups, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
     this.waterCupMap.set( cupModel, waterCupNode );
     this.waterCup2DLayerNode.addChild( waterCupNode );

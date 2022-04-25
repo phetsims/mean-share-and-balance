@@ -8,6 +8,7 @@
 
 import { Shape } from '../../../../kite/js/imports.js';
 import { LinearGradient, Node, Path } from '../../../../scenery/js/imports.js';
+import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup3DModel from '../model/WaterCup3DModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -18,7 +19,7 @@ export default class WaterCup3DNode extends Node {
     super();
 
     const cupHeight = 100;
-    const xRadius = 40;
+    const xRadius = 30;
     const yRadius = 12;
     const centerTop = -cupHeight / 2;
     const centerBottom = cupHeight / 2;
@@ -73,9 +74,17 @@ export default class WaterCup3DNode extends Node {
       pickable: false
     } );
 
-    const waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty.value, modelViewTransform );
+    // Adjustable water level triangle
+    const dragRange = new Range( -cupHeight / 2, cupHeight / 2 );
 
-    this.y = cup3DModel.y;
+    const waterLevelTriangle = new WaterLevelTriangleNode(
+      cup3DModel.waterLevelProperty,
+      xRadius,
+      dragRange
+    );
+
+    // this.y = cup3DModel.y;
+    this.y = modelViewTransform.modelToViewY( 0 ) - cupHeight;
 
     this.addChild( cupBack );
     this.addChild( cupBottom );

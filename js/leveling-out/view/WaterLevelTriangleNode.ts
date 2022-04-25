@@ -7,15 +7,28 @@
  */
 
 import { Shape } from '../../../../kite/js/imports.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, Path } from '../../../../scenery/js/imports.js';
+import { DragListener, Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
+import Range from '../../../../dot/js/Range.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import Vector2Property from '../../../../dot/js/Vector2Property.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+
+type SelfOptions = {};
+type WaterLevelTriangleNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterLevelTriangleNode extends Node {
-  constructor( waterLevel: number, modelViewTransform: ModelViewTransform2 ) {
-    super();
+  constructor( waterLevelProperty: NumberProperty,
+               xRadius: number, dragRange: Range,
+               providedOptions?: WaterLevelTriangleNodeOptions ) {
+    const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
+        cursor: 'pointer'
+      },
+      providedOptions );
+    super( options );
 
-    const sideLength = 10;
+    const sideLength = 15;
 
     const triangleShape = new Shape()
       .moveTo( 0, 0 )
@@ -24,9 +37,25 @@ export default class WaterLevelTriangleNode extends Node {
       .close();
 
     const waterLevelTriangle = new Path( triangleShape, {
-      fill: 'green',
+      fill: '#51CEF4',
       stroke: 'black'
     } );
+
+    // set at edge of water cup
+    this.x = xRadius;
+
+    const adjustWaterLevelProperty = new Vector2Property( new Vector2( 0, waterLevelProperty.value ) );
+    adjustWaterLevelProperty.link( adjustWaterLevel => {
+      waterLevelProperty.set( dragRange.constrainValue( adjustWaterLevel.y ) );
+    } );
+
+    waterLevelProperty.link( waterLevel => {
+      this.centerY = waterLevel;
+    } );
+
+    this.addInputListener( new DragListener( {
+      positionProperty: adjustWaterLevelProperty
+    } ) );
 
     this.addChild( waterLevelTriangle );
   }

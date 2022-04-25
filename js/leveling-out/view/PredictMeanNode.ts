@@ -18,7 +18,7 @@ type SelfOptions = {};
 type PredictMeanNodeOptions = SelfOptions & PickRequired<NodeOptions,
   'visibleProperty' | 'tandem'>
 
-class PredictMeanNode extends Node {
+export default class PredictMeanNode extends Node {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
 
@@ -88,4 +88,3 @@ class PredictMeanNode extends Node {
 }
 
 meanShareAndBalance.register( 'PredictMeanNode', PredictMeanNode );
-export default PredictMeanNode;

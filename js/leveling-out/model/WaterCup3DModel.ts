@@ -7,7 +7,7 @@
  */
 
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Range from '../../../../dot/js/Range.js';
+// import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
@@ -27,9 +27,8 @@ export default class WaterCup3DModel {
     }, providedOptions );
 
     this.xProperty = new NumberProperty( options.x );
-    this.waterLevelProperty = new NumberProperty( 0.5, {
-      range: new Range( 0, 1 )
-    } );
+    //TODO add range based on 0 to 1
+    this.waterLevelProperty = new NumberProperty( 0.5 );
   }
 }
 
