@@ -38,12 +38,12 @@ class PredictMeanNode extends Node {
       lineWidth: 2
     } );
 
-    this.predictMeanLine.mouseArea = this.predictMeanLine.bounds.dilated( dilation );
-    this.predictMeanLine.touchArea = this.predictMeanLine.bounds.dilated( dilation );
+    this.predictMeanLine.mouseArea = this.predictMeanLine.localBounds.dilated( dilation );
+    this.predictMeanLine.touchArea = this.predictMeanLine.localBounds.dilated( dilation );
 
-    this.predictMeanHandle = new Circle( 5, { center: this.predictMeanLine.bounds.rightCenter, fill: 'purple' } );
-    this.predictMeanHandle.mouseArea = this.predictMeanLine.bounds.dilated( dilation );
-    this.predictMeanHandle.touchArea = this.predictMeanLine.bounds.dilated( dilation );
+    this.predictMeanHandle = new Circle( 5, { center: this.predictMeanLine.localBounds.rightCenter, fill: 'purple' } );
+    this.predictMeanHandle.mouseArea = this.predictMeanHandle.localBounds.dilated( dilation );
+    this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( dilation );
 
     // track predictMeanLine drag position
     const predictMeanPositionProperty = new Vector2Property( modelViewTransform.modelToViewXY( 0, model.meanPredictionProperty.value ) );
@@ -77,12 +77,12 @@ class PredictMeanNode extends Node {
 
   private updateLine( lineEnd: number, dilation: number ): void {
     this.predictMeanLine.x2 = lineEnd;
-    this.predictMeanLine.mouseArea = this.predictMeanLine.bounds.dilated( dilation );
-    this.predictMeanLine.touchArea = this.predictMeanLine.bounds.dilated( dilation );
+    this.predictMeanLine.mouseArea = this.predictMeanLine.localBounds.dilated( dilation );
+    this.predictMeanLine.touchArea = this.predictMeanLine.localBounds.dilated( dilation );
 
     this.predictMeanHandle.center = this.predictMeanLine.bounds.rightCenter;
-    this.predictMeanHandle.mouseArea = this.predictMeanLine.bounds.dilated( dilation );
-    this.predictMeanHandle.touchArea = this.predictMeanLine.bounds.dilated( dilation );
+    this.predictMeanHandle.mouseArea = this.predictMeanHandle.localBounds.dilated( dilation );
+    this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( dilation );
   }
 
 }

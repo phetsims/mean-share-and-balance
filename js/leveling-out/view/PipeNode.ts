@@ -9,7 +9,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import { Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import { Shape } from '../../../../kite/js/imports.js';
@@ -19,6 +19,7 @@ type SelfOptions = {};
 
 type PipeNodeOptions = SelfOptions & NodeOptions;
 
+//TODO add accessibility for screen reader.
 export default class PipeNode extends Node {
 
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
@@ -28,20 +29,44 @@ export default class PipeNode extends Node {
 
     super( options );
 
+    const dilation = 10;
     const strokeWidth = 1;
     const pipeLength = 50;
     const pipeWidth = 5;
     const pipeCenter = new Vector2( pipeLength / 2, pipeWidth / 2 );
     const pipeRectangle = new Rectangle( 0, 0, pipeLength, pipeWidth, { stroke: 'black', fill: '#51CEF4' } );
 
+    //Valve drawing
     const valveRadius = 10;
     const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + strokeWidth * 2 ), { fill: 'grey' } );
     const outerValve = new Path( this.createCircle( valveRadius + strokeWidth, pipeWidth ), { fill: 'black' } );
-    const valveNode = new Node( { children: [ outerValve, innerValve ] } );
+    const valveNode = new Node( { children: [ outerValve, innerValve ], cursor: 'pointer' } );
     valveNode.center = pipeCenter;
     // To turn off set clipArea to null
     // Change valve node rotation to Math.PI/2
-    pipeRectangle.clipArea = this.pipeClipArea( pipeRectangle.localBounds, valveRadius );
+    const pipeClipArea = this.pipeClipArea( pipeRectangle.localBounds, valveRadius );
+    pipeRectangle.clipArea = pipeClipArea;
+
+    valveNode.mouseArea = valveNode.localBounds.dilated( dilation );
+    valveNode.touchArea = valveNode.localBounds.dilated( dilation );
+
+    //Valve rotation event listener
+    valveNode.addInputListener( new FireListener( {
+      fire: () => {
+        pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
+      }
+    } ) );
+
+    pipeModel.isOpenProperty.link( isOpen => {
+      if ( isOpen ) {
+        valveNode.rotation = Math.PI / 2;
+        pipeRectangle.clipArea = null;
+      }
+      else {
+        valveNode.rotation = 0;
+        pipeRectangle.clipArea = pipeClipArea;
+      }
+    } );
 
     this.addChild( pipeRectangle );
     this.addChild( valveNode );
