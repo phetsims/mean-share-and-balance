@@ -21,13 +21,15 @@ type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 export default class WaterCup3DNode extends Node {
   constructor( cup3DModel: WaterCup3DModel, modelViewTransform: ModelViewTransform2,
                providedOptions?: WaterCup3DNodeOptions ) {
+    const cupHeight = 100;
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default options
+      y: modelViewTransform.modelToViewY( 0 ) - cupHeight
     }, providedOptions );
     super();
 
-    const cupHeight = 100;
+
     const xRadius = 30;
     const yRadius = 12;
     const centerTop = -cupHeight / 2;
@@ -95,14 +97,12 @@ export default class WaterCup3DNode extends Node {
     // Adjustable water level triangle
     const dragRange = new Range( -cupHeight / 2, cupHeight / 2 );
 
+    //TODO ask Sam about how we want phet-io instrumentation.
     const waterLevelTriangle = new WaterLevelTriangleNode(
       cup3DModel.waterLevelProperty,
       dragRange,
-      { tandem: options.tandem, y: cupHeight / 2, left: xRadius }
+      { tandem: options.tandem.createTandem( 'waterLevelTriangle' ), y: cupHeight / 2, left: xRadius }
     );
-
-    // this.y = cup3DModel.y;
-    this.y = modelViewTransform.modelToViewY( 0 ) - cupHeight;
 
     this.addChild( cupBack );
     this.addChild( cupBottom );
@@ -110,6 +110,8 @@ export default class WaterCup3DNode extends Node {
     this.addChild( waterTop );
     this.addChild( cupFront );
     this.addChild( waterLevelTriangle );
+
+    this.mutate( options );
   }
 }
 
