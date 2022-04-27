@@ -8,25 +8,26 @@
 
 import { Shape } from '../../../../kite/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
+import VSlider from '../../../../sun/js/VSlider.js';
+import SliderTrack from '../../../../sun/js/SliderTrack.js';
+import Matrix3 from '../../../../dot/js/Matrix3.js';
 
 type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterLevelTriangleNode extends Node {
   constructor( waterLevelProperty: NumberProperty,
-               xRadius: number, dragRange: Range,
+               dragRange: Range,
                providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'
       },
       providedOptions );
-    super( options );
+    super();
 
     const sideLength = 15;
 
@@ -34,30 +35,22 @@ export default class WaterLevelTriangleNode extends Node {
       .moveTo( 0, 0 )
       .lineTo( Math.cos( Math.PI / 6 ) * sideLength, -Math.sin( Math.PI / 6 ) * sideLength )
       .lineTo( Math.cos( Math.PI / 6 ) * sideLength, Math.sin( Math.PI / 6 ) * sideLength )
-      .close();
+      .close()
+      .transformed( Matrix3.rotation2( Math.PI / 2 ) );
 
     const waterLevelTriangle = new Path( triangleShape, {
       fill: '#51CEF4',
       stroke: 'black'
     } );
 
-    // set at edge of water cup
-    this.x = xRadius;
+    const invisibleTrack = new SliderTrack( new Node(), waterLevelProperty, new Range( 0, 1 ) );
 
-    const adjustWaterLevelProperty = new Vector2Property( new Vector2( 0, waterLevelProperty.value ) );
-    adjustWaterLevelProperty.link( adjustWaterLevel => {
-      waterLevelProperty.set( dragRange.constrainValue( adjustWaterLevel.y ) );
-    } );
+    const slider = new VSlider( waterLevelProperty, new Range( 0, 1 ),
+      { thumbNode: waterLevelTriangle, trackNode: invisibleTrack } );
 
-    waterLevelProperty.link( waterLevel => {
-      this.centerY = waterLevel;
-    } );
+    this.addChild( slider );
 
-    this.addInputListener( new DragListener( {
-      positionProperty: adjustWaterLevelProperty
-    } ) );
-
-    this.addChild( waterLevelTriangle );
+    this.mutate( options );
   }
 }
 

@@ -152,7 +152,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     // 3D water cups
-    const waterCup3DNode = new WaterCup3DNode( new WaterCup3DModel(), this.modelViewTransform3DCups );
+    const waterCup3DNode = new WaterCup3DNode( new WaterCup3DModel(), this.modelViewTransform3DCups, { tandem: options.tandem } );
     this.waterCup3DLayerNode.addChild( waterCup3DNode );
     this.waterCup3DLayerNode.centerX = this.cupsAreaCenterX;
 
