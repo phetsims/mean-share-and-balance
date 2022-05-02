@@ -11,6 +11,7 @@ import WaterCup3DModel from './WaterCup3DModel.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   x: number;
@@ -33,7 +34,9 @@ export default class WaterCupModel {
       range: new Range( 0, 1 )
     } );
 
-    this.waterCup2DChild = new WaterCup2DModel( this.waterLevelProperty, this.xProperty );
-    this.waterCup3DChild = new WaterCup3DModel( this.waterLevelProperty, this.xProperty );
+    this.waterCup2DChild = new WaterCup2DModel( this );
+    this.waterCup3DChild = new WaterCup3DModel( this );
   }
 }
+
+meanShareAndBalance.register( 'WaterCupModel', WaterCupModel );

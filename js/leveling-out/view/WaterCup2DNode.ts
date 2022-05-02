@@ -18,27 +18,34 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = {};
 
-type WaterCup2DNodeOptions = SelfOptions & NodeOptions;
+type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
 
 export default class WaterCup2DNode extends Node {
-  constructor( waterCup: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
+  constructor( cup2DModel: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
-               providedOptions?: WaterCup2DNodeOptions ) {
-    const options = optionize<WaterCup2DNodeOptions, SelfOptions, NodeOptions>()( {
-      //TODO add default values for options
-    }, providedOptions );
-
-    super( options );
-
+               providedOptions?: cup2DModel2DNodeOptions ) {
     //TODO add cupWidth and cupHeight to global constants
     const cupWidth = 50;
     const cupHeight = 100;
+
+    const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
+      y: modelViewTransform.modelToViewY( 0 ) - cupHeight,
+      left: cup2DModel.parent.xProperty.value
+    }, providedOptions );
+
+    super();
+
     const tickMarks = new TickMarksNode( cupHeight, { visibleProperty: isShowingTickMarksProperty } );
 
     // 0 is empty, 1 is full
-    const y = Utils.linear( 0, 1, cupHeight, 0, waterCup.waterLevelProperty.value );
+    const y = Utils.linear( 0, 1, cupHeight, 0, cup2DModel.parent.waterLevelProperty.value );
     const waterCupRectangle = new Rectangle( 0, 0, cupWidth, cupHeight, { stroke: 'black' } );
-    const waterLevelRectangle = new Rectangle( 0, y, cupWidth, cupHeight * waterCup.waterLevelProperty.value, { fill: '#51CEF4' } );
+    const waterLevelRectangle = new Rectangle( 0, y, cupWidth, cupHeight * cup2DModel.parent.waterLevelProperty.value, { fill: '#51CEF4' } );
+
+    cup2DModel.parent.waterLevelProperty.link( waterLevel => {
+      waterLevelRectangle.setRectHeightFromBottom( cupHeight * waterLevel );
+    } );
+
 
     const showMeanLine = new Line( 0, cupHeight * meanProperty.value, cupWidth, cupHeight * meanProperty.value, {
       stroke: 'red',
@@ -51,8 +58,7 @@ export default class WaterCup2DNode extends Node {
     this.addChild( showMeanLine );
     this.addChild( tickMarks );
 
-    this.x = waterCup.xProperty.value;
-    this.y = modelViewTransform.modelToViewY( 0 ) - cupHeight;
+    this.mutate( options );
   }
 }
 

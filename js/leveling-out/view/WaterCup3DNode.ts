@@ -25,7 +25,8 @@ export default class WaterCup3DNode extends Node {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default options
-      y: modelViewTransform.modelToViewY( 0 ) - cupHeight
+      y: modelViewTransform.modelToViewY( 0 ) - cupHeight,
+      left: cup3DModel.parent.xProperty.value
     }, providedOptions );
     super();
 
@@ -64,7 +65,7 @@ export default class WaterCup3DNode extends Node {
       pickable: false
     } );
 
-    cup3DModel.waterLevelProperty.link( waterLevel => {
+    cup3DModel.parent.waterLevelProperty.link( waterLevel => {
       const centerLiquidY = centerBottom - cupHeight * waterLevel;
       const waterTopShape = new Shape()
         .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI * 2, false )
@@ -99,7 +100,7 @@ export default class WaterCup3DNode extends Node {
 
     //TODO ask Sam about how we want phet-io instrumentation.
     const waterLevelTriangle = new WaterLevelTriangleNode(
-      cup3DModel.waterLevelProperty,
+      cup3DModel.parent.waterLevelProperty,
       dragRange,
       { tandem: options.tandem.createTandem( 'waterLevelTriangle' ), y: cupHeight / 2, left: xRadius }
     );

@@ -36,10 +36,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   private readonly waterCup2DMap: Map<WaterCup2DModel, WaterCup2DNode>;
   private readonly waterCup3DMap: Map<WaterCup3DModel, WaterCup3DNode>;
   private readonly pipeMap: Map<PipeModel, PipeNode>
-  // This also includes the pipes that connect the cups
+  // This also includes the pipes that connect the 2D cups as well as the draggable water level triangle
   private readonly waterCupLayerNode = new Node();
-  // This also includes the draggable triangle for water level
-  private readonly waterCup3DLayerNode = new Node();
   private readonly cupsAreaCenterX: number;
   private readonly predictMeanLine: PredictMeanNode;
   readonly model: LevelingOutModel;
@@ -91,6 +89,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       }
     );
 
+    //Number Picker
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty,
       new Property( model.levelingOutRange ), {
@@ -124,19 +123,25 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     this.waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     this.waterCup3DMap = new Map< WaterCup3DModel, WaterCup3DNode>();
     model.waterCups.forEach( waterCup => {
-      this.addWaterCupNode( waterCup.waterCup2DChild );
+      this.addWaterCupNodes( waterCup.waterCup2DChild, waterCup.waterCup3DChild, options );
     } );
 
     model.waterCups.addItemAddedListener( waterCupModel => {
-      this.addWaterCupNode( waterCupModel.waterCup2DChild );
+      this.addWaterCupNodes( waterCupModel.waterCup2DChild, waterCupModel.waterCup3DChild, options );
     } );
 
     model.waterCups.addItemRemovedListener( waterCupModel => {
-      const waterCupNode = this.waterCup2DMap.get( waterCupModel.waterCup2DChild )!;
-      this.waterCupLayerNode.removeChild( waterCupNode );
+      const waterCup2DNode = this.waterCup2DMap.get( waterCupModel.waterCup2DChild )!;
+      const waterCup3DNode = this.waterCup3DMap.get( waterCupModel.waterCup3DChild )!;
+
+      this.waterCupLayerNode.removeChild( waterCup2DNode );
+      this.waterCupLayerNode.removeChild( waterCup3DNode );
+
       this.waterCupLayerNode.centerX = this.cupsAreaCenterX;
       this.predictMeanLine.x = this.waterCupLayerNode.x;
+
       this.waterCup2DMap.delete( waterCupModel.waterCup2DChild );
+      this.waterCup3DMap.delete( waterCupModel.waterCup3DChild );
     } );
 
     // Pipe nodes addition and removal
@@ -153,11 +158,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       this.pipeMap.delete( pipe );
     } );
 
-    // 3D water cups
-    // const waterCup3DNode = new WaterCup3DNode( new WaterCup3DModel(), this.modelViewTransform3DCups, { tandem: options.tandem.createTandem( 'waterCup3DNode' ) } );
-    // this.waterCup3DLayerNode.addChild( waterCup3DNode );
-    // this.waterCup3DLayerNode.centerX = this.cupsAreaCenterX;
-
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
@@ -165,11 +165,17 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     this.addChild( this.predictMeanLine );
   }
 
-  private addWaterCupNode( cupModel: WaterCup2DModel ): void {
-    const waterCupNode = new WaterCup2DNode( cupModel, this.modelViewTransform2DCups, this.model.meanProperty,
+  private addWaterCupNodes( cup2DModel: WaterCup2DModel, cup3DModel: WaterCup3DModel, options: LevelingOutScreenViewOptions ): void {
+    const waterCup2DNode = new WaterCup2DNode( cup2DModel, this.modelViewTransform2DCups, this.model.meanProperty,
       this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
-    this.waterCup2DMap.set( cupModel, waterCupNode );
-    this.waterCupLayerNode.addChild( waterCupNode );
+    const waterCup3DNode = new WaterCup3DNode( cup3DModel, this.modelViewTransform3DCups, { tandem: options.tandem.createTandem( 'waterCup3DNode' ) } );
+
+    this.waterCup2DMap.set( cup2DModel, waterCup2DNode );
+    this.waterCup3DMap.set( cup3DModel, waterCup3DNode );
+
+    this.waterCupLayerNode.addChild( waterCup2DNode );
+    this.waterCupLayerNode.addChild( waterCup3DNode );
+
     this.waterCupLayerNode.centerX = this.cupsAreaCenterX;
     this.predictMeanLine.x = this.waterCupLayerNode.x;
   }
