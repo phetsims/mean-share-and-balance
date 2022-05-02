@@ -12,10 +12,10 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
-import WaterCup2DModel from './WaterCup2DModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import PipeModel from './PipeModel.js';
+import WaterCupModel from './WaterCupModel.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -31,7 +31,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
   readonly dragRange = new Range( 0, 1 );
-  readonly waterCups = createObservableArray<WaterCup2DModel>();
+  readonly waterCups = createObservableArray<WaterCupModel>();
   readonly pipes = createObservableArray<PipeModel>();
   readonly meanPredictionProperty: NumberProperty;
   //TODO based on mean of cup water levels
@@ -48,14 +48,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.levelingOutRange = new Range( 1, 7 );
 
     // The sim starts with one water cup
-    this.waterCups.push( new WaterCup2DModel() );
+    this.waterCups.push( new WaterCupModel() );
 
     this.numberOfCupsProperty.link( value => {
       while ( value > this.waterCups.length ) {
         const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
-        this.waterCups.push( new WaterCup2DModel( { x: lastWaterCup.xProperty.value + 100 } ) );
+        this.waterCups.push( new WaterCupModel( { x: lastWaterCup.xProperty.value + 100 } ) );
         if ( value > 1 ) {
-          this.pipes.push( new PipeModel( lastWaterCup.xProperty, lastWaterCup.y ) );
+          this.pipes.push( new PipeModel( lastWaterCup.xProperty, lastWaterCup.waterCup2DChild.y ) );
         }
       }
       while ( value < this.waterCups.length ) {
@@ -69,7 +69,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  override reset(): void {
+override reset(): void {
     super.reset();
     this.isShowingPredictMeanProperty.reset();
     this.isShowingMeanProperty.reset();
