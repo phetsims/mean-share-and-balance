@@ -55,19 +55,15 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
         this.waterCups.push( new WaterCupModel( { x: lastWaterCup.xProperty.value + 100 } ) );
         if ( value > 1 ) {
-          // new pipe model to const
           const pipeModel = new PipeModel(
             lastWaterCup.xProperty,
-            lastWaterCup.waterCup2DChild.y,
-            this.waterCups.slice( -2 )
+            lastWaterCup.waterCup2DChild.y
           );
           pipeModel.isOpenProperty.link( isOpen => {
             if ( isOpen ) {
-              const index = this.pipes.findIndex( pipe => pipe === pipeModel );
-              this.levelWater( index );
+              this.levelWater();
             }
           } );
-          // create callback outside of loop and pass in
           this.pipes.push( pipeModel );
         }
       }
@@ -79,35 +75,43 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       }
 
       assert && assert( value === this.waterCups.length, `The value returned is: ${value}, but the waterCups length is: ${this.waterCups.length}.` );
+      if ( value > 0 ) {
+        assert && assert( this.waterCups.length - 1 === this.pipes.length, `The length of pipes is: ${this.pipes.length}, but should be one less the length of water cups or: ${this.waterCups.length - 1}.` );
+      }
     } );
   }
 
-  private levelWater( index: number ): void {
-    // remove duplicates
-    const affectedCups = new Set<WaterCupModel>( this.getAffectedCups( index ) );
-    // calculate mean
+  private levelWater(): void {
+    const affectedCups: Array<Set<WaterCupModel>> = [];
+    let cupsSet = new Set<WaterCupModel>();
+    // organize into sets of connected cups
+    this.pipes.forEach( ( pipe, index ) => {
+      if ( pipe.isOpenProperty.value ) {
+        cupsSet.add( this.waterCups[ index ] );
+        cupsSet.add( this.waterCups[ index + 1 ] );
+        if ( index === this.pipes.length - 1 ) {
+          affectedCups.push( cupsSet );
+        }
+      }
+      else if ( cupsSet.size > 1 ) {
+        affectedCups.push( cupsSet );
+        cupsSet = new Set<WaterCupModel>();
+      }
+    } );
+    // calculate and set mean
+    affectedCups.forEach( cupsSet => {
+      const waterMean = this.calculateMean( cupsSet );
+      cupsSet.forEach( cup => cup.waterLevelProperty.set( waterMean ) );
+    } );
+  }
+
+  private calculateMean( cups: Set<WaterCupModel> ): number {
     let totalWater = 0;
-    affectedCups.forEach( cup => {
+    cups.forEach( cup => {
       totalWater += cup.waterLevelProperty.value;
     } );
-    const waterMean = totalWater / affectedCups.size;
-
-    affectedCups.forEach( cup => cup.waterLevelProperty.set( waterMean ) );
+    return totalWater / cups.size;
   }
-
-  private getAffectedCups( index: number ): Array<WaterCupModel> {
-    const cups: Array<WaterCupModel> = [];
-    for ( const pipe of this.pipes.slice( index ) ) {
-      if ( pipe.isOpenProperty.value ) {
-        pipe.connectedCups.forEach( cup => cups.push( cup ) );
-      }
-      else {
-        return cups;
-      }
-    }
-    return cups;
-  }
-
 
   override reset(): void {
     super.reset();
