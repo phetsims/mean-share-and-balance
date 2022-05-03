@@ -54,7 +54,8 @@ export default class PipeNode extends Node {
     valveNode.addInputListener( new FireListener( {
       fire: () => {
         pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
-      }
+      },
+      tandem: options.tandem.createTandem( 'fireListener' )
     } ) );
 
     pipeModel.isOpenProperty.link( isOpen => {
