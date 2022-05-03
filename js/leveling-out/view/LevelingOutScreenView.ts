@@ -111,7 +111,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     //Predict Mean Line
-    this.predictMeanLine = new PredictMeanNode( model, this.modelViewTransform2DCups, {
+    this.predictMeanLine = new PredictMeanNode(
+      model,
+      this.modelViewTransform2DCups,
+      {
         visibleProperty: model.isShowingPredictMeanProperty,
         tandem: options.tandem.createTandem( 'predictMeanLine' )
       }
@@ -147,7 +150,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     this.pipeMap = new Map<PipeModel, PipeNode>();
     model.pipes.addItemAddedListener( pipe => {
       const tandemName = `${this.model.numberOfCupsProperty.value}`;
-      const pipeNode = new PipeNode( pipe, this.modelViewTransform2DCups, { tandem: options.tandem.createTandem( `${tandemName}PipeNode` ) } );
+      const pipeNode = new PipeNode(
+        pipe,
+        this.modelViewTransform2DCups,
+        {
+          tandem: options.tandem.createTandem( `${tandemName}PipeNode` )
+        }
+      );
       this.pipeMap.set( pipe, pipeNode );
       this.waterCupLayerNode.addChild( pipeNode );
     } );
@@ -166,10 +175,20 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   }
 
   private addWaterCupNodes( cup2DModel: WaterCup2DModel, cup3DModel: WaterCup3DModel, options: LevelingOutScreenViewOptions ): void {
-    const waterCup2DNode = new WaterCup2DNode( cup2DModel, this.modelViewTransform2DCups, this.model.meanProperty,
-      this.model.isShowingTickMarksProperty, this.model.isShowingMeanProperty );
+    const waterCup2DNode = new WaterCup2DNode(
+      cup2DModel,
+      this.modelViewTransform2DCups,
+      this.model.meanProperty,
+      this.model.isShowingTickMarksProperty,
+      this.model.isShowingMeanProperty
+    );
+
     const tandemName = `${this.model.numberOfCupsProperty.value}`;
-    const waterCup3DNode = new WaterCup3DNode( cup3DModel, this.modelViewTransform3DCups, { tandem: options.tandem.createTandem( `${tandemName}waterCup3DNode` ) } );
+    const waterCup3DNode = new WaterCup3DNode(
+      cup3DModel,
+      this.modelViewTransform3DCups,
+      { tandem: options.tandem.createTandem( `${tandemName}waterCup3DNode` ) }
+    );
 
     this.waterCup2DMap.set( cup2DModel, waterCup2DNode );
     this.waterCup3DMap.set( cup3DModel, waterCup3DNode );

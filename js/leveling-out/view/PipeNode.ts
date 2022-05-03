@@ -14,6 +14,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
 
@@ -30,16 +31,14 @@ export default class PipeNode extends Node {
     super( options );
 
     const dilation = 10;
-    const strokeWidth = 1;
-    const pipeLength = 50;
     const pipeWidth = 5;
-    const pipeCenter = new Vector2( pipeLength / 2, pipeWidth / 2 );
-    const pipeRectangle = new Rectangle( 0, 0, pipeLength, pipeWidth, { stroke: 'black', fill: '#51CEF4' } );
+    const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
+    const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth, { stroke: 'black', fill: '#51CEF4' } );
 
     //Valve drawing
     const valveRadius = 10;
-    const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + strokeWidth * 2 ), { fill: 'grey' } );
-    const outerValve = new Path( this.createCircle( valveRadius + strokeWidth, pipeWidth ), { fill: 'black' } );
+    const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.STROKE_WIDTH * 2 ), { fill: 'grey' } );
+    const outerValve = new Path( this.createCircle( valveRadius + MeanShareAndBalanceConstants.STROKE_WIDTH, pipeWidth ), { fill: 'black' } );
     const valveNode = new Node( { children: [ outerValve, innerValve ], cursor: 'pointer' } );
     valveNode.center = pipeCenter;
     // To turn off set clipArea to null
@@ -71,8 +70,8 @@ export default class PipeNode extends Node {
 
     this.addChild( pipeRectangle );
     this.addChild( valveNode );
-    //TODO grab cupWidth from global Constant
-    this.x = pipeModel.xProperty.value + 50;
+
+    this.x = pipeModel.xProperty.value + MeanShareAndBalanceConstants.CUP_WIDTH;
     this.y = modelViewTransform.modelToViewY( 0 ) - pipeWidth;
   }
 

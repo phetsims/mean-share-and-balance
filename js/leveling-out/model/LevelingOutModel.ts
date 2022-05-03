@@ -16,6 +16,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import PipeModel from './PipeModel.js';
 import WaterCupModel from './WaterCupModel.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -53,7 +54,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.numberOfCupsProperty.link( value => {
       while ( value > this.waterCups.length ) {
         const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
-        this.waterCups.push( new WaterCupModel( { x: lastWaterCup.xProperty.value + 100 } ) );
+        this.waterCups.push( new WaterCupModel( { x: lastWaterCup.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) } ) );
         if ( value > 1 ) {
           const pipeModel = new PipeModel(
             lastWaterCup.xProperty,

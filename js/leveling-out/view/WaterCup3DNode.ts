@@ -14,6 +14,7 @@ import WaterCup3DModel from '../model/WaterCup3DModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
@@ -21,11 +22,10 @@ type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 export default class WaterCup3DNode extends Node {
   constructor( cup3DModel: WaterCup3DModel, modelViewTransform: ModelViewTransform2,
                providedOptions?: WaterCup3DNodeOptions ) {
-    const cupHeight = 100;
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default options
-      y: modelViewTransform.modelToViewY( 0 ) - cupHeight,
+      y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: cup3DModel.parent.xProperty.value
     }, providedOptions );
     super();
@@ -33,8 +33,8 @@ export default class WaterCup3DNode extends Node {
 
     const xRadius = 30;
     const yRadius = 12;
-    const centerTop = -cupHeight / 2;
-    const centerBottom = cupHeight / 2;
+    const centerTop = -MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
+    const centerBottom = MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
 
 
     const cupGradient = new LinearGradient( -xRadius, 0, xRadius, 0 )
@@ -66,7 +66,7 @@ export default class WaterCup3DNode extends Node {
     } );
 
     cup3DModel.parent.waterLevelProperty.link( waterLevel => {
-      const centerLiquidY = centerBottom - cupHeight * waterLevel;
+      const centerLiquidY = centerBottom - MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel;
       const waterTopShape = new Shape()
         .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI * 2, false )
         .close();
@@ -96,13 +96,17 @@ export default class WaterCup3DNode extends Node {
     } );
 
     // Adjustable water level triangle
-    const dragRange = new Range( -cupHeight / 2, cupHeight / 2 );
+    const dragRange = new Range( -MeanShareAndBalanceConstants.CUP_HEIGHT / 2, MeanShareAndBalanceConstants.CUP_HEIGHT / 2 );
 
     //TODO ask Sam about how we want phet-io instrumentation.
     const waterLevelTriangle = new WaterLevelTriangleNode(
       cup3DModel.parent.waterLevelProperty,
       dragRange,
-      { tandem: options.tandem.createTandem( 'waterLevelTriangle' ), y: cupHeight / 2, left: xRadius }
+      {
+        tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
+        y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
+        left: xRadius
+      }
     );
 
     this.addChild( cupBack );

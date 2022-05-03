@@ -15,6 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TickMarksNode from './TickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
 
@@ -25,29 +26,53 @@ export default class WaterCup2DNode extends Node {
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: cup2DModel2DNodeOptions ) {
     //TODO add cupWidth and cupHeight to global constants
-    const cupWidth = 50;
-    const cupHeight = 100;
 
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
-      y: modelViewTransform.modelToViewY( 0 ) - cupHeight,
+      y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: cup2DModel.parent.xProperty.value
     }, providedOptions );
 
     super();
 
-    const tickMarks = new TickMarksNode( cupHeight, { visibleProperty: isShowingTickMarksProperty } );
+    const tickMarks = new TickMarksNode(
+      MeanShareAndBalanceConstants.CUP_HEIGHT,
+      { visibleProperty: isShowingTickMarksProperty }
+    );
 
     // 0 is empty, 1 is full
-    const y = Utils.linear( 0, 1, cupHeight, 0, cup2DModel.parent.waterLevelProperty.value );
-    const waterCupRectangle = new Rectangle( 0, 0, cupWidth, cupHeight, { stroke: 'black' } );
-    const waterLevelRectangle = new Rectangle( 0, y, cupWidth, cupHeight * cup2DModel.parent.waterLevelProperty.value, { fill: '#51CEF4' } );
+    const y = Utils.linear(
+      0,
+      1,
+      MeanShareAndBalanceConstants.CUP_HEIGHT,
+      0,
+      cup2DModel.parent.waterLevelProperty.value
+    );
+    const waterCupRectangle = new Rectangle(
+      0,
+      0,
+      MeanShareAndBalanceConstants.CUP_WIDTH,
+      MeanShareAndBalanceConstants.CUP_HEIGHT,
+      { stroke: 'black' }
+    );
+    const waterLevelRectangle = new Rectangle(
+      0,
+      y,
+      MeanShareAndBalanceConstants.CUP_WIDTH,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * cup2DModel.parent.waterLevelProperty.value,
+      { fill: '#51CEF4' }
+    );
 
     cup2DModel.parent.waterLevelProperty.link( waterLevel => {
-      waterLevelRectangle.setRectHeightFromBottom( cupHeight * waterLevel );
+      waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
     } );
 
 
-    const showMeanLine = new Line( 0, cupHeight * meanProperty.value, cupWidth, cupHeight * meanProperty.value, {
+    const showMeanLine = new Line(
+      0,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * meanProperty.value,
+      MeanShareAndBalanceConstants.CUP_WIDTH,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * meanProperty.value,
+      {
       stroke: 'red',
       lineWidth: 2,
       visibleProperty: isShowingMeanProperty
