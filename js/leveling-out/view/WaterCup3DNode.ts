@@ -7,7 +7,7 @@
  */
 
 import { Shape } from '../../../../kite/js/imports.js';
-import { LinearGradient, Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup3DModel from '../model/WaterCup3DModel.js';
@@ -30,18 +30,18 @@ export default class WaterCup3DNode extends Node {
     }, providedOptions );
     super();
 
-
     const xRadius = 30;
     const yRadius = 12;
     const centerTop = -MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
     const centerBottom = MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
 
-
-    const cupGradient = new LinearGradient( -xRadius, 0, xRadius, 0 )
-      .addColorStop( 0, 'white' )
-      .addColorStop( 0.666, 'grey' )
-      .addColorStop( 0.782, 'grey' )
-      .addColorStop( 1, 'white' );
+    // Cup structure and glare shapes
+    const cupGlareShape = new Shape()
+      .moveTo( -20, centerTop + 18 )
+      .verticalLineTo( 50 )
+      .lineTo( -15, 52 )
+      .verticalLineTo( centerTop + 21 )
+      .close();
 
     const cupFrontShape = new Shape()
       .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, false )
@@ -52,47 +52,53 @@ export default class WaterCup3DNode extends Node {
       .ellipticalArc( 0, centerTop, xRadius, yRadius, 0, Math.PI, 0, false )
       .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, true )
       .close();
+
     const cupBottomShape = new Shape()
       .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, 2 * Math.PI, false );
 
+    // Water fill and shading paths
     const waterSide = new Path( null, {
-      stroke: 'black',
-      fill: '#51CEF4',
+      fill: '#A5D9F2',
       pickable: false
     } );
     const waterTop = new Path( null, {
-      fill: '#51CEF4',
+      fill: '#A5D9F2',
       pickable: false
     } );
-
-    cup3DModel.parent.waterLevelProperty.link( waterLevel => {
-      const centerLiquidY = centerBottom - MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel;
-      const waterTopShape = new Shape()
-        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI * 2, false )
-        .close();
-      const waterSideShape = new Shape()
-        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, Math.PI, 0, true )
-        .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, false )
-        .close();
-
-      waterTop.shape = waterTopShape;
-      waterSide.shape = waterSideShape;
+    const waterFrontEdge = new Path( null, {
+      fill: '#8EC6DD',
+      pickable: false
+    } );
+    const waterBackEdge = new Path( null, {
+      fill: '#9CD0E5',
+      pickable: false
+    } );
+    const waterCrescent = new Path( null, {
+      fill: '#B4E5F9'
     } );
 
+    // Water cup structure and glare paths
     const cupFront = new Path( cupFrontShape, {
-      stroke: 'grey',
-      fill: cupGradient,
-      opacity: 0.5
+      stroke: 'black',
+      lineWidth: 2
     } );
+
     const cupBack = new Path( cupBackShape, {
-      stroke: 'grey',
-      fill: cupGradient
+      stroke: 'black',
+      lineWidth: 2,
+      fill: '#EDF2F4'
     } );
+
     cupBack.setScaleMagnitude( -1, 1 );
     const cupBottom = new Path( cupBottomShape, {
-      stroke: 'grey',
+      stroke: 'black',
       fill: 'white',
       pickable: false
+    } );
+
+    const cupGlare = new Path( cupGlareShape.getOffsetShape( 2 ), {
+      fill: 'white',
+      opacity: 0.35
     } );
 
     // Adjustable water level triangle
@@ -109,11 +115,43 @@ export default class WaterCup3DNode extends Node {
       }
     );
 
+    // water level adjustment listener
+    cup3DModel.parent.waterLevelProperty.link( waterLevel => {
+      const centerLiquidY = centerBottom - MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel;
+      const waterTopShape = new Shape()
+        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI * 2, false )
+        .close();
+      const waterSideShape = new Shape()
+        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, Math.PI, 0, true )
+        .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, false )
+        .close();
+      const waterFrontEdgeShape = new Shape()
+        .ellipticalArc( 0, centerLiquidY + 1, xRadius, yRadius + 2, 0, Math.PI, 0, true )
+        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI, false );
+      const waterBackEdgeShape = new Shape()
+        .ellipticalArc( 0, centerBottom - 1, xRadius, yRadius + 4, Math.PI, Math.PI, 0, true )
+        .ellipticalArc( 0, centerBottom, xRadius, yRadius, Math.PI, 0, Math.PI, false );
+      const waterCrescentShape = new Shape()
+        .ellipticalArc( 8, centerLiquidY, yRadius * 0.75, xRadius * 0.4, Math.PI * 1.5, Math.PI, 0, true )
+        .ellipticalArc( 8, centerLiquidY, yRadius * 0.75, xRadius * 0.6, Math.PI * 1.5, 0, Math.PI, false );
+
+      waterTop.shape = waterTopShape;
+      waterSide.shape = waterSideShape;
+      waterFrontEdge.shape = waterFrontEdgeShape;
+      waterBackEdge.shape = waterBackEdgeShape;
+      waterCrescent.shape = waterCrescentShape;
+
+    } );
+
     this.addChild( cupBack );
     this.addChild( cupBottom );
     this.addChild( waterSide );
+    this.addChild( waterBackEdge );
     this.addChild( waterTop );
+    this.addChild( waterCrescent );
+    this.addChild( waterFrontEdge );
     this.addChild( cupFront );
+    this.addChild( cupGlare );
     this.addChild( waterLevelTriangle );
 
     this.mutate( options );
