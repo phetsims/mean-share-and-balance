@@ -9,6 +9,7 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCupModel from './WaterCupModel.js';
 
+// do we still need this class?
 export default class WaterCup3DModel {
   readonly parent: WaterCupModel
   readonly y = 400;

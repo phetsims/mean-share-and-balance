@@ -21,6 +21,7 @@ export type WaterCupModelOptions = SelfOptions;
 export default class WaterCupModel {
   readonly xProperty: NumberProperty;
   readonly waterLevelProperty: NumberProperty;
+  //TODO determine if children actually needed
   readonly waterCup2DChild: WaterCup2DModel;
   readonly waterCup3DChild: WaterCup3DModel;
 
