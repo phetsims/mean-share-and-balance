@@ -55,7 +55,20 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
         this.waterCups.push( new WaterCupModel( { x: lastWaterCup.xProperty.value + 100 } ) );
         if ( value > 1 ) {
-          this.pipes.push( new PipeModel( lastWaterCup.xProperty, lastWaterCup.waterCup2DChild.y ) );
+          // new pipe model to const
+          const pipeModel = new PipeModel(
+            lastWaterCup.xProperty,
+            lastWaterCup.waterCup2DChild.y,
+            this.waterCups.slice( -2 )
+          );
+          pipeModel.isOpenProperty.link( isOpen => {
+            if ( isOpen ) {
+              const index = this.pipes.findIndex( pipe => pipe === pipeModel );
+              this.levelWater( index );
+            }
+          } );
+          // create callback outside of loop and pass in
+          this.pipes.push( pipeModel );
         }
       }
       while ( value < this.waterCups.length ) {
@@ -69,7 +82,34 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-override reset(): void {
+  private levelWater( index: number ): void {
+    // remove duplicates
+    const affectedCups = new Set<WaterCupModel>( this.getAffectedCups( index ) );
+    // calculate mean
+    let totalWater = 0;
+    affectedCups.forEach( cup => {
+      totalWater += cup.waterLevelProperty.value;
+    } );
+    const waterMean = totalWater / affectedCups.size;
+
+    affectedCups.forEach( cup => cup.waterLevelProperty.set( waterMean ) );
+  }
+
+  private getAffectedCups( index: number ): Array<WaterCupModel> {
+    const cups: Array<WaterCupModel> = [];
+    for ( const pipe of this.pipes.slice( index ) ) {
+      if ( pipe.isOpenProperty.value ) {
+        pipe.connectedCups.forEach( cup => cups.push( cup ) );
+      }
+      else {
+        return cups;
+      }
+    }
+    return cups;
+  }
+
+
+  override reset(): void {
     super.reset();
     this.isShowingPredictMeanProperty.reset();
     this.isShowingMeanProperty.reset();
