@@ -71,17 +71,20 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         {
           node: predictMeanText,
           property: model.isShowingPredictMeanProperty,
-          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
+          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
+          options: { accessibleName: meanShareAndBalanceStrings.predictMean }
         },
         {
           node: showMeanText,
           property: model.isShowingMeanProperty,
-          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' )
+          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
+          options: { accessibleName: meanShareAndBalanceStrings.showMean }
         },
         {
           node: tickMarksText,
           property: model.isShowingTickMarksProperty,
-          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
+          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
+          options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
         } ],
       {
         right: this.layoutBounds.right - 100,
@@ -96,7 +99,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
         yMargin: 10,
         xMargin: 10,
-        arrowHeight: 10
+        arrowHeight: 10,
+        accessibleName: meanShareAndBalanceStrings.numberOfCups
       }
     );
 
