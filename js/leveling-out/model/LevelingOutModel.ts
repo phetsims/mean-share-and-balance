@@ -17,6 +17,9 @@ import createObservableArray from '../../../../axon/js/createObservableArray.js'
 import PipeModel from './PipeModel.js';
 import WaterCupModel from './WaterCupModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -32,14 +35,18 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly numberOfCupsProperty: NumberProperty;
   readonly levelingOutRange: Range;
   readonly dragRange = new Range( 0, 1 );
-  readonly waterCups = createObservableArray<WaterCupModel>();
+  readonly waterCupGroup: PhetioGroup<WaterCupModel, [ number ]>;
   readonly pipes = createObservableArray<PipeModel>();
   readonly meanPredictionProperty: NumberProperty;
   //TODO based on mean of cup water levels
   readonly meanProperty = new NumberProperty( 0.5 );
 
   constructor( providedOptions: LevelingOutModelOptions ) {
-    super( providedOptions );
+    const options = optionize<LevelingOutModelOptions, SelfOptions>()( {
+        //TODO add in custom options
+      }, providedOptions
+    );
+    super( options );
 
     this.isShowingPredictMeanProperty = new BooleanProperty( false );
     this.isShowingMeanProperty = new BooleanProperty( false );
@@ -47,14 +54,20 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.meanPredictionProperty = new NumberProperty( 0 );
     this.numberOfCupsProperty = new NumberProperty( 1 );
     this.levelingOutRange = new Range( 1, 7 );
+    this.waterCupGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
+      return new WaterCupModel( { tandem: tandem, x: x } );
+    }, [ 0 ], {
+      phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
+      tandem: options.tandem.createTandem( 'waterCupGroup' )
+    } );
 
     // The sim starts with one water cup
-    this.waterCups.push( new WaterCupModel() );
+    this.waterCupGroup.createNextElement( 0 );
 
     this.numberOfCupsProperty.link( value => {
-      while ( value > this.waterCups.length ) {
-        const lastWaterCup = this.waterCups[ this.waterCups.length - 1 ];
-        this.waterCups.push( new WaterCupModel( { x: lastWaterCup.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) } ) );
+      while ( value > this.waterCupGroup.count ) {
+        const lastWaterCup = this.waterCupGroup.getElement( this.waterCupGroup.count - 1 );
+        this.waterCupGroup.createNextElement( lastWaterCup.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) );
         if ( value > 1 ) {
           const pipeModel = new PipeModel(
             lastWaterCup.xProperty,
@@ -68,16 +81,17 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           this.pipes.push( pipeModel );
         }
       }
-      while ( value < this.waterCups.length ) {
-        this.waterCups.pop();
+      while ( value < this.waterCupGroup.count ) {
+        const lastWaterCup = this.waterCupGroup.getElement( this.waterCupGroup.count - 1 );
+        this.waterCupGroup.disposeElement( lastWaterCup );
         if ( value > 0 ) {
           this.pipes.pop();
         }
       }
 
-      assert && assert( value === this.waterCups.length, `The value returned is: ${value}, but the waterCups length is: ${this.waterCups.length}.` );
+      assert && assert( value === this.waterCupGroup.count, `The value returned is: ${value}, but the waterCups length is: ${this.waterCupGroup.count}.` );
       if ( value > 0 ) {
-        assert && assert( this.waterCups.length - 1 === this.pipes.length, `The length of pipes is: ${this.pipes.length}, but should be one less the length of water cups or: ${this.waterCups.length - 1}.` );
+        assert && assert( this.waterCupGroup.count - 1 === this.pipes.length, `The length of pipes is: ${this.pipes.length}, but should be one less the length of water cups or: ${this.waterCupGroup.count - 1}.` );
       }
     } );
   }
@@ -88,8 +102,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     // organize into sets of connected cups
     this.pipes.forEach( ( pipe, index ) => {
       if ( pipe.isOpenProperty.value ) {
-        cupsSet.add( this.waterCups[ index ] );
-        cupsSet.add( this.waterCups[ index + 1 ] );
+        cupsSet.add( this.waterCupGroup.getElement( index ) );
+        cupsSet.add( this.waterCupGroup.getElement( index + 1 ) );
         if ( index === this.pipes.length - 1 ) {
           affectedCups.push( cupsSet );
         }
@@ -121,8 +135,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.isShowingTickMarksProperty.reset();
     this.numberOfCupsProperty.reset();
 
-    while ( this.waterCups.length > 1 ) {
-      this.waterCups.pop();
+    while ( this.waterCupGroup.count > 1 ) {
+      const lastWaterCup = this.waterCupGroup.getElement( this.waterCupGroup.count - 1 );
+      this.waterCupGroup.disposeElement( lastWaterCup );
       this.pipes.pop();
     }
   }

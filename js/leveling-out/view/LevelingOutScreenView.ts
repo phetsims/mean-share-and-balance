@@ -125,15 +125,15 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     this.waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     this.waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
-    model.waterCups.forEach( waterCup => {
+    model.waterCupGroup.forEach( waterCup => {
       this.addWaterCupNodes( waterCup.waterCup2DChild, waterCup.waterCup3DChild, options );
     } );
 
-    model.waterCups.addItemAddedListener( waterCupModel => {
+    model.waterCupGroup.elementCreatedEmitter.addListener( waterCupModel => {
       this.addWaterCupNodes( waterCupModel.waterCup2DChild, waterCupModel.waterCup3DChild, options );
     } );
 
-    model.waterCups.addItemRemovedListener( waterCupModel => {
+    model.waterCupGroup.elementDisposedEmitter.addListener( waterCupModel => {
       const waterCup2DNode = this.waterCup2DMap.get( waterCupModel.waterCup2DChild )!;
       const waterCup3DNode = this.waterCup3DMap.get( waterCupModel.waterCup3DChild )!;
 
