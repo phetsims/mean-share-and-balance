@@ -24,7 +24,6 @@ export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions;
 export default class WaterCupModel extends PhetioObject {
   readonly xProperty: NumberProperty;
   readonly waterLevelProperty: NumberProperty;
-  //TODO determine if children actually needed
   readonly waterCup2DChild: WaterCup2DModel;
   readonly waterCup3DChild: WaterCup3DModel;
   static WaterCupModelIO: IOType<WaterCupModel>;
@@ -45,7 +44,14 @@ export default class WaterCupModel extends PhetioObject {
 
     this.waterCup2DChild = new WaterCup2DModel( this );
     this.waterCup3DChild = new WaterCup3DModel( this );
+
+    this.waterLevelProperty.link( waterLevel => {
+      const waterOffset = waterLevel - this.waterCup3DChild.waterLevelProperty.value;
+      this.waterCup2DChild.waterLevelProperty.set( this.waterCup2DChild.waterLevelProperty.value + waterOffset );
+      this.waterCup3DChild.waterLevelProperty.set( waterLevel );
+    } );
   }
+
 }
 
 WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {

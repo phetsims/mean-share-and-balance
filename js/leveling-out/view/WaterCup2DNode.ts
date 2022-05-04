@@ -58,24 +58,31 @@ export default class WaterCup2DNode extends Node {
       0,
       y,
       MeanShareAndBalanceConstants.CUP_WIDTH,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * cup2DModel.parent.waterLevelProperty.value,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * cup2DModel.waterLevelProperty.value,
       { fill: '#51CEF4' }
     );
 
-    cup2DModel.parent.waterLevelProperty.link( waterLevel => {
+    cup2DModel.waterLevelProperty.link( waterLevel => {
       waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
     } );
 
+    const meanInverse = 1 - meanProperty.value;
 
     const showMeanLine = new Line(
       0,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * meanProperty.value,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
       MeanShareAndBalanceConstants.CUP_WIDTH,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * meanProperty.value,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
       {
-      stroke: 'red',
-      lineWidth: 2,
-      visibleProperty: isShowingMeanProperty
+        stroke: 'red',
+        lineWidth: 2,
+        visibleProperty: isShowingMeanProperty
+      } );
+
+    meanProperty.link( mean => {
+      const inverse = 1 - mean;
+      showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
+      showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
     } );
 
     this.addChild( waterLevelRectangle );

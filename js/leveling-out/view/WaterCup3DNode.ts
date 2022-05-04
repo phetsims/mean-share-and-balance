@@ -104,7 +104,7 @@ export default class WaterCup3DNode extends Node {
     // Adjustable water level triangle
     const dragRange = new Range( -MeanShareAndBalanceConstants.CUP_HEIGHT / 2, MeanShareAndBalanceConstants.CUP_HEIGHT / 2 );
 
-    //TODO ask Sam about how we want phet-io instrumentation.
+    // Pass in parent waterLevelProperty to link appropriately for 3D/2D communication
     const waterLevelTriangle = new WaterLevelTriangleNode(
       cup3DModel.parent.waterLevelProperty,
       dragRange,
@@ -116,7 +116,7 @@ export default class WaterCup3DNode extends Node {
     );
 
     // water level adjustment listener
-    cup3DModel.parent.waterLevelProperty.link( waterLevel => {
+    cup3DModel.waterLevelProperty.link( waterLevel => {
       const centerLiquidY = centerBottom - MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel;
       const waterTopShape = new Shape()
         .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI * 2, false )

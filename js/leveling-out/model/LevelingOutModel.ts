@@ -20,6 +20,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import WaterCup2DModel from './WaterCup2DModel.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceModel here
@@ -39,7 +40,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly pipes = createObservableArray<PipeModel>();
   readonly meanPredictionProperty: NumberProperty;
   //TODO based on mean of cup water levels
-  readonly meanProperty = new NumberProperty( 0.5 );
+  readonly meanProperty: NumberProperty;
 
   constructor( providedOptions: LevelingOutModelOptions ) {
     const options = optionize<LevelingOutModelOptions, SelfOptions>()( {
@@ -62,12 +63,26 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     // The sim starts with one water cup
-    this.waterCupGroup.createNextElement( 0 );
+    const firstCup = this.waterCupGroup.createNextElement( 0 );
+    this.meanProperty = new NumberProperty( this.calculateGroupMean( this.waterCupGroup ) );
 
+    firstCup.waterLevelProperty.link( () => {
+      this.levelWater();
+      this.meanProperty.set( this.calculateGroupMean( this.waterCupGroup ) );
+    } );
+
+
+    // add/remove water cups and pipes according to number spinner
     this.numberOfCupsProperty.link( value => {
       while ( value > this.waterCupGroup.count ) {
         const lastWaterCup = this.waterCupGroup.getElement( this.waterCupGroup.count - 1 );
-        this.waterCupGroup.createNextElement( lastWaterCup.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) );
+        const newCup = this.waterCupGroup.createNextElement( lastWaterCup.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) );
+
+        newCup.waterLevelProperty.link( () => {
+          this.levelWater();
+          this.meanProperty.set( this.calculateGroupMean( this.waterCupGroup ) );
+        } );
+
         if ( value > 1 ) {
           const pipeModel = new PipeModel(
             lastWaterCup.xProperty,
@@ -97,35 +112,44 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   private levelWater(): void {
-    const affectedCups: Array<Set<WaterCupModel>> = [];
-    let cupsSet = new Set<WaterCupModel>();
+    const affectedCups: Array<Set<WaterCup2DModel>> = [];
+    let cupsSet = new Set<WaterCup2DModel>();
     // organize into sets of connected cups
     this.pipes.forEach( ( pipe, index ) => {
       if ( pipe.isOpenProperty.value ) {
-        cupsSet.add( this.waterCupGroup.getElement( index ) );
-        cupsSet.add( this.waterCupGroup.getElement( index + 1 ) );
+        cupsSet.add( this.waterCupGroup.getElement( index ).waterCup2DChild );
+        cupsSet.add( this.waterCupGroup.getElement( index + 1 ).waterCup2DChild );
         if ( index === this.pipes.length - 1 ) {
           affectedCups.push( cupsSet );
         }
       }
       else if ( cupsSet.size > 1 ) {
         affectedCups.push( cupsSet );
-        cupsSet = new Set<WaterCupModel>();
+        cupsSet = new Set<WaterCup2DModel>();
       }
     } );
     // calculate and set mean
     affectedCups.forEach( cupsSet => {
-      const waterMean = this.calculateMean( cupsSet );
+      const waterMean = this.calculateSetMean( cupsSet );
       cupsSet.forEach( cup => cup.waterLevelProperty.set( waterMean ) );
     } );
   }
 
-  private calculateMean( cups: Set<WaterCupModel> ): number {
+  //TODO refactor into one function
+  private calculateSetMean( cups: Set<WaterCup2DModel> ): number {
     let totalWater = 0;
     cups.forEach( cup => {
       totalWater += cup.waterLevelProperty.value;
     } );
     return totalWater / cups.size;
+  }
+
+  private calculateGroupMean( cups: PhetioGroup<WaterCupModel, [ number ]> ): number {
+    let totalWater = 0;
+    cups.forEach( cup => {
+      totalWater += cup.waterLevelProperty.value;
+    } );
+    return totalWater / cups.count;
   }
 
   override reset(): void {
