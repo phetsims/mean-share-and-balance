@@ -195,17 +195,25 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     // Pipe nodes addition and removal
     const pipeMap = new Map<PipeModel, PipeNode>();
-    model.pipeGroup.elementCreatedEmitter.addListener( pipe => {
-      const tandemName = `${model.numberOfCupsProperty.value}`;
-      const pipeNode = new PipeNode(
-        pipe,
-        modelViewTransform2DCups,
-        {
-          tandem: options.tandem.createTandem( `${tandemName}PipeNode` )
-        }
-      );
-      pipeMap.set( pipe, pipeNode );
+
+    const pipeNodeGroup = new PhetioGroup<PipeNode, [ PipeModel ]>( ( tandem: Tandem, pipeModel: PipeModel ) => {
+      return new PipeNode( pipeModel, modelViewTransform2DCups,
+        { tandem: tandem } );
+    }, () => [ model.pipeGroup.archetype ], {
+      phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
+      tandem: options.tandem.createTandem( 'pipeNodeGroup' ),
+      supportsDynamicState: false
+    } );
+
+    const createPipeNode = ( pipeModel: PipeModel ) => {
+      const pipeNode = pipeNodeGroup.createCorrespondingGroupElement( 'pipeNode', pipeModel );
       waterCupLayerNode.addChild( pipeNode );
+      return pipeNode;
+    };
+
+    model.pipeGroup.elementCreatedEmitter.addListener( pipe => {
+      const pipeNode = createPipeNode( pipe );
+      pipeMap.set( pipe, pipeNode );
     } );
 
     model.pipeGroup.elementDisposedEmitter.addListener( pipe => {

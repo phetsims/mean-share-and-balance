@@ -169,6 +169,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       this.waterCupGroup.disposeElement( lastWaterCup );
       this.pipeGroup.dispose();
     }
+    this.waterCupGroup.forEach( cup => {
+      cup.waterLevelProperty.set( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT );
+
+      // reset to circumvent 2D water level offset.
+      cup.waterCup2DChild.waterLevelProperty.set( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT );
+    } );
   }
 }
 

@@ -15,6 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {
   x: number;
@@ -38,7 +39,7 @@ export default class WaterCupModel extends PhetioObject {
     super( options );
 
     this.xProperty = new NumberProperty( options.x );
-    this.waterLevelProperty = new NumberProperty( 0.5, {
+    this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
       range: new Range( 0, 1 )
     } );
 
