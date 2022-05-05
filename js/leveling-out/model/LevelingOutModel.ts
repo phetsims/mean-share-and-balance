@@ -13,7 +13,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import PipeModel from './PipeModel.js';
 import WaterCupModel from './WaterCupModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -37,7 +36,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly levelingOutRange: Range;
   readonly dragRange = new Range( 0, 1 );
   readonly waterCupGroup: PhetioGroup<WaterCupModel, [ number ]>;
-  readonly pipes = createObservableArray<PipeModel>();
+  readonly pipeGroup: PhetioGroup<PipeModel, [ NumberProperty, number ]>;
   readonly meanPredictionProperty: NumberProperty;
   //TODO based on mean of cup water levels
   readonly meanProperty: NumberProperty;
@@ -62,6 +61,13 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'waterCupGroup' )
     } );
 
+    this.pipeGroup = new PhetioGroup( ( tandem: Tandem, xProperty: NumberProperty, y: number ) => {
+      return new PipeModel( xProperty, y, { tandem: tandem } );
+    }, [ new NumberProperty( 0 ), 0 ], {
+      phetioType: PhetioGroup.PhetioGroupIO( PipeModel.PipeModelIO ),
+      tandem: options.tandem.createTandem( 'pipeGroup' )
+    } );
+
     // The sim starts with one water cup
     const firstCup = this.waterCupGroup.createNextElement( 0 );
     this.meanProperty = new NumberProperty( this.calculateGroupMean( this.waterCupGroup ) );
@@ -84,29 +90,26 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         } );
 
         if ( value > 1 ) {
-          const pipeModel = new PipeModel(
-            lastWaterCup.xProperty,
-            lastWaterCup.waterCup2DChild.y
-          );
-          pipeModel.isOpenProperty.link( isOpen => {
+          const newPipe = this.pipeGroup.createNextElement( lastWaterCup.xProperty, lastWaterCup.waterCup2DChild.y );
+          newPipe.isOpenProperty.link( isOpen => {
             if ( isOpen ) {
               this.levelWater();
             }
           } );
-          this.pipes.push( pipeModel );
         }
       }
       while ( value < this.waterCupGroup.count ) {
         const lastWaterCup = this.waterCupGroup.getElement( this.waterCupGroup.count - 1 );
         this.waterCupGroup.disposeElement( lastWaterCup );
         if ( value > 0 ) {
-          this.pipes.pop();
+          const lastPipe = this.pipeGroup.getElement( this.pipeGroup.count - 1 );
+          this.pipeGroup.disposeElement( lastPipe );
         }
       }
 
       assert && assert( value === this.waterCupGroup.count, `The value returned is: ${value}, but the waterCups length is: ${this.waterCupGroup.count}.` );
       if ( value > 0 ) {
-        assert && assert( this.waterCupGroup.count - 1 === this.pipes.length, `The length of pipes is: ${this.pipes.length}, but should be one less the length of water cups or: ${this.waterCupGroup.count - 1}.` );
+        assert && assert( this.waterCupGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCupGroup.count - 1}.` );
       }
     } );
   }
@@ -115,11 +118,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     const affectedCups: Array<Set<WaterCup2DModel>> = [];
     let cupsSet = new Set<WaterCup2DModel>();
     // organize into sets of connected cups
-    this.pipes.forEach( ( pipe, index ) => {
+    let index = 0;
+    this.pipeGroup.forEach( pipe => {
       if ( pipe.isOpenProperty.value ) {
         cupsSet.add( this.waterCupGroup.getElement( index ).waterCup2DChild );
         cupsSet.add( this.waterCupGroup.getElement( index + 1 ).waterCup2DChild );
-        if ( index === this.pipes.length - 1 ) {
+        if ( index === this.pipeGroup.count - 1 ) {
           affectedCups.push( cupsSet );
         }
       }
@@ -127,6 +131,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         affectedCups.push( cupsSet );
         cupsSet = new Set<WaterCup2DModel>();
       }
+      index += 1;
     } );
     // calculate and set mean
     affectedCups.forEach( cupsSet => {
@@ -162,7 +167,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     while ( this.waterCupGroup.count > 1 ) {
       const lastWaterCup = this.waterCupGroup.getElement( this.waterCupGroup.count - 1 );
       this.waterCupGroup.disposeElement( lastWaterCup );
-      this.pipes.pop();
+      this.pipeGroup.dispose();
     }
   }
 }

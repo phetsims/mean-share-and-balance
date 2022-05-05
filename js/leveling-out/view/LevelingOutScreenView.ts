@@ -195,7 +195,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     // Pipe nodes addition and removal
     const pipeMap = new Map<PipeModel, PipeNode>();
-    model.pipes.addItemAddedListener( pipe => {
+    model.pipeGroup.elementCreatedEmitter.addListener( pipe => {
       const tandemName = `${model.numberOfCupsProperty.value}`;
       const pipeNode = new PipeNode(
         pipe,
@@ -208,7 +208,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       waterCupLayerNode.addChild( pipeNode );
     } );
 
-    model.pipes.addItemRemovedListener( pipe => {
+    model.pipeGroup.elementDisposedEmitter.addListener( pipe => {
       const pipeNode = pipeMap.get( pipe )!;
       waterCupLayerNode.removeChild( pipeNode );
       pipeMap.delete( pipe );
