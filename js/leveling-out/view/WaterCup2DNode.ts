@@ -29,7 +29,7 @@ export default class WaterCup2DNode extends Node {
 
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: cup2DModel.parent.xProperty.value
+      left: cup2DModel.xProperty.value
     }, providedOptions );
 
     super();
@@ -45,7 +45,7 @@ export default class WaterCup2DNode extends Node {
       1,
       MeanShareAndBalanceConstants.CUP_HEIGHT,
       0,
-      cup2DModel.parent.waterLevelProperty.value
+      cup2DModel.waterLevelProperty.value
     );
     const waterCupRectangle = new Rectangle(
       0,

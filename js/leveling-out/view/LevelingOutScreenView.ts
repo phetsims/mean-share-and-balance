@@ -28,7 +28,6 @@ import PipeModel from '../model/PipeModel.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
 import WaterCup3DModel from '../model/WaterCup3DModel.js';
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
-import WaterCupModel from '../model/WaterCupModel.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 
 type SelfOptions = {};
@@ -127,7 +126,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         model.meanProperty,
         model.isShowingTickMarksProperty,
         model.isShowingMeanProperty, { tandem: tandem } );
-    }, [ new WaterCup2DModel( new WaterCupModel( { tandem: Tandem.OPTIONAL, x: 0 } ) ) ], {
+    }, () => [ model.waterCup2DGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup2DNodeGroup' ),
       supportsDynamicState: false
@@ -135,7 +134,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCup3DModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCup3DModel ) => {
       return new WaterCup3DNode( waterCup3DModel, modelViewTransform3DCups, { tandem: tandem } );
-    }, [ new WaterCup3DModel( new WaterCupModel( { tandem: Tandem.OPTIONAL, x: 0 } ) ) ], {
+    }, () => [ model.waterCup3DGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup3DNodeGroup' ),
       supportsDynamicState: false
@@ -148,49 +147,60 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     const waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
 
+    // TODO: Its unconventional to addChild on a method called createNode.
     const createWaterCup2DNode = ( waterCup2DModel: WaterCup2DModel ) => {
-      const waterCup2DNode = waterCup2DNodeGroup.createCorrespondingGroupElement( 'waterCup2DNode', waterCup2DModel );
+      const waterCup2DNode = waterCup2DNodeGroup.createCorrespondingGroupElement( waterCup2DModel.tandem.name, waterCup2DModel );
       waterCupLayerNode.addChild( waterCup2DNode );
       return waterCup2DNode;
     };
     const createWaterCup3DNode = ( waterCup3DModel: WaterCup3DModel ) => {
-      const waterCup3DNode = waterCup3DNodeGroup.createCorrespondingGroupElement( 'waterCup3DNode', waterCup3DModel );
+      const waterCup3DNode = waterCup3DNodeGroup.createCorrespondingGroupElement( waterCup3DModel.tandem.name, waterCup3DModel );
       waterCupLayerNode.addChild( waterCup3DNode );
       return waterCup3DNode;
     };
 
-    const addWaterCupNodes = ( waterCupModel: WaterCupModel ) => {
-      const waterCup2DNode = createWaterCup2DNode( waterCupModel.waterCup2DChild );
-      const waterCup3DNode = createWaterCup3DNode( waterCupModel.waterCup3DChild );
+    const addWaterCup2DNode = ( waterCup2DModel: WaterCup2DModel ) => {
+      const waterCup2DNode = createWaterCup2DNode( waterCup2DModel );
 
-      waterCup2DMap.set( waterCupModel.waterCup2DChild, waterCup2DNode );
-      waterCup3DMap.set( waterCupModel.waterCup3DChild, waterCup3DNode );
+      waterCup2DMap.set( waterCup2DModel, waterCup2DNode );
 
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanLine.x = waterCupLayerNode.x;
     };
 
+    const addWaterCup3DNode = ( waterCup3DModel: WaterCup3DModel ) => {
+      const waterCup3DNode = createWaterCup3DNode( waterCup3DModel );
+
+      waterCup3DMap.set( waterCup3DModel, waterCup3DNode );
+
+      waterCupLayerNode.centerX = cupsAreaCenterX;
+    };
+
     // add initial starting cups
-    model.waterCupGroup.forEach( waterCup => {
-      addWaterCupNodes( waterCup );
-    } );
+    model.waterCup2DGroup.forEach( addWaterCup2DNode );
+    model.waterCup3DGroup.forEach( addWaterCup3DNode );
 
-    model.waterCupGroup.elementCreatedEmitter.addListener( waterCup => {
-      addWaterCupNodes( waterCup );
-    } );
+    model.waterCup2DGroup.elementCreatedEmitter.addListener( addWaterCup2DNode );
+    model.waterCup3DGroup.elementCreatedEmitter.addListener( addWaterCup3DNode );
 
-    model.waterCupGroup.elementDisposedEmitter.addListener( waterCupModel => {
-      const waterCup2DNode = waterCup2DMap.get( waterCupModel.waterCup2DChild )!;
-      const waterCup3DNode = waterCup3DMap.get( waterCupModel.waterCup3DChild )!;
+    // TODO: Unify duplicated code
+    model.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2DModel => {
+      const waterCup2DNode = waterCup2DMap.get( waterCup2DModel )!;
 
       waterCupLayerNode.removeChild( waterCup2DNode );
-      waterCupLayerNode.removeChild( waterCup3DNode );
 
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanLine.x = waterCupLayerNode.x;
 
-      waterCup2DMap.delete( waterCupModel.waterCup2DChild );
-      waterCup3DMap.delete( waterCupModel.waterCup3DChild );
+      waterCup2DMap.delete( waterCup2DModel );
+    } );
+
+    model.waterCup3DGroup.elementDisposedEmitter.addListener( waterCup3DModel => {
+      const waterCup3DNode = waterCup3DMap.get( waterCup3DModel )!;
+
+      waterCupLayerNode.removeChild( waterCup3DNode );
+      waterCupLayerNode.centerX = cupsAreaCenterX;
+      waterCup3DMap.delete( waterCup3DModel );
     } );
 
     // Pipe nodes addition and removal
@@ -206,7 +216,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     const createPipeNode = ( pipeModel: PipeModel ) => {
-      const pipeNode = pipeNodeGroup.createCorrespondingGroupElement( 'pipeNode', pipeModel );
+      const pipeNode = pipeNodeGroup.createCorrespondingGroupElement( pipeModel.tandem.name, pipeModel );
       waterCupLayerNode.addChild( pipeNode );
       return pipeNode;
     };

@@ -62,12 +62,12 @@ export default class PredictMeanNode extends Node {
     } ) );
 
     // Update line length and dilation based on water cups
-    model.waterCupGroup.elementCreatedEmitter.addListener( waterCup => {
-      this.updateLine( waterCup.xProperty.value + 75, dilation );
+    model.waterCup2DGroup.elementCreatedEmitter.addListener( waterCup2D => {
+      this.updateLine( waterCup2D.xProperty.value + 75, dilation );
     } );
 
-    model.waterCupGroup.elementDisposedEmitter.addListener( waterCup => {
-      this.updateLine( waterCup.xProperty.value - 25, dilation );
+    model.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2D => {
+      this.updateLine( waterCup2D.xProperty.value - 25, dilation );
     } );
 
     this.addChild( this.predictMeanLine );

@@ -26,7 +26,7 @@ export default class WaterCup3DNode extends Node {
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default options
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: cup3DModel.parent.xProperty.value
+      left: cup3DModel.xProperty.value
     }, providedOptions );
     super();
 
@@ -106,7 +106,7 @@ export default class WaterCup3DNode extends Node {
 
     // Pass in parent waterLevelProperty to link appropriately for 3D/2D communication
     const waterLevelTriangle = new WaterLevelTriangleNode(
-      cup3DModel.parent.waterLevelProperty,
+      cup3DModel.waterLevelProperty,
       dragRange,
       {
         tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
