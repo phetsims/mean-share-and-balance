@@ -80,7 +80,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     // The sim starts with one water cup
     const first3DCup = this.waterCup3DGroup.createNextElement( 0 );
     const first2DCup = this.waterCup2DGroup.createNextElement( 0 );
-    this.meanProperty = new NumberProperty( this.calculateGroupMean( this.waterCup3DGroup ) );
+    this.meanProperty = new NumberProperty( this.calculateMean( this.waterCup3DGroup ) );
 
     const validRange = new Range( 0, 1 );
 
@@ -93,7 +93,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         waterCup2D.waterLevelProperty.value = validRange.constrainValue( new2DWaterLevel );
 
         this.levelWater();
-        this.meanProperty.set( this.calculateGroupMean( this.waterCup3DGroup ) );
+        this.meanProperty.set( this.calculateMean( this.waterCup3DGroup ) );
       } );
     };
 
@@ -127,6 +127,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         }
       }
 
+      this.meanProperty.set( this.calculateMean( this.waterCup3DGroup ) );
+
       assert && assert( value === this.waterCup3DGroup.count, `The value returned is: ${value}, but the waterCups length is: ${this.waterCup3DGroup.count}.` );
       if ( value > 0 ) {
         assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
@@ -159,26 +161,18 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
     // calculate and set mean
     affectedCups.forEach( cupsSet => {
-      const waterMean = this.calculateSetMean( cupsSet );
+      const waterMean = this.calculateMean( cupsSet );
       cupsSet.forEach( cup => cup.waterLevelProperty.set( waterMean ) );
     } );
   }
 
-  //TODO refactor into one function
-  private calculateSetMean( cups: Set<WaterCup2DModel> ): number {
+  private calculateMean( cups: Set<WaterCup2DModel> | PhetioGroup<WaterCup3DModel, [ number ]> ): number {
     let totalWater = 0;
     cups.forEach( cup => {
       totalWater += cup.waterLevelProperty.value;
     } );
-    return totalWater / cups.size;
-  }
-
-  private calculateGroupMean( cups: PhetioGroup<WaterCup3DModel, [ number ]> ): number {
-    let totalWater = 0;
-    cups.forEach( cup => {
-      totalWater += cup.waterLevelProperty.value;
-    } );
-    return totalWater / cups.count;
+    const totalCups = cups instanceof Set ? cups.size : cups.count;
+    return totalWater / totalCups;
   }
 
   override reset(): void {
