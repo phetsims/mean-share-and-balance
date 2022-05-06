@@ -29,6 +29,7 @@ import WaterCup3DNode from './WaterCup3DNode.js';
 import WaterCup3DModel from '../model/WaterCup3DModel.js';
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
 
@@ -40,8 +41,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {
 
-      //TODO add default values for optional SelfOptions here
-
       //TODO add default values for optional ScreenViewOptions here
     }, providedOptions );
 
@@ -49,10 +48,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 500 ), 100 );
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean );
-    const showMeanText = new Text( meanShareAndBalanceStrings.showMean );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks );
-    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups );
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15 } );
+    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15 } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15 } );
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, { fontSize: 15 } );
 
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
       tandem: options.tandem.createTandem( 'questionBar' )
@@ -80,8 +79,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
           options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
         } ],
       {
-        right: this.layoutBounds.right - 100,
-        top: questionBar.boundsProperty.value.maxY + 20
+        right: this.layoutBounds.right - MeanShareAndBalanceConstants.HORIZONTAL_MARGIN,
+        top: questionBar.boundsProperty.value.maxY + MeanShareAndBalanceConstants.VERTICAL_MARGIN
       }
     );
 
@@ -90,6 +89,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       model.numberOfCupsProperty,
       new Property( model.levelingOutRange ), {
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
+        color: 'black',
         yMargin: 10,
         xMargin: 10,
         arrowHeight: 10,
@@ -103,8 +103,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         numberOfCupsNumberPicker
       ],
       align: 'center',
-      right: 900,
-      bottom: this.layoutBounds.bottom
+      right: this.layoutBounds.right - MeanShareAndBalanceConstants.HORIZONTAL_MARGIN,
+      bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.VERTICAL_MARGIN
     } );
 
     //Predict Mean Line

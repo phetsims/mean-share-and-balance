@@ -19,8 +19,9 @@ const MeanShareAndBalanceConstants = {
   CUP_HEIGHT: 100,
   WATER_LEVEL_DEFAULT: 0.5,
   STROKE_WIDTH: 1,
-  PIPE_LENGTH: 50
-  //TODO
+  PIPE_LENGTH: 50,
+  VERTICAL_MARGIN: 30,
+  HORIZONTAL_MARGIN: 100
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

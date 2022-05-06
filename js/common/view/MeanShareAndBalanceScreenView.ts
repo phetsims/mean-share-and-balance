@@ -14,6 +14,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import { Rectangle } from '../../../../scenery/js/imports.js';
 
 type SelfOptions = {
   //TODO add options that are specific to MeanShareAndBalanceScreenView here
@@ -33,6 +34,9 @@ class MeanShareAndBalanceScreenView extends ScreenView {
     }, providedOptions );
 
     super( options );
+    //TODO fix this to be a correct background
+    const background = new Rectangle( 0, 0, this.layoutBounds.maxX, this.layoutBounds.maxY,
+      { fill: '#FFF9F0' } );
 
     const resetAllButton = new ResetAllButton( {
       listener: () => {
@@ -44,6 +48,7 @@ class MeanShareAndBalanceScreenView extends ScreenView {
       bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN,
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
+    this.addChild( background );
     this.addChild( resetAllButton );
   }
 
