@@ -37,7 +37,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly dragRange = new Range( 0, 1 );
   readonly pipeGroup: PhetioGroup<PipeModel, [ NumberProperty, number ]>;
   readonly meanPredictionProperty: NumberProperty;
-  //TODO based on mean of cup water levels
   readonly meanProperty: NumberProperty;
   waterCup2DGroup: PhetioGroup<WaterCup2DModel, [ x: number ]>;
   waterCup3DGroup: PhetioGroup<WaterCup3DModel, [ x: number ]>;
@@ -110,7 +109,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         syncCups( new3DCup, new2DCup );
 
         if ( value > 1 ) {
-          const newPipe = this.pipeGroup.createNextElement( lastWaterCup3D.xProperty, 200 ); // TODO: Get the y value from the 2D cup
+          const newPipe = this.pipeGroup.createNextElement( lastWaterCup3D.xProperty, new2DCup.y );
           newPipe.isOpenProperty.link( isOpen => {
             if ( isOpen ) {
               this.levelWater();
