@@ -41,8 +41,7 @@ export default class PipeNode extends Node {
     const outerValve = new Path( this.createCircle( valveRadius + MeanShareAndBalanceConstants.STROKE_WIDTH, pipeWidth ), { fill: 'black' } );
     const valveNode = new Node( { children: [ outerValve, innerValve ], cursor: 'pointer' } );
     valveNode.center = pipeCenter;
-    // To turn off set clipArea to null
-    // Change valve node rotation to Math.PI/2
+
     const pipeClipArea = this.pipeClipArea( pipeRectangle.localBounds, valveRadius );
     pipeRectangle.clipArea = pipeClipArea;
 
