@@ -43,7 +43,14 @@ export default class PipeModel extends PhetioObject {
 }
 
 PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
-  valueType: PipeModel
+  valueType: PipeModel,
+  toStateObject: ( pipeModel: PipeModel ) => ( {} ),
+  stateToArgsForConstructor: ( stateObject: any ) => {
+    return [ 0 ];
+  },
+  stateSchema: {
+    // initialPlaceInLine: NumberIO
+  }
 } );
 
 meanShareAndBalance.register( 'PipeModel', PipeModel );
