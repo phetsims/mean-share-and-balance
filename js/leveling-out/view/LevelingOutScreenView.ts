@@ -127,7 +127,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         model.meanProperty,
         model.isShowingTickMarksProperty,
         model.isShowingMeanProperty, { tandem: tandem } );
-    }, [ new WaterCup2DModel( new WaterCupModel() ) ], {
+    }, [ new WaterCup2DModel( new WaterCupModel( { tandem: Tandem.OPTIONAL, x: 0 } ) ) ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup2DNodeGroup' ),
       supportsDynamicState: false
@@ -135,7 +135,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCup3DModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCup3DModel ) => {
       return new WaterCup3DNode( waterCup3DModel, modelViewTransform3DCups, { tandem: tandem } );
-    }, [ new WaterCup3DModel( new WaterCupModel() ) ], {
+    }, [ new WaterCup3DModel( new WaterCupModel( { tandem: Tandem.OPTIONAL, x: 0 } ) ) ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup3DNodeGroup' ),
       supportsDynamicState: false

@@ -16,11 +16,12 @@ import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioO
 import IOType from '../../../../tandem/js/types/IOType.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = {
   x: number;
 };
-export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions;
+export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions& PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
   readonly xProperty: NumberProperty;
@@ -29,7 +30,7 @@ export default class WaterCupModel extends PhetioObject {
   readonly waterCup3DChild: WaterCup3DModel;
   static WaterCupModelIO: IOType<WaterCupModel>;
 
-  constructor( providedOptions?: WaterCupModelOptions ) {
+  constructor( providedOptions: WaterCupModelOptions ) {
     const options = optionize<WaterCupModelOptions, SelfOptions, PhetioObjectOptions>()( {
       phetioType: WaterCupModel.WaterCupModelIO,
       tandem: Tandem.REQUIRED,
@@ -56,7 +57,14 @@ export default class WaterCupModel extends PhetioObject {
 }
 
 WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {
-  valueType: WaterCupModel
+  valueType: WaterCupModel,
+  toStateObject: ( waterCupModel: WaterCupModel ) => ( { } ),
+  stateToArgsForConstructor: ( stateObject: any ) => {
+    return [ 0 ];
+  },
+  stateSchema: {
+    // initialPlaceInLine: NumberIO
+  }
 } );
 
 meanShareAndBalance.register( 'WaterCupModel', WaterCupModel );
