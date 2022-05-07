@@ -9,13 +9,13 @@ import meanShareAndBalance from './meanShareAndBalance.js';
 
 type StringsType = {
   'mean-share-and-balance': {
-    'title': string
-  },
-  'predictMean': string,
-  'showMean': string,
-  'tickMarks': string,
-  'numberOfCups': string,
-  'levelingOutQuestion': string
+    'title': string;
+  };
+  'predictMean': string;
+  'showMean': string;
+  'tickMarks': string;
+  'numberOfCups': string;
+  'levelingOutQuestion': string;
 };
 
 const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
