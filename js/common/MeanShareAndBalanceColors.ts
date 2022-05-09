@@ -23,7 +23,7 @@ const meanShareAndBalanceColors = {
   // Background color that for screens in this sim
   // TODO: More colors should be in this profile so they can be edited using the Color Editor
   screenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'background', {
-    default: 'white'
+    default: '#FFF9F0'
   } )
 };
 
