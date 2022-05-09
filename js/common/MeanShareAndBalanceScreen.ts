@@ -33,7 +33,6 @@ export default class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceMode
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
     }, providedOptions );
 
-    //TODO add LevelingOutScreen
     super( createModel, createView, options );
   }
 }

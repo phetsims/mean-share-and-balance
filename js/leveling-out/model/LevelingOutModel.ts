@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Base class for LevelingOut view
+ * Model for the Leveling Out screen, which includes 2d cups, 3d cups, connecting pipes, and view options.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -38,23 +39,42 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly pipeGroup: PhetioGroup<PipeModel, [ NumberProperty, number ]>;
   readonly meanPredictionProperty: NumberProperty;
   readonly meanProperty: NumberProperty;
-  waterCup2DGroup: PhetioGroup<WaterCup2DModel, [ x: number ]>;
-  waterCup3DGroup: PhetioGroup<WaterCup3DModel, [ x: number ]>;
+  readonly waterCup2DGroup: PhetioGroup<WaterCup2DModel, [ x: number ]>;
+  readonly waterCup3DGroup: PhetioGroup<WaterCup3DModel, [ x: number ]>;
 
-  constructor( providedOptions: LevelingOutModelOptions ) {
+  constructor( providedOptions?: LevelingOutModelOptions ) {
     const options = optionize<LevelingOutModelOptions, SelfOptions>()( {
         //TODO add in custom options
       }, providedOptions
     );
     super( options );
 
-    this.isShowingPredictMeanProperty = new BooleanProperty( false );
-    this.isShowingMeanProperty = new BooleanProperty( false );
-    this.isShowingTickMarksProperty = new BooleanProperty( false );
-    this.meanPredictionProperty = new NumberProperty( 0 );
-    this.numberOfCupsProperty = new NumberProperty( 1 );
+    this.isShowingPredictMeanProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isShowingPredictMeanProperty' )
+    } );
+    this.isShowingMeanProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isShowingMeanProperty' )
+    } );
+    this.isShowingTickMarksProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isShowingTickMarksProperty' )
+
+      // TODO: add phetioDocumentation where appropriate
+    } );
+    this.meanPredictionProperty = new NumberProperty( 0, {
+      tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
+      phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup'
+    } );
+
     this.levelingOutRange = new Range( 1, 7 );
 
+    // The sim starts with one water cup
+    this.numberOfCupsProperty = new NumberProperty( 1, {
+      tandem: options.tandem.createTandem( 'numberOfCupsProperty' ),
+      numberType: 'Integer',
+      range: this.levelingOutRange
+    } );
+
+    // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
       return new WaterCup3DModel( { tandem: tandem, x: x } );
     }, [ 0 ], {
@@ -76,11 +96,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'pipeGroup' )
     } );
 
-    // The sim starts with one water cup
-    const first3DCup = this.waterCup3DGroup.createNextElement( 0 );
-    const first2DCup = this.waterCup2DGroup.createNextElement( 0 );
-    this.meanProperty = new NumberProperty( this.calculateMean( this.waterCup3DGroup ) );
-
     const validRange = new Range( 0, 1 );
 
     // Wire up the water level, treating the 3d model as the ground truth
@@ -96,13 +111,15 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
     };
 
-    syncCups( first3DCup, first2DCup );
+    this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT );
 
     // add/remove water cups and pipes according to number spinner
     this.numberOfCupsProperty.link( value => {
       while ( value > this.waterCup3DGroup.count ) {
         const lastWaterCup3D = this.waterCup3DGroup.getElement( this.waterCup3DGroup.count - 1 );
-        const x = lastWaterCup3D.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
+        const x = lastWaterCup3D ?
+                  lastWaterCup3D.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
+                  0;
         const new3DCup = this.waterCup3DGroup.createNextElement( x );
         const new2DCup = this.waterCup2DGroup.createNextElement( x );
 
@@ -134,6 +151,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       }
 
     } );
+
+
   }
 
   /**
