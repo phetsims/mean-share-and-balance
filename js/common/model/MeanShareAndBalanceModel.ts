@@ -17,7 +17,7 @@ type SelfOptions = {
 
 type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-class MeanShareAndBalanceModel {
+export default class MeanShareAndBalanceModel {
 
   constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
 
@@ -40,4 +40,3 @@ class MeanShareAndBalanceModel {
 }
 
 meanShareAndBalance.register( 'MeanShareAndBalanceModel', MeanShareAndBalanceModel );
-export default MeanShareAndBalanceModel;

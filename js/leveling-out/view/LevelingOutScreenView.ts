@@ -79,8 +79,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
           options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
         } ],
       {
-        right: this.layoutBounds.right - MeanShareAndBalanceConstants.HORIZONTAL_MARGIN,
-        top: questionBar.boundsProperty.value.maxY + MeanShareAndBalanceConstants.VERTICAL_MARGIN
+        right: this.layoutBounds.right - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+        top: questionBar.boundsProperty.value.maxY + MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
       }
     );
 
@@ -103,8 +103,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         numberOfCupsNumberPicker
       ],
       align: 'center',
-      right: this.layoutBounds.right - MeanShareAndBalanceConstants.HORIZONTAL_MARGIN,
-      bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.VERTICAL_MARGIN
+      right: this.layoutBounds.right - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
     //Predict Mean Line

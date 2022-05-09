@@ -39,8 +39,8 @@ export default class PipeNode extends Node {
 
     //Valve drawing
     const valveRadius = 10;
-    const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.STROKE_WIDTH * 2 ), { fill: 'grey' } );
-    const outerValve = new Path( this.createCircle( valveRadius + MeanShareAndBalanceConstants.STROKE_WIDTH, pipeWidth ), { fill: 'black' } );
+    const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ), { fill: 'grey' } );
+    const outerValve = new Path( this.createCircle( valveRadius + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ), { fill: 'black' } );
     const valveNode = new Node( { children: [ outerValve, innerValve ], cursor: 'pointer' } );
     valveNode.center = pipeCenter;
 

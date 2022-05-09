@@ -14,17 +14,14 @@ import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from './model/MeanShareAndBalanceModel.js';
 import MeanShareAndBalanceScreenView from './view/MeanShareAndBalanceScreenView.js';
-// import LevelingOutScreenView from '../leveling-out/LevelingOutScreenView.js';
-// import LevelingOutModel from '../leveling-out/LevelingOutModel.js';
 
 type SelfOptions = {
-  //TODO add options that are specific to MeanSh≥areAndBalanceScreen here
+  //TODO add options that are specific to MeanShareAndBalanceScreen here
 };
 
 type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-// TODO: export default at all class declarations
-class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends MeanShareAndBalanceScreenView> extends Screen<T, V> {
+export default class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends MeanShareAndBalanceScreenView> extends Screen<T, V> {
 
   constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
 
@@ -42,4 +39,3 @@ class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends Me
 }
 
 meanShareAndBalance.register( 'MeanShareAndBalanceScreen', MeanShareAndBalanceScreen );
-export default MeanShareAndBalanceScreen;

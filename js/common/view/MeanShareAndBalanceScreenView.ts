@@ -21,7 +21,7 @@ type SelfOptions = {
 
 export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
-class MeanShareAndBalanceScreenView extends ScreenView {
+export default class MeanShareAndBalanceScreenView extends ScreenView {
 
   constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
 
@@ -64,4 +64,3 @@ class MeanShareAndBalanceScreenView extends ScreenView {
 }
 
 meanShareAndBalance.register( 'MeanShareAndBalanceScreenView', MeanShareAndBalanceScreenView );
-export default MeanShareAndBalanceScreenView;
