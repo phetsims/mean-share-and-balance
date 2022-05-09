@@ -129,8 +129,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     }, () => [ model.waterCup2DGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup2DNodeGroup' ),
-      supportsDynamicState: false,
-      phetioDynamicElement: true
+      supportsDynamicState: false
     } );
 
     const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCup3DModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCup3DModel ) => {
@@ -138,8 +137,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     }, () => [ model.waterCup3DGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup3DNodeGroup' ),
-      supportsDynamicState: false,
-      phetioDynamicElement: true
+      supportsDynamicState: false
     } );
 
     // Dynamically center cups
@@ -204,8 +202,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     }, () => [ model.pipeGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'pipeNodeGroup' ),
-      supportsDynamicState: false,
-      phetioDynamicElement: true
+      supportsDynamicState: false
     } );
 
     const createPipeNode = ( pipeModel: PipeModel ) => {

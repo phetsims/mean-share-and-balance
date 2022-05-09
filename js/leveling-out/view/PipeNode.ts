@@ -26,6 +26,8 @@ export default class PipeNode extends Node {
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       //TODO add default values for options
+
+      phetioDynamicElement: true
     }, providedOptions );
 
     super( options );
