@@ -37,6 +37,8 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
+  readonly pipeMap: Map<PipeModel, PipeNode>
+
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
@@ -190,7 +192,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     // Pipe nodes addition and removal
-    const pipeMap = new Map<PipeModel, PipeNode>();
+    this.pipeMap = new Map<PipeModel, PipeNode>();
 
     const pipeNodeGroup = new PhetioGroup<PipeNode, [ PipeModel ]>( ( tandem: Tandem, pipeModel: PipeModel ) => {
       return new PipeNode( pipeModel, modelViewTransform2DCups,
@@ -209,13 +211,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     model.pipeGroup.elementCreatedEmitter.addListener( pipe => {
       const pipeNode = createPipeNode( pipe );
-      pipeMap.set( pipe, pipeNode );
+      this.pipeMap.set( pipe, pipeNode );
     } );
 
     model.pipeGroup.elementDisposedEmitter.addListener( pipe => {
-      const pipeNode = pipeMap.get( pipe )!;
+      const pipeNode = this.pipeMap.get( pipe )!;
       waterCupLayerNode.removeChild( pipeNode );
-      pipeMap.delete( pipe );
+      this.pipeMap.delete( pipe );
     } );
 
     this.addChild( questionBar );
@@ -223,6 +225,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
+  }
+
+  override step( dt: number ): void {
+    for ( const pipe of this.pipeMap.values() ) {
+      pipe.step( dt );
+    }
   }
 }
 
