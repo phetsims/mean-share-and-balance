@@ -15,7 +15,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-// import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
@@ -145,7 +144,7 @@ export default class WaterCup3DNode extends Node {
 
     } );
 
-    // waterFrontEdge.clipArea = this.cupClipArea( waterFrontEdge.localBounds, cupFront.localBounds );
+    waterFrontEdge.clipArea = this.cupClipArea( cupFrontShape, cupBottomShape );
 
     this.addChild( cupBack );
     this.addChild( cupBottom );
@@ -161,12 +160,10 @@ export default class WaterCup3DNode extends Node {
     this.mutate( options );
   }
 
-  // private cupClipArea( waterBounds: Bounds2, cupBounds: Bounds2 ): Shape {
-  //   const clipAreaWater = Shape.bounds( waterBounds );
-  //   const clipAreaCup = Shape.bounds( cupBounds );
-  //
-  //   return clipAreaWater.shapeDifference( clipAreaCup );
-  // }
+  private cupClipArea( cupFrontShape: Shape, cupBottomShape: Shape ): Shape {
+    const clipAreaCup = Shape.union( [ cupFrontShape, cupBottomShape ] );
+    return clipAreaCup;
+  }
 }
 
 meanShareAndBalance.register( 'WaterCup3DNode', WaterCup3DNode );
