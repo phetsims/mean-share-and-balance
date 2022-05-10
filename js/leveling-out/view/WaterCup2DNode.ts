@@ -42,24 +42,14 @@ export default class WaterCup2DNode extends Node {
     );
 
     // 0 is empty, 1 is full
-    const y = Utils.linear(
-      0,
-      1,
-      MeanShareAndBalanceConstants.CUP_HEIGHT,
-      0,
-      cup2DModel.waterLevelProperty.value
-    );
-    const waterCupRectangle = new Rectangle(
-      0,
-      0,
-      MeanShareAndBalanceConstants.CUP_WIDTH,
-      MeanShareAndBalanceConstants.CUP_HEIGHT,
+    const y = Utils.linear( 0, 1, MeanShareAndBalanceConstants.CUP_HEIGHT, 0, cup2DModel.waterLevelProperty.value );
+
+    const waterCupRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT,
       { stroke: 'black' }
     );
-    const waterLevelRectangle = new Rectangle(
-      0,
-      y,
-      MeanShareAndBalanceConstants.CUP_WIDTH,
+
+    const waterCupBackgroundRectangle = new Rectangle( waterCupRectangle.localBounds, { fill: 'white' } );
+    const waterLevelRectangle = new Rectangle( 0, y, MeanShareAndBalanceConstants.CUP_WIDTH,
       MeanShareAndBalanceConstants.CUP_HEIGHT * cup2DModel.waterLevelProperty.value,
       { fill: '#51CEF4' }
     );
@@ -89,6 +79,7 @@ export default class WaterCup2DNode extends Node {
       showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
     } );
 
+    this.addChild( waterCupBackgroundRectangle );
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
     this.addChild( showMeanLine );
