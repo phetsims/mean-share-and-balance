@@ -142,9 +142,13 @@ export default class WaterCup3DNode extends Node {
       waterBackEdge.shape = waterBackEdgeShape;
       waterCrescent.shape = waterCrescentShape;
 
+      //Prevents back edge from appearing when water level empty.
+      waterBackEdge.clipArea = Shape.union( [ waterTopShape, waterSideShape ] );
+
     } );
 
-    waterFrontEdge.clipArea = this.cupClipArea( cupFrontShape, cupBottomShape );
+    // Prevents front edge from dipping below cup boundary when dragged all the way down.
+    waterFrontEdge.clipArea = Shape.union( [ cupFrontShape, cupBottomShape ] );
 
     this.addChild( cupBack );
     this.addChild( cupBottom );
@@ -160,10 +164,6 @@ export default class WaterCup3DNode extends Node {
     this.mutate( options );
   }
 
-  private cupClipArea( cupFrontShape: Shape, cupBottomShape: Shape ): Shape {
-    const clipAreaCup = Shape.union( [ cupFrontShape, cupBottomShape ] );
-    return clipAreaCup;
-  }
 }
 
 meanShareAndBalance.register( 'WaterCup3DNode', WaterCup3DNode );
