@@ -25,8 +25,6 @@ export default class PipeNode extends Node {
 
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
-      //TODO add default values for options
-
       phetioDynamicElement: true
     }, providedOptions );
 
@@ -41,7 +39,11 @@ export default class PipeNode extends Node {
     const valveRadius = 10;
     const innerValve = new Path( this.createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ), { fill: 'grey' } );
     const outerValve = new Path( this.createCircle( valveRadius + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ), { fill: 'black' } );
-    const valveNode = new Node( { children: [ outerValve, innerValve ], cursor: 'pointer' } );
+    const valveNode = new Node( {
+      children: [ outerValve, innerValve ],
+      cursor: 'pointer',
+      tandem: options.tandem.createTandem( 'valveNode' )
+    } );
     valveNode.center = pipeCenter;
 
     const pipeClipArea = this.pipeClipArea( pipeRectangle.localBounds, valveRadius );

@@ -13,10 +13,11 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
 type PredictMeanNodeOptions = SelfOptions & PickRequired<NodeOptions,
-  'visibleProperty' | 'tandem'>
+  'visibleProperty' | 'tandem' | 'phetioDocumentation'>
 
 export default class PredictMeanNode extends Node {
   private readonly predictMeanLine: Line;
@@ -32,8 +33,7 @@ export default class PredictMeanNode extends Node {
 
     const dilation = 10;
 
-    //TODO pass in cup width
-    this.predictMeanLine = new Line( 0, 0, 75, 0, {
+    this.predictMeanLine = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH + 25, 0, {
       stroke: 'purple',
       lineWidth: 2
     } );

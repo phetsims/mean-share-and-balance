@@ -35,7 +35,9 @@ export default class PipeModel extends PhetioObject {
 
     super( options );
 
-    this.isOpenProperty = new BooleanProperty( false );
+    this.isOpenProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isOpenProperty' )
+    } );
     // Should these be options?
     this.xProperty = xProperty;
     this.y = y;

@@ -79,6 +79,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       return new WaterCup3DModel( { tandem: tandem, x: x } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCup3DModel.WaterCup3DModelIO ),
+      phetioDocumentation: 'Holds the models for the 3D water cups.',
       tandem: options.tandem.createTandem( 'waterCup3DGroup' )
     } );
 
@@ -86,6 +87,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       return new WaterCup2DModel( { tandem: tandem, x: x } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCup2DModel.WaterCup2DModelIO ),
+      phetioDocumentation: 'Holds the models for the 2D water cups.',
       tandem: options.tandem.createTandem( 'waterCup2DGroup' )
     } );
 
@@ -93,12 +95,17 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       return new PipeModel( xProperty, y, { tandem: tandem } );
     }, [ new NumberProperty( 0 ), 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( PipeModel.PipeModelIO ),
+      phetioDocumentation: 'Holds the connecting pipes for the 2D water cups.',
       tandem: options.tandem.createTandem( 'pipeGroup' )
     } );
 
     const validWaterLevelRange = new Range( 0, 1 );
 
-    this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT );
+    // should this calculate the average water instead of assuming water_level_default?
+    this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+      tandem: options.tandem.createTandem( 'meanProperty' ),
+      phetioDocumentation: 'The ground truth water level mean.'
+    } );
 
     // add/remove water cups and pipes according to number spinner
     this.numberOfCupsProperty.link( numberOfCups => {

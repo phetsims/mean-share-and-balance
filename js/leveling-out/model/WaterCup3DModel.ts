@@ -35,7 +35,9 @@ export default class WaterCup3DModel extends PhetioObject {
     }, providedOptions );
     super( options );
     this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
-      range: new Range( 0, 1 )
+      range: new Range( 0, 1 ),
+      tandem: options.tandem.createTandem( 'waterLevelProperty' ),
+      phetioDocumentation: 'The current water level of the cup, 0 being empty 1 being full.'
     } );
 
     this.xProperty = new NumberProperty( options.x );

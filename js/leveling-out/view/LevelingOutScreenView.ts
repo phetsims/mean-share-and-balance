@@ -40,8 +40,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {
-
-      //TODO add default values for optional ScreenViewOptions here
     }, providedOptions );
 
     super( model, options );
@@ -113,7 +111,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       modelViewTransform2DCups,
       {
         visibleProperty: model.isShowingPredictMeanProperty,
-        tandem: options.tandem.createTandem( 'predictMeanLine' )
+        tandem: options.tandem.createTandem( 'predictMeanLine' ),
+        phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
 

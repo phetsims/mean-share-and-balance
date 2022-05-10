@@ -11,8 +11,9 @@ import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {};
-type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty'>;
+type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
 
+// Should tick marks be common code?
 export default class TickMarksNode extends Node {
 
   constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {

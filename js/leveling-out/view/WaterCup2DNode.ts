@@ -25,8 +25,6 @@ export default class WaterCup2DNode extends Node {
   constructor( cup2DModel: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: cup2DModel2DNodeOptions ) {
-    //TODO add cupWidth and cupHeight to global constants
-
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: cup2DModel.xProperty.value,
@@ -37,7 +35,10 @@ export default class WaterCup2DNode extends Node {
 
     const tickMarks = new TickMarksNode(
       MeanShareAndBalanceConstants.CUP_HEIGHT,
-      { visibleProperty: isShowingTickMarksProperty }
+      {
+        visibleProperty: isShowingTickMarksProperty,
+        tandem: options.tandem.createTandem( 'tickMarks' )
+      }
     );
 
     // 0 is empty, 1 is full
@@ -77,7 +78,9 @@ export default class WaterCup2DNode extends Node {
       {
         stroke: 'red',
         lineWidth: 2,
-        visibleProperty: isShowingMeanProperty
+        visibleProperty: isShowingMeanProperty,
+        tandem: options.tandem.createTandem( 'showMeanLine' ),
+        phetioDocumentation: 'Line that shows the ground truth water level mean across all present cups.'
       } );
 
     meanProperty.link( mean => {
