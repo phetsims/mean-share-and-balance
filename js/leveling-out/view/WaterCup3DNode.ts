@@ -15,6 +15,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
@@ -59,23 +60,23 @@ export default class WaterCup3DNode extends Node {
 
     // Water fill and shading paths
     const waterSide = new Path( null, {
-      fill: '#A5D9F2',
+      fill: MeanShareAndBalanceColors.water3DFillColorProperty,
       pickable: false
     } );
     const waterTop = new Path( null, {
-      fill: '#A5D9F2',
+      fill: MeanShareAndBalanceColors.water3DFillColorProperty,
       pickable: false
     } );
     const waterFrontEdge = new Path( null, {
-      fill: '#8EC6DD',
+      fill: MeanShareAndBalanceColors.water3DFrontEdgeFillColorProperty,
       pickable: false
     } );
     const waterBackEdge = new Path( null, {
-      fill: '#9CD0E5',
+      fill: MeanShareAndBalanceColors.water3DBackEdgeFillColorProperty,
       pickable: false
     } );
     const waterCrescent = new Path( null, {
-      fill: '#B4E5F9'
+      fill: MeanShareAndBalanceColors.water3DCrescentFillColorProperty
     } );
 
     // Water cup structure and glare paths
@@ -98,7 +99,7 @@ export default class WaterCup3DNode extends Node {
     } );
 
     const cupGlare = new Path( cupGlareShape.getOffsetShape( 2 ), {
-      fill: 'white',
+      fill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty,
       opacity: 0.35
     } );
 

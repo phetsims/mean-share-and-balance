@@ -16,6 +16,7 @@ import TickMarksNode from './TickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {};
 
@@ -51,7 +52,7 @@ export default class WaterCup2DNode extends Node {
     const waterCupBackgroundRectangle = new Rectangle( waterCupRectangle.localBounds, { fill: 'white' } );
     const waterLevelRectangle = new Rectangle( 0, y, MeanShareAndBalanceConstants.CUP_WIDTH,
       MeanShareAndBalanceConstants.CUP_HEIGHT * cup2DModel.waterLevelProperty.value,
-      { fill: '#51CEF4' }
+      { fill: MeanShareAndBalanceColors.water2DFillColorProperty }
     );
 
     cup2DModel.waterLevelProperty.link( waterLevel => {
@@ -66,7 +67,7 @@ export default class WaterCup2DNode extends Node {
       MeanShareAndBalanceConstants.CUP_WIDTH,
       MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
       {
-        stroke: 'red',
+        stroke: MeanShareAndBalanceColors.showMeanLineStrokeColorProperty,
         lineWidth: 2,
         visibleProperty: isShowingMeanProperty,
         tandem: options.tandem.createTandem( 'showMeanLine' ),
