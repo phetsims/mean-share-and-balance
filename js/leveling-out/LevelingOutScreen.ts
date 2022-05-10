@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO Describe this class and its responsibilities.
+ * Instantiates Leveling Out Model and Screen View.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -16,9 +16,7 @@ import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceScreen from '../common/MeanShareAndBalanceScreen.js';
 
-type SelfOptions = {
-  //TODO add options that are specific to LevelingOutScreen here
-};
+type SelfOptions = {};
 
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
 

@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO Describe this class and its responsibilities.
+ * Representation for the MeanShareAndBalanceScreen, contains resetAll button
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -15,9 +15,7 @@ import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
-type SelfOptions = {
-  //TODO add options that are specific to MeanShareAndBalanceScreenView here
-};
+type SelfOptions = {};
 
 export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
@@ -27,9 +25,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {
 
-      //TODO add default values for optional SelfOptions here
-
-      //TODO add default values for optional ScreenViewOptions here
     }, providedOptions );
 
     super( options );
@@ -51,7 +46,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
    * Resets the view.
    */
   public reset(): void {
-    //TODO
   }
 
   /**
@@ -59,7 +53,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
    * @param dt - time step, in seconds
    */
   public override step( dt: number ): void {
-    //TODO
   }
 }
 

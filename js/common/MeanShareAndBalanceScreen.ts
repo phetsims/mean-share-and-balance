@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO Describe this class and its responsibilities.
+ * Creates model and view for Mean Share and Balance, contains background color
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -15,9 +15,7 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from './model/MeanShareAndBalanceModel.js';
 import MeanShareAndBalanceScreenView from './view/MeanShareAndBalanceScreenView.js';
 
-type SelfOptions = {
-  //TODO add options that are specific to MeanShareAndBalanceScreen here
-};
+type SelfOptions = {};
 
 type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
@@ -26,10 +24,6 @@ export default class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceMode
   constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
 
     const options = optionize<MeanShareAndBalanceScreenOptions, SelfOptions, ScreenOptions>()( {
-
-      //TODO add default values for optional SelfOptions here
-
-      //TODO add default values for optional ScreenOptions here
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
     }, providedOptions );
 

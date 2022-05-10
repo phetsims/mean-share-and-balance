@@ -104,11 +104,9 @@ export default class PipeNode extends Node {
     const currentRotation = this.valveNode.rotation;
     const targetRotation = isOpen ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;
-    //TODO get same behavior but only assign to rotation once
-    this.valveNode.rotation = currentRotation + Math.sign( delta ) * dt * 3;
-    if ( Math.abs( this.valveNode.rotation - targetRotation ) * 0.2 <= dt ) {
-      this.valveNode.rotation = targetRotation;
-    }
+    const rotationThreshold = Math.abs( this.valveNode.rotation - targetRotation ) * 0.4;
+    const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;
+    this.valveNode.rotation = rotationThreshold <= dt ? targetRotation : proposedRotation;
   }
 
   step( dt: number ): void {
