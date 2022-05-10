@@ -22,9 +22,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import WaterCup2DModel from './WaterCup2DModel.js';
 import WaterCup3DModel from './WaterCup3DModel.js';
 
-type SelfOptions = {
-  //TODO add options that are specific to MeanShareAndBalanceModel here
-};
+type SelfOptions = {};
 
 type LevelingOutModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
@@ -44,7 +42,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   constructor( providedOptions?: LevelingOutModelOptions ) {
     const options = optionize<LevelingOutModelOptions, SelfOptions>()( {
-        //TODO add in custom options
       }, providedOptions
     );
     super( options );
@@ -57,8 +54,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
     this.isShowingTickMarksProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isShowingTickMarksProperty' )
-
-      // TODO: add phetioDocumentation where appropriate
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
@@ -76,7 +71,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
-      return new WaterCup3DModel( { tandem: tandem, x: x } );
+      return new WaterCup3DModel( { tandem: tandem, x: x, y: 400 } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCup3DModel.WaterCup3DModelIO ),
       phetioDocumentation: 'Holds the models for the 3D water cups.',
@@ -84,7 +79,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     this.waterCup2DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
-      return new WaterCup2DModel( { tandem: tandem, x: x } );
+      return new WaterCup2DModel( { tandem: tandem, x: x, y: 200 } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCup2DModel.WaterCup2DModelIO ),
       phetioDocumentation: 'Holds the models for the 2D water cups.',

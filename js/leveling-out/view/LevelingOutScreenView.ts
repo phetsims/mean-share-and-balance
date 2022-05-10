@@ -30,6 +30,7 @@ import WaterCup3DModel from '../model/WaterCup3DModel.js';
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import AbstractWaterCupModel from '../model/AbstractWaterCupModel.js';
 
 type SelfOptions = {};
 
@@ -140,56 +141,45 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       supportsDynamicState: false
     } );
 
-    // Dynamically center cups
+    // Center 2D & 3D cups
     const cupsAreaCenterX = this.layoutBounds.centerX - levelingOutOptionsCheckboxGroup.width;
-
-    // Connect nodes to view
-    const waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
-    const waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanLine.x = waterCupLayerNode.x;
     };
 
-    const addWaterCup2DNode = ( waterCup2DModel: WaterCup2DModel ) => {
-      const waterCup2DNode = waterCup2DNodeGroup.createCorrespondingGroupElement( waterCup2DModel.tandem.name, waterCup2DModel );
-      waterCupLayerNode.addChild( waterCup2DNode );
-      waterCup2DMap.set( waterCup2DModel, waterCup2DNode );
-      centerWaterCupLayerNode();
-    };
+    // Connect nodes to view
+    const waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
+    const waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
 
-    const addWaterCup3DNode = ( waterCup3DModel: WaterCup3DModel ) => {
-      const waterCup3DNode = waterCup3DNodeGroup.createCorrespondingGroupElement( waterCup3DModel.tandem.name, waterCup3DModel );
-      waterCupLayerNode.addChild( waterCup3DNode );
-      waterCup3DMap.set( waterCup3DModel, waterCup3DNode );
-      centerWaterCupLayerNode();
-    };
+    // callback functions to add and remove water cups
+    function addWaterCup<T extends AbstractWaterCupModel>( map: Map<T, Node>, nodeGroup: PhetioGroup<Node, [ T ]> ) {
+      return ( cupModel: T ) => {
+        const cupNode = nodeGroup.createCorrespondingGroupElement( cupModel.tandem.name, cupModel );
+        waterCupLayerNode.addChild( cupNode );
+        map.set( cupModel, cupNode );
+        centerWaterCupLayerNode();
+      };
+    }
+
+    function removeWaterCup<T>( map: Map<T, Node> ) {
+      return ( cupModel: T ) => {
+        const cupNode = map.get( cupModel )!;
+        waterCupLayerNode.removeChild( cupNode );
+        centerWaterCupLayerNode();
+        map.delete( cupModel );
+      };
+    }
 
     // add initial starting cups
-    model.waterCup2DGroup.forEach( addWaterCup2DNode );
-    model.waterCup3DGroup.forEach( addWaterCup3DNode );
+    model.waterCup2DGroup.forEach( addWaterCup( waterCup2DMap, waterCup2DNodeGroup ) );
+    model.waterCup3DGroup.forEach( addWaterCup( waterCup3DMap, waterCup3DNodeGroup ) );
 
-    model.waterCup2DGroup.elementCreatedEmitter.addListener( addWaterCup2DNode );
-    model.waterCup3DGroup.elementCreatedEmitter.addListener( addWaterCup3DNode );
-
-    // TODO: Unify duplicated code
-    model.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2DModel => {
-      const waterCup2DNode = waterCup2DMap.get( waterCup2DModel )!;
-      waterCupLayerNode.removeChild( waterCup2DNode );
-
-      centerWaterCupLayerNode();
-
-      waterCup2DMap.delete( waterCup2DModel );
-    } );
-
-    model.waterCup3DGroup.elementDisposedEmitter.addListener( waterCup3DModel => {
-      const waterCup3DNode = waterCup3DMap.get( waterCup3DModel )!;
-      waterCupLayerNode.removeChild( waterCup3DNode );
-
-      centerWaterCupLayerNode();
-
-      waterCup3DMap.delete( waterCup3DModel );
-    } );
+    // add and remove cups according to model groups.
+    model.waterCup2DGroup.elementCreatedEmitter.addListener( addWaterCup( waterCup2DMap, waterCup2DNodeGroup ) );
+    model.waterCup3DGroup.elementCreatedEmitter.addListener( addWaterCup( waterCup3DMap, waterCup3DNodeGroup ) );
+    model.waterCup2DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup2DMap ) );
+    model.waterCup3DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup3DMap ) );
 
     // Pipe nodes addition and removal
     this.pipeMap = new Map<PipeModel, PipeNode>();
@@ -206,19 +196,17 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const createPipeNode = ( pipeModel: PipeModel ) => {
       const pipeNode = pipeNodeGroup.createCorrespondingGroupElement( pipeModel.tandem.name, pipeModel );
       waterCupLayerNode.addChild( pipeNode );
-      return pipeNode;
+      this.pipeMap.set( pipeModel, pipeNode );
     };
 
-    model.pipeGroup.elementCreatedEmitter.addListener( pipe => {
-      const pipeNode = createPipeNode( pipe );
-      this.pipeMap.set( pipe, pipeNode );
-    } );
-
-    model.pipeGroup.elementDisposedEmitter.addListener( pipe => {
-      const pipeNode = this.pipeMap.get( pipe )!;
+    const removePipeNode = ( pipeModel: PipeModel ) => {
+      const pipeNode = this.pipeMap.get( pipeModel )!;
       waterCupLayerNode.removeChild( pipeNode );
-      this.pipeMap.delete( pipe );
-    } );
+      this.pipeMap.delete( pipeModel );
+    };
+
+    model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
+    model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
