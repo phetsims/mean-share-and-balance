@@ -124,7 +124,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           const new2DWaterLevel = new2DCup.waterLevelProperty.value + delta;
           new2DCup.waterLevelProperty.value = validWaterLevelRange.constrainValue( new2DWaterLevel );
 
-          this.levelWater();
+          // this.levelWater();
           this.updateMeanFrom3DCups();
         } );
 
@@ -132,7 +132,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           const newPipe = this.pipeGroup.createNextElement( lastWaterCup3D.xProperty, new2DCup.y );
           newPipe.isOpenProperty.link( isOpen => {
             if ( isOpen ) {
-              this.levelWater();
+              // this.levelWater();
             }
           } );
         }
@@ -163,7 +163,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   /**
    * Called when a pipe is opened or closed, levels out the water levels for the connected cups.
    */
-  private levelWater(): void {
+  private levelWater( dt: number ): void {
     const affectedCups: Array<Set<WaterCup2DModel>> = [];
     let cupsSet = new Set<WaterCup2DModel>();
     // organize into sets of connected cups
@@ -185,8 +185,21 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     // calculate and set mean
     affectedCups.forEach( cupsSet => {
       const waterMean = calculateMean( Array.from( cupsSet ).map( cup => cup.waterLevelProperty.value ) );
-      cupsSet.forEach( cup => cup.waterLevelProperty.set( waterMean ) );
+      cupsSet.forEach( cup => {
+        const currentWaterLevel = cup.waterLevelProperty.value;
+        const delta = waterMean - currentWaterLevel;
+
+        // Animate water non-linearly
+        cup.waterLevelProperty.set( currentWaterLevel + delta * dt * 5 );
+
+        //to animate linearly grab Math.sign(delta) and multiply by dt
+      } );
     } );
+  }
+
+  override step( dt: number ): void {
+    super.step( dt );
+    this.levelWater( dt );
   }
 
   override reset(): void {
