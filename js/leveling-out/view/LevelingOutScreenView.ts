@@ -39,8 +39,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
-    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {
-    }, providedOptions );
+    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
     super( model, options );
 
@@ -145,24 +144,23 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // Connect nodes to view
     const waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
     const waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
+    const centerWaterCupLayerNode = () => {
+      waterCupLayerNode.centerX = cupsAreaCenterX;
+      predictMeanLine.x = waterCupLayerNode.x;
+    };
 
     const addWaterCup2DNode = ( waterCup2DModel: WaterCup2DModel ) => {
       const waterCup2DNode = waterCup2DNodeGroup.createCorrespondingGroupElement( waterCup2DModel.tandem.name, waterCup2DModel );
       waterCupLayerNode.addChild( waterCup2DNode );
       waterCup2DMap.set( waterCup2DModel, waterCup2DNode );
-
-      waterCupLayerNode.centerX = cupsAreaCenterX;
-      predictMeanLine.x = waterCupLayerNode.x;
-
-      // TODO fix predictMeanLine first cup bug
+      centerWaterCupLayerNode();
     };
 
     const addWaterCup3DNode = ( waterCup3DModel: WaterCup3DModel ) => {
       const waterCup3DNode = waterCup3DNodeGroup.createCorrespondingGroupElement( waterCup3DModel.tandem.name, waterCup3DModel );
       waterCupLayerNode.addChild( waterCup3DNode );
       waterCup3DMap.set( waterCup3DModel, waterCup3DNode );
-
-      waterCupLayerNode.centerX = cupsAreaCenterX;
+      centerWaterCupLayerNode();
     };
 
     // add initial starting cups
@@ -177,8 +175,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const waterCup2DNode = waterCup2DMap.get( waterCup2DModel )!;
       waterCupLayerNode.removeChild( waterCup2DNode );
 
-      waterCupLayerNode.centerX = cupsAreaCenterX;
-      predictMeanLine.x = waterCupLayerNode.x;
+      centerWaterCupLayerNode();
 
       waterCup2DMap.delete( waterCup2DModel );
     } );
@@ -187,7 +184,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const waterCup3DNode = waterCup3DMap.get( waterCup3DModel )!;
       waterCupLayerNode.removeChild( waterCup3DNode );
 
-      waterCupLayerNode.centerX = cupsAreaCenterX;
+      centerWaterCupLayerNode();
 
       waterCup3DMap.delete( waterCup3DModel );
     } );
