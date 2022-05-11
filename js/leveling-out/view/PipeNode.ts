@@ -50,7 +50,8 @@ export default class PipeNode extends Node {
     this.valveNode = new Node( {
       children: [ outerValve, innerValve ],
       cursor: 'pointer',
-      tandem: options.tandem.createTandem( 'valveNode' )
+      tandem: options.tandem.createTandem( 'valveNode' ),
+      tagName: 'button'
     } );
     this.valveNode.center = pipeCenter;
 

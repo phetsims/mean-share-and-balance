@@ -114,7 +114,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       {
         visibleProperty: model.isShowingPredictMeanProperty,
         tandem: options.tandem.createTandem( 'predictMeanLine' ),
-        phetioDocumentation: 'Line user can drag to predict water level mean.'
+        phetioDocumentation: 'Line user can drag to predict water level mean.',
+        valueProperty: model.meanPredictionProperty,
+        enabledRangeProperty: new Property( model.dragRange )
       }
     );
 
