@@ -17,12 +17,16 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
 
 type SelfOptions = {};
 
 type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
 
 export default class WaterCup2DNode extends Node {
+  private readonly meanProperty: NumberProperty;
+  private readonly meanLink: PropertyLinkListener<number>;
+
   constructor( cup2DModel: WaterCup2DModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: cup2DModel2DNodeOptions ) {
@@ -34,6 +38,7 @@ export default class WaterCup2DNode extends Node {
 
     super();
 
+    this.meanProperty = meanProperty;
     const tickMarks = new TickMarksNode(
       MeanShareAndBalanceConstants.CUP_HEIGHT,
       {
@@ -74,11 +79,15 @@ export default class WaterCup2DNode extends Node {
         phetioDocumentation: 'Line that shows the ground truth water level mean across all present cups.'
       } );
 
-    meanProperty.link( mean => {
-      const inverse = 1 - mean;
-      showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
-      showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
-    } );
+    this.meanLink = ( mean: number ): PropertyLinkListener<number> => {
+      return function() {
+        const inverse = 1 - mean;
+        showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
+        showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
+      };
+    };
+
+    meanProperty.link( this.meanLink );
 
     this.addChild( waterCupBackgroundRectangle );
     this.addChild( waterLevelRectangle );
@@ -87,6 +96,11 @@ export default class WaterCup2DNode extends Node {
     this.addChild( tickMarks );
 
     this.mutate( options );
+  }
+
+  override dispose(): void {
+    super.dispose();
+    this.meanProperty.unlink( this.meanLink );
   }
 }
 

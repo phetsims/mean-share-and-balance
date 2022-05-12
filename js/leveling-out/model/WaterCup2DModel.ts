@@ -30,6 +30,10 @@ export default class WaterCup2DModel extends AbstractWaterCupModel {
     }, providedOptions );
     super( options );
   }
+
+  override dispose(): void {
+    super.dispose();
+  }
 }
 
 WaterCup2DModel.WaterCup2DModelIO = new IOType<WaterCup2DModel>( 'WaterCup2DModelIO', {

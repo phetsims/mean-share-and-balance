@@ -31,6 +31,10 @@ export default class WaterCup3DModel extends AbstractWaterCupModel {
     }, providedOptions );
     super( options );
   }
+
+  override dispose(): void {
+    super.dispose();
+  }
 }
 
 WaterCup3DModel.WaterCup3DModelIO = new IOType<WaterCup3DModel>( 'WaterCup3DModelIO', {

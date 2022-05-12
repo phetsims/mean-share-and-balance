@@ -155,7 +155,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
 
     // callback functions to add and remove water cups
-    function addWaterCup<T extends AbstractWaterCupModel>( map: Map<T, Node>, nodeGroup: PhetioGroup<Node, [ T ]> ) {
+    function addWaterCup<T extends AbstractWaterCupModel, U extends Node>( map: Map<T, U>, nodeGroup: PhetioGroup<U, [ T ]> ) {
       return ( cupModel: T ) => {
         const cupNode = nodeGroup.createCorrespondingGroupElement( cupModel.tandem.name, cupModel );
         waterCupLayerNode.addChild( cupNode );
@@ -164,7 +164,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       };
     }
 
-    function removeWaterCup<T>( map: Map<T, Node> ) {
+    function removeWaterCup<T extends AbstractWaterCupModel, U extends Node>( map: Map<T, U> ) {
       return ( cupModel: T ) => {
         const cupNode = map.get( cupModel )!;
         waterCupLayerNode.removeChild( cupNode );
@@ -205,11 +205,14 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const pipeNode = this.pipeMap.get( pipeModel )!;
       waterCupLayerNode.removeChild( pipeNode );
       this.pipeMap.delete( pipeModel );
+      pipeNode.dispose();
     };
 
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
+
+    //TODO add tab order for alternative input
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
