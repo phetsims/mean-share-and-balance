@@ -7,32 +7,25 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import AbstractWaterCupModel from './AbstractWaterCupModel.js';
+import AbstractWaterCupModel, { AbstractWaterCupModelOptions } from './AbstractWaterCupModel.js';
 
-type SelfOptions = {
-  x: number;
-  y: number;
-};
-type WaterCup2DModelOptions = SelfOptions & PhetioObjectOptions;
+type SelfOptions = {};
+type WaterCup2DModelOptions = SelfOptions & AbstractWaterCupModelOptions;
 
 export default class WaterCup2DModel extends AbstractWaterCupModel {
   static WaterCup2DModelIO: IOType<WaterCup2DModel>;
+
   constructor( providedOptions: WaterCup2DModelOptions ) {
 
-    const options = optionize<WaterCup2DModelOptions, SelfOptions, PhetioObjectOptions>()( {
+    const options = optionize<WaterCup2DModelOptions, SelfOptions, AbstractWaterCupModelOptions>()( {
       phetioType: WaterCup2DModel.WaterCup2DModelIO,
       tandem: Tandem.REQUIRED,
       phetioDynamicElement: true
     }, providedOptions );
     super( options );
-  }
-
-  override dispose(): void {
-    super.dispose();
   }
 }
 
