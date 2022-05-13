@@ -26,7 +26,7 @@ type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
 export default class WaterCup2DNode extends Node {
   private readonly meanProperty: NumberProperty;
   private readonly meanLink: PropertyLinkListener<number>;
-  private readonly waterLevelLink: PropertyLinkListener<any>;
+  private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCupModel: WaterCupModel;
 
   constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
@@ -64,10 +64,8 @@ export default class WaterCup2DNode extends Node {
       { fill: MeanShareAndBalanceColors.water2DFillColorProperty }
     );
 
-    this.waterLevelLink = ( waterLevel: number ): PropertyLinkListener<number> => {
-      return function() {
+    this.waterLevelLink = ( waterLevel: number ) => {
         waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
-      };
     };
     waterCupModel.waterLevelProperty.link( this.waterLevelLink );
 
@@ -86,12 +84,10 @@ export default class WaterCup2DNode extends Node {
         phetioDocumentation: 'Line that shows the ground truth water level mean across all present cups.'
       } );
 
-    this.meanLink = ( mean: number ): PropertyLinkListener<number> => {
-      return function() {
+    this.meanLink = ( mean: number ) => {
         const inverse = 1 - mean;
         showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
         showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
-      };
     };
 
     meanProperty.link( this.meanLink );
