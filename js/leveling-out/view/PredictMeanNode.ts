@@ -14,7 +14,7 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
-import WaterCup2DModel from '../model/WaterCup2DModel.js';
+import WaterCupModel from '../model/WaterCupModel.js';
 
 type SelfOptions = {};
 type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & NodeOptions
@@ -23,7 +23,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
   private readonly model: LevelingOutModel;
-  private readonly updateLineListener: ( waterCup: WaterCup2DModel, xOffset: number ) => void;
+  private readonly updateLineListener: ( waterCup: WaterCupModel, xOffset: number ) => void;
   private readonly dragListener: DragListener;
 
   constructor( model: LevelingOutModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
@@ -69,7 +69,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    this.updateLineListener = ( waterCup: WaterCup2DModel, xOffset: number ): void => {
+    this.updateLineListener = ( waterCup: WaterCupModel, xOffset: number ): void => {
       this.updateLine( waterCup.xProperty.value + xOffset, dilation );
     };
 

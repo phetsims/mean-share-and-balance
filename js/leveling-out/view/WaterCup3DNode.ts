@@ -10,7 +10,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import WaterCup3DModel from '../model/WaterCup3DModel.js';
+import WaterCupModel from '../model/WaterCupModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
@@ -21,7 +21,7 @@ type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterCup3DNode extends Node {
-  constructor( cup3DModel: WaterCup3DModel, modelViewTransform: ModelViewTransform2,
+  constructor( cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
                providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {

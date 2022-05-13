@@ -20,17 +20,15 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import WaterCup2DModel from '../model/WaterCup2DModel.js';
+import WaterCupModel from '../model/WaterCupModel.js';
 import PredictMeanNode from './PredictMeanNode.js';
 import merge from '../../../../phet-core/js/merge.js';
 import PipeNode from './PipeNode.js';
 import PipeModel from '../model/PipeModel.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
-import WaterCup3DModel from '../model/WaterCup3DModel.js';
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import AbstractWaterCupModel from '../model/AbstractWaterCupModel.js';
 
 type SelfOptions = {};
 
@@ -38,7 +36,7 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
-  readonly pipeMap: Map<PipeModel, PipeNode>
+  readonly pipeMap: Map<PipeModel, PipeNode>;
 
   constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -124,7 +122,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const waterCupLayerNode = new Node();
 
     // 2D/3D water cup nodes addition and removal
-    const waterCup2DNodeGroup = new PhetioGroup<WaterCup2DNode, [ WaterCup2DModel ]>( ( tandem: Tandem, waterCup2DModel: WaterCup2DModel ) => {
+    const waterCup2DNodeGroup = new PhetioGroup<WaterCup2DNode, [ WaterCupModel ]>( ( tandem: Tandem, waterCup2DModel: WaterCupModel ) => {
       return new WaterCup2DNode( waterCup2DModel, modelViewTransform2DCups,
         model.meanProperty,
         model.isShowingTickMarksProperty,
@@ -135,7 +133,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       supportsDynamicState: false
     } );
 
-    const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCup3DModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCup3DModel ) => {
+    const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCupModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCupModel ) => {
       return new WaterCup3DNode( waterCup3DModel, modelViewTransform3DCups, { tandem: tandem } );
     }, () => [ model.waterCup3DGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
@@ -151,12 +149,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     };
 
     // Connect nodes to view
-    const waterCup2DMap = new Map<WaterCup2DModel, WaterCup2DNode>();
-    const waterCup3DMap = new Map<WaterCup3DModel, WaterCup3DNode>();
+    const waterCup2DMap = new Map<WaterCupModel, WaterCup2DNode>();
+    const waterCup3DMap = new Map<WaterCupModel, WaterCup3DNode>();
 
     // callback functions to add and remove water cups
-    function addWaterCup<T extends AbstractWaterCupModel, U extends Node>( map: Map<T, U>, nodeGroup: PhetioGroup<U, [ T ]> ) {
-      return ( cupModel: T ) => {
+    function addWaterCup<U extends Node>( map: Map<WaterCupModel, U>, nodeGroup: PhetioGroup<U, [ WaterCupModel ]> ) {
+      return ( cupModel: WaterCupModel ) => {
         const cupNode = nodeGroup.createCorrespondingGroupElement( cupModel.tandem.name, cupModel );
         waterCupLayerNode.addChild( cupNode );
         map.set( cupModel, cupNode );
@@ -164,8 +162,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       };
     }
 
-    function removeWaterCup<T extends AbstractWaterCupModel, U extends Node>( map: Map<T, U> ) {
-      return ( cupModel: T ) => {
+    function removeWaterCup<U extends Node>( map: Map<WaterCupModel, U> ) {
+      return ( cupModel: WaterCupModel ) => {
         const cupNode = map.get( cupModel )!;
         waterCupLayerNode.removeChild( cupNode );
         centerWaterCupLayerNode();
