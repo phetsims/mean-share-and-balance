@@ -13,6 +13,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import AbstractWaterCupModel from './AbstractWaterCupModel.js';
 
+// REVIEW: Don't duplicate options here in the subtype.  Don't skip parent options
 type SelfOptions = {
   x: number;
   y: number;
@@ -26,12 +27,15 @@ export default class WaterCup3DModel extends AbstractWaterCupModel {
 
     const options = optionize<WaterCup3DModelOptions, SelfOptions, PhetioObjectOptions>()( {
       phetioType: WaterCup3DModel.WaterCup3DModelIO,
+
+      // REVIEW: Move to the parent type
       tandem: Tandem.REQUIRED,
       phetioDynamicElement: true
     }, providedOptions );
     super( options );
   }
 
+  // REVIEW: unused
   override dispose(): void {
     super.dispose();
   }

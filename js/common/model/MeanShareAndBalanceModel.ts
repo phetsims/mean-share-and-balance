@@ -13,7 +13,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = {};
 
-type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+export type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceModel {
 
