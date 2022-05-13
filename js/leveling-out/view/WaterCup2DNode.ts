@@ -26,6 +26,8 @@ type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
 export default class WaterCup2DNode extends Node {
   private readonly meanProperty: NumberProperty;
   private readonly meanLink: PropertyLinkListener<number>;
+  private readonly waterLevelLink: PropertyLinkListener<any>;
+  private readonly waterCupModel: WaterCupModel;
 
   constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
@@ -37,6 +39,8 @@ export default class WaterCup2DNode extends Node {
     }, providedOptions );
 
     super();
+
+    this.waterCupModel = waterCupModel;
 
     this.meanProperty = meanProperty;
     const tickMarks = new TickMarksNode(
@@ -60,9 +64,12 @@ export default class WaterCup2DNode extends Node {
       { fill: MeanShareAndBalanceColors.water2DFillColorProperty }
     );
 
-    waterCupModel.waterLevelProperty.link( waterLevel => {
-      waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
-    } );
+    this.waterLevelLink = ( waterLevel: number ): PropertyLinkListener<number> => {
+      return function() {
+        waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
+      };
+    };
+    waterCupModel.waterLevelProperty.link( this.waterLevelLink );
 
     const meanInverse = 1 - meanProperty.value;
 
@@ -101,6 +108,7 @@ export default class WaterCup2DNode extends Node {
   override dispose(): void {
     super.dispose();
     this.meanProperty.unlink( this.meanLink );
+    this.waterCupModel.waterLevelProperty.unlink( this.waterLevelLink );
   }
 }
 

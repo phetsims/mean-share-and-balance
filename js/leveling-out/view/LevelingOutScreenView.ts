@@ -168,6 +168,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         waterCupLayerNode.removeChild( cupNode );
         centerWaterCupLayerNode();
         map.delete( cupModel );
+        cupNode.dispose();
+        cupModel.dispose();
       };
     }
 
