@@ -6,16 +6,16 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Shape } from '../../../../kite/js/imports.js';
-import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
-import Range from '../../../../dot/js/Range.js';
+import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCupModel from '../model/WaterCupModel.js';
+import Range from '../../../../dot/js/Range.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
+// import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
@@ -31,134 +31,15 @@ export default class WaterCup3DNode extends Node {
     }, providedOptions );
     super();
 
-    const xRadius = 30;
-    const yRadius = 12;
-    const centerTop = -MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
-    const centerBottom = MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
-
-    // Cup structure and glare shapes
-    const cupGlareShape = new Shape()
-      .moveTo( -20, centerTop + 18 )
-      .verticalLineTo( 50 )
-      .lineTo( -15, 52 )
-      .verticalLineTo( centerTop + 21 )
-      .close();
-
-    const cupFrontShape = new Shape()
-      .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, false )
-      .ellipticalArc( 0, centerTop, xRadius, yRadius, 0, Math.PI, 0, true )
-      .close();
-
-    const cupBackShape = new Shape()
-      .ellipticalArc( 0, centerTop, xRadius, yRadius, 0, Math.PI, 0, false )
-      .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, true )
-      .close();
-
-    const cupBottomShape = new Shape()
-      .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, 2 * Math.PI, false );
-
-    // Water fill and shading paths
-    const waterSide = new Path( null, {
-      fill: MeanShareAndBalanceColors.water3DFillColorProperty,
-      pickable: false
-    } );
-    const waterTop = new Path( null, {
-      fill: MeanShareAndBalanceColors.water3DFillColorProperty,
-      pickable: false
-    } );
-    const waterFrontEdge = new Path( null, {
-      fill: MeanShareAndBalanceColors.water3DFrontEdgeFillColorProperty,
-      pickable: false
-    } );
-    const waterBackEdge = new Path( null, {
-      fill: MeanShareAndBalanceColors.water3DBackEdgeFillColorProperty,
-      pickable: false
-    } );
-    const waterCrescent = new Path( null, {
-      fill: MeanShareAndBalanceColors.water3DCrescentFillColorProperty
-    } );
-
-    // Water cup structure and glare paths
-    const cupFront = new Path( cupFrontShape, {
-      stroke: 'black',
-      lineWidth: 2
-    } );
-
-    const cupBack = new Path( cupBackShape, {
-      stroke: 'black',
-      lineWidth: 2,
-      fill: '#EDF2F4'
-    } );
-
-    cupBack.setScaleMagnitude( -1, 1 );
-    const cupBottom = new Path( cupBottomShape, {
-      stroke: 'black',
-      fill: 'white',
-      pickable: false
-    } );
-
-    const cupGlare = new Path( cupGlareShape.getOffsetShape( 2 ), {
-      fill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty,
-      opacity: 0.35
-    } );
-
-    // Adjustable water level triangle
-    const dragRange = new Range( -MeanShareAndBalanceConstants.CUP_HEIGHT / 2, MeanShareAndBalanceConstants.CUP_HEIGHT / 2 );
-
-    // Pass in parent waterLevelProperty to link appropriately for 3D/2D communication
-    const waterLevelTriangle = new WaterLevelTriangleNode(
-      cup3DModel.waterLevelProperty,
-      dragRange,
+    const dragRange = new Range( 0, 1 );
+    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty );
+    const waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty, dragRange,
       {
-        tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
-        y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
-        left: xRadius
-      }
-    );
-
-    // water level adjustment listener
-    cup3DModel.waterLevelProperty.link( waterLevel => {
-      const centerLiquidY = centerBottom - MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel;
-      const waterTopShape = new Shape()
-        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI * 2, false )
-        .close();
-      const waterSideShape = new Shape()
-        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, Math.PI, 0, true )
-        .ellipticalArc( 0, centerBottom, xRadius, yRadius, 0, 0, Math.PI, false )
-        .close();
-      const waterFrontEdgeShape = new Shape()
-        .ellipticalArc( 0, centerLiquidY + 1, xRadius, yRadius + 2, 0, Math.PI, 0, true )
-        .ellipticalArc( 0, centerLiquidY, xRadius, yRadius, 0, 0, Math.PI, false );
-      const waterBackEdgeShape = new Shape()
-        .ellipticalArc( 0, centerBottom - 1, xRadius, yRadius + 4, Math.PI, Math.PI, 0, true )
-        .ellipticalArc( 0, centerBottom, xRadius, yRadius, Math.PI, 0, Math.PI, false );
-      const waterCrescentShape = new Shape()
-        .ellipticalArc( 8, centerLiquidY, yRadius * 0.75, xRadius * 0.4, Math.PI * 1.5, Math.PI, 0, true )
-        .ellipticalArc( 8, centerLiquidY, yRadius * 0.75, xRadius * 0.6, Math.PI * 1.5, 0, Math.PI, false );
-
-      waterTop.shape = waterTopShape;
-      waterSide.shape = waterSideShape;
-      waterFrontEdge.shape = waterFrontEdgeShape;
-      waterBackEdge.shape = waterBackEdgeShape;
-      waterCrescent.shape = waterCrescentShape;
-
-      //Prevents back edge from appearing when water level empty.
-      waterBackEdge.clipArea = Shape.union( [ waterTopShape, waterSideShape ] );
-
+      tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
+      y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
+      left: 30
     } );
-
-    // Prevents front edge from dipping below cup boundary when dragged all the way down.
-    waterFrontEdge.clipArea = Shape.union( [ cupFrontShape, cupBottomShape ] );
-
-    this.addChild( cupBack );
-    this.addChild( cupBottom );
-    this.addChild( waterSide );
-    this.addChild( waterBackEdge );
-    this.addChild( waterTop );
-    this.addChild( waterCrescent );
-    this.addChild( waterFrontEdge );
-    this.addChild( cupFront );
-    this.addChild( cupGlare );
+    this.addChild( waterCup );
     this.addChild( waterLevelTriangle );
 
     this.mutate( options );
