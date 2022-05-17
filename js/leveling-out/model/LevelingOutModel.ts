@@ -131,6 +131,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
         this.waterCup2DGroup.disposeElement( this.waterCup2DGroup.getLastElement() );
+        // Reset 2D waterLevelProperty to 3D waterLevelProperty when a cup is removed.
+        for ( let i = 0; i < numberOfCups; i++ ) {
+          const cup2D = this.waterCup2DGroup.getElement( i );
+          const cup3D = this.waterCup3DGroup.getElement( i );
+          cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
+        }
         if ( numberOfCups > 0 ) {
           this.pipeGroup.disposeElement( this.pipeGroup.getLastElement() );
         }
