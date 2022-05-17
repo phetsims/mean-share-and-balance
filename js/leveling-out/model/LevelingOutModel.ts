@@ -135,7 +135,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           this.pipeGroup.disposeElement( this.pipeGroup.getLastElement() );
         }
       }
-
       this.updateMeanFrom3DCups();
 
       assert && assert( numberOfCups === this.waterCup3DGroup.count, `Expected ${numberOfCups} cups, but found: ${this.waterCup3DGroup.count}.` );
@@ -152,36 +151,27 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    * Called during step(), levels out the water levels for the connected cups.
    */
   private levelWater( dt: number ): void {
-
-    // TODO: Rename to setsOfConnectedCups or something like that
-    const affectedCups: Array<Set<WaterCupModel>> = [];
-
-    // TODO: compute affectedCups like this pseudocode:
-    // 1. Start with an empty set
-    // 2. Visit cup:.
-    //    a. If the pipe to the right is closed, add the set to the affectedCups array and start a new set on the next cup
-    //    b. If the pipe to the right is open, add the next cup to the current set.  Then go to step 2.
-    // 3. Visit cup (0)
-
+    const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
     let currentSet = new Set<WaterCupModel>();
-    // organize into sets of connected cups
     let index = 0;
-    this.pipeGroup.forEach( pipe => {
-      if ( pipe.isOpenProperty.value ) {
-        currentSet.add( this.waterCup2DGroup.getElement( index ) );
-        currentSet.add( this.waterCup2DGroup.getElement( index + 1 ) );
-        if ( index === this.pipeGroup.count - 1 ) {
-          affectedCups.push( currentSet );
+
+    // organize into sets of connected cups
+    this.waterCup2DGroup.forEach( cup => {
+      currentSet.add( cup );
+      if ( this.pipeGroup.count > index ) {
+        if ( !this.pipeGroup.getElement( index ).isOpenProperty.value ) {
+          setsOfConnectedCups.push( currentSet );
+          currentSet = new Set<WaterCupModel>();
         }
+        index += 1;
       }
-      else if ( currentSet.size > 1 ) {
-        affectedCups.push( currentSet );
-        currentSet = new Set<WaterCupModel>();
+      else if ( this.waterCup2DGroup.getLastElement() === cup ) {
+        setsOfConnectedCups.push( currentSet );
       }
-      index += 1;
     } );
+
     // calculate and set mean
-    affectedCups.forEach( cupsSet => {
+    setsOfConnectedCups.forEach( cupsSet => {
       const waterMean = calculateMean( Array.from( cupsSet ).map( cup => cup.waterLevelProperty.value ) );
       cupsSet.forEach( cup => {
         const currentWaterLevel = cup.waterLevelProperty.value;
@@ -190,8 +180,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         // Animate water non-linearly. Higher discrepancy means the water will flow faster.
         // When the water levels are closer, it will slow down.
         cup.waterLevelProperty.set( currentWaterLevel + delta * dt * 5 );
-
-        //to animate linearly grab Math.sign(delta) and multiply by dt
       } );
     } );
   }
