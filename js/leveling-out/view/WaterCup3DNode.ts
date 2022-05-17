@@ -32,7 +32,7 @@ export default class WaterCup3DNode extends Node {
     super();
 
     const dragRange = new Range( 0, 1 );
-    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty );
+    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, { lineWidth: 2 } );
     const waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty, dragRange,
       {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
