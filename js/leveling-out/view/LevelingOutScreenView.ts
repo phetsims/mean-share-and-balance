@@ -85,7 +85,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     //Number Picker
     const numberOfCupsNumberPicker = new NumberPicker(
       model.numberOfCupsProperty,
-      new Property( model.levelingOutRange ), {
+      new Property( model.numberOfCupsRange ), {
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
         color: 'black',
         yMargin: 10,

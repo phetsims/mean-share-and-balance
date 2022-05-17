@@ -21,9 +21,11 @@ type SelfOptions = {};
 type PipeNodeOptions = SelfOptions & NodeOptions;
 
 export default class PipeNode extends Node {
-  readonly valveNode: Node;
-  readonly pipeModel: PipeModel;
-  readonly rotateValveFireListener: FireListener;
+  private readonly valveNode: Node;
+  private readonly pipeModel: PipeModel;
+  private readonly rotateValveFireListener: FireListener;
+  private readonly innerValve: Path;
+  private readonly outerValve: Path;
 
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -57,13 +59,13 @@ export default class PipeNode extends Node {
     };
 
     // Valve drawing
-    const innerValve = new Path( createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
+    this.innerValve = new Path( createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
       { fill: 'grey' } );
-    const outerValve = new Path( createCircle( valveRadius + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ),
+    this.outerValve = new Path( createCircle( valveRadius + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ),
       { fill: 'black' } );
 
     this.valveNode = new Node( {
-      children: [ outerValve, innerValve ],
+      children: [ this.outerValve, this.innerValve ],
       cursor: 'pointer',
       tandem: options.tandem.createTandem( 'valveNode' ),
       tagName: 'button'
@@ -122,6 +124,10 @@ export default class PipeNode extends Node {
     super.dispose();
     this.valveNode.removeInputListener( this.rotateValveFireListener );
     this.pipeModel.isOpenProperty.unlinkAll();
+    this.pipeModel.dispose();
+    this.innerValve.dispose();
+    this.outerValve.dispose();
+    this.valveNode.dispose();
   }
 
 }

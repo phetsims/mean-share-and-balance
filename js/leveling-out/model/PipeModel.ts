@@ -42,6 +42,12 @@ export default class PipeModel extends PhetioObject {
     this.xProperty = xProperty;
     this.y = y;
   }
+
+  override dispose(): void {
+    super.dispose();
+    this.isOpenProperty.dispose();
+    this.xProperty.dispose();
+  }
 }
 
 PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {

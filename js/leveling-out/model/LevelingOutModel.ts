@@ -27,8 +27,7 @@ type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceMod
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   // TODO: Should this be able to go to 0 for PhET-iO?  Perhaps an issue for the designer
-  // TODO: Rename to numberOfCupsRange
-  readonly levelingOutRange = new Range( 1, 7 );
+  readonly numberOfCupsRange = new Range( 1, 7 );
   readonly dragRange = new Range( 0, 1 );
 
   readonly isShowingPredictMeanProperty: BooleanProperty;
@@ -63,17 +62,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     // The sim starts with one water cup
-    this.numberOfCupsProperty = new NumberProperty( 1, {
+    this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' ),
       numberType: 'Integer',
-      range: this.levelingOutRange
+      range: this.numberOfCupsRange
     } );
 
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
 
-      // REVIEW: move y values to constants
-      return new WaterCupModel( { tandem: tandem, x: x, y: 400 } );
+      return new WaterCupModel( { tandem: tandem, x: x, y: MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
       phetioDocumentation: 'Holds the models for the 3D water cups.',
@@ -81,7 +79,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     this.waterCup2DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
-      return new WaterCupModel( { tandem: tandem, x: x, y: 200 } );
+      return new WaterCupModel( { tandem: tandem, x: x, y: MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
       phetioDocumentation: 'Holds the models for the 2D water cups.',
@@ -203,9 +201,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
 
-    // TODO: Add a constant like INITIAL_NUMBER_OF_CUPS
     // NOTE: This will auto-delete the corresponding 2d cups, since those are synchronized above
-    while ( this.waterCup3DGroup.count > 1 ) {
+    while ( this.waterCup3DGroup.count > MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS ) {
       this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
       this.pipeGroup.dispose();
     }
