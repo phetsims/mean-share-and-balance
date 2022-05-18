@@ -203,6 +203,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const removePipeNode = ( pipeModel: PipeModel ) => {
       const pipeNode = this.pipeMap.get( pipeModel )!;
       waterCupLayerNode.removeChild( pipeNode );
+      pipeNodeGroup.disposeElement( pipeNode );
       this.pipeMap.delete( pipeModel );
     };
 
