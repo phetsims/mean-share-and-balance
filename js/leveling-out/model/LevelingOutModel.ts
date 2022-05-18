@@ -58,7 +58,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
-      phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup'
+      phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup',
+      range: new Range( 0, 1 )
     } );
 
     // The sim starts with one water cup
@@ -96,7 +97,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
       tandem: options.tandem.createTandem( 'meanProperty' ),
-      phetioDocumentation: 'The ground truth water level mean.'
+      phetioDocumentation: 'The ground truth water level mean.',
+      phetioReadOnly: true,
+      range: new Range( 0, 1 )
     } );
 
     const validWaterLevelRange = new Range( 0, 1 );
