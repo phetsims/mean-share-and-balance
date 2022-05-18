@@ -14,7 +14,7 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
-import WaterCupModel from '../model/WaterCupModel.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = {};
 type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & NodeOptions
@@ -23,7 +23,6 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
   private readonly model: LevelingOutModel;
-  private readonly updateLineListener: ( waterCup: WaterCupModel, xOffset: number ) => void;
   private readonly dragListener: DragListener;
 
   constructor( model: LevelingOutModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
@@ -51,7 +50,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
     this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( dilation );
 
     // track predictMeanLine drag position
-    const predictMeanPositionProperty = new Vector2Property( modelViewTransform.modelToViewXY( 0, model.meanPredictionProperty.value ) );
+    const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, model.meanPredictionProperty.value ) );
     predictMeanPositionProperty.link( predictMeanPosition => {
       model.meanPredictionProperty.value = model.dragRange.constrainValue( predictMeanPosition.y );
     } );
@@ -69,21 +68,17 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    this.updateLineListener = ( waterCup: WaterCupModel, xOffset: number ): void => {
-      this.updateLine( waterCup.xProperty.value + xOffset, dilation );
-    };
-
     model.waterCup2DGroup.elementCreatedEmitter.addListener( waterCup2D => {
-      this.updateLineListener( waterCup2D, 75 );
+      this.updateLine( waterCup2D.xProperty.value + 75, dilation );
     } );
 
     model.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2D => {
-      this.updateLineListener( waterCup2D, -25 );
+      this.updateLine( waterCup2D.xProperty.value - 25, dilation );
     } );
 
     this.addChild( this.predictMeanLine );
     this.addChild( this.predictMeanHandle );
-    this.bottom = modelViewTransform.modelToViewY( 0 );
+    this.centerY = modelViewTransform.modelToViewY( 0 );
   }
 
   private updateLine( lineEnd: number, dilation: number ): void {

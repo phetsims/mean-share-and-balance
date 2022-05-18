@@ -212,13 +212,23 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
-
-    //TODO add tab order for alternative input
     this.addChild( questionBar );
     this.addChild( levelingOutOptionsCheckboxGroup );
     this.addChild( levelingOutNumberPickerVBox );
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
+
+    this.pdomPlayAreaNode.pdomOrder = [
+      levelingOutOptionsCheckboxGroup,
+      predictMeanLine,
+      levelingOutNumberPickerVBox,
+      waterCupLayerNode
+
+    ];
+
+    this.pdomControlAreaNode.pdomOrder = [
+      this.resetAllButton
+    ];
   }
 
   override step( dt: number ): void {
