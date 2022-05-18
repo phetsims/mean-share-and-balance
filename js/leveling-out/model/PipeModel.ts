@@ -14,9 +14,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-type SelfOptions = {
-
-};
+type SelfOptions = {};
 export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 
 export default class PipeModel extends PhetioObject {
@@ -26,7 +24,7 @@ export default class PipeModel extends PhetioObject {
   readonly y: number;
   static PipeModelIO: IOType<PipeModel>;
 
-  constructor( xProperty: NumberProperty, y: number, providedOptions?: PipeModelOptions ) {
+  constructor( x: number, y: number, providedOptions?: PipeModelOptions ) {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
       phetioType: PipeModel.PipeModelIO,
       tandem: Tandem.REQUIRED,
@@ -39,7 +37,7 @@ export default class PipeModel extends PhetioObject {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );
     // Should these be options?
-    this.xProperty = xProperty;
+    this.xProperty = new NumberProperty( x );
     this.y = y;
   }
 }
@@ -48,7 +46,7 @@ PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
   valueType: PipeModel,
   toStateObject: ( pipeModel: PipeModel ) => ( {} ),
   stateToArgsForConstructor: ( stateObject: any ) => {
-    return [ new NumberProperty( 0 ) ];
+    return [ 0 ];
   },
   stateSchema: {
     // initialPlaceInLine: NumberIO

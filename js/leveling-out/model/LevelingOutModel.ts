@@ -40,7 +40,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   readonly waterCup3DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
   readonly waterCup2DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
 
-  readonly pipeGroup: PhetioGroup<PipeModel, [ NumberProperty, number ]>;
+  readonly pipeGroup: PhetioGroup<PipeModel, [ number, number ]>;
 
   constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -86,9 +86,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'waterCup2DGroup' )
     } );
 
-    this.pipeGroup = new PhetioGroup( ( tandem: Tandem, xProperty: NumberProperty, y: number ) => {
-      return new PipeModel( xProperty, y, { tandem: tandem } );
-    }, [ new NumberProperty( 0 ), 0 ], {
+    this.pipeGroup = new PhetioGroup( ( tandem: Tandem, x: number, y: number ) => {
+      return new PipeModel( x, y, { tandem: tandem } );
+    }, [ 0, 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( PipeModel.PipeModelIO ),
       phetioDocumentation: 'Holds the connecting pipes for the 2D water cups.',
       tandem: options.tandem.createTandem( 'pipeGroup' )
@@ -123,7 +123,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         } );
 
         if ( lastWaterCup ) {
-          this.pipeGroup.createNextElement( lastWaterCup.xProperty, new2DCup.y );
+          this.pipeGroup.createNextElement( lastWaterCup.xProperty.value, new2DCup.y );
         }
       }
       while ( numberOfCups < this.waterCup3DGroup.count ) {
