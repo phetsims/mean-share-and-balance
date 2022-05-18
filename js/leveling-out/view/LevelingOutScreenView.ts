@@ -153,6 +153,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const waterCup3DMap = new Map<WaterCupModel, WaterCup3DNode>();
 
     // callback functions to add and remove water cups
+    // TODO: Rename to createAddWaterCupListener
     function addWaterCup<U extends Node>( map: Map<WaterCupModel, U>, nodeGroup: PhetioGroup<U, [ WaterCupModel ]> ) {
       return ( cupModel: WaterCupModel ) => {
         const cupNode = nodeGroup.createCorrespondingGroupElement( cupModel.tandem.name, cupModel );
@@ -162,13 +163,14 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       };
     }
 
-    function removeWaterCup<U extends Node>( map: Map<WaterCupModel, U> ) {
+    // TODO: Rename to createWaterCupRemoveListener
+    function removeWaterCup<U extends Node>( phetioGroup: PhetioGroup<U, [ WaterCupModel ]>, map: Map<WaterCupModel, U> ) {
       return ( cupModel: WaterCupModel ) => {
         const cupNode = map.get( cupModel )!;
         waterCupLayerNode.removeChild( cupNode );
         centerWaterCupLayerNode();
         map.delete( cupModel );
-        cupNode.dispose();
+        phetioGroup.disposeElement( cupNode );
       };
     }
 
@@ -179,8 +181,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // add and remove cups according to model groups.
     model.waterCup2DGroup.elementCreatedEmitter.addListener( addWaterCup( waterCup2DMap, waterCup2DNodeGroup ) );
     model.waterCup3DGroup.elementCreatedEmitter.addListener( addWaterCup( waterCup3DMap, waterCup3DNodeGroup ) );
-    model.waterCup2DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup2DMap ) );
-    model.waterCup3DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup3DMap ) );
+    model.waterCup2DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup2DNodeGroup, waterCup2DMap ) );
+    model.waterCup3DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup3DNodeGroup, waterCup3DMap ) );
 
     // Pipe nodes addition and removal
     this.pipeMap = new Map<PipeModel, PipeNode>();

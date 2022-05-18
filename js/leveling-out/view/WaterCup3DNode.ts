@@ -15,12 +15,13 @@ import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
-// import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterCup3DNode extends Node {
+  private readonly waterLevelTriangle: WaterLevelTriangleNode;
+
   constructor( cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
                providedOptions?: WaterCup3DNodeOptions ) {
 
@@ -33,18 +34,21 @@ export default class WaterCup3DNode extends Node {
 
     const dragRange = new Range( 0, 1 );
     const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, { lineWidth: 2 } );
-    const waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty, dragRange,
-      {
+    this.waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty, dragRange, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
       left: 30
     } );
     this.addChild( waterCup );
-    this.addChild( waterLevelTriangle );
+    this.addChild( this.waterLevelTriangle );
 
     this.mutate( options );
   }
 
+  override dispose(): void {
+    super.dispose();
+    this.waterLevelTriangle.dispose();
+  }
 }
 
 meanShareAndBalance.register( 'WaterCup3DNode', WaterCup3DNode );

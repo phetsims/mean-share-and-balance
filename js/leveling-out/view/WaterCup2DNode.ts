@@ -28,6 +28,7 @@ export default class WaterCup2DNode extends Node {
   private readonly meanLink: PropertyLinkListener<number>;
   private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCupModel: WaterCupModel;
+  private readonly tickMarks: TickMarksNode;
 
   constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
@@ -43,7 +44,7 @@ export default class WaterCup2DNode extends Node {
     this.waterCupModel = waterCupModel;
 
     this.meanProperty = meanProperty;
-    const tickMarks = new TickMarksNode(
+    this.tickMarks = new TickMarksNode(
       MeanShareAndBalanceConstants.CUP_HEIGHT,
       {
         visibleProperty: isShowingTickMarksProperty,
@@ -65,7 +66,7 @@ export default class WaterCup2DNode extends Node {
     );
 
     this.waterLevelLink = ( waterLevel: number ) => {
-        waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
+      waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
     };
     waterCupModel.waterLevelProperty.link( this.waterLevelLink );
 
@@ -79,15 +80,13 @@ export default class WaterCup2DNode extends Node {
       {
         stroke: MeanShareAndBalanceColors.showMeanLineStrokeColorProperty,
         lineWidth: 2,
-        visibleProperty: isShowingMeanProperty,
-        tandem: options.tandem.createTandem( 'showMeanLine' ),
-        phetioDocumentation: 'Line that shows the ground truth water level mean across all present cups.'
+        visibleProperty: isShowingMeanProperty
       } );
 
     this.meanLink = ( mean: number ) => {
-        const inverse = 1 - mean;
-        showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
-        showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
+      const inverse = 1 - mean;
+      showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
+      showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
     };
 
     meanProperty.link( this.meanLink );
@@ -96,7 +95,7 @@ export default class WaterCup2DNode extends Node {
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
     this.addChild( showMeanLine );
-    this.addChild( tickMarks );
+    this.addChild( this.tickMarks );
 
     this.mutate( options );
   }
@@ -105,6 +104,8 @@ export default class WaterCup2DNode extends Node {
     super.dispose();
     this.meanProperty.unlink( this.meanLink );
     this.waterCupModel.waterLevelProperty.unlink( this.waterLevelLink );
+
+    this.tickMarks.dispose();
   }
 }
 

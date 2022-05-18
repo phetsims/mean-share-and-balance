@@ -20,6 +20,8 @@ type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterLevelTriangleNode extends Node {
+  private readonly slider: VSlider;
+
   constructor( waterLevelProperty: NumberProperty,
                dragRange: Range,
                providedOptions?: WaterLevelTriangleNodeOptions ) {
@@ -45,18 +47,23 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, new Range( 0, 1 ),
-      { tandem: sliderTandem.createTandem( 'trackNode' ) } );
+    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, new Range( 0, 1 ), {
+      tandem: sliderTandem.createTandem( 'trackNode' )
+    } );
 
-    const slider = new VSlider( waterLevelProperty, new Range( 0, 1 ),
-      {
-        thumbNode: waterLevelTriangle, trackNode: invisibleTrack,
-        tandem: sliderTandem
-      } );
+    this.slider = new VSlider( waterLevelProperty, new Range( 0, 1 ), {
+      thumbNode: waterLevelTriangle, trackNode: invisibleTrack,
+      tandem: sliderTandem
+    } );
 
-    this.addChild( slider );
+    this.addChild( this.slider );
 
     this.mutate( options );
+  }
+
+  override dispose(): void {
+    super.dispose();
+    this.slider.dispose();
   }
 }
 
