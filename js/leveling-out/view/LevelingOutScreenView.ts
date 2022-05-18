@@ -169,7 +169,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         centerWaterCupLayerNode();
         map.delete( cupModel );
         cupNode.dispose();
-        cupModel.dispose();
       };
     }
 
@@ -205,7 +204,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const pipeNode = this.pipeMap.get( pipeModel )!;
       waterCupLayerNode.removeChild( pipeNode );
       this.pipeMap.delete( pipeModel );
-      pipeNode.dispose();
     };
 
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
