@@ -12,6 +12,7 @@ import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioO
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
   x: number;
@@ -26,10 +27,15 @@ export default class WaterCupModel extends PhetioObject {
   static WaterCupModelIO: IOType<WaterCupModel>;
 
   constructor( providedOptions: AbstractWaterCupModelOptions ) {
-    super( providedOptions );
 
-    this.xProperty = new NumberProperty( providedOptions.x );
-    this.y = providedOptions.y;
+    const options = optionize<AbstractWaterCupModelOptions, SelfOptions, PhetioObjectOptions>()( {
+      phetioType: WaterCupModel.WaterCupModelIO,
+      phetioDynamicElement: true
+    }, providedOptions );
+    super( options );
+
+    this.xProperty = new NumberProperty( options.x );
+    this.y = options.y;
     this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
       range: new Range( 0, 1 )
     } );
