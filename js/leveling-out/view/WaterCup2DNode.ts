@@ -104,7 +104,6 @@ export default class WaterCup2DNode extends Node {
     super.dispose();
     this.meanProperty.unlink( this.meanLink );
     this.waterCupModel.waterLevelProperty.unlink( this.waterLevelLink );
-
     this.tickMarks.dispose();
   }
 }

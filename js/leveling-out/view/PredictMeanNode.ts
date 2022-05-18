@@ -95,13 +95,6 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
     this.predictMeanHandle.mouseArea = this.predictMeanHandle.localBounds.dilated( dilation );
     this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( dilation );
   }
-
-  override dispose(): void {
-    super.dispose();
-    // this.model.waterCup2DGroup.elementCreatedEmitter.removeListener( this.updateLineListener );
-    this.removeInputListener( this.dragListener );
-  }
-
 }
 
 meanShareAndBalance.register( 'PredictMeanNode', PredictMeanNode );

@@ -48,7 +48,7 @@ PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
   valueType: PipeModel,
   toStateObject: ( pipeModel: PipeModel ) => ( {} ),
   stateToArgsForConstructor: ( stateObject: any ) => {
-    return [ 0 ];
+    return [ new NumberProperty( 0 ) ];
   },
   stateSchema: {
     // initialPlaceInLine: NumberIO
