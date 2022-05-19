@@ -18,7 +18,7 @@ import Matrix3 from '../../../../dot/js/Matrix3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
-type WaterLevelTriangleNodeOptions = SelfOptions & NodeOptions
+type WaterLevelTriangleNodeOptions = SelfOptions & Omit<NodeOptions, 'pickable' | 'inputEnabled'>
 
 export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;

@@ -17,7 +17,7 @@ import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/ac
 import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = {};
-type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & NodeOptions
+type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & Omit<NodeOptions, 'pickable' | 'inputEnabled'>
 
 export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
