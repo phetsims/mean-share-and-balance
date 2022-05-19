@@ -25,6 +25,7 @@ export default class PipeNode extends Node {
   private readonly pipeModel: PipeModel;
   private readonly innerValve: Path;
   private readonly outerValve: Path;
+  private readonly valveRotationFireListener: FireListener;
 
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -78,12 +79,13 @@ export default class PipeNode extends Node {
     this.valveNode.touchArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
 
     // Valve rotation event listener
-    this.valveNode.addInputListener( new FireListener( {
+    this.valveRotationFireListener = new FireListener( {
       fire: () => {
         pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
       },
       tandem: options.tandem.createTandem( 'fireListener' )
-    } ) );
+    } );
+    this.valveNode.addInputListener( this.valveRotationFireListener );
 
     // Linking to isOpenProperty to enable/disable pipe clip area
     pipeModel.isOpenProperty.link( isOpen => {
@@ -115,6 +117,13 @@ export default class PipeNode extends Node {
 
   step( dt: number ): void {
     this.stepRotation( dt, this.pipeModel.isOpenProperty.value );
+  }
+
+  override dispose(): void {
+    super.dispose();
+    this.valveNode.removeInputListener( this.valveRotationFireListener );
+    this.valveRotationFireListener.dispose();
+    this.valveNode.dispose();
   }
 }
 
