@@ -24,7 +24,9 @@ const MeanShareAndBalanceConstants = {
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 100,
   CUPS_3D_Y_VALUE: 400,
-  CUPS_2D_Y_VALUE: 200
+  CUPS_2D_Y_VALUE: 200,
+  MOUSE_DILATION: 5,
+  TOUCH_DILATION: 10
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );
