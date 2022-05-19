@@ -46,7 +46,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 500 ), 100 );
-    //TODO test adjustment to work with query param stringTest=long
+    //TODO text adjustment to work with query param stringTest=long
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15 } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15 } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15 } );
@@ -155,8 +155,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const waterCup3DMap = new Map<WaterCupModel, WaterCup3DNode>();
 
     // callback functions to add and remove water cups
-    // TODO: Rename to createAddWaterCupListener
-    function addWaterCup<U extends Node>( map: Map<WaterCupModel, U>, nodeGroup: PhetioGroup<U, [ WaterCupModel ]> ) {
+    function createAddWaterCupListener<U extends Node>( map: Map<WaterCupModel, U>, nodeGroup: PhetioGroup<U, [ WaterCupModel ]> ) {
       return ( cupModel: WaterCupModel ) => {
         const cupNode = nodeGroup.createCorrespondingGroupElement( cupModel.tandem.name, cupModel );
         waterCupLayerNode.addChild( cupNode );
@@ -165,8 +164,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       };
     }
 
-    // TODO: Rename to createWaterCupRemoveListener
-    function removeWaterCup<U extends Node>( phetioGroup: PhetioGroup<U, [ WaterCupModel ]>, map: Map<WaterCupModel, U> ) {
+    function createRemoveWaterCupListener<U extends Node>( phetioGroup: PhetioGroup<U, [ WaterCupModel ]>, map: Map<WaterCupModel, U> ) {
       return ( cupModel: WaterCupModel ) => {
         const cupNode = map.get( cupModel )!;
         waterCupLayerNode.removeChild( cupNode );
@@ -177,14 +175,14 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     }
 
     // add initial starting cups
-    model.waterCup2DGroup.forEach( addWaterCup( waterCup2DMap, waterCup2DNodeGroup ) );
-    model.waterCup3DGroup.forEach( addWaterCup( waterCup3DMap, waterCup3DNodeGroup ) );
+    model.waterCup2DGroup.forEach( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
+    model.waterCup3DGroup.forEach( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
 
     // add and remove cups according to model groups.
-    model.waterCup2DGroup.elementCreatedEmitter.addListener( addWaterCup( waterCup2DMap, waterCup2DNodeGroup ) );
-    model.waterCup3DGroup.elementCreatedEmitter.addListener( addWaterCup( waterCup3DMap, waterCup3DNodeGroup ) );
-    model.waterCup2DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup2DNodeGroup, waterCup2DMap ) );
-    model.waterCup3DGroup.elementDisposedEmitter.addListener( removeWaterCup( waterCup3DNodeGroup, waterCup3DMap ) );
+    model.waterCup2DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
+    model.waterCup3DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
+    model.waterCup2DGroup.elementDisposedEmitter.addListener( createRemoveWaterCupListener( waterCup2DNodeGroup, waterCup2DMap ) );
+    model.waterCup3DGroup.elementDisposedEmitter.addListener( createRemoveWaterCupListener( waterCup3DNodeGroup, waterCup3DMap ) );
 
     // Pipe nodes addition and removal
     this.pipeMap = new Map<PipeModel, PipeNode>();
