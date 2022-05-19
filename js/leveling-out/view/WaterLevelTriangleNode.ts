@@ -15,6 +15,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
 import SliderTrack from '../../../../sun/js/SliderTrack.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & NodeOptions
@@ -57,8 +58,8 @@ export default class WaterLevelTriangleNode extends Node {
     } );
 
     // Set pointer areas for slider thumb node.
-    waterLevelTriangle.mouseArea = waterLevelTriangle.localBounds.dilated( 5 );
-    waterLevelTriangle.touchArea = waterLevelTriangle.localBounds.dilated( 10 );
+    waterLevelTriangle.mouseArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
+    waterLevelTriangle.touchArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
 
     this.addChild( this.slider );
     this.mutate( options );

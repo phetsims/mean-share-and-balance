@@ -74,8 +74,8 @@ export default class PipeNode extends Node {
     pipeRectangle.clipArea = pipeClipArea;
 
     // Set pointer areas for valveNode
-    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( 5 );
-    this.valveNode.touchArea = this.valveNode.localBounds.dilated( 10 );
+    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
+    this.valveNode.touchArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
 
     // Valve rotation event listener
     this.valveNode.addInputListener( new FireListener( {
