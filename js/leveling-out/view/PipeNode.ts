@@ -36,7 +36,6 @@ export default class PipeNode extends Node {
     this.pipeModel = pipeModel;
 
     // Pipe & valve dimensions
-    const dilation = 10;
     const pipeWidth = 5;
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth,
@@ -74,8 +73,9 @@ export default class PipeNode extends Node {
     const pipeClipArea = createPipeClipArea( pipeRectangle.localBounds, valveRadius );
     pipeRectangle.clipArea = pipeClipArea;
 
-    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( dilation );
-    this.valveNode.touchArea = this.valveNode.localBounds.dilated( dilation );
+    // Set pointer areas for valveNode
+    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( 5 );
+    this.valveNode.touchArea = this.valveNode.localBounds.dilated( 10 );
 
     // Valve rotation event listener
     this.valveNode.addInputListener( new FireListener( {
