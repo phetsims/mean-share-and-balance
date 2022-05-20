@@ -7,18 +7,21 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import NumberProperty, { NumberPropertyOptions } from '../../../../axon/js/NumberProperty.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
-import optionize from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 
 type SelfOptions = {
   x: number;
   y: number;
+  waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
-export type AbstractWaterCupModelOptions = SelfOptions & PhetioObjectOptions;
+export type AbstractWaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
   readonly y: number;
@@ -28,7 +31,7 @@ export default class WaterCupModel extends PhetioObject {
 
   constructor( providedOptions: AbstractWaterCupModelOptions ) {
 
-    const options = optionize<AbstractWaterCupModelOptions, SelfOptions, PhetioObjectOptions>()( {
+    const options = optionize<AbstractWaterCupModelOptions, Omit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       phetioType: WaterCupModel.WaterCupModelIO,
       phetioDynamicElement: true
     }, providedOptions );
@@ -36,9 +39,15 @@ export default class WaterCupModel extends PhetioObject {
 
     this.xProperty = new NumberProperty( options.x );
     this.y = options.y;
-    this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
-      range: new Range( 0, 1 )
-    } );
+    this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, combineOptions<NumberPropertyOptions>( {
+      range: new Range( 0, 1 ),
+      tandem: options.tandem.createTandem( 'waterLevelProperty' )
+    }, options.waterLevelPropertyOptions ) );
+  }
+
+  override dispose(): void {
+    super.dispose();
+    this.waterLevelProperty.dispose();
   }
 }
 

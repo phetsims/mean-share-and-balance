@@ -80,7 +80,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     this.waterCup2DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
-      return new WaterCupModel( { tandem: tandem, x: x, y: MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE } );
+      return new WaterCupModel( {
+        tandem: tandem,
+        x: x,
+        y: MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE,
+        waterLevelPropertyOptions: {
+          phetioReadOnly: true
+        }
+      } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
       phetioDocumentation: 'Holds the models for the 2D water cups.',
