@@ -19,26 +19,30 @@ import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 type SelfOptions = {
   x: number;
   y: number;
+  waterHeightRange?: Range;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
-export type AbstractWaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
   readonly y: number;
   readonly waterLevelProperty: NumberProperty;
   readonly xProperty: NumberProperty;
   static WaterCupModelIO: IOType<WaterCupModel>;
+  waterHeightRange: Range;
 
-  constructor( providedOptions: AbstractWaterCupModelOptions ) {
+  constructor( providedOptions: WaterCupModelOptions ) {
 
-    const options = optionize<AbstractWaterCupModelOptions, Omit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
+    const options = optionize<WaterCupModelOptions, Omit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       phetioType: WaterCupModel.WaterCupModelIO,
-      phetioDynamicElement: true
+      phetioDynamicElement: true,
+      waterHeightRange: new Range( 0, 1 )
     }, providedOptions );
     super( options );
 
     this.xProperty = new NumberProperty( options.x );
     this.y = options.y;
+    this.waterHeightRange = options.waterHeightRange;
     this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, combineOptions<NumberPropertyOptions>( {
       range: new Range( 0, 1 ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' )

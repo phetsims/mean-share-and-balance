@@ -9,7 +9,6 @@
 import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCupModel from '../model/WaterCupModel.js';
-import Range from '../../../../dot/js/Range.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
@@ -32,9 +31,8 @@ export default class WaterCup3DNode extends Node {
     }, providedOptions );
     super();
 
-    const dragRange = new Range( 0, 1 );
     const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, { lineWidth: 2 } );
-    this.waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty, dragRange, {
+    this.waterLevelTriangle = new WaterLevelTriangleNode( cup3DModel.waterLevelProperty, cup3DModel.waterHeightRange, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
       left: 30

@@ -129,12 +129,26 @@ export default class IntroModel extends MeanShareAndBalanceModel {
           const new2DWaterLevel = new2DCup.waterLevelProperty.value + delta;
           new2DCup.waterLevelProperty.value = validWaterLevelRange.constrainValue( new2DWaterLevel );
 
+          // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
+          new2DCup.waterLevelProperty.value === 1 ?
+          new3DCup.waterHeightRange.setMax( new3DCup.waterLevelProperty.value ) :
+          new3DCup.waterHeightRange.setMax( 1 );
+
+          // If 2D cup reaches 0 and 3D cup still has water
+          // Subtract delta from max waterLevelProperty in 2D cups
+          if ( new2DCup.waterLevelProperty.value === 0 ) {
+            let fullestCup = this.waterCup3DGroup.getElement( 0 );
+            this.waterCup2DGroup.forEach( cup => {
+              cup.waterLevelProperty.value > fullestCup.waterLevelProperty.value && ( fullestCup = cup );
+            } );
+
+            fullestCup.waterLevelProperty.set( fullestCup.waterLevelProperty.value + delta );
+          }
+
           this.updateMeanFrom3DCups();
         } );
 
-        if ( lastWaterCup ) {
-          this.pipeGroup.createNextElement( lastWaterCup.xProperty.value, new2DCup.y );
-        }
+        lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.xProperty.value, new2DCup.y );
       }
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
@@ -156,10 +170,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanProperty.set( calculateMean( this.waterCup3DGroup.map( waterCup3D => waterCup3D.waterLevelProperty.value ) ) );
   }
 
-  /**
-   * Called during step(), levels out the water levels for the connected cups.
-   */
-  private levelWater( dt: number ): void {
+  // Return array of sets of cups connected by open pipes
+  private classifyCups( waterCupGroup: PhetioGroup<WaterCupModel, [ x: number ]> ): Array<Set<WaterCupModel>> {
     const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
     let currentSet = new Set<WaterCupModel>();
     let index = 0;
@@ -178,6 +190,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         setsOfConnectedCups.push( currentSet );
       }
     } );
+
+    return setsOfConnectedCups;
+  }
+
+  /**
+   * Called during step(), levels out the water levels for the connected cups.
+   */
+  private levelWater( dt: number ): void {
+    const setsOfConnectedCups = this.classifyCups( this.waterCup2DGroup );
 
     // calculate and set mean
     setsOfConnectedCups.forEach( cupsSet => {

@@ -48,11 +48,11 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, new Range( 0, 1 ), {
+    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, dragRange, {
       tandem: sliderTandem.createTandem( 'trackNode' )
     } );
 
-    this.slider = new VSlider( waterLevelProperty, new Range( 0, 1 ), {
+    this.slider = new VSlider( waterLevelProperty, dragRange, {
       thumbNode: waterLevelTriangle, trackNode: invisibleTrack,
       tandem: sliderTandem
     } );
