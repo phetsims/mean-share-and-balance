@@ -24,7 +24,7 @@ type SelfOptions = {};
 
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 
-export default class LevelingOutModel extends MeanShareAndBalanceModel {
+export default class IntroModel extends MeanShareAndBalanceModel {
 
   // TODO: Should this be able to go to 0 for PhET-iO?  Perhaps an issue for the designer
   readonly numberOfCupsRange = new Range( 1, 7 );
@@ -221,4 +221,4 @@ function calculateMean( values: number[] ): number {
   return _.mean( values );
 }
 
-meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );
+meanShareAndBalance.register( 'IntroModel', IntroModel );

@@ -10,7 +10,7 @@ import { Circle, DragListener, Line, Node, NodeOptions } from '../../../../scene
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import LevelingOutModel from '../model/LevelingOutModel.js';
+import IntroModel from '../model/IntroModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
@@ -22,10 +22,10 @@ type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & Omit<NodeO
 export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
-  private readonly model: LevelingOutModel;
+  private readonly model: IntroModel;
   private readonly dragListener: DragListener;
 
-  constructor( model: LevelingOutModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
+  constructor( model: IntroModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
     const options = optionize<PredictMeanNodeOptions, SelfOptions, AccessibleSliderOptions>()( {
       cursor: 'pointer',

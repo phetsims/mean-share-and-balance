@@ -13,7 +13,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import { VBox, Text, Node } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
-import LevelingOutModel from '../model/LevelingOutModel.js';
+import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -34,11 +34,11 @@ type SelfOptions = {};
 
 type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
-export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
+export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
   readonly pipeMap: Map<PipeModel, PipeNode>;
 
-  constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
+  constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
@@ -238,4 +238,4 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );
+meanShareAndBalance.register( 'IntroScreenView', IntroScreenView );
