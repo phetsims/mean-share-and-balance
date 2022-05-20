@@ -106,6 +106,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
+    this.syncDataButton.centerX = levelingOutNumberPickerVBox.centerX;
+
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode(
       model,
@@ -222,8 +224,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       levelingOutOptionsCheckboxGroup,
       predictMeanLine,
       levelingOutNumberPickerVBox,
-      waterCupLayerNode
-
+      waterCupLayerNode,
+      this.syncDataButton
     ];
 
     this.pdomControlAreaNode.pdomOrder = [

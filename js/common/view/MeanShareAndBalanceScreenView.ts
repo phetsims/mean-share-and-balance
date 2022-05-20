@@ -14,6 +14,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import ResetButton from '../../../../scenery-phet/js/buttons/ResetButton.js';
 
 type SelfOptions = {};
 
@@ -21,13 +22,23 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   readonly resetAllButton: ResetAllButton;
+  readonly syncDataButton: ResetButton;
 
   constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
-    const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {
-
-    }, providedOptions );
+    const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
 
     super( options );
+
+    this.syncDataButton = new ResetButton( {
+      listener: () => {
+        this.interruptSubtreeInput(); // cancel interactions that may be in progress
+        model.syncData();
+      },
+      right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      y: 300,
+      radius: 15,
+      tandem: options.tandem.createTandem( 'matchRepresentationsButton' )
+    } );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
@@ -40,6 +51,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
     this.addChild( this.resetAllButton );
+    this.addChild( this.syncDataButton );
   }
 
   /**

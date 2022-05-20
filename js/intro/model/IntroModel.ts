@@ -139,12 +139,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
         this.waterCup2DGroup.disposeElement( this.waterCup2DGroup.getLastElement() );
-        // Reset 2D waterLevelProperty to 3D waterLevelProperty when a cup is removed.
-        for ( let i = 0; i < numberOfCups; i++ ) {
-          const cup2D = this.waterCup2DGroup.getElement( i );
-          const cup3D = this.waterCup3DGroup.getElement( i );
-          cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
-        }
+        this.matchCupWaterLevels();
         if ( numberOfCups > 0 ) {
           this.pipeGroup.disposeElement( this.pipeGroup.getLastElement() );
         }
@@ -196,6 +191,21 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         cup.waterLevelProperty.set( currentWaterLevel + delta * dt * 5 );
       } );
     } );
+  }
+
+  // Reset 2D waterLevelProperty to 3D waterLevelProperty.
+  private matchCupWaterLevels(): void {
+    for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
+      const cup2D = this.waterCup2DGroup.getElement( i );
+      const cup3D = this.waterCup3DGroup.getElement( i );
+      cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
+    }
+  }
+
+  override syncData(): void {
+    super.syncData();
+    this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( false ) );
+    this.matchCupWaterLevels();
   }
 
   override step( dt: number ): void {

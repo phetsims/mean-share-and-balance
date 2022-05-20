@@ -21,17 +21,20 @@ export default class MeanShareAndBalanceModel {
 
   }
 
+  syncData(): void {
+  }
+
   /**
    * Resets the model.
    */
-  public reset(): void {
+  reset(): void {
   }
 
   /**
    * Steps the model.
    * @param dt - time step, in seconds
    */
-  public step( dt: number ): void {
+  step( dt: number ): void {
   }
 }
 
