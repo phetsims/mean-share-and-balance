@@ -26,7 +26,7 @@ export default class WaterCup3DNode extends Node {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: cup3DModel.xProperty.value,
+      left: cup3DModel.x,
       phetioDynamicElement: true
     }, providedOptions );
     super();

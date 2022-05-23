@@ -101,7 +101,7 @@ export default class PipeNode extends Node {
     this.addChild( this.valveNode );
 
     // Set position related to associated cup
-    this.x = pipeModel.xProperty.value + MeanShareAndBalanceConstants.CUP_WIDTH;
+    this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH;
     this.y = modelViewTransform.modelToViewY( 0 ) - pipeWidth;
   }
 

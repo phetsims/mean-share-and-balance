@@ -62,11 +62,11 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
 
     // Update line length and dilation based on water cups
     model.waterCup2DGroup.elementCreatedEmitter.addListener( waterCup2D => {
-      this.updateLine( waterCup2D.xProperty.value + 75 );
+      this.updateLine( waterCup2D.x + 75 );
     } );
 
     model.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2D => {
-      this.updateLine( waterCup2D.xProperty.value - 25 );
+      this.updateLine( waterCup2D.x - 25 );
     } );
 
     this.setPointerAreas();

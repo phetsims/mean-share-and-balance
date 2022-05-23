@@ -117,7 +117,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
         const lastWaterCup: WaterCupModel | null = this.waterCup3DGroup.count > 0 ? this.waterCup3DGroup.getLastElement() : null;
         const x = lastWaterCup ?
-                  lastWaterCup.xProperty.value + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
+                  lastWaterCup.x + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
                   0;
         const new3DCup = this.waterCup3DGroup.createNextElement( x );
         const new2DCup = this.waterCup2DGroup.createNextElement( x );
@@ -148,7 +148,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
           this.updateMeanFrom3DCups();
         } );
 
-        lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.xProperty.value, new2DCup.y );
+        lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.x, new2DCup.y );
       }
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );

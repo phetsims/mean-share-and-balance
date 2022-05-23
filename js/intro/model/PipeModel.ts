@@ -7,11 +7,11 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {};
@@ -20,7 +20,7 @@ export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 export default class PipeModel extends PhetioObject {
 
   readonly isOpenProperty: BooleanProperty;
-  readonly xProperty: NumberProperty;
+  readonly x: number;
   readonly y: number;
   static PipeModelIO: IOType<PipeModel>;
 
@@ -36,8 +36,8 @@ export default class PipeModel extends PhetioObject {
     this.isOpenProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );
-    // Should these be options?
-    this.xProperty = new NumberProperty( x );
+    // TODO: Should these be options?  Be consistent with WaterCupModel either way
+    this.x = x;
     this.y = y;
   }
 
@@ -49,12 +49,16 @@ export default class PipeModel extends PhetioObject {
 
 PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
   valueType: PipeModel,
-  toStateObject: ( pipeModel: PipeModel ) => ( {} ),
+  toStateObject: ( pipeModel: PipeModel ) => ( {
+    x: pipeModel.x,
+    y: pipeModel.y
+  } ),
   stateToArgsForConstructor: ( stateObject: any ) => {
-    return [ 0 ];
+    return [ stateObject.x, stateObject.y ];
   },
   stateSchema: {
-    // initialPlaceInLine: NumberIO
+    x: NumberIO,
+    y: NumberIO
   }
 } );
 
