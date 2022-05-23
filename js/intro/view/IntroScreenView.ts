@@ -47,10 +47,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 250 ), 100 );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, 500 ), 100 );
     //TODO text adjustment to work with query param stringTest=long
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15 } );
-    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15 } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15 } );
-    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, { fontSize: 15 } );
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: 175 } );
+    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: 175 } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: 175 } );
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, { fontSize: 15, maxWidth: 175 } );
 
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
       tandem: options.tandem.createTandem( 'questionBar' )
