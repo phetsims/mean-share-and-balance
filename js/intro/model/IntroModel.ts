@@ -91,7 +91,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
       phetioDocumentation: 'Holds the models for the 2D water cups.',
-      tandem: options.tandem.createTandem( 'waterCup2DGroup' )
+      tandem: options.tandem.createTandem( 'waterCup2DGroup' ),
+      supportsDynamicState: false
     } );
 
     this.pipeGroup = new PhetioGroup( ( tandem: Tandem, x: number, y: number ) => {
@@ -99,7 +100,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }, [ 0, 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( PipeModel.PipeModelIO ),
       phetioDocumentation: 'Holds the connecting pipes for the 2D water cups.',
-      tandem: options.tandem.createTandem( 'pipeGroup' )
+      tandem: options.tandem.createTandem( 'pipeGroup' ),
+      supportsDynamicState: false
     } );
 
     this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
@@ -111,6 +113,62 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     const validWaterLevelRange = new Range( 0, 1 );
 
+    this.waterCup3DGroup.elementCreatedEmitter.addListener( waterCup3D => {
+      const lastWaterCup: WaterCupModel | null = this.waterCup3DGroup.count > 1 ? this.waterCup3DGroup.getElement( this.waterCup3DGroup.count - 2 ) : null;
+      const x = lastWaterCup ?
+                lastWaterCup.x + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
+                0;
+      const new2DCup = this.waterCup2DGroup.createCorrespondingGroupElement( waterCup3D.tandem.name, x );
+
+      waterCup3D.waterLevelProperty.lazyLink( waterLevel => {
+        const delta = waterLevel - waterCup3D.oldWaterLevelProperty.value;
+
+        const new2DWaterLevel = new2DCup.waterLevelProperty.value + delta;
+        new2DCup.waterLevelProperty.value = validWaterLevelRange.constrainValue( new2DWaterLevel );
+
+        // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
+        new2DCup.waterLevelProperty.value === 1 ?
+        waterCup3D.waterHeightRange.setMax( waterCup3D.waterLevelProperty.value ) :
+        waterCup3D.waterHeightRange.setMax( 1 );
+
+        // If 2D cup reaches 0 and 3D cup still has water
+        // Subtract delta from max waterLevelProperty in 2D cups
+        if ( new2DCup.waterLevelProperty.value === 0 ) {
+          let fullestCup = this.waterCup3DGroup.getElement( 0 );
+          this.waterCup2DGroup.forEach( cup => {
+            cup.waterLevelProperty.value > fullestCup.waterLevelProperty.value && ( fullestCup = cup );
+          } );
+
+          fullestCup.waterLevelProperty.set( fullestCup.waterLevelProperty.value + delta );
+        }
+        this.updateMeanFrom3DCups();
+
+        waterCup3D.oldWaterLevelProperty.set( waterLevel );
+      } );
+      this.updateMeanFrom3DCups();
+    } );
+
+    this.waterCup2DGroup.elementCreatedEmitter.addListener( waterCup2D => {
+      const lastWaterCup: WaterCupModel | null = this.waterCup2DGroup.count > 1 ? this.waterCup2DGroup.getElement( this.waterCup2DGroup.count - 2 ) : null;
+
+      // createCorrespondingGroupElement did not work here because there is always one more cup than there are pipes.
+      // TODO: find a fix.
+      lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.x, waterCup2D.y );
+    } );
+
+    // TODO: match up 3D cup index to 2D cup index
+    this.waterCup3DGroup.elementDisposedEmitter.addListener( waterCup3D => {
+      this.waterCup2DGroup.disposeElement( this.waterCup2DGroup.getLastElement() );
+      this.waterCup3DGroup.count > 0 && this.updateMeanFrom3DCups();
+    } );
+
+    this.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2D => {
+      if ( this.waterCup2DGroup.count >= 1 ) {
+        this.pipeGroup.disposeElement( this.pipeGroup.getLastElement() );
+        assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
+      }
+    } );
+
     // add/remove water cups and pipes according to number spinner
     this.numberOfCupsProperty.link( numberOfCups => {
       while ( numberOfCups > this.waterCup3DGroup.count ) {
@@ -119,50 +177,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         const x = lastWaterCup ?
                   lastWaterCup.x + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
                   0;
-        const new3DCup = this.waterCup3DGroup.createNextElement( x );
-        const new2DCup = this.waterCup2DGroup.createNextElement( x );
-
-        // Wire up the water level, treating the 3d model as the ground truth
-        new3DCup.waterLevelProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
-
-          const delta = waterLevel - oldWaterLevel;
-          const new2DWaterLevel = new2DCup.waterLevelProperty.value + delta;
-          new2DCup.waterLevelProperty.value = validWaterLevelRange.constrainValue( new2DWaterLevel );
-
-          // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
-          new2DCup.waterLevelProperty.value === 1 ?
-          new3DCup.waterHeightRange.setMax( new3DCup.waterLevelProperty.value ) :
-          new3DCup.waterHeightRange.setMax( 1 );
-
-          // If 2D cup reaches 0 and 3D cup still has water
-          // Subtract delta from max waterLevelProperty in 2D cups
-          if ( new2DCup.waterLevelProperty.value === 0 ) {
-            let fullestCup = this.waterCup3DGroup.getElement( 0 );
-            this.waterCup2DGroup.forEach( cup => {
-              cup.waterLevelProperty.value > fullestCup.waterLevelProperty.value && ( fullestCup = cup );
-            } );
-
-            fullestCup.waterLevelProperty.set( fullestCup.waterLevelProperty.value + delta );
-          }
-
-          this.updateMeanFrom3DCups();
-        } );
-
-        lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.x, new2DCup.y );
+        this.waterCup3DGroup.createNextElement( x );
       }
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
-        this.waterCup2DGroup.disposeElement( this.waterCup2DGroup.getLastElement() );
-        this.matchCupWaterLevels();
-        if ( numberOfCups > 0 ) {
-          this.pipeGroup.disposeElement( this.pipeGroup.getLastElement() );
-        }
       }
-      this.updateMeanFrom3DCups();
 
       assert && assert( numberOfCups === this.waterCup3DGroup.count, `Expected ${numberOfCups} cups, but found: ${this.waterCup3DGroup.count}.` );
       assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
-      assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
     } );
   }
 

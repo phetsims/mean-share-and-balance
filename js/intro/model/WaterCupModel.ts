@@ -31,6 +31,7 @@ export default class WaterCupModel extends PhetioObject {
   readonly waterLevelProperty: NumberProperty;
   static WaterCupModelIO: IOType<WaterCupModel>;
   waterHeightRange: Range;
+  readonly oldWaterLevelProperty: NumberProperty;
 
   constructor( providedOptions: WaterCupModelOptions ) {
 
@@ -48,11 +49,17 @@ export default class WaterCupModel extends PhetioObject {
       range: new Range( 0, 1 ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' )
     }, options.waterLevelPropertyOptions ) );
+    this.oldWaterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+      range: new Range( 0, 1 ),
+      tandem: options.tandem.createTandem( 'oldWaterLevelProperty' ),
+      phetioReadOnly: true
+    } );
   }
 
   override dispose(): void {
     super.dispose();
     this.waterLevelProperty.dispose();
+    this.oldWaterLevelProperty.dispose();
   }
 }
 
