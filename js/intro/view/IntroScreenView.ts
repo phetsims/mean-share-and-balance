@@ -57,31 +57,41 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     }, { labelText: meanShareAndBalanceStrings.levelingOutQuestion, barFill: '#2496D6' } ) );
 
     //Checkbox Group
-    const levelingOutOptionsCheckboxGroupTandem = options.tandem.createTandem( 'levelingOutOptionsCheckboxGroup' );
-    const levelingOutOptionsCheckboxGroup = new VerticalCheckboxGroup( [
+
+    const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
+    const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [
         {
           node: predictMeanText,
           property: model.isShowingPredictMeanProperty,
-          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
+          tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
           options: { accessibleName: meanShareAndBalanceStrings.predictMean }
         },
         {
           node: showMeanText,
           property: model.isShowingMeanProperty,
-          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
+          tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
           options: { accessibleName: meanShareAndBalanceStrings.showMean }
         },
         {
           node: tickMarksText,
           property: model.isShowingTickMarksProperty,
-          tandem: levelingOutOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
+          tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
           options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
         } ],
       {
-        right: this.layoutBounds.right - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-        top: questionBar.boundsProperty.value.maxY + MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
+
+        checkboxOptions: {
+          boxWidth: 15
+        }
       }
     );
+
+    const introOptionsVBox = new VBox( {
+      children: [ introOptionsCheckboxGroup ],
+      minContentWidth: 175,
+      right: this.layoutBounds.right - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      top: questionBar.boundsProperty.value.maxY + MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
+    } );
 
     //Number Picker
     const numberOfCupsNumberPicker = new NumberPicker(
@@ -96,17 +106,18 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    const levelingOutNumberPickerVBox = new VBox( {
+    const introNumberPickerVBox = new VBox( {
       children: [
         numberOfCupsText,
         numberOfCupsNumberPicker
       ],
       align: 'center',
-      right: this.layoutBounds.right - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      minContentWidth: 500,
+      right: this.resetAllButton.left - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
-    this.syncDataButton.centerX = levelingOutNumberPickerVBox.centerX;
+    this.syncDataButton.centerX = introNumberPickerVBox.centerX;
 
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode(
@@ -145,7 +156,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // Center 2D & 3D cups
-    const checkboxGroupWidthOffset = ( levelingOutOptionsCheckboxGroup.width + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    const checkboxGroupWidthOffset = ( introOptionsCheckboxGroup.width + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
@@ -215,15 +226,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
     this.addChild( questionBar );
-    this.addChild( levelingOutOptionsCheckboxGroup );
-    this.addChild( levelingOutNumberPickerVBox );
+    this.addChild( introOptionsVBox );
+    this.addChild( introNumberPickerVBox );
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
 
     this.pdomPlayAreaNode.pdomOrder = [
-      levelingOutOptionsCheckboxGroup,
+      introOptionsCheckboxGroup,
       predictMeanLine,
-      levelingOutNumberPickerVBox,
+      introNumberPickerVBox,
       waterCupLayerNode,
       this.syncDataButton
     ];
