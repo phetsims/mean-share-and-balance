@@ -9,7 +9,6 @@
 import { Shape } from '../../../../kite/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
-import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
@@ -24,7 +23,6 @@ export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;
 
   constructor( waterLevelProperty: NumberProperty,
-               dragRange: Range,
                providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'
@@ -48,11 +46,11 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, dragRange, {
+    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, waterLevelProperty.range!, {
       tandem: sliderTandem.createTandem( 'trackNode' )
     } );
 
-    this.slider = new VSlider( waterLevelProperty, dragRange, {
+    this.slider = new VSlider( waterLevelProperty, waterLevelProperty.range!, {
       thumbNode: waterLevelTriangle, trackNode: invisibleTrack,
       tandem: sliderTandem
     } );

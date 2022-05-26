@@ -131,19 +131,12 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
           // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
           new2DCup.waterLevelProperty.value === 1 ?
-          new3DCup.waterHeightRange.setMax( new3DCup.waterLevelProperty.value ) :
-          new3DCup.waterHeightRange.setMax( 1 );
+          new3DCup.waterLevelProperty.range!.setMax( new3DCup.waterLevelProperty.value ) :
+          new3DCup.waterLevelProperty.range!.setMax( 1 );
 
-          // If 2D cup reaches 0 and 3D cup still has water
-          // Subtract delta from max waterLevelProperty in 2D cups
-          if ( new2DCup.waterLevelProperty.value === 0 ) {
-            let fullestCup = this.waterCup3DGroup.getElement( 0 );
-            this.waterCup2DGroup.forEach( cup => {
-              cup.waterLevelProperty.value > fullestCup.waterLevelProperty.value && ( fullestCup = cup );
-            } );
-
-            fullestCup.waterLevelProperty.set( fullestCup.waterLevelProperty.value + delta );
-          }
+          new2DCup.waterLevelProperty.value <= 0 ?
+          new3DCup.waterLevelProperty.range!.setMin( new3DCup.waterLevelProperty.value ) :
+          new3DCup.waterLevelProperty.range!.setMin( 0 );
 
           this.updateMeanFrom3DCups();
         } );
