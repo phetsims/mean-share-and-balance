@@ -112,12 +112,12 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         numberOfCupsNumberPicker
       ],
       align: 'center',
-      minContentWidth: 500,
+      minContentWidth: 175,
       right: this.resetAllButton.left - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
-    this.syncDataButton.centerX = introNumberPickerVBox.centerX;
+    // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
 
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode(
@@ -234,7 +234,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.pdomPlayAreaNode.pdomOrder = [
       introOptionsCheckboxGroup,
       predictMeanLine,
-      introNumberPickerVBox,
+      numberOfCupsNumberPicker,
       waterCupLayerNode,
       this.syncDataButton
     ];

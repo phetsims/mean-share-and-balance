@@ -46,10 +46,17 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         model.reset();
         this.reset();
       },
+      tandem: options.tandem.createTandem( 'resetAllButton' ),
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
-      bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN,
-      tandem: options.tandem.createTandem( 'resetAllButton' )
+      bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN
     } );
+
+    // this.bottomRightControlsGrid = new GridBox( {
+    //   rows: [ [ null, null ], [ null, this.resetAllButton ] ],
+    //   right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
+    //   bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN
+    // } );
+
     this.addChild( this.resetAllButton );
     this.addChild( this.syncDataButton );
   }
