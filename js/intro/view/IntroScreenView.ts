@@ -148,7 +148,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCupModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCupModel ) => {
-      return new WaterCup3DNode( waterCup3DModel, modelViewTransform3DCups, { tandem: tandem } );
+      return new WaterCup3DNode( model, waterCup3DModel, modelViewTransform3DCups, { tandem: tandem } );
     }, () => [ model.waterCup3DGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
       tandem: options.tandem.createTandem( 'waterCup3DNodeGroup' ),

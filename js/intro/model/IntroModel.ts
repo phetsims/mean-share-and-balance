@@ -29,6 +29,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   // TODO: Should this be able to go to 0 for PhET-iO?  Perhaps an issue for the designer
   readonly numberOfCupsRange = new Range( 1, 7 );
   readonly dragRange = new Range( 0, 1 );
+  readonly cupRange = new Range( 0, 1 );
 
   readonly isShowingPredictMeanProperty: BooleanProperty;
   readonly isShowingMeanProperty: BooleanProperty;
@@ -41,6 +42,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   readonly waterCup2DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
 
   readonly pipeGroup: PhetioGroup<PipeModel, [ number, number ]>;
+
 
   constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -109,8 +111,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: new Range( 0, 1 )
     } );
 
-    const validWaterLevelRange = new Range( 0, 1 );
-
     // add/remove water cups and pipes according to number spinner
     this.numberOfCupsProperty.link( numberOfCups => {
       while ( numberOfCups > this.waterCup3DGroup.count ) {
@@ -119,27 +119,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         const x = lastWaterCup ?
                   lastWaterCup.x + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
                   0;
-        const new3DCup = this.waterCup3DGroup.createNextElement( x );
+        this.waterCup3DGroup.createNextElement( x );
         const new2DCup = this.waterCup2DGroup.createNextElement( x );
-
-        // Wire up the water level, treating the 3d model as the ground truth
-        new3DCup.waterLevelProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
-
-          const delta = waterLevel - oldWaterLevel;
-          const new2DWaterLevel = new2DCup.waterLevelProperty.value + delta;
-          new2DCup.waterLevelProperty.value = validWaterLevelRange.constrainValue( new2DWaterLevel );
-
-          // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
-          new2DCup.waterLevelProperty.value === 1 ?
-          new3DCup.waterLevelProperty.range!.setMax( new3DCup.waterLevelProperty.value ) :
-          new3DCup.waterLevelProperty.range!.setMax( 1 );
-
-          new2DCup.waterLevelProperty.value <= 0 ?
-          new3DCup.waterLevelProperty.range!.setMin( new3DCup.waterLevelProperty.value ) :
-          new3DCup.waterLevelProperty.range!.setMin( 0 );
-
-          this.updateMeanFrom3DCups();
-        } );
 
         lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.x, new2DCup.y );
       }
@@ -244,6 +225,44 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup2DGroup.forEach( waterCup2D => waterCup2D.waterLevelProperty.reset() );
 
     this.meanProperty.reset();
+  }
+
+  // TODO: document why we're using this.
+  changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
+
+    const index = this.waterCup3DGroup.indexOf( cup3DModel );
+    const new2DCup = this.waterCup2DGroup.getElement( index );
+
+    const proposedDelta = waterLevel - oldWaterLevel;
+
+    // TODO: refactor out into separate function.
+    const new2DWaterLevel = new2DCup.waterLevelProperty.value + proposedDelta;
+    const constrained2D = this.cupRange.constrainValue( new2DWaterLevel );
+    const constrained2DDelta = constrained2D - new2DCup.waterLevelProperty.value;
+
+    const new3DWaterLevel = cup3DModel.waterLevelProperty.value + proposedDelta;
+    const constrained3D = this.cupRange.constrainValue( new3DWaterLevel );
+    const constrained3DDelta = constrained3D - cup3DModel.waterLevelProperty.value;
+
+    const actualDelta = Math.abs( constrained2DDelta ) < Math.abs( constrained3DDelta ) ? constrained2DDelta : constrained3DDelta;
+
+    cup3DModel.waterLevelProperty.set( cup3DModel.waterLevelProperty.value + actualDelta );
+    new2DCup.waterLevelProperty.set( new2DCup.waterLevelProperty.value + actualDelta );
+
+    // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
+    new2DCup.waterLevelProperty.value >= 1 ?
+    this.dragRange.setMax( cup3DModel.waterLevelProperty.value ) :
+    this.dragRange.setMax( 1 );
+
+    new2DCup.waterLevelProperty.value <= 0 ?
+    this.dragRange.setMin( cup3DModel.waterLevelProperty.value ) :
+    this.dragRange.setMin( 0 );
+
+    this.updateMeanFrom3DCups();
+
+    // TODO: investigate potentially removing other listener?
+
+    // TODO: assertion to ensure waterlevel totals are equal.
   }
 }
 
