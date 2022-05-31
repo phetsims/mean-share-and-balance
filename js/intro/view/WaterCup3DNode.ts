@@ -17,6 +17,7 @@ import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import IntroModel from '../model/IntroModel.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {};
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
@@ -40,7 +41,11 @@ export default class WaterCup3DNode extends Node {
     const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, {
       lineWidth: 2,
       beakerHeight: beakerHeight,
-      beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH
+      beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH,
+      solutionFill: MeanShareAndBalanceColors.waterFillColorProperty,
+      solutionGlareFill: MeanShareAndBalanceColors.water3DCrescentFillColorProperty,
+      solutionShadowFill: MeanShareAndBalanceColors.waterShadowFillColorProperty,
+      beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
     // TODO: Increase documentation for adapter property.

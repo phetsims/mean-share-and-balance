@@ -15,6 +15,7 @@ import PipeModel from '../model/PipeModel.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {};
 
@@ -40,7 +41,7 @@ export default class PipeNode extends Node {
     const pipeWidth = 3;
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth,
-      { stroke: 'black', fill: '#51CEF4' } );
+      { stroke: 'black', fill: MeanShareAndBalanceColors.waterFillColorProperty } );
     const valveRadius = 10;
 
     // Function to create circle with center rectangle cut out.

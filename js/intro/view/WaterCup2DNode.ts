@@ -62,7 +62,7 @@ export default class WaterCup2DNode extends Node {
     const waterCupBackgroundRectangle = new Rectangle( waterCupRectangle.localBounds, { fill: 'white' } );
     const waterLevelRectangle = new Rectangle( 0, y, MeanShareAndBalanceConstants.CUP_WIDTH,
       MeanShareAndBalanceConstants.CUP_HEIGHT * waterCupModel.waterLevelProperty.value,
-      { fill: MeanShareAndBalanceColors.water2DFillColorProperty }
+      { fill: MeanShareAndBalanceColors.waterFillColorProperty }
     );
 
     this.waterLevelLink = ( waterLevel: number ) => {
