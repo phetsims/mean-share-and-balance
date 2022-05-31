@@ -34,7 +34,14 @@ export default class WaterCup3DNode extends Node {
     }, providedOptions );
     super();
 
-    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, { lineWidth: 2 } );
+    const heightOffset = 10;
+    const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - heightOffset;
+
+    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, {
+      lineWidth: 2,
+      beakerHeight: beakerHeight,
+      beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH
+    } );
 
     // TODO: Increase documentation for adapter property.
     // Synthetic property used to track water level prior to setting water level in 2D and 3D cups.
@@ -50,7 +57,7 @@ export default class WaterCup3DNode extends Node {
     this.waterLevelTriangle = new WaterLevelTriangleNode( adapterProperty, cup3DModel.enabledRangeProperty, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
-      left: 30
+      left: MeanShareAndBalanceConstants.CUP_WIDTH / 2
     } );
     this.addChild( waterCup );
     this.addChild( this.waterLevelTriangle );

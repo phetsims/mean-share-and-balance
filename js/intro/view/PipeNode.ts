@@ -37,7 +37,7 @@ export default class PipeNode extends Node {
     this.pipeModel = pipeModel;
 
     // Pipe & valve dimensions
-    const pipeWidth = 5;
+    const pipeWidth = 3;
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth,
       { stroke: 'black', fill: '#51CEF4' } );

@@ -74,7 +74,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
 
-      return new WaterCupModel( { tandem: tandem, x: x, y: MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE } );
+      return new WaterCupModel( {
+        tandem: tandem,
+        x: x,
+        y: MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE
+      } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
       phetioDocumentation: 'Holds the models for the 3D water cups.',
