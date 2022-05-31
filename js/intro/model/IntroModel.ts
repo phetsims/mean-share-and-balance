@@ -250,13 +250,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     new2DCup.waterLevelProperty.set( new2DCup.waterLevelProperty.value + actualDelta );
 
     // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
-    new2DCup.waterLevelProperty.value >= 1 ?
-    this.dragRange.setMax( cup3DModel.waterLevelProperty.value ) :
-    this.dragRange.setMax( 1 );
 
-    new2DCup.waterLevelProperty.value <= 0 ?
-    this.dragRange.setMin( cup3DModel.waterLevelProperty.value ) :
-    this.dragRange.setMin( 0 );
+    // Whichever cup (2d or 3d cup) has less determines how low the user can drag that value. If the 3d cup has less,
+    // the user can drag all the way to zero
+    const min = Math.max( cup3DModel.waterLevelProperty.value - new2DCup.waterLevelProperty.value, 0 );
+    cup3DModel.enabledRangeProperty.set( new Range( min, 1 ) );
 
     this.updateMeanFrom3DCups();
 

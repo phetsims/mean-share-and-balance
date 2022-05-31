@@ -27,6 +27,8 @@ const MeanShareAndBalanceConstants = {
   CUPS_2D_Y_VALUE: 200,
   MOUSE_DILATION: 5,
   TOUCH_DILATION: 10
+
+  // TODO: How to factor out new Range(0,1) but without letting one reference disrupt others?
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

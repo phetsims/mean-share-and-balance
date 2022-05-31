@@ -16,6 +16,7 @@ import SliderTrack from '../../../../sun/js/SliderTrack.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & Omit<NodeOptions, 'pickable' | 'inputEnabled'>
@@ -23,7 +24,7 @@ type WaterLevelTriangleNodeOptions = SelfOptions & Omit<NodeOptions, 'pickable' 
 export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;
 
-  constructor( waterLevelProperty: NumberProperty, dragRange: Range,
+  constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>,
                providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'
@@ -47,13 +48,14 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, dragRange, {
+    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, new Range( 0, 1 ), {
       tandem: sliderTandem.createTandem( 'trackNode' )
     } );
 
-    this.slider = new VSlider( waterLevelProperty, dragRange, {
+    this.slider = new VSlider( waterLevelProperty, new Range( 0, 1 ), {
       thumbNode: waterLevelTriangle, trackNode: invisibleTrack,
-      tandem: sliderTandem
+      tandem: sliderTandem,
+      enabledRangeProperty: enabledRangeProperty
     } );
 
     // Set pointer areas for slider thumb node.
