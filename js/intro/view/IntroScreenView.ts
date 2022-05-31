@@ -231,6 +231,9 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
 
+    this.syncDataButton.y = MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE - MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
+    this.syncDataButton.left = introOptionsVBox.left;
+
     this.pdomPlayAreaNode.pdomOrder = [
       introOptionsCheckboxGroup,
       predictMeanLine,
