@@ -7,6 +7,7 @@
  */
 
 import { Circle, DragListener, Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import OmitStrict from '../../../../phet-core/js/types/OmitStrict.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -18,7 +19,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
 type SelfOptions = {};
-type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & Omit<NodeOptions, 'pickable' | 'inputEnabled'>
+type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & OmitStrict<NodeOptions, 'pickable' | 'inputEnabled'>
 
 export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;

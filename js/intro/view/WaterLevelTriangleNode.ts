@@ -7,6 +7,7 @@
  */
 
 import { Shape } from '../../../../kite/js/imports.js';
+import OmitStrict from '../../../../phet-core/js/types/OmitStrict.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import optionize from '../../../../phet-core/js/optionize.js';
@@ -19,7 +20,7 @@ import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = {};
-type WaterLevelTriangleNodeOptions = SelfOptions & Omit<NodeOptions, 'pickable' | 'inputEnabled'>
+type WaterLevelTriangleNodeOptions = SelfOptions & OmitStrict<NodeOptions, 'pickable' | 'inputEnabled'>
 
 export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;
