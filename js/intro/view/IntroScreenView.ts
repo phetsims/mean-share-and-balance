@@ -50,7 +50,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: 175 } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: 175 } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: 175 } );
-    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, { fontSize: 15, maxWidth: 175 } );
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
+      fontSize: 15, maxWidth: 175, layoutOptions: {
+        x: 0,
+        y: 0,
+        width: 2,
+        minContentWidth: 175,
+        xAlign: 'left'
+      }
+    } );
 
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
       tandem: options.tandem.createTandem( 'questionBar' )
@@ -102,20 +110,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         yMargin: 10,
         xMargin: 10,
         arrowHeight: 10,
-        accessibleName: meanShareAndBalanceStrings.numberOfCups
+        accessibleName: meanShareAndBalanceStrings.numberOfCups,
+        layoutOptions: { x: 0, y: 1 }
       }
     );
 
-    const introNumberPickerVBox = new VBox( {
-      children: [
-        numberOfCupsText,
-        numberOfCupsNumberPicker
-      ],
-      align: 'center',
-      minContentWidth: 175,
-      right: this.resetAllButton.left - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-      bottom: this.layoutBounds.bottom - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
-    } );
 
     // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
 
@@ -225,9 +224,13 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
+    this.bottomRightControlsGrid.insertColumn( 0, [ numberOfCupsNumberPicker ] );
+    this.bottomRightControlsGrid.insertRow( 0, [ numberOfCupsText ] );
+    this.bottomRightControlsGrid.right = this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN;
+    this.bottomRightControlsGrid.bottom = this.layoutBounds.maxY - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN;
+
     this.addChild( questionBar );
     this.addChild( introOptionsVBox );
-    this.addChild( introNumberPickerVBox );
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
 
