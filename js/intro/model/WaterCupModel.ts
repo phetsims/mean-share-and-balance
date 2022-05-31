@@ -17,6 +17,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import Property from '../../../../axon/js/Property.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 
 type SelfOptions = {
   x: number;
@@ -34,6 +35,7 @@ export default class WaterCupModel extends PhetioObject {
 
   // This determines the allowed drag range in the slider control
   readonly enabledRangeProperty: Property<Range>;
+  readonly resetEmitter: Emitter;
 
   constructor( providedOptions: WaterCupModelOptions ) {
 
@@ -46,11 +48,18 @@ export default class WaterCupModel extends PhetioObject {
 
     this.x = options.x;
     this.y = options.y;
-    this.enabledRangeProperty = new Property<Range>( new Range( 0, 1 ) );
+    this.resetEmitter = new Emitter();
+    this.enabledRangeProperty = new Property<Range>( new Range( 0, 1 ), { reentrant: true } );
     this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, combineOptions<NumberPropertyOptions>( {
       range: new Range( 0, 1 ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' )
     }, options.waterLevelPropertyOptions ) );
+  }
+
+  reset(): void {
+    this.resetEmitter.emit();
+    this.enabledRangeProperty.reset();
+    this.waterLevelProperty.reset();
   }
 
   override dispose(): void {

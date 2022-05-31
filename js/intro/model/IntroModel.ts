@@ -221,8 +221,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
       this.pipeGroup.dispose();
     }
-    this.waterCup3DGroup.forEach( waterCup3D => waterCup3D.waterLevelProperty.reset() );
-    this.waterCup2DGroup.forEach( waterCup2D => waterCup2D.waterLevelProperty.reset() );
+    this.waterCup3DGroup.forEach( waterCup3D => waterCup3D.reset() );
+    this.waterCup2DGroup.forEach( waterCup2D => waterCup2D.reset() );
 
     this.meanProperty.reset();
   }

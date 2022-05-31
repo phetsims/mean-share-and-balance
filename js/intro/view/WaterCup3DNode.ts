@@ -35,13 +35,18 @@ export default class WaterCup3DNode extends Node {
     super();
 
     const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, { lineWidth: 2 } );
-    const adapterProperty = new NumberProperty( 0.5, {
-      range: new Range( 0, 1 )
+
+    // TODO: Increase documentation for adapter property.
+    // Synthetic property used to track water level prior to setting water level in 2D and 3D cups.
+    const adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+      range: new Range( 0, 1 ),
+      reentrant: true
     } );
 
     adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
       introModel.changeWaterLevel( cup3DModel, adapterProperty, waterLevel, oldWaterLevel );
     } );
+    cup3DModel.resetEmitter.addListener( () => adapterProperty.reset() );
     this.waterLevelTriangle = new WaterLevelTriangleNode( adapterProperty, cup3DModel.enabledRangeProperty, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
