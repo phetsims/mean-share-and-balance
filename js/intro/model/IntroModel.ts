@@ -227,7 +227,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanProperty.reset();
   }
 
-  // TODO: document why we're using this.
+  // adapterProperty allows us to confirm water levels and their deltas are within range before setting each cups own waterLevelProperty.
+  // Without an adapter property waterLevels become disconnected, and our visual representations do not match the data set.
   changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
 
     const index = this.waterCup3DGroup.indexOf( cup3DModel );
@@ -249,17 +250,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     cup3DModel.waterLevelProperty.set( cup3DModel.waterLevelProperty.value + actualDelta );
     new2DCup.waterLevelProperty.set( new2DCup.waterLevelProperty.value + actualDelta );
 
-    // Constrain waterHeightRange on 3D cup if corresponding 2D Cup runs out of space.
+    // Whichever cup (2D or 3D) has more determines how high the user can drag that value.
+    // If the 3D cup has more, the user can drag to 1.
+    const max = Math.min( 1 - new2DCup.waterLevelProperty.value + cup3DModel.waterLevelProperty.value, 1 );
 
-    // Whichever cup (2d or 3d cup) has less determines how low the user can drag that value. If the 3d cup has less,
-    // the user can drag all the way to zero
+    // Whichever cup (2d or 3d cup) has less determines how low the user can drag that value.
+    // If the 3d cup has less, the user can drag all the way to 0.
     const min = Math.max( cup3DModel.waterLevelProperty.value - new2DCup.waterLevelProperty.value, 0 );
-    cup3DModel.enabledRangeProperty.set( new Range( min, 1 ) );
+
+    // Constrain range based on remaining space in cups.
+    cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
 
     this.updateMeanFrom3DCups();
 
     // TODO: investigate potentially removing other listener?
-
     // TODO: assertion to ensure waterlevel totals are equal.
   }
 }
