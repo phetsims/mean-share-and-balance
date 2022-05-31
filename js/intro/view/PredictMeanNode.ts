@@ -15,6 +15,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
 type SelfOptions = {};
 type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & Omit<NodeOptions, 'pickable' | 'inputEnabled'>
@@ -40,7 +41,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
       stroke: 'purple',
       lineWidth: 2
     } );
-    this.predictMeanHandle = new Circle( 5, { center: this.predictMeanLine.localBounds.rightCenter, fill: 'purple' } );
+    this.predictMeanHandle = new ShadedSphereNode( 10, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
     // track predictMeanLine drag position
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, model.meanPredictionProperty.value ) );

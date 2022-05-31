@@ -81,7 +81,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       {
 
         checkboxOptions: {
-          boxWidth: 15
+          boxWidth: 16
         }
       }
     );
