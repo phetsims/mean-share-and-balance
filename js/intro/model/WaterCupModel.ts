@@ -8,7 +8,7 @@
  */
 
 import NumberProperty, { NumberPropertyOptions } from '../../../../axon/js/NumberProperty.js';
-import OmitStrict from '../../../../phet-core/js/types/OmitStrict.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
@@ -40,7 +40,7 @@ export default class WaterCupModel extends PhetioObject {
 
   constructor( providedOptions: WaterCupModelOptions ) {
 
-    const options = optionize<WaterCupModelOptions, OmitStrict<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
+    const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       phetioType: WaterCupModel.WaterCupModelIO,
       phetioDynamicElement: true,
       waterHeightRange: new Range( 0, 1 )
