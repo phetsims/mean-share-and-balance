@@ -224,6 +224,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
+    // TODO: description of how layout is supposed to work
+    // TODO: request Jonathan micro-review
     this.bottomRightControlsGrid.insertColumn( 0, [ numberOfCupsNumberPicker ] );
     this.bottomRightControlsGrid.insertRow( 0, [ numberOfCupsText ] );
     this.bottomRightControlsGrid.right = this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN;
