@@ -9,15 +9,15 @@
 import { Shape } from '../../../../kite/js/imports.js';
 import OmitStrict from '../../../../phet-core/js/types/OmitStrict.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
-import SliderTrack from '../../../../sun/js/SliderTrack.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
 
 type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & OmitStrict<NodeOptions, 'pickable' | 'inputEnabled'>
@@ -49,14 +49,15 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    const invisibleTrack = new SliderTrack( new Rectangle( 0, 0, 1, 1 ), waterLevelProperty, new Range( 0, 1 ), {
-      tandem: sliderTandem.createTandem( 'trackNode' )
-    } );
-
+    // TODO: Fix this slider situation.
     this.slider = new VSlider( waterLevelProperty, new Range( 0, 1 ), {
-      thumbNode: waterLevelTriangle, trackNode: invisibleTrack,
+      trackSize: new Dimension2( 5, MeanShareAndBalanceConstants.CUP_HEIGHT - 5 ),
+      thumbNode: waterLevelTriangle,
       tandem: sliderTandem,
-      enabledRangeProperty: enabledRangeProperty
+      enabledRangeProperty: enabledRangeProperty,
+      trackStroke: null,
+      trackFillEnabled: null,
+      trackFillDisabled: null
     } );
 
     // Set pointer areas for slider thumb node.
