@@ -13,7 +13,6 @@ import { FireListener, Node, NodeOptions, Path, Rectangle } from '../../../../sc
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
@@ -31,6 +30,7 @@ export default class PipeNode extends Node {
   handleTop: Rectangle;
   screw: Rectangle;
   screwBottom: Rectangle;
+  newValveNode: Node;
 
   constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -71,11 +71,12 @@ export default class PipeNode extends Node {
       y: this.handle.y - 3,
       cornerRadius: 2
     } );
-    this.newValveNode = new Node( {
-      children: [ this.screw, this.handleTop, this.handle, this.]
-    })
+
     this.screwBottom = new Rectangle( 0, 0, 10, 4, { fill: 'DarkRed', cornerRadius: 2, centerX: pipeCenter.x, y: pipeRectangle.y - 3 } );
 
+    this.newValveNode = new Node( {
+      children: [ this.screw, this.handleTop, this.handle, this.screwBottom ]
+    } );
     // Valve drawing
     this.innerValve = new Path( createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
       { fill: 'grey' } );
@@ -122,7 +123,6 @@ export default class PipeNode extends Node {
     this.addChild( this.screw );
     this.addChild( this.screwBottom );
     this.addChild( this.handle );
-
 
 
     // Set position related to associated cup
