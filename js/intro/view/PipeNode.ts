@@ -75,7 +75,8 @@ export default class PipeNode extends Node {
     this.screwBottom = new Rectangle( 0, 0, 10, 4, { fill: 'DarkRed', cornerRadius: 2, centerX: pipeCenter.x, y: pipeRectangle.y - 3 } );
 
     this.newValveNode = new Node( {
-      children: [ this.screw, this.handleTop, this.handle, this.screwBottom ]
+      children: [ this.screw, this.handleTop, this.handle, this.screwBottom ],
+      cursor: 'pointer'
     } );
     // Valve drawing
     this.innerValve = new Path( createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
@@ -119,10 +120,7 @@ export default class PipeNode extends Node {
 
     this.addChild( pipeRectangle );
     // this.addChild( this.valveNode );
-    this.addChild( this.handleTop );
-    this.addChild( this.screw );
-    this.addChild( this.screwBottom );
-    this.addChild( this.handle );
+    this.addChild( this.newValveNode );
 
 
     // Set position related to associated cup
