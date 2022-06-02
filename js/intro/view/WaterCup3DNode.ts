@@ -58,15 +58,18 @@ export default class WaterCup3DNode extends Node {
     adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
       introModel.changeWaterLevel( cup3DModel, adapterProperty, waterLevel, oldWaterLevel );
     } );
+
     cup3DModel.resetEmitter.addListener( () => adapterProperty.reset() );
+
     this.waterLevelTriangle = new WaterLevelTriangleNode( adapterProperty, cup3DModel.enabledRangeProperty, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
-      y: MeanShareAndBalanceConstants.CUP_HEIGHT / 2,
       left: MeanShareAndBalanceConstants.CUP_WIDTH / 2
     } );
+
     this.addChild( waterCup );
     this.addChild( this.waterLevelTriangle );
 
+    this.waterLevelTriangle.bottom = waterCup.bottom + 5;
     this.mutate( options );
   }
 
