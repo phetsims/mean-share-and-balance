@@ -15,7 +15,6 @@ import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import ResetButton from '../../../../scenery-phet/js/buttons/ResetButton.js';
-import { GridBox } from '../../../../scenery/js/imports.js';
 
 type SelfOptions = {};
 
@@ -24,7 +23,6 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   readonly resetAllButton: ResetAllButton;
   readonly syncDataButton: ResetButton;
-  bottomRightControlsGrid: GridBox;
 
   constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
@@ -37,7 +35,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         model.syncData();
       },
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-      y: 300,
       radius: 15,
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' )
     } );
@@ -49,20 +46,12 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         this.reset();
       },
       tandem: options.tandem.createTandem( 'resetAllButton' ),
-      layoutOptions: { yAlign: 'bottom' }
-    } );
-
-    this.bottomRightControlsGrid = new GridBox( {
-      margin: 5,
-      children: [
-        this.resetAllButton
-      ],
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN
     } );
 
 
-    this.addChild( this.bottomRightControlsGrid );
+    this.addChild( this.resetAllButton );
     this.addChild( this.syncDataButton );
   }
 

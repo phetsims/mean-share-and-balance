@@ -12,7 +12,8 @@ import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import { VBox, Text, Node } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import NumberPicker from '../../../../scenery-phet/js/NumberPicker.js';
+// TODO: why is this in Sun?
+import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -51,12 +52,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: 175 } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: 175 } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
-      fontSize: 15, maxWidth: 175, layoutOptions: {
-        x: 0,
-        y: 0,
-        width: 2,
-        minContentWidth: 175,
-        xAlign: 'left'
+      fontSize: 15,
+      maxWidth: 175,
+      layoutOptions: {
+        align: 'left'
       }
     } );
 
@@ -102,18 +101,29 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     //Number Picker
-    const numberOfCupsNumberPicker = new NumberPicker(
+    const numberOfCupsNumberSpinner = new NumberSpinner(
       model.numberOfCupsProperty,
       new Property( model.numberOfCupsRange ), {
+        arrowsPosition: 'leftRight',
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
-        color: 'black',
-        yMargin: 10,
-        xMargin: 10,
-        arrowHeight: 10,
         accessibleName: meanShareAndBalanceStrings.numberOfCups,
-        layoutOptions: { x: 0, y: 1 }
+        layoutOptions: {
+          align: 'left'
+        }
       }
     );
+
+    const numberSpinnerVBox = new VBox( {
+      children: [ numberOfCupsText, numberOfCupsNumberSpinner ],
+      minContentWidth: 175,
+      right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      top: introOptionsVBox.bottom,
+      topMargin: 50,
+      align: 'left',
+      layoutOptions: {
+        align: 'left'
+      }
+    } );
 
 
     // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
@@ -224,13 +234,9 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
-    this.bottomRightControlsGrid.insertColumn( 0, [ numberOfCupsNumberPicker ] );
-    this.bottomRightControlsGrid.insertRow( 0, [ numberOfCupsText ] );
-    this.bottomRightControlsGrid.right = this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN;
-    this.bottomRightControlsGrid.bottom = this.layoutBounds.maxY - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN;
-
     this.addChild( questionBar );
     this.addChild( introOptionsVBox );
+    this.addChild( numberSpinnerVBox );
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
 
@@ -240,7 +246,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.pdomPlayAreaNode.pdomOrder = [
       introOptionsCheckboxGroup,
       predictMeanLine,
-      numberOfCupsNumberPicker,
+      numberOfCupsNumberSpinner,
       waterCupLayerNode,
       this.syncDataButton
     ];
