@@ -48,10 +48,15 @@ export default class WaterCup3DNode extends Node {
       beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
-    // TODO: Increase documentation for adapter property.
-    // Synthetic property used to track water level prior to setting water level in 2D and 3D cups.
+    // adapaterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
+    // when the adapterProperty values change a method in the introModel compares delta between current and past value
+    // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
     const adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
       range: new Range( 0, 1 ),
+
+      // When the slider is changed it triggers a value change in the adapter property
+      // This value then updates the 2D & 3D waterLevels which may trigger a change in the slider enabledRangeProperty
+      // If the range shrinks and the adapterProperty is out of range then it will be constrained requiring a reentrant: true
       reentrant: true
     } );
 
