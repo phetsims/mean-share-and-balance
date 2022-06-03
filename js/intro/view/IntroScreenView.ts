@@ -47,7 +47,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-    //TODO text adjustment to work with query param stringTest=long
+
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: 175 } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: 175 } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: 175 } );
@@ -118,11 +118,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       minContentWidth: 175,
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       top: introOptionsVBox.bottom,
-      topMargin: 50,
-      align: 'left',
-      layoutOptions: {
-        align: 'left'
-      }
+      align: 'left'
     } );
 
 
