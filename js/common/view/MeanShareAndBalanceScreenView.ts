@@ -14,12 +14,12 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import ResetButton from '../../../../scenery-phet/js/buttons/ResetButton.js';
-import { AlignBox, GridBox, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, VBox, Text } from '../../../../scenery/js/imports.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import merge from '../../../../phet-core/js/merge.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 
 type SelfOptions = {};
 
@@ -27,7 +27,7 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   readonly resetAllButton: ResetAllButton;
-  readonly syncDataButton: ResetButton;
+  readonly syncDataButton: RectangularPushButton;
   readonly controlsAlignBox: AlignBox;
   readonly controlsVBox: VBox;
   readonly numberSpinnerVBox: VBox;
@@ -44,13 +44,15 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height, this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    this.syncDataButton = new ResetButton( {
+    // TODO: Draw sync icon.
+    this.syncDataButton = new RectangularPushButton( {
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.syncData();
       },
+      content: new Text( 'Sync Data' ),
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-      radius: 15,
+      baseColor: 'white',
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
       layoutOptions: { x: 0, y: 1, xAlign: 'left', minContentHeight: 175, yAlign: 'top' }
     } );
