@@ -10,8 +10,7 @@
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import { VBox, Text, Node } from '../../../../scenery/js/imports.js';
-import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
+import { Text, Node } from '../../../../scenery/js/imports.js';
 // TODO: why is this in Sun?
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
@@ -23,7 +22,6 @@ import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCupModel from '../model/WaterCupModel.js';
 import PredictMeanNode from './PredictMeanNode.js';
-import merge from '../../../../phet-core/js/merge.js';
 import PipeNode from './PipeNode.js';
 import PipeModel from '../model/PipeModel.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
@@ -53,18 +51,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: 175 } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
-      maxWidth: 175,
-      layoutOptions: {
-        align: 'left'
-      }
+      maxWidth: 175
     } );
 
-    const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
-      tandem: options.tandem.createTandem( 'questionBar' )
-    }, { labelText: meanShareAndBalanceStrings.levelingOutQuestion, barFill: '#2496D6' } ) );
-
     //Checkbox Group
-
     const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
     const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [
         {
@@ -93,13 +83,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    const introOptionsVBox = new VBox( {
-      children: [ introOptionsCheckboxGroup ],
-      minContentWidth: 175,
-      right: this.layoutBounds.right - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-      top: questionBar.boundsProperty.value.maxY + MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
-    } );
-
     //Number Picker
     const numberOfCupsNumberSpinner = new NumberSpinner(
       model.numberOfCupsProperty,
@@ -112,14 +95,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         }
       }
     );
-
-    const numberSpinnerVBox = new VBox( {
-      children: [ numberOfCupsText, numberOfCupsNumberSpinner ],
-      minContentWidth: 175,
-      right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-      top: introOptionsVBox.bottom,
-      align: 'left'
-    } );
 
 
     // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
@@ -230,14 +205,12 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
     model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
 
-    this.addChild( questionBar );
-    this.addChild( introOptionsVBox );
-    this.addChild( numberSpinnerVBox );
+    // Configure layout
+    this.controlsVBox.addChild( introOptionsCheckboxGroup );
+    this.numberSpinnerVBox.children = [ numberOfCupsText, numberOfCupsNumberSpinner ];
+
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanLine );
-
-    this.syncDataButton.y = MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE - MeanShareAndBalanceConstants.CUP_HEIGHT / 2;
-    this.syncDataButton.left = introOptionsVBox.left;
 
     this.pdomPlayAreaNode.pdomOrder = [
       introOptionsCheckboxGroup,
