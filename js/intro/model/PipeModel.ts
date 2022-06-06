@@ -14,6 +14,11 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
+type StateObject = {
+  x: number;
+  y: number;
+}
+
 type SelfOptions = {
   x: number;
   y: number;
@@ -57,7 +62,7 @@ PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
     x: pipeModel.x,
     y: pipeModel.y
   } ),
-  stateToArgsForConstructor: ( stateObject: any ) => {
+  stateToArgsForConstructor: ( stateObject: StateObject ) => {
     return [ stateObject.x, stateObject.y ];
   },
   stateSchema: {

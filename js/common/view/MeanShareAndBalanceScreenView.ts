@@ -14,12 +14,13 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { AlignBox, GridBox, VBox, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, VBox, Text, Node } from '../../../../scenery/js/imports.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import merge from '../../../../phet-core/js/merge.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
+import SyncIcon from './SyncIcon.js';
 
 type SelfOptions = {};
 
@@ -44,13 +45,16 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height, this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    // TODO: Draw sync icon.
+    const syncIcon = new SyncIcon( 20 );
+    const syncContent = new Node( {
+      children: [ syncIcon, new Text( 'Sync Data' ) ]
+    } );
     this.syncDataButton = new RectangularPushButton( {
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.syncData();
       },
-      content: new Text( 'Sync Data' ),
+      content: syncContent,
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
