@@ -26,7 +26,7 @@ type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceMod
 
 export default class IntroModel extends MeanShareAndBalanceModel {
 
-  // TODO: Should this be able to go to 0 for PhET-iO?
+  // TODO: Should this be able to go to 0 for PhET-iO? https://github.com/phetsims/mean-share-and-balance/issues/18
   readonly numberOfCupsRange = new Range( 1, 7 );
   readonly dragRange = new Range( 0, 1 );
   readonly cupRange = new Range( 0, 1 );
@@ -242,6 +242,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanProperty.reset();
   }
 
+  // Constrains water level deltas within cup range.
+  private constrainDelta( delta: number, range: Range, waterLevelProperty: NumberProperty ): number {
+    const newWaterLevel = waterLevelProperty.value + delta;
+    const constrainedWaterLevel = range.constrainValue( newWaterLevel );
+    const constrainedDelta = constrainedWaterLevel - waterLevelProperty.value;
+    return constrainedDelta;
+  }
+
   // adapterProperty allows us to confirm water levels and their deltas are within range before setting each cups own waterLevelProperty.
   // Without an adapter property waterLevels become disconnected, and our visual representations do not match the data set.
   changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
@@ -251,14 +259,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     const proposedDelta = waterLevel - oldWaterLevel;
 
-    // TODO: refactor out into separate function.
-    const new2DWaterLevel = new2DCup.waterLevelProperty.value + proposedDelta;
-    const constrained2D = this.cupRange.constrainValue( new2DWaterLevel );
-    const constrained2DDelta = constrained2D - new2DCup.waterLevelProperty.value;
-
-    const new3DWaterLevel = cup3DModel.waterLevelProperty.value + proposedDelta;
-    const constrained3D = this.cupRange.constrainValue( new3DWaterLevel );
-    const constrained3DDelta = constrained3D - cup3DModel.waterLevelProperty.value;
+    const constrained2DDelta = this.constrainDelta( proposedDelta, this.cupRange, new2DCup.waterLevelProperty );
+    const constrained3DDelta = this.constrainDelta( proposedDelta, this.cupRange, cup3DModel.waterLevelProperty );
 
     const actualDelta = Math.abs( constrained2DDelta ) < Math.abs( constrained3DDelta ) ? constrained2DDelta : constrained3DDelta;
 
@@ -277,8 +279,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
 
     this.updateMeanFrom3DCups();
-
-    // TODO: investigate potentially removing other listener?
     // TODO: assertion to ensure waterlevel totals are equal.
   }
 }
