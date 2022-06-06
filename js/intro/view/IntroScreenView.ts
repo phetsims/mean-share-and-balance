@@ -190,7 +190,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.pipeMap = new Map<PipeModel, PipeNode>();
 
     const pipeNodeGroup = new PhetioGroup<PipeNode, [ PipeModel ]>( ( tandem: Tandem, pipeModel: PipeModel ) => {
-      return new PipeNode( pipeModel, modelViewTransform2DCups,
+      return new PipeNode( pipeModel, modelViewTransform2DCups, model.isAutoSharingProperty,
         { tandem: tandem } );
     }, () => [ model.pipeGroup.archetype ], {
       phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),

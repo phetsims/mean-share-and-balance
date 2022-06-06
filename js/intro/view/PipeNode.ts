@@ -16,6 +16,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = {};
 
@@ -28,7 +29,7 @@ export default class PipeNode extends Node {
   private readonly outerValve: Path;
   private readonly valveRotationFireListener: FireListener;
 
-  constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
+  constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       phetioDynamicElement: true
     }, providedOptions );
@@ -83,6 +84,8 @@ export default class PipeNode extends Node {
     this.valveRotationFireListener = new FireListener( {
       fire: () => {
         pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
+        isAutoSharingProperty.set( false );
+
       },
       tandem: options.tandem.createTandem( 'fireListener' )
     } );
