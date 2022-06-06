@@ -23,12 +23,12 @@ export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 
 export default class PipeModel extends PhetioObject {
 
-  readonly isOpenProperty: BooleanProperty;
-  readonly x: number;
-  readonly y: number;
-  static PipeModelIO: IOType<PipeModel>;
+  public readonly isOpenProperty: BooleanProperty;
+  public readonly x: number;
+  public readonly y: number;
+  public static PipeModelIO: IOType<PipeModel>;
 
-  constructor( providedOptions?: PipeModelOptions ) {
+  public constructor( providedOptions?: PipeModelOptions ) {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
       phetioType: PipeModel.PipeModelIO,
@@ -45,7 +45,7 @@ export default class PipeModel extends PhetioObject {
     this.y = options.y;
   }
 
-  override dispose(): void {
+  public override dispose(): void {
     super.dispose();
     this.isOpenProperty.dispose();
   }

@@ -16,7 +16,7 @@ type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProp
 // Should tick marks be common code?
 export default class TickMarksNode extends Node {
 
-  constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
+  public constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
     super( providedOptions );
 
     const tickLevels = [ 0.25, 0.5, 0.75 ];
@@ -28,7 +28,7 @@ export default class TickMarksNode extends Node {
   }
 
   //creates and adds tick mark to node
-  addTickMark( fraction: number ): void {
+  private addTickMark( fraction: number ): void {
     const tickMark = new Line( 0, fraction, 5, fraction, {
       stroke: 'black',
       lineWidth: 2

@@ -26,14 +26,14 @@ type SelfOptions = {};
 export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
-  readonly resetAllButton: ResetAllButton;
-  readonly syncDataButton: RectangularPushButton;
-  readonly controlsAlignBox: AlignBox;
-  readonly controlsVBox: VBox;
-  readonly numberSpinnerVBox: VBox;
-  readonly questionBar: QuestionBar;
+  public readonly resetAllButton: ResetAllButton;
+  public readonly syncDataButton: RectangularPushButton;
+  private readonly controlsAlignBox: AlignBox;
+  public readonly controlsVBox: VBox;
+  public readonly numberSpinnerVBox: VBox;
+  public readonly questionBar: QuestionBar;
 
-  constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  public constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
 
     super( options );

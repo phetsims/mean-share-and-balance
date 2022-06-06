@@ -21,7 +21,7 @@ type SelfOptions = {};
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
 
 export default class IntroScreen extends MeanShareAndBalanceScreen<IntroModel, IntroScreenView> {
-  constructor( providedOptions: LevelingOutScreenOptions ) {
+  public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
     }, providedOptions );

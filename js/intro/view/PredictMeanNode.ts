@@ -27,7 +27,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly model: IntroModel;
   private readonly dragListener: DragListener;
 
-  constructor( model: IntroModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
+  public constructor( model: IntroModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
     const options = optionize<PredictMeanNodeOptions, SelfOptions, AccessibleSliderOptions>()( {
       cursor: 'pointer',

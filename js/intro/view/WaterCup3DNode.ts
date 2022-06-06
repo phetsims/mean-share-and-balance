@@ -25,7 +25,7 @@ type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
 
-  constructor( introModel: IntroModel, cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
+  public constructor( introModel: IntroModel, cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
                providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
@@ -79,7 +79,7 @@ export default class WaterCup3DNode extends Node {
     this.mutate( options );
   }
 
-  override dispose(): void {
+  public override dispose(): void {
     super.dispose();
     this.waterLevelTriangle.dispose();
   }

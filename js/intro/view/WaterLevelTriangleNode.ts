@@ -23,9 +23,9 @@ type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled'>
 
 export default class WaterLevelTriangleNode extends Node {
-  readonly slider: VSlider;
+  private readonly slider: VSlider;
 
-  constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>, height: number,
+  public constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>, height: number,
                providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'
@@ -72,7 +72,7 @@ export default class WaterLevelTriangleNode extends Node {
     this.mutate( options );
   }
 
-  override dispose(): void {
+  public override dispose(): void {
     super.dispose();
     this.slider.dispose();
   }

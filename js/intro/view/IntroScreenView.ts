@@ -35,9 +35,9 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
-  readonly pipeMap: Map<PipeModel, PipeNode>;
+  private readonly pipeMap: Map<PipeModel, PipeNode>;
 
-  constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
+  public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
@@ -234,7 +234,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     ];
   }
 
-  override step( dt: number ): void {
+  public override step( dt: number ): void {
     for ( const pipe of this.pipeMap.values() ) {
       pipe.step( dt );
     }

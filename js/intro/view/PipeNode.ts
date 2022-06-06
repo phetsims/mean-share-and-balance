@@ -29,7 +29,7 @@ export default class PipeNode extends Node {
   private readonly outerValve: Path;
   private readonly valveRotationFireListener: FireListener;
 
-  constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
+  public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       phetioDynamicElement: true
     }, providedOptions );
@@ -110,7 +110,7 @@ export default class PipeNode extends Node {
   }
 
   // Valve animation
-  stepRotation( dt: number, isOpen: boolean ): void {
+  private stepRotation( dt: number, isOpen: boolean ): void {
     const currentRotation = this.valveNode.rotation;
     const targetRotation = isOpen ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;
@@ -119,11 +119,11 @@ export default class PipeNode extends Node {
     this.valveNode.rotation = rotationThreshold <= dt ? targetRotation : proposedRotation;
   }
 
-  step( dt: number ): void {
+  public step( dt: number ): void {
     this.stepRotation( dt, this.pipeModel.isOpenProperty.value );
   }
 
-  override dispose(): void {
+  public override dispose(): void {
     super.dispose();
     this.valveNode.removeInputListener( this.valveRotationFireListener );
     this.valveRotationFireListener.dispose();

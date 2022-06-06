@@ -30,7 +30,7 @@ export default class WaterCup2DNode extends Node {
   private readonly waterCupModel: WaterCupModel;
   private readonly tickMarks: TickMarksNode;
 
-  constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
+  public constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
@@ -100,7 +100,7 @@ export default class WaterCup2DNode extends Node {
     this.mutate( options );
   }
 
-  override dispose(): void {
+  public override dispose(): void {
     super.dispose();
     this.meanProperty.unlink( this.meanLink );
     this.waterCupModel.waterLevelProperty.unlink( this.waterLevelLink );

@@ -27,25 +27,25 @@ type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceMod
 export default class IntroModel extends MeanShareAndBalanceModel {
 
   // TODO: Should this be able to go to 0 for PhET-iO? https://github.com/phetsims/mean-share-and-balance/issues/18
-  readonly numberOfCupsRange = new Range( 1, 7 );
-  readonly dragRange = new Range( 0, 1 );
-  readonly cupRange = new Range( 0, 1 );
+  public readonly numberOfCupsRange = new Range( 1, 7 );
+  public readonly dragRange = new Range( 0, 1 );
+  public readonly cupRange = new Range( 0, 1 );
 
-  readonly isShowingPredictMeanProperty: BooleanProperty;
-  readonly isShowingMeanProperty: BooleanProperty;
-  readonly isShowingTickMarksProperty: BooleanProperty;
-  readonly isAutoSharingProperty: BooleanProperty;
-  readonly numberOfCupsProperty: NumberProperty;
-  readonly meanPredictionProperty: NumberProperty;
-  readonly meanProperty: NumberProperty;
+  public readonly isShowingPredictMeanProperty: BooleanProperty;
+  public readonly isShowingMeanProperty: BooleanProperty;
+  public readonly isShowingTickMarksProperty: BooleanProperty;
+  public readonly isAutoSharingProperty: BooleanProperty;
+  public readonly numberOfCupsProperty: NumberProperty;
+  public readonly meanPredictionProperty: NumberProperty;
+  public readonly meanProperty: NumberProperty;
 
-  readonly waterCup3DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
-  readonly waterCup2DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
+  public readonly waterCup3DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
+  public readonly waterCup2DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
 
-  readonly pipeGroup: PhetioGroup<PipeModel, [ x: number, y: number, isOpen?: boolean ]>;
+  public readonly pipeGroup: PhetioGroup<PipeModel, [ x: number, y: number, isOpen?: boolean ]>;
 
 
-  constructor( providedOptions?: LevelingOutModelOptions ) {
+  public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
     super( options );
@@ -210,19 +210,19 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
   }
 
-  override syncData(): void {
+  public override syncData(): void {
     super.syncData();
     // Will trigger the closure of al pipes. pipe.isOpenProperty = false
     this.isAutoSharingProperty.set( false );
     this.matchCupWaterLevels();
   }
 
-  override step( dt: number ): void {
+  public override step( dt: number ): void {
     super.step( dt );
     this.levelWater( dt );
   }
 
-  override reset(): void {
+  public override reset(): void {
     super.reset();
     this.isShowingPredictMeanProperty.reset();
     this.isShowingMeanProperty.reset();
@@ -252,7 +252,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   // adapterProperty allows us to confirm water levels and their deltas are within range before setting each cups own waterLevelProperty.
   // Without an adapter property waterLevels become disconnected, and our visual representations do not match the data set.
-  changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
+  public changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
 
     const index = this.waterCup3DGroup.indexOf( cup3DModel );
     const new2DCup = this.waterCup2DGroup.getElement( index );

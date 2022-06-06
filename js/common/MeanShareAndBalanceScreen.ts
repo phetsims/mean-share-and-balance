@@ -21,7 +21,7 @@ type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions
 
 export default class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends MeanShareAndBalanceScreenView> extends Screen<T, V> {
 
-  constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
+  public constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
 
     const options = optionize<MeanShareAndBalanceScreenOptions, SelfOptions, ScreenOptions>()( {
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty

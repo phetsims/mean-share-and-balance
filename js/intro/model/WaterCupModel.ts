@@ -29,16 +29,16 @@ type SelfOptions = {
 export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
-  readonly x: number;
-  readonly y: number;
-  readonly waterLevelProperty: NumberProperty;
-  static WaterCupModelIO: IOType<WaterCupModel>;
+  public readonly x: number;
+  public readonly y: number;
+  public readonly waterLevelProperty: NumberProperty;
+  public static WaterCupModelIO: IOType<WaterCupModel>;
 
   // This determines the allowed drag range in the slider control
-  readonly enabledRangeProperty: Property<Range>;
-  readonly resetEmitter: Emitter;
+  public readonly enabledRangeProperty: Property<Range>;
+  public readonly resetEmitter: Emitter;
 
-  constructor( providedOptions: WaterCupModelOptions ) {
+  public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       phetioType: WaterCupModel.WaterCupModelIO,
@@ -57,13 +57,13 @@ export default class WaterCupModel extends PhetioObject {
     }, options.waterLevelPropertyOptions ) );
   }
 
-  reset(): void {
+  public reset(): void {
     this.resetEmitter.emit();
     this.enabledRangeProperty.reset();
     this.waterLevelProperty.reset();
   }
 
-  override dispose(): void {
+  public override dispose(): void {
     super.dispose();
     this.waterLevelProperty.dispose();
   }

@@ -17,24 +17,24 @@ export type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioO
 
 export default class MeanShareAndBalanceModel {
 
-  constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
+  public constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
 
   }
 
-  syncData(): void {
+  public syncData(): void {
   }
 
   /**
    * Resets the model.
    */
-  reset(): void {
+  public reset(): void {
   }
 
   /**
    * Steps the model.
    * @param dt - time step, in seconds
    */
-  step( dt: number ): void {
+  public step( dt: number ): void {
   }
 }
 
