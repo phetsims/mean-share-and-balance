@@ -9,7 +9,7 @@
 import { Shape } from '../../../../kite/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
@@ -17,7 +17,7 @@ import Matrix3 from '../../../../dot/js/Matrix3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
-import SliderTrack from '../../../../sun/js/SliderTrack.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
 
 type SelfOptions = {};
 type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled'>
@@ -25,7 +25,7 @@ type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pick
 export default class WaterLevelTriangleNode extends Node {
   readonly slider: VSlider;
 
-  constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>,
+  constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>, height: number,
                providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'
@@ -49,20 +49,19 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    // TODO: Slider thumbNode still off slightly from waterlevel.
-    const invisibleSliderTrack = new SliderTrack( new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_HEIGHT + 10, 0, { fill: 'red' } ),
-      waterLevelProperty,
-      new Range( 0, 1 ),
-      {
-      enabledRangeProperty: enabledRangeProperty,
-      visible: false
-    } );
-
     this.slider = new VSlider( waterLevelProperty, new Range( 0, 1 ), {
-      trackNode: invisibleSliderTrack,
       thumbNode: waterLevelTriangle,
       tandem: sliderTandem,
-      enabledRangeProperty: enabledRangeProperty
+      enabledRangeProperty: enabledRangeProperty,
+      trackSize: new Dimension2( 10, height ),
+
+      // Precisely align the bounds of the track, independent of the slider width, so the slider thumb will go to the
+      // top and bottom of the cup
+      trackBoundsDilation: false,
+      trackFillEnabled: null,
+      trackFillDisabled: null,
+      trackStroke: null,
+      trackPickable: false
     } );
 
     // Set pointer areas for slider thumb node.

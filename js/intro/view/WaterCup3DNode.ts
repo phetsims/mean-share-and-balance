@@ -35,11 +35,12 @@ export default class WaterCup3DNode extends Node {
     }, providedOptions );
     super();
 
-    const heightOffset = 10;
-    const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - heightOffset;
+    // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses so they don't seem disproportionately tall
+    const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
 
+    const beakerLineWidth = 2;
     const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, {
-      lineWidth: 2,
+      lineWidth: beakerLineWidth,
       beakerHeight: beakerHeight,
       beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH,
       solutionFill: MeanShareAndBalanceColors.waterFillColorProperty,
@@ -66,15 +67,15 @@ export default class WaterCup3DNode extends Node {
 
     cup3DModel.resetEmitter.addListener( () => adapterProperty.reset() );
 
-    this.waterLevelTriangle = new WaterLevelTriangleNode( adapterProperty, cup3DModel.enabledRangeProperty, {
+    this.waterLevelTriangle = new WaterLevelTriangleNode( adapterProperty, cup3DModel.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
-      left: MeanShareAndBalanceConstants.CUP_WIDTH / 2
+      left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
+      top: waterCup.top + BeakerNode.DEFAULT_Y_RADIUS + beakerLineWidth / 2
     } );
 
     this.addChild( waterCup );
     this.addChild( this.waterLevelTriangle );
 
-    this.waterLevelTriangle.bottom = waterCup.bottom + 5;
     this.mutate( options );
   }
 
