@@ -14,7 +14,11 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-type SelfOptions = {};
+type SelfOptions = {
+  x: number;
+  y: number;
+  isOpen?: boolean;
+};
 export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 
 export default class PipeModel extends PhetioObject {
@@ -24,8 +28,9 @@ export default class PipeModel extends PhetioObject {
   readonly y: number;
   static PipeModelIO: IOType<PipeModel>;
 
-  constructor( x: number, y: number, providedOptions?: PipeModelOptions ) {
+  constructor( providedOptions?: PipeModelOptions ) {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
+      isOpen: false,
       phetioType: PipeModel.PipeModelIO,
       tandem: Tandem.REQUIRED,
       phetioDynamicElement: true
@@ -33,12 +38,11 @@ export default class PipeModel extends PhetioObject {
 
     super( options );
 
-    this.isOpenProperty = new BooleanProperty( false, {
+    this.isOpenProperty = new BooleanProperty( options.isOpen, {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );
-    // TODO: Should these be options?  Be consistent with WaterCupModel either way
-    this.x = x;
-    this.y = y;
+    this.x = options.x;
+    this.y = options.y;
   }
 
   override dispose(): void {

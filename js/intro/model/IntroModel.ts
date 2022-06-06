@@ -26,7 +26,7 @@ type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceMod
 
 export default class IntroModel extends MeanShareAndBalanceModel {
 
-  // TODO: Should this be able to go to 0 for PhET-iO?  Perhaps an issue for the designer
+  // TODO: Should this be able to go to 0 for PhET-iO?
   readonly numberOfCupsRange = new Range( 1, 7 );
   readonly dragRange = new Range( 0, 1 );
   readonly cupRange = new Range( 0, 1 );
@@ -42,7 +42,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   readonly waterCup3DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
   readonly waterCup2DGroup: PhetioGroup<WaterCupModel, [ x: number ]>;
 
-  readonly pipeGroup: PhetioGroup<PipeModel, [ number, number ]>;
+  readonly pipeGroup: PhetioGroup<PipeModel, [ x: number, y: number, isOpen?: boolean ]>;
 
 
   constructor( providedOptions?: LevelingOutModelOptions ) {
@@ -104,9 +104,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'waterCup2DGroup' )
     } );
 
-    this.pipeGroup = new PhetioGroup( ( tandem: Tandem, x: number, y: number ) => {
-      return new PipeModel( x, y, { tandem: tandem } );
-    }, [ 0, 0 ], {
+    this.pipeGroup = new PhetioGroup( ( tandem: Tandem, x: number, y: number, isOpen?: boolean ) => {
+      return new PipeModel( { x: x, y: y, isOpen: isOpen, tandem: tandem } );
+    }, [ 0, 0, false ], {
       phetioType: PhetioGroup.PhetioGroupIO( PipeModel.PipeModelIO ),
       phetioDocumentation: 'Holds the connecting pipes for the 2D water cups.',
       tandem: options.tandem.createTandem( 'pipeGroup' )
@@ -130,7 +130,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         this.waterCup3DGroup.createNextElement( x );
         const new2DCup = this.waterCup2DGroup.createNextElement( x );
 
-        lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.x, new2DCup.y );
+        lastWaterCup && this.pipeGroup.createNextElement( lastWaterCup.x, new2DCup.y, this.isAutoSharingProperty.value );
       }
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
