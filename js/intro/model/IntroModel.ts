@@ -34,6 +34,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   readonly isShowingPredictMeanProperty: BooleanProperty;
   readonly isShowingMeanProperty: BooleanProperty;
   readonly isShowingTickMarksProperty: BooleanProperty;
+  readonly isAutoSharingProperty: BooleanProperty;
   readonly numberOfCupsProperty: NumberProperty;
   readonly meanPredictionProperty: NumberProperty;
   readonly meanProperty: NumberProperty;
@@ -57,6 +58,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     } );
     this.isShowingTickMarksProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isShowingTickMarksProperty' )
+    } );
+    this.isAutoSharingProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isAutoSharingProperty' )
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
@@ -141,6 +145,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       assert && assert( numberOfCups === this.waterCup3DGroup.count, `Expected ${numberOfCups} cups, but found: ${this.waterCup3DGroup.count}.` );
       assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
       assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
+    } );
+
+    // Opens pipes when auto share is enabled
+    this.isAutoSharingProperty.link( isAutoSharing => {
+      this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
     } );
   }
 
