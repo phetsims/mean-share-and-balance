@@ -45,14 +45,15 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height, this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    const syncIcon = new SyncIcon( 15 );
+    const syncRadius = 15;
+    const syncIcon = new SyncIcon( syncRadius );
     const syncContent = new Node( {
       children: [
         syncIcon,
         new Text( meanShareAndBalanceStrings.syncData, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
-          fontSize: 12, maxWidth: 160
+          fontSize: 12, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH - syncRadius
         } )
       ]
     } );
@@ -66,7 +67,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
-      layoutOptions: { x: 0, y: 1, xAlign: 'left', minContentHeight: 175, yAlign: 'top' }
+      layoutOptions: { x: 0, y: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     } );
 
     this.resetAllButton = new ResetAllButton( {
@@ -98,7 +99,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         this.syncDataButton,
         this.numberSpinnerVBox
       ],
-      minContentWidth: 175,
+      minContentWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH,
       spacing: 20
     } );
 
