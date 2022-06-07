@@ -22,7 +22,7 @@
   window.phet.chipper.packageObject =
     {
       "name": "mean-share-and-balance",
-      "version": "1.0.0-dev.1",
+      "version": "1.0.0-dev.2",
       "license": "GPL-3.0",
       "repository": {
         "type": "git",
@@ -46,7 +46,17 @@
         }
       },
       "eslintConfig": {
-        "extends": "../chipper/eslint/sim_eslintrc.js"
+        "extends": "../chipper/eslint/sim_eslintrc.js",
+        "overrides": [
+          {
+            "files": [
+              "**/*.ts"
+            ],
+            "rules": {
+              "@typescript-eslint/explicit-member-accessibility": "error"
+            }
+          }
+        ]
       }
     };
   window.phet.chipper.stringRepos =
