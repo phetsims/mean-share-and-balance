@@ -281,9 +281,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.updateMeanFrom3DCups();
 
     // TODO: This assert breaks on very small thresholds. Is this number small enough to create a threshold barrier or is it a concern?
-    //const total2DWater = _.sum( this.waterCup2DGroup.map( cup => cup.waterLevelProperty.value ) );
-    //const total3DWater = _.sum( this.waterCup3DGroup.map( cup => cup.waterLevelProperty.value ) );
-    // assert && assert( total2DWater === total3DWater, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+    const total2DWater = _.sum( this.waterCup2DGroup.map( cup => cup.waterLevelProperty.value ) );
+    const total3DWater = _.sum( this.waterCup3DGroup.map( cup => cup.waterLevelProperty.value ) );
+    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
+    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 }
 

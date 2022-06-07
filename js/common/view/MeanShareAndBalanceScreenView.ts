@@ -45,10 +45,18 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height, this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    const syncIcon = new SyncIcon( 20 );
+    const syncIcon = new SyncIcon( 15 );
     const syncContent = new Node( {
-      children: [ syncIcon, new Text( 'Sync Data' ) ]
+      children: [
+        syncIcon,
+        new Text( meanShareAndBalanceStrings.syncData, {
+          left: syncIcon.right + 5,
+          centerY: syncIcon.centerY,
+          fontSize: 12, maxWidth: 160
+        } )
+      ]
     } );
+
     this.syncDataButton = new RectangularPushButton( {
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress

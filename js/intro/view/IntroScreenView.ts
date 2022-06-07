@@ -49,9 +49,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: 175 } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: 175 } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: 175 } );
-
-    //TODO: Add into meanShareAndBalanceStrings
-    const autoShareText = new Text( 'Auto Share', { fontSize: 15, maxWidth: 175 } );
+    const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: 175 } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
       maxWidth: 175
