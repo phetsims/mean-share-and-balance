@@ -29,6 +29,7 @@ export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 export default class PipeModel extends PhetioObject {
 
   public readonly isOpenProperty: BooleanProperty;
+  public readonly isCurrentlyClickedProperty: BooleanProperty;
   public readonly x: number;
   public readonly y: number;
   public static PipeModelIO: IOType<PipeModel>;
@@ -48,6 +49,7 @@ export default class PipeModel extends PhetioObject {
     } );
     this.x = options.x;
     this.y = options.y;
+    this.isCurrentlyClickedProperty = new BooleanProperty( false );
   }
 
   public override dispose(): void {

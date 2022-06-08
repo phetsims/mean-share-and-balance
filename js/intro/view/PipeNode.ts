@@ -84,8 +84,14 @@ export default class PipeNode extends Node {
     this.valveRotationFireListener = new FireListener( {
       fire: () => {
         pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
-        isAutoSharingProperty.set( false );
 
+        // This does not support re-entrance.
+        // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
+        // it closes all the pipes, but when a user opens a pipe and auto-share is checked
+        // only the clicked pipe should close and auto-share unchecks.
+        pipeModel.isCurrentlyClickedProperty.set( true );
+        isAutoSharingProperty.set( false );
+        pipeModel.isCurrentlyClickedProperty.set( false );
       },
       tandem: options.tandem.createTandem( 'fireListener' )
     } );

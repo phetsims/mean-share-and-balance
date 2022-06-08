@@ -151,7 +151,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // Opens pipes when auto share is enabled
     this.isAutoSharingProperty.link( isAutoSharing => {
-      this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
+      const clickedPipe = this.pipeGroup.find( pipe => pipe.isCurrentlyClickedProperty.value );
+      !clickedPipe && this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
     } );
   }
 
@@ -239,7 +240,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
       // Constrain range based on remaining space in cups.
       cup3D.enabledRangeProperty.set( new Range( min, max ) );
-      console.log( cup3D.enabledRangeProperty.value );
     }
   }
 
