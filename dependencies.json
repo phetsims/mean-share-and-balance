@@ -1,5 +1,5 @@
 {
-  "comment": "# mean-share-and-balance 1.0.0-dev.3 Tue Jun 07 2022 14:02:52 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# mean-share-and-balance 1.0.0-dev.4 Wed Jun 08 2022 12:34:32 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "c13a8c7741d95fbd8e37619c66ebcca8686dffe7",
     "branch": "master"
@@ -21,7 +21,7 @@
     "branch": "master"
   },
   "joist": {
-    "sha": "9630d2f58978477a3beca07269ae474195503d57",
+    "sha": "ab662ed3ab27b2ce5dc5c88e4e480599ba6acd5b",
     "branch": "master"
   },
   "kite": {
@@ -29,7 +29,7 @@
     "branch": "master"
   },
   "mean-share-and-balance": {
-    "sha": "359fd8f4c109c42bf12804dcb1bb08561419cb66",
+    "sha": "2cdb4f21b4a240a3d8093aacee22384c2e7e667f",
     "branch": "master"
   },
   "perennial-alias": {
@@ -49,7 +49,7 @@
     "branch": "master"
   },
   "phet-io-wrappers": {
-    "sha": "e41e4b7f666f5b5eb19a3d3d449bd7c65f8f0a77",
+    "sha": "e39d6368690043cca3e35415375edfc692387e3c",
     "branch": "master"
   },
   "phetcommon": {
@@ -57,7 +57,7 @@
     "branch": "master"
   },
   "phetmarks": {
-    "sha": "47f6bd532615dfeb669c18b8257154ed80682273",
+    "sha": "6c253c1e5f4259187f61b4e6b0f9e9a29724d8e6",
     "branch": "master"
   },
   "query-string-machine": {
@@ -65,7 +65,7 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "a71a41a54a6be51ec71f02fa0db9cc8e7ba20e22",
+    "sha": "337aa73629a2544f5731b107b7136a7963a14937",
     "branch": "master"
   },
   "scenery-phet": {
@@ -77,15 +77,15 @@
     "branch": "master"
   },
   "studio": {
-    "sha": "ac09ef5451988f98a1a83eb0afaf7198cc0e167c",
+    "sha": "7a644f567d0e5d76670b20b8b98fef64fac7c049",
     "branch": "master"
   },
   "sun": {
-    "sha": "6de1461f414eda597393ce44f50dc7a30cfa28f0",
+    "sha": "2d09d4a6347c7cca975c46e6c5654e485a76a930",
     "branch": "master"
   },
   "tambo": {
-    "sha": "ab1a8d0e53725d09e5aa16dc63302976c2479afe",
+    "sha": "930e38030d246503f3e29aa90b586dc08fac2454",
     "branch": "master"
   },
   "tandem": {
