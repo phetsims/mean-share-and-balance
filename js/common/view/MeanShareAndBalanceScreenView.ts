@@ -67,7 +67,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
-      layoutOptions: { x: 0, y: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
+      layoutOptions: { x: 1, y: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     } );
 
     this.resetAllButton = new ResetAllButton( {
@@ -83,15 +83,16 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     this.controlsVBox = new VBox( {
       align: 'left',
-      layoutOptions: { x: 0, y: 0 }
+      layoutOptions: { x: 1, y: 0 }
     } );
 
     this.numberSpinnerVBox = new VBox( {
       align: 'left',
       justify: 'bottom',
       spacing: 10,
-      layoutOptions: { x: 0, y: 2 }
+      layoutOptions: { x: 1, y: 2 }
     } );
+
 
     const controlsGridBox = new GridBox( {
       children: [
@@ -99,9 +100,10 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         this.syncDataButton,
         this.numberSpinnerVBox
       ],
-      minContentWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH,
+      minContentWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH + 25,
       spacing: 20
     } );
+
 
     this.controlsAlignBox = new AlignBox( controlsGridBox, {
       alignBounds: playAreaBounds,
@@ -110,10 +112,12 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       rightMargin: MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
+    // const gridEdge = new Line( { y1: 0, y2: 800, lineWidth: 2, stroke: 'purple', x: this.layoutBounds.maxX - 25 - MeanShareAndBalanceConstants.MAX_TEXT_WIDTH - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN } );
 
     this.addChild( this.questionBar );
     this.addChild( this.resetAllButton );
     this.addChild( this.controlsAlignBox );
+    // this.addChild( gridEdge );
   }
 
   /**
