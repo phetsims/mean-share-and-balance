@@ -112,6 +112,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'pipeGroup' )
     } );
 
+    // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
+    // the number of cups varies
     this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
       tandem: options.tandem.createTandem( 'meanProperty' ),
       phetioDocumentation: 'The ground truth water level mean.',

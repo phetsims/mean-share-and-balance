@@ -93,6 +93,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     //Number Picker
     const numberOfCupsNumberSpinner = new NumberSpinner(
       model.numberOfCupsProperty,
+
+      // The range is constant
       new Property( model.numberOfCupsRange ), {
         arrowsPosition: 'leftRight',
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
@@ -115,6 +117,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         tandem: options.tandem.createTandem( 'predictMeanLine' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.',
         valueProperty: model.meanPredictionProperty,
+
+        // Constant range
         enabledRangeProperty: new Property( model.dragRange )
       }
     );
