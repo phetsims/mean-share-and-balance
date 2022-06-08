@@ -222,6 +222,25 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public override step( dt: number ): void {
     super.step( dt );
     this.levelWater( dt );
+
+    for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
+      const cup2D = this.waterCup2DGroup.getElement( i );
+      const cup3D = this.waterCup3DGroup.getElement( i );
+
+      //TODO: Create method that takes 2D Cup and 3D cup to factor out code below
+
+      // Whichever cup (2D or 3D) has more determines how high the user can drag that value.
+      // If the 3D cup has more, the user can drag to 1.
+      const max = Math.min( 1 - cup2D.waterLevelProperty.value + cup3D.waterLevelProperty.value, 1 );
+
+      // Whichever cup (2d or 3d cup) has less determines how low the user can drag that value.
+      // If the 3d cup has less, the user can drag all the way to 0.
+      const min = Math.max( cup3D.waterLevelProperty.value - cup2D.waterLevelProperty.value, 0 );
+
+      // Constrain range based on remaining space in cups.
+      cup3D.enabledRangeProperty.set( new Range( min, max ) );
+      console.log( cup3D.enabledRangeProperty.value );
+    }
   }
 
   public override reset(): void {
@@ -279,7 +298,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // Constrain range based on remaining space in cups.
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
-
     this.updateMeanFrom3DCups();
 
     const total2DWater = _.sum( this.waterCup2DGroup.map( cup => cup.waterLevelProperty.value ) );
