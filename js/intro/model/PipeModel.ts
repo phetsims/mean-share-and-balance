@@ -29,7 +29,7 @@ export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 export default class PipeModel extends PhetioObject {
 
   public readonly isOpenProperty: BooleanProperty;
-  public readonly isCurrentlyClickedProperty: BooleanProperty;
+  public readonly isCurrentlyClickedProperty= new BooleanProperty( false );
   public readonly x: number;
   public readonly y: number;
   public static PipeModelIO: IOType<PipeModel>;
@@ -47,14 +47,15 @@ export default class PipeModel extends PhetioObject {
     this.isOpenProperty = new BooleanProperty( options.isOpen, {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );
+
     this.x = options.x;
     this.y = options.y;
-    this.isCurrentlyClickedProperty = new BooleanProperty( false );
   }
 
   public override dispose(): void {
     super.dispose();
     this.isOpenProperty.dispose();
+    this.isCurrentlyClickedProperty.dispose();
   }
 }
 

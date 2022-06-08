@@ -215,8 +215,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public override syncData(): void {
     super.syncData();
-    // Will trigger the closure of al pipes. pipe.isOpenProperty = false
     this.isAutoSharingProperty.set( false );
+    this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( false ) );
     this.matchCupWaterLevels();
   }
 
