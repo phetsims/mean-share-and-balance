@@ -24,6 +24,8 @@ type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
+  private readonly cup3DModel: WaterCupModel;
+  private readonly adapterProperty: NumberProperty;
 
   public constructor( introModel: IntroModel, cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
                providedOptions?: WaterCup3DNodeOptions ) {
@@ -34,6 +36,8 @@ export default class WaterCup3DNode extends Node {
       phetioDynamicElement: true
     }, providedOptions );
     super();
+
+    this.cup3DModel = cup3DModel;
 
     // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses so they don't seem disproportionately tall
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
@@ -52,7 +56,7 @@ export default class WaterCup3DNode extends Node {
     // adapaterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
     // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
-    const adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+    this.adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
       range: new Range( 0, 1 ),
 
       // When the slider is changed it triggers a value change in the adapter property
@@ -61,13 +65,13 @@ export default class WaterCup3DNode extends Node {
       reentrant: true
     } );
 
-    adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
-      introModel.changeWaterLevel( cup3DModel, adapterProperty, waterLevel, oldWaterLevel );
+    this.adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
+      introModel.changeWaterLevel( cup3DModel, this.adapterProperty, waterLevel, oldWaterLevel );
     } );
 
-    cup3DModel.resetEmitter.addListener( () => adapterProperty.reset() );
+    cup3DModel.resetEmitter.addListener( () => this.adapterProperty.reset() );
 
-    this.waterLevelTriangle = new WaterLevelTriangleNode( adapterProperty, cup3DModel.enabledRangeProperty, beakerHeight, {
+    this.waterLevelTriangle = new WaterLevelTriangleNode( this.adapterProperty, cup3DModel.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       top: waterCup.top + BeakerNode.DEFAULT_Y_RADIUS + beakerLineWidth / 2
@@ -82,6 +86,8 @@ export default class WaterCup3DNode extends Node {
   public override dispose(): void {
     super.dispose();
     this.waterLevelTriangle.dispose();
+    this.adapterProperty.dispose();
+    this.cup3DModel.resetEmitter.removeAllListeners();
   }
 }
 

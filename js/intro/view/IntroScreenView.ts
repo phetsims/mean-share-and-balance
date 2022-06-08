@@ -80,7 +80,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
           node: autoShareText,
           property: model.isAutoSharingProperty,
           tandem: introOptionsCheckboxGroupTandem.createTandem( 'autoShareCheckbox' ),
-          options: { accessibleName: 'Auto Share' }
+          options: { accessibleName: meanShareAndBalanceStrings.autoShare }
         } ],
       {
 

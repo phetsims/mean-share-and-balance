@@ -14,8 +14,8 @@
   "autoShare": {
     "value": "Auto Share"
   },
-  "syncData": {
-    "value": "Sync Data"
+  "sync": {
+    "value": "Sync"
   },
   "numberOfCups": {
     "value": "Number of Cups"

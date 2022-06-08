@@ -15,7 +15,7 @@ type StringsType = {
   'showMean': string;
   'tickMarks': string;
   'autoShare': string;
-  'syncData': string;
+  'sync': string;
   'numberOfCups': string;
   'levelingOutQuestion': string;
 };

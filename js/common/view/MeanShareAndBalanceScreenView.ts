@@ -50,7 +50,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const syncContent = new Node( {
       children: [
         syncIcon,
-        new Text( meanShareAndBalanceStrings.syncData, {
+        new Text( meanShareAndBalanceStrings.sync, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
           fontSize: 12, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH - syncRadius
@@ -64,6 +64,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         model.syncData();
       },
       content: syncContent,
+      accessibleName: meanShareAndBalanceStrings.sync,
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
@@ -112,12 +113,10 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       rightMargin: MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
-    // const gridEdge = new Line( { y1: 0, y2: 800, lineWidth: 2, stroke: 'purple', x: this.layoutBounds.maxX - 25 - MeanShareAndBalanceConstants.MAX_TEXT_WIDTH - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN } );
 
     this.addChild( this.questionBar );
     this.addChild( this.resetAllButton );
     this.addChild( this.controlsAlignBox );
-    // this.addChild( gridEdge );
   }
 
   /**
