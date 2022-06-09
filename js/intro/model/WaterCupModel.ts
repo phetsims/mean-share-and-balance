@@ -26,6 +26,12 @@ type SelfOptions = {
   waterHeightRange?: Range;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
+
+type stateObject = {
+  x: number;
+  y: number;
+};
+
 export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
@@ -76,7 +82,7 @@ WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {
   toStateObject: ( waterCupModel: WaterCupModel ) => ( {
     x: waterCupModel.x
   } ),
-  stateToArgsForConstructor: ( stateObject: any ) => {
+  stateToArgsForConstructor: ( stateObject: stateObject ) => {
     return [ stateObject.x ];
   },
   stateSchema: {
