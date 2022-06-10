@@ -68,7 +68,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
       tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
-      layoutOptions: { x: 1, y: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
+      layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     } );
 
     this.resetAllButton = new ResetAllButton( {
@@ -84,14 +84,14 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     this.controlsVBox = new VBox( {
       align: 'left',
-      layoutOptions: { x: 1, y: 0 }
+      layoutOptions: { column: 1, row: 0 }
     } );
 
     this.numberSpinnerVBox = new VBox( {
       align: 'left',
       justify: 'bottom',
       spacing: 10,
-      layoutOptions: { x: 1, y: 2 }
+      layoutOptions: { column: 1, row: 2 }
     } );
 
 
