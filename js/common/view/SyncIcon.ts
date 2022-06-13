@@ -6,7 +6,8 @@ import ResetShape from '../../../../scenery-phet/js/ResetShape.js';
 
 /**
  * Draws sync icon
- * REVIEW: Please describe how the sync icon looks
+ * Sync icon takes the form of two curved arrows pointing at each other's tail. The curved arrows split the bottom
+ * and top half of a circle and the arrows point in a counter-clockwise direction.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

@@ -47,13 +47,13 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
-    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
-    const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
-      maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH
+      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
 
     // Checkbox Group
@@ -101,9 +101,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    // REVIEW: Please eliminate unused code
-    // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
-
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode(
       model,
@@ -143,7 +140,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // Center 2D & 3D cups
-    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;

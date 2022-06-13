@@ -67,7 +67,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: new Range( 0, 1 )
     } );
 
-    // The sim starts with one water cup // REVIEW, this code comment duplicates the value of the constant and could become stale
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' ),
       numberType: 'Integer',
@@ -165,8 +164,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   // Return array of sets of cups connected by open pipes
-  // REVIEW: Rename to getSetsOfConnectedCups
-  private classifyCups( waterCupGroup: PhetioGroup<WaterCupModel, [ x: number ]> ): Array<Set<WaterCupModel>> {
+  private getSetsOfConnectedCups( waterCupGroup: PhetioGroup<WaterCupModel, [ x: number ]> ): Array<Set<WaterCupModel>> {
     const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
     let currentSet = new Set<WaterCupModel>();
     let index = 0;
@@ -195,7 +193,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * // REVIEW: perhaps rename animateWater or stepWater or stepWaterLevels?
    */
   private levelWater( dt: number ): void {
-    const setsOfConnectedCups = this.classifyCups( this.waterCup2DGroup );
+    const setsOfConnectedCups = this.getSetsOfConnectedCups( this.waterCup2DGroup );
 
     // calculate and set mean
     setsOfConnectedCups.forEach( cupsSet => {
@@ -220,7 +218,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
   }
 
-  // REVIEW: Please described the intent of this method and when it is called
+  // Matches the 2D cup water level representations to their respective 3D cup water level
+  // Will close all open pipe valves
+  // Called when the syncDataRectangular button is pressed.
   public override syncData(): void {
     super.syncData();
     this.isAutoSharingProperty.set( false );

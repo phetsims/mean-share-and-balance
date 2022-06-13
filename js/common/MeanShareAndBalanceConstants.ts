@@ -30,8 +30,7 @@ const MeanShareAndBalanceConstants = {
   MOUSE_DILATION: 5,
   TOUCH_DILATION: 10,
 
-  // REVIEW: Document, is this for all text, or should this have a more specific variable name?
-  MAX_TEXT_WIDTH: 175
+  MAX_CONTROLS_TEXT_WIDTH: 175
 
   // TODO: How to factor out new Range(0,1) but without letting one reference disrupt others?
 };
