@@ -103,6 +103,13 @@ export default class PipeNode extends Node {
     } );
     this.valveNode.addInputListener( this.valveRotationFireListener );
 
+    // Sets pipe rotation to open if "Auto Share" is enabled.
+    // This prevents the valve node from rotating on entrance and continously rotating in
+    // the state wrapper.
+    if ( isAutoSharingProperty.value ) {
+      this.valveNode.rotation = Math.PI / 2;
+    }
+
     // Linking to isOpenProperty to enable/disable pipe clip area
     pipeModel.isOpenProperty.link( isOpen => {
       if ( isOpen ) {
