@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Model for the MeanShareAndBalance Screen. Rest and step functions
+ * Model for the MeanShareAndBalance Screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

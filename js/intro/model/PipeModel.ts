@@ -32,6 +32,7 @@ export default class PipeModel extends PhetioObject {
   public readonly isCurrentlyClickedProperty= new BooleanProperty( false );
   public readonly x: number;
   public readonly y: number;
+
   public static PipeModelIO: IOType<PipeModel>;
 
   public constructor( providedOptions?: PipeModelOptions ) {

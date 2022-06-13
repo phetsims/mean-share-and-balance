@@ -44,7 +44,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public readonly pipeGroup: PhetioGroup<PipeModel, [ x: number, y: number, isOpen?: boolean ]>;
 
-
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
