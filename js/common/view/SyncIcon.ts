@@ -6,6 +6,8 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 /**
  * Draws sync icon
+ * REVIEW: Please describe how the sync icon looks
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */

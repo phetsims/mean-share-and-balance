@@ -23,10 +23,14 @@ const MeanShareAndBalanceConstants = {
   PIPE_LENGTH: 50,
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 15,
+
+  // REVIEW: Document, is this for the bottom or center of the cups?
   CUPS_3D_Y_VALUE: 525,
   CUPS_2D_Y_VALUE: 275,
   MOUSE_DILATION: 5,
   TOUCH_DILATION: 10,
+
+  // REVIEW: Document, is this for all text, or should this have a more specific variable name?
   MAX_TEXT_WIDTH: 175
 
   // TODO: How to factor out new Range(0,1) but without letting one reference disrupt others?

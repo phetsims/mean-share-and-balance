@@ -2,6 +2,7 @@
 
 /**
  * Representation for the triangle that adjusts the water level in 3D cups.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */

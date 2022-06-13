@@ -12,6 +12,7 @@ import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import { Text, Node } from '../../../../scenery/js/imports.js';
 // TODO: why is this in Sun?
+// REVIEW: Can you please elaborate on the question?
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -55,34 +56,29 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH
     } );
 
-    //Checkbox Group
+    // Checkbox Group
     const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
-    const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [
-        {
-          node: predictMeanText,
-          property: model.isShowingPredictMeanProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.predictMean }
-        },
-        {
-          node: showMeanText,
-          property: model.isShowingMeanProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.showMean }
-        },
-        {
-          node: tickMarksText,
-          property: model.isShowingTickMarksProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
-        },
-        {
-          node: autoShareText,
-          property: model.isAutoSharingProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'autoShareCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.autoShare }
-        } ],
-      {
+    const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
+        node: predictMeanText,
+        property: model.isShowingPredictMeanProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.predictMean }
+      }, {
+        node: showMeanText,
+        property: model.isShowingMeanProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.showMean }
+      }, {
+        node: tickMarksText,
+        property: model.isShowingTickMarksProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
+      }, {
+        node: autoShareText,
+        property: model.isAutoSharingProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'autoShareCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.autoShare }
+      } ], {
 
         checkboxOptions: {
           boxWidth: 16
@@ -105,21 +101,21 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-
+    // REVIEW: Please eliminate unused code
     // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
 
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode(
       model,
-      modelViewTransform2DCups,
-      {
+      modelViewTransform2DCups, {
         visibleProperty: model.isShowingPredictMeanProperty,
-        tandem: options.tandem.createTandem( 'predictMeanLine' ),
-        phetioDocumentation: 'Line user can drag to predict water level mean.',
         valueProperty: model.meanPredictionProperty,
 
         // Constant range
-        enabledRangeProperty: new Property( model.dragRange )
+        enabledRangeProperty: new Property( model.dragRange ),
+
+        tandem: options.tandem.createTandem( 'predictMeanLine' ),
+        phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
 
@@ -182,7 +178,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.waterCup2DGroup.forEach( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
     model.waterCup3DGroup.forEach( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
 
-    // add and remove cups according to model groups.
+    // add and remove cups according to model groups
     model.waterCup2DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
     model.waterCup3DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
     model.waterCup2DGroup.elementDisposedEmitter.addListener( createRemoveWaterCupListener( waterCup2DNodeGroup, waterCup2DMap ) );

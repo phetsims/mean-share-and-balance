@@ -38,11 +38,12 @@ export default class WaterCupModel extends PhetioObject {
   public readonly x: number;
   public readonly y: number;
   public readonly waterLevelProperty: NumberProperty;
-  public static WaterCupModelIO: IOType<WaterCupModel>;
+  public readonly resetEmitter: Emitter;
 
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
-  public readonly resetEmitter: Emitter;
+
+  public static WaterCupModelIO: IOType<WaterCupModel>;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 

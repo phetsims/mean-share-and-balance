@@ -2,6 +2,7 @@
 
 /**
  * Representation for the 2D pipe and valve between each water cup.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -22,6 +23,8 @@ type SelfOptions = {};
 
 type PipeNodeOptions = SelfOptions & NodeOptions;
 
+const VALVE_RADIUS = 10;
+
 export default class PipeNode extends Node {
   private readonly valveNode: Node;
   private readonly pipeModel: PipeModel;
@@ -41,9 +44,10 @@ export default class PipeNode extends Node {
     // Pipe & valve dimensions
     const pipeWidth = 3;
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
-    const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth,
-      { stroke: 'black', fill: MeanShareAndBalanceColors.waterFillColorProperty } );
-    const valveRadius = 10;
+    const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth, {
+      stroke: 'black',
+      fill: MeanShareAndBalanceColors.waterFillColorProperty
+    } );
 
     // Function to create circle with center rectangle cut out.
     const createCircle = ( radius: number, rectangleWidth: number ): Shape => {
@@ -60,9 +64,9 @@ export default class PipeNode extends Node {
     };
 
     // Valve drawing
-    this.innerValve = new Path( createCircle( valveRadius, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
+    this.innerValve = new Path( createCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
       { fill: 'grey' } );
-    this.outerValve = new Path( createCircle( valveRadius + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ),
+    this.outerValve = new Path( createCircle( VALVE_RADIUS + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ),
       { fill: 'black' } );
 
     this.valveNode = new Node( {
@@ -73,7 +77,7 @@ export default class PipeNode extends Node {
     } );
     this.valveNode.center = pipeCenter;
 
-    const pipeClipArea = createPipeClipArea( pipeRectangle.localBounds, valveRadius );
+    const pipeClipArea = createPipeClipArea( pipeRectangle.localBounds, VALVE_RADIUS );
     pipeRectangle.clipArea = pipeClipArea;
 
     // Set pointer areas for valveNode
@@ -85,6 +89,8 @@ export default class PipeNode extends Node {
       fire: () => {
         pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
 
+        // REVIEW: Is the comment about re-entrance about the isCurrentlyClickedProperty?  If so, maybe it should be documented
+        // at that declaration?
         // This does not support re-entrance.
         // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
         // it closes all the pipes, but when a user opens a pipe and auto-share is checked

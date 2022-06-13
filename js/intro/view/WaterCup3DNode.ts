@@ -2,6 +2,7 @@
 
 /**
  * Representation for the 3D water cup including draggable water level.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -57,6 +58,8 @@ export default class WaterCup3DNode extends Node {
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
     // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
     this.adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+
+      // REVIEW: Is this range defined elsewhere?  Should it be factored out?
       range: new Range( 0, 1 ),
 
       // When the slider is changed it triggers a value change in the adapter property

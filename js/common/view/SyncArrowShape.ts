@@ -2,6 +2,7 @@
 
 /**
  * Draws individual curved arrow for Sync Icon
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -10,6 +11,8 @@ import { Shape } from '../../../../kite/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 export default class SyncArrowShape extends Shape {
+
+  // REVIEW: Please add documentation for the parameters, including but not limited to units.
   public constructor( radius: number, orientation: number ) {
     super();
     const innerRadius = radius * 0.4;
@@ -24,7 +27,7 @@ export default class SyncArrowShape extends Shape {
     this.lineTo( outerRadius * Math.cos( startAngle ), outerRadius * Math.sin( startAngle ) );
     const neckAngle = startAngle + endToNeckAngularSpan;
 
-    //Outer curve
+    // Outer curve
     this.arc( 0, 0, outerRadius, startAngle, neckAngle, true );
     const headWidthExtrusion = ( headWidth - ( outerRadius - innerRadius ) ) / 2;
     this.lineTo(

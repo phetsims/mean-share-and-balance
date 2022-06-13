@@ -2,6 +2,7 @@
 
 /**
  * Representation for the 2D water cup including dynamic water level.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -85,6 +86,8 @@ export default class WaterCup2DNode extends Node {
       } );
 
     this.meanLink = ( mean: number ) => {
+
+      // REVIEW: Please describe why the inverse is relevant here.  Is it because +y axis goes down?
       const inverse = 1 - mean;
       this.showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
       this.showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
