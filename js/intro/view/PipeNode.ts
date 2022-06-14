@@ -76,23 +76,25 @@ export default class PipeNode extends Node {
       { fill: 'black' } );
     this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: 'gray' } );
 
-    this.innerValve.center = pipeCenter;
-    this.outerValve.center = pipeCenter;
+    const handleWidth = 4;
+    const handleHeight = 22;
 
-
-    this.handle = new Rectangle( 0, 0, 4, 22, {
+    this.handle = new Rectangle( 0, 0, handleWidth, handleHeight, {
       fill: 'red',
       cornerRadius: 2,
       stroke: 'black',
-      bottom: this.innerValve.top,
-      centerX: this.innerValve.centerX
+      y: this.outerValve.top - handleHeight,
+      x: this.innerValve.centerX - handleWidth / 2
     } );
 
+    // TODO: Sam please help me understand coordinate frames. The difference between setting center & x,y
     this.valveNode = new Node( {
       children: [ this.handle, this.innerValve, this.outerValve ],
       cursor: 'pointer',
       tandem: options.tandem?.createTandem( 'valveNode' ),
-      tagName: 'button'
+      tagName: 'button',
+      y: pipeCenter.y,
+      x: pipeCenter.x
     } );
 
     const pipeClipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
