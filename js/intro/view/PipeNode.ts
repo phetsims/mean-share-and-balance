@@ -28,7 +28,6 @@ const VALVE_RADIUS = 10;
 export default class PipeNode extends Node {
   private readonly pipeModel: PipeModel;
   private readonly valveRotationFireListener: FireListener;
-
   private readonly handle: Rectangle;
   private readonly valveNode: Node;
   private readonly pipeRectangle: Rectangle;
@@ -70,6 +69,7 @@ export default class PipeNode extends Node {
       const clipAreaCircle = Shape.circle( bounds.center, radius );
       return clipAreaRectangle.shapeDifference( clipAreaCircle );
     };
+
 
     // Valve drawing
     this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH ),
@@ -134,6 +134,7 @@ export default class PipeNode extends Node {
         this.pipeRectangle.clipArea = null;
       }
       else {
+
         this.pipeRectangle.clipArea = pipeClipArea;
       }
     } );
