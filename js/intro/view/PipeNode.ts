@@ -14,7 +14,6 @@ import { FireListener, Node, NodeOptions, Path, Rectangle } from '../../../../sc
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
@@ -31,6 +30,11 @@ export default class PipeNode extends Node {
   private readonly innerValve: Path;
   private readonly outerValve: Path;
   private readonly valveRotationFireListener: FireListener;
+  private handle: Rectangle;
+  private handleTop: Rectangle;
+  private screw: Rectangle;
+  private screwBottom: Rectangle;
+  private newValveNode: Node;
 
   public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -42,7 +46,7 @@ export default class PipeNode extends Node {
     this.pipeModel = pipeModel;
 
     // Pipe & valve dimensions
-    const pipeWidth = 3;
+    const pipeWidth = 5;
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth, {
       stroke: 'black',
@@ -57,11 +61,25 @@ export default class PipeNode extends Node {
     };
 
     // Function to create pipe clip area when valve is closed
-    const createPipeClipArea = ( bounds: Bounds2, radius: number ): Shape => {
-      const clipAreaRectangle = Shape.bounds( bounds );
-      const clipAreaCircle = Shape.circle( bounds.center, radius );
-      return clipAreaRectangle.shapeDifference( clipAreaCircle );
-    };
+    // const createPipeClipArea = ( bounds: Bounds2, radius: number ): Shape => {
+    //   const clipAreaRectangle = Shape.bounds( bounds );
+    //   const clipAreaCircle = Shape.circle( bounds.center, radius );
+    //   return clipAreaRectangle.shapeDifference( clipAreaCircle );
+    // };
+
+    // new valve attempt
+    this.screw = new Rectangle( 0, 0, 6, 18, { fill: 'grey', centerX: pipeCenter.x, y: pipeRectangle.y - 18 } );
+    this.handle = new Rectangle( 0, 0, 30, 6, { fill: 'red', cornerRadius: 5, centerX: pipeCenter.x, y: this.screw.y } );
+    this.handleTop = new Rectangle( 0, 0, 10, 5, {
+      fill: 'DarkRed',
+      centerX: pipeCenter.x,
+      y: this.handle.y - 3,
+      cornerRadius: 2
+    } );
+    this.newValveNode = new Node( {
+      children: [ this.screw, this.handleTop, this.handle ]
+    } );
+    this.screwBottom = new Rectangle( 0, 0, 10, 4, { fill: 'DarkRed', cornerRadius: 2, centerX: pipeCenter.x, y: pipeRectangle.y - 3 } );
 
     // Valve drawing
     this.innerValve = new Path( createCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
@@ -77,8 +95,8 @@ export default class PipeNode extends Node {
     } );
     this.valveNode.center = pipeCenter;
 
-    const pipeClipArea = createPipeClipArea( pipeRectangle.localBounds, VALVE_RADIUS );
-    pipeRectangle.clipArea = pipeClipArea;
+    // const pipeClipArea = createPipeClipArea( pipeRectangle.localBounds, VALVE_RADIUS );
+    // pipeRectangle.clipArea = pipeClipArea;
 
     // Set pointer areas for valveNode
     this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
@@ -116,12 +134,18 @@ export default class PipeNode extends Node {
         pipeRectangle.clipArea = null;
       }
       else {
-        pipeRectangle.clipArea = pipeClipArea;
+        // pipeRectangle.clipArea = pipeClipArea;
       }
     } );
 
     this.addChild( pipeRectangle );
-    this.addChild( this.valveNode );
+    // this.addChild( this.valveNode );
+    this.addChild( this.handleTop );
+    this.addChild( this.screw );
+    this.addChild( this.screwBottom );
+    this.addChild( this.handle );
+    this.addChild( this.newValveNode );
+
 
     // Set position related to associated cup
     this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH;
