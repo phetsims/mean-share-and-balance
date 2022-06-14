@@ -36,6 +36,7 @@ export default class PipeNode extends Node {
   private screwBottom: Rectangle;
   private newValveNode: Node;
 
+
   public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       phetioDynamicElement: true
@@ -76,11 +77,15 @@ export default class PipeNode extends Node {
       y: this.handle.y - 3,
       cornerRadius: 2
     } );
+
     this.newValveNode = new Node( {
       children: [ this.screw, this.handleTop, this.handle ]
     } );
     this.screwBottom = new Rectangle( 0, 0, 10, 4, { fill: 'DarkRed', cornerRadius: 2, centerX: pipeCenter.x, y: pipeRectangle.y - 3 } );
 
+    this.newValveNode = new Node( {
+      children: [ this.screw, this.handleTop, this.handle, this.screwBottom ]
+    } );
     // Valve drawing
     this.innerValve = new Path( createCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
       { fill: 'grey' } );
@@ -145,7 +150,6 @@ export default class PipeNode extends Node {
     this.addChild( this.screwBottom );
     this.addChild( this.handle );
     this.addChild( this.newValveNode );
-
 
     // Set position related to associated cup
     this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH;
