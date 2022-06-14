@@ -24,9 +24,10 @@ const MeanShareAndBalanceConstants = {
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 15,
 
-  // REVIEW: Document, is this for the bottom or center of the cups?
+  // Sets center Y value for cups.
   CUPS_3D_Y_VALUE: 525,
   CUPS_2D_Y_VALUE: 275,
+
   MOUSE_DILATION: 5,
   TOUCH_DILATION: 10,
 

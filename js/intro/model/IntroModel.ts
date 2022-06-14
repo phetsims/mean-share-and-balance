@@ -150,7 +150,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     // Opens pipes when auto share is enabled
     this.isAutoSharingProperty.link( isAutoSharing => {
 
-      // REVIEW: Please describe the intent of this part
+      // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
+      // it closes all the pipes, but when a user opens a pipe and auto-share is checked
+      // only the clicked pipe should close and auto-share unchecks.
+      // isCurrentlyClickedProperty tracks the pipe's state to allow us to determine which pipes should open.
       const clickedPipe = this.pipeGroup.find( pipe => pipe.isCurrentlyClickedProperty.value );
       !clickedPipe && this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
     } );

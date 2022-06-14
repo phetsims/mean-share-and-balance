@@ -72,7 +72,9 @@ export default class WaterCup2DNode extends Node {
     };
     waterCupModel.waterLevelProperty.link( this.waterLevelLink );
 
-    const meanInverse = 1 - meanProperty.value;
+    // Model view transform inverts Y mapping, therefore the mean inverse is needed to place
+    // show mean line accurately in relation to water levels.
+    let meanInverse = 1 - meanProperty.value;
 
     this.showMeanLine = new Line(
       0,
@@ -86,11 +88,9 @@ export default class WaterCup2DNode extends Node {
       } );
 
     this.meanLink = ( mean: number ) => {
-
-      // REVIEW: Please describe why the inverse is relevant here.  Is it because +y axis goes down?
-      const inverse = 1 - mean;
-      this.showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
-      this.showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * inverse );
+      meanInverse = 1 - mean;
+      this.showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
+      this.showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
     };
 
     meanProperty.link( this.meanLink );

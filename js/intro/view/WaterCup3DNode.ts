@@ -40,7 +40,8 @@ export default class WaterCup3DNode extends Node {
 
     this.cup3DModel = cup3DModel;
 
-    // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses so they don't seem disproportionately tall
+    // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
+    // so they don't seem disproportionately tall
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
 
     const beakerLineWidth = 2;
