@@ -168,7 +168,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   // Return array of sets of cups connected by open pipes
-  private getSetsOfConnectedCups( waterCupGroup: PhetioGroup<WaterCupModel, [ x: number ]> ): Array<Set<WaterCupModel>> {
+  private getSetsOfConnectedCups(): Array<Set<WaterCupModel>> {
     const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
     let currentSet = new Set<WaterCupModel>();
     let index = 0;
@@ -197,7 +197,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * // REVIEW: perhaps rename animateWater or stepWater or stepWaterLevels?
    */
   private levelWater( dt: number ): void {
-    const setsOfConnectedCups = this.getSetsOfConnectedCups( this.waterCup2DGroup );
+    const setsOfConnectedCups = this.getSetsOfConnectedCups();
 
     // calculate and set mean
     setsOfConnectedCups.forEach( cupsSet => {
@@ -276,11 +276,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   // Constrains water level deltas within cup range.
-  private constrainDelta( delta: number, range: Range, waterLevelProperty: NumberProperty ): number {
+  private static constrainDelta( delta: number, range: Range, waterLevelProperty: NumberProperty ): number {
     const newWaterLevel = waterLevelProperty.value + delta;
     const constrainedWaterLevel = range.constrainValue( newWaterLevel );
-    const constrainedDelta = constrainedWaterLevel - waterLevelProperty.value;
-    return constrainedDelta;
+    return constrainedWaterLevel - waterLevelProperty.value;
   }
 
   // adapterProperty allows us to confirm water levels and their deltas are within range before setting each cups own waterLevelProperty.
@@ -292,8 +291,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     const proposedDelta = waterLevel - oldWaterLevel;
 
-    const constrained2DDelta = this.constrainDelta( proposedDelta, this.cupRange, new2DCup.waterLevelProperty );
-    const constrained3DDelta = this.constrainDelta( proposedDelta, this.cupRange, cup3DModel.waterLevelProperty );
+    const constrained2DDelta = IntroModel.constrainDelta( proposedDelta, this.cupRange, new2DCup.waterLevelProperty );
+    const constrained3DDelta = IntroModel.constrainDelta( proposedDelta, this.cupRange, cup3DModel.waterLevelProperty );
 
     // Use whichever delta is more limiting
     const actualDelta = Math.abs( constrained2DDelta ) < Math.abs( constrained3DDelta ) ? constrained2DDelta : constrained3DDelta;
