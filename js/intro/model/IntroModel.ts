@@ -18,9 +18,10 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import WaterCupModel from './WaterCupModel.js';
 
-type SelfOptions = {};
+type SelfOptions = EmptyObjectType;
 
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 

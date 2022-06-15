@@ -13,6 +13,7 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { AlignBox, GridBox, VBox, Text, Node } from '../../../../scenery/js/imports.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
@@ -22,7 +23,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import SyncIcon from './SyncIcon.js';
 
-type SelfOptions = {};
+type SelfOptions = EmptyObjectType;
 
 export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
 

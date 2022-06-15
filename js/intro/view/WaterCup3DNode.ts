@@ -12,6 +12,7 @@ import WaterCupModel from '../model/WaterCupModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
@@ -19,7 +20,7 @@ import Range from '../../../../dot/js/Range.js';
 import IntroModel from '../model/IntroModel.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
-type SelfOptions = {};
+type SelfOptions = EmptyObjectType;
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterCup3DNode extends Node {

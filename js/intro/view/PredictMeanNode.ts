@@ -13,12 +13,13 @@ import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import IntroModel from '../model/IntroModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
-type SelfOptions = {};
+type SelfOptions = EmptyObjectType;
 type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled'>
 
 export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {

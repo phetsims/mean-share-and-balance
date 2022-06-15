@@ -6,11 +6,12 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-type SelfOptions = {};
+type SelfOptions = EmptyObjectType;
 type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
 
 // Should tick marks be common code?

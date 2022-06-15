@@ -8,6 +8,7 @@
 
 import Utils from '../../../../dot/js/Utils.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import { Rectangle, Node, Line, NodeOptions } from '../../../../scenery/js/imports.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCupModel from '../model/WaterCupModel.js';
@@ -19,7 +20,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
 
-type SelfOptions = {};
+type SelfOptions = EmptyObjectType;
 
 type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
 
