@@ -14,11 +14,11 @@ import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import { FireListener, Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
-import { Shape } from '../../../../kite/js/imports.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -27,11 +27,13 @@ type PipeNodeOptions = SelfOptions & NodeOptions;
 const VALVE_RADIUS = 10;
 
 export default class PipeNode extends Node {
-  private readonly valveNode: Node;
   private readonly pipeModel: PipeModel;
+  private readonly valveRotationFireListener: FireListener;
+  private readonly handle: Rectangle;
+  private readonly valveNode: Node;
+  private readonly pipeRectangle: Rectangle;
   private readonly innerValve: Path;
   private readonly outerValve: Path;
-  private readonly valveRotationFireListener: FireListener;
 
   public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -45,16 +47,21 @@ export default class PipeNode extends Node {
     // Pipe & valve dimensions
     const pipeWidth = 3;
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
-    const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth, {
-      stroke: 'black',
-      fill: MeanShareAndBalanceColors.waterFillColorProperty
-    } );
+    this.pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth,
+      { stroke: 'black', fill: MeanShareAndBalanceColors.waterFillColorProperty } );
 
     // Function to create circle with center rectangle cut out.
-    const createCircle = ( radius: number, rectangleWidth: number ): Shape => {
+    const createInnerCircle = ( radius: number, rectangleWidth: number ): Shape => {
       const circle = Shape.circle( radius );
       const rectangle = Shape.rectangle( -rectangleWidth / 2, -radius - 5, rectangleWidth, ( radius + 5 ) * 2 );
       return circle.shapeDifference( rectangle );
+    };
+
+    const createOuterCircle = ( radius: number ): Shape => {
+      const outerCircle = Shape.circle( radius + 2 );
+      const innerCircle = Shape.circle( radius - 1 );
+
+      return outerCircle.shapeDifference( innerCircle );
     };
 
     // Function to create pipe clip area when valve is closed
@@ -64,22 +71,35 @@ export default class PipeNode extends Node {
       return clipAreaRectangle.shapeDifference( clipAreaCircle );
     };
 
+
     // Valve drawing
-    this.innerValve = new Path( createCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH * 2 ),
-      { fill: 'grey' } );
-    this.outerValve = new Path( createCircle( VALVE_RADIUS + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH, pipeWidth ),
+    this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH ),
       { fill: 'black' } );
+    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: 'gray' } );
 
-    this.valveNode = new Node( {
-      children: [ this.outerValve, this.innerValve ],
-      cursor: 'pointer',
-      tandem: options.tandem.createTandem( 'valveNode' ),
-      tagName: 'button'
+    const handleWidth = 4;
+    const handleHeight = 22;
+
+    this.handle = new Rectangle( 0, 0, handleWidth, handleHeight, {
+      fill: 'red',
+      cornerRadius: 2,
+      stroke: 'black',
+      y: this.outerValve.top - handleHeight,
+      x: this.innerValve.centerX - handleWidth / 2
     } );
-    this.valveNode.center = pipeCenter;
 
-    const pipeClipArea = createPipeClipArea( pipeRectangle.localBounds, VALVE_RADIUS );
-    pipeRectangle.clipArea = pipeClipArea;
+    // TODO: Sam please help me understand coordinate frames. The difference between setting center & x,y
+    this.valveNode = new Node( {
+      children: [ this.handle, this.innerValve, this.outerValve ],
+      cursor: 'pointer',
+      tandem: options.tandem?.createTandem( 'valveNode' ),
+      tagName: 'button',
+      y: pipeCenter.y,
+      x: pipeCenter.x
+    } );
+
+    const pipeClipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
+    this.pipeRectangle.clipArea = pipeClipArea;
 
     // Set pointer areas for valveNode
     this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
@@ -114,14 +134,14 @@ export default class PipeNode extends Node {
     // Linking to isOpenProperty to enable/disable pipe clip area
     pipeModel.isOpenProperty.link( isOpen => {
       if ( isOpen ) {
-        pipeRectangle.clipArea = null;
+        this.pipeRectangle.clipArea = null;
       }
       else {
-        pipeRectangle.clipArea = pipeClipArea;
+        this.pipeRectangle.clipArea = pipeClipArea;
       }
     } );
 
-    this.addChild( pipeRectangle );
+    this.addChild( this.pipeRectangle );
     this.addChild( this.valveNode );
 
     // Set position related to associated cup
@@ -145,9 +165,7 @@ export default class PipeNode extends Node {
 
   public override dispose(): void {
     super.dispose();
-    this.valveNode.removeInputListener( this.valveRotationFireListener );
     this.valveRotationFireListener.dispose();
-    this.valveNode.dispose();
   }
 }
 
