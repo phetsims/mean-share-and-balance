@@ -23,11 +23,15 @@ const MeanShareAndBalanceConstants = {
   PIPE_LENGTH: 50,
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 15,
+
+  // Sets center Y value for cups.
   CUPS_3D_Y_VALUE: 525,
   CUPS_2D_Y_VALUE: 275,
+
   MOUSE_DILATION: 5,
   TOUCH_DILATION: 10,
-  MAX_TEXT_WIDTH: 175
+
+  MAX_CONTROLS_TEXT_WIDTH: 175
 
   // TODO: How to factor out new Range(0,1) but without letting one reference disrupt others?
 };

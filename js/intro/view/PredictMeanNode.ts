@@ -2,6 +2,7 @@
 
 /**
  * Representation for the draggable predict mean line
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */

@@ -30,10 +30,11 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
   public readonly syncDataButton: RectangularPushButton;
-  private readonly controlsAlignBox: AlignBox;
   public readonly controlsVBox: VBox;
   public readonly numberSpinnerVBox: VBox;
   public readonly questionBar: QuestionBar;
+
+  private readonly controlsAlignBox: AlignBox;
 
   public constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
@@ -54,7 +55,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         new Text( meanShareAndBalanceStrings.sync, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
-          fontSize: 12, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH - syncRadius
+          fontSize: 12, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncRadius
         } )
       ]
     } );
@@ -68,8 +69,8 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       accessibleName: meanShareAndBalanceStrings.sync,
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
-      tandem: options.tandem.createTandem( 'matchRepresentationsButton' ),
-      layoutOptions: { x: 1, y: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
+      tandem: options.tandem.createTandem( 'syncRepresentationsButton' ),
+      layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     } );
 
     this.resetAllButton = new ResetAllButton( {
@@ -85,14 +86,14 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     this.controlsVBox = new VBox( {
       align: 'left',
-      layoutOptions: { x: 1, y: 0 }
+      layoutOptions: { column: 1, row: 0 }
     } );
 
     this.numberSpinnerVBox = new VBox( {
       align: 'left',
       justify: 'bottom',
       spacing: 10,
-      layoutOptions: { x: 1, y: 2 }
+      layoutOptions: { column: 1, row: 2 }
     } );
 
 
@@ -102,7 +103,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         this.syncDataButton,
         this.numberSpinnerVBox
       ],
-      minContentWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH + 25,
+      minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20
     } );
 

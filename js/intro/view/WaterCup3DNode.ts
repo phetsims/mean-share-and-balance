@@ -2,6 +2,7 @@
 
 /**
  * Representation for the 3D water cup including draggable water level.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -40,7 +41,8 @@ export default class WaterCup3DNode extends Node {
 
     this.cup3DModel = cup3DModel;
 
-    // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses so they don't seem disproportionately tall
+    // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
+    // so they don't seem disproportionately tall
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
 
     const beakerLineWidth = 2;
@@ -54,20 +56,26 @@ export default class WaterCup3DNode extends Node {
       beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
-    // adapaterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
+    // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
     // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
     this.adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+
+      // REVIEW: Is this range defined elsewhere?  Should it be factored out?
       range: new Range( 0, 1 ),
 
       // When the slider is changed it triggers a value change in the adapter property
       // This value then updates the 2D & 3D waterLevels which may trigger a change in the slider enabledRangeProperty
       // If the range shrinks and the adapterProperty is out of range then it will be constrained requiring a reentrant: true
-      reentrant: true
+      reentrant: true,
+      tandem: options.tandem?.createTandem( 'adapterProperty' ),
+      phetioReadOnly: true
     } );
 
     this.adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
-      introModel.changeWaterLevel( cup3DModel, this.adapterProperty, waterLevel, oldWaterLevel );
+      if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
+        introModel.changeWaterLevel( cup3DModel, this.adapterProperty, waterLevel, oldWaterLevel );
+      }
     } );
 
     cup3DModel.resetEmitter.addListener( () => this.adapterProperty.reset() );

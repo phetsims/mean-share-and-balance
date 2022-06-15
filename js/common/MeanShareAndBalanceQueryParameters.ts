@@ -13,6 +13,8 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 
 const SCHEMA_MAP = {
   //TODO add schemas for query parameters
+
+  // REVIEW: I recommend deleting this file and usages until the sim starts to need query parameters.
 };
 
 const MeanShareAndBalanceQueryParameters = QueryStringMachine.getAll( SCHEMA_MAP );

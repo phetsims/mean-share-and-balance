@@ -38,11 +38,12 @@ export default class WaterCupModel extends PhetioObject {
   public readonly x: number;
   public readonly y: number;
   public readonly waterLevelProperty: NumberProperty;
-  public static WaterCupModelIO: IOType<WaterCupModel>;
+  public readonly resetEmitter: Emitter;
 
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
-  public readonly resetEmitter: Emitter;
+
+  public static WaterCupModelIO: IOType<WaterCupModel>;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 
@@ -59,7 +60,11 @@ export default class WaterCupModel extends PhetioObject {
     this.enabledRangeProperty = new Property<Range>( new Range( 0, 1 ), { reentrant: true } );
     this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, combineOptions<NumberPropertyOptions>( {
       range: new Range( 0, 1 ),
-      tandem: options.tandem.createTandem( 'waterLevelProperty' )
+      tandem: options.tandem.createTandem( 'waterLevelProperty' ),
+
+      // Changing the adapterProperty calls changeWaterLevel, which changes the level of waterLevelProperty,
+      // which in turn can change the adapterProperty again.
+      reentrant: true
     }, options.waterLevelPropertyOptions ) );
   }
 

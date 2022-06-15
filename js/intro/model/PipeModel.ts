@@ -2,6 +2,7 @@
 
 /**
  * Base class for Pipe Node
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -29,9 +30,10 @@ export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 export default class PipeModel extends PhetioObject {
 
   public readonly isOpenProperty: BooleanProperty;
-  public readonly isCurrentlyClickedProperty= new BooleanProperty( false );
+  public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
   public readonly x: number;
   public readonly y: number;
+
   public static PipeModelIO: IOType<PipeModel>;
 
   public constructor( providedOptions?: PipeModelOptions ) {

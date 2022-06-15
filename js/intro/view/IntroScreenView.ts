@@ -13,6 +13,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import { Text, Node } from '../../../../scenery/js/imports.js';
 // TODO: why is this in Sun?
+// REVIEW: Can you please elaborate on the question?
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -44,46 +45,41 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     super( model, options );
 
-    const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-    const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 50, MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
-    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
-    const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH } );
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
-      maxWidth: MeanShareAndBalanceConstants.MAX_TEXT_WIDTH
+      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
 
-    //Checkbox Group
+    // Checkbox Group
     const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
-    const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [
-        {
-          node: predictMeanText,
-          property: model.isShowingPredictMeanProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.predictMean }
-        },
-        {
-          node: showMeanText,
-          property: model.isShowingMeanProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.showMean }
-        },
-        {
-          node: tickMarksText,
-          property: model.isShowingTickMarksProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
-        },
-        {
-          node: autoShareText,
-          property: model.isAutoSharingProperty,
-          tandem: introOptionsCheckboxGroupTandem.createTandem( 'autoShareCheckbox' ),
-          options: { accessibleName: meanShareAndBalanceStrings.autoShare }
-        } ],
-      {
+    const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
+        node: predictMeanText,
+        property: model.isShowingPredictMeanProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.predictMean }
+      }, {
+        node: showMeanText,
+        property: model.isShowingMeanProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.showMean }
+      }, {
+        node: tickMarksText,
+        property: model.isShowingTickMarksProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
+      }, {
+        node: autoShareText,
+        property: model.isAutoSharingProperty,
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'autoShareCheckbox' ),
+        options: { accessibleName: meanShareAndBalanceStrings.autoShare }
+      } ], {
 
         checkboxOptions: {
           boxWidth: 16
@@ -106,21 +102,18 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-
-    // this.syncDataButton.centerX = introNumberPickerVBox.centerX;
-
     //Predict Mean Line
     const predictMeanLine = new PredictMeanNode(
       model,
-      modelViewTransform2DCups,
-      {
+      modelViewTransform2DCups, {
         visibleProperty: model.isShowingPredictMeanProperty,
-        tandem: options.tandem.createTandem( 'predictMeanLine' ),
-        phetioDocumentation: 'Line user can drag to predict water level mean.',
         valueProperty: model.meanPredictionProperty,
 
         // Constant range
-        enabledRangeProperty: new Property( model.dragRange )
+        enabledRangeProperty: new Property( model.dragRange ),
+
+        tandem: options.tandem.createTandem( 'predictMeanLine' ),
+        phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
 
@@ -148,7 +141,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // Center 2D & 3D cups
-    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
@@ -183,7 +176,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.waterCup2DGroup.forEach( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
     model.waterCup3DGroup.forEach( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
 
-    // add and remove cups according to model groups.
+    // add and remove cups according to model groups
     model.waterCup2DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
     model.waterCup3DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
     model.waterCup2DGroup.elementDisposedEmitter.addListener( createRemoveWaterCupListener( waterCup2DNodeGroup, waterCup2DMap ) );

@@ -45,7 +45,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public readonly pipeGroup: PhetioGroup<PipeModel, [ x: number, y: number, isOpen?: boolean ]>;
 
-
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
@@ -69,7 +68,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: new Range( 0, 1 )
     } );
 
-    // The sim starts with one water cup
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' ),
       numberType: 'Integer',
@@ -152,17 +150,25 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // Opens pipes when auto share is enabled
     this.isAutoSharingProperty.link( isAutoSharing => {
+
+      // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
+      // it closes all the pipes, but when a user opens a pipe and auto-share is checked
+      // only the clicked pipe should close and auto-share unchecks.
+      // isCurrentlyClickedProperty tracks the pipe's state to allow us to determine which pipes should open.
       const clickedPipe = this.pipeGroup.find( pipe => pipe.isCurrentlyClickedProperty.value );
       !clickedPipe && this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
     } );
   }
 
+  /**
+   * The 3D cups define the ground truth of the amount of water, this updates the mean from those values.
+   */
   private updateMeanFrom3DCups(): void {
     this.meanProperty.set( calculateMean( this.waterCup3DGroup.map( waterCup3D => waterCup3D.waterLevelProperty.value ) ) );
   }
 
   // Return array of sets of cups connected by open pipes
-  private classifyCups( waterCupGroup: PhetioGroup<WaterCupModel, [ x: number ]> ): Array<Set<WaterCupModel>> {
+  private getSetsOfConnectedCups( waterCupGroup: PhetioGroup<WaterCupModel, [ x: number ]> ): Array<Set<WaterCupModel>> {
     const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
     let currentSet = new Set<WaterCupModel>();
     let index = 0;
@@ -187,9 +193,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   /**
    * Called during step(), levels out the water levels for the connected cups.
+   * // REVIEW: please document the dt parameter
+   * // REVIEW: perhaps rename animateWater or stepWater or stepWaterLevels?
    */
   private levelWater( dt: number ): void {
-    const setsOfConnectedCups = this.classifyCups( this.waterCup2DGroup );
+    const setsOfConnectedCups = this.getSetsOfConnectedCups( this.waterCup2DGroup );
 
     // calculate and set mean
     setsOfConnectedCups.forEach( cupsSet => {
@@ -214,6 +222,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
   }
 
+  // Matches the 2D cup water level representations to their respective 3D cup water level
+  // Will close all open pipe valves
+  // Called when the syncDataRectangular button is pressed.
   public override syncData(): void {
     super.syncData();
     this.isAutoSharingProperty.set( false );
@@ -284,6 +295,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const constrained2DDelta = this.constrainDelta( proposedDelta, this.cupRange, new2DCup.waterLevelProperty );
     const constrained3DDelta = this.constrainDelta( proposedDelta, this.cupRange, cup3DModel.waterLevelProperty );
 
+    // Use whichever delta is more limiting
     const actualDelta = Math.abs( constrained2DDelta ) < Math.abs( constrained3DDelta ) ? constrained2DDelta : constrained3DDelta;
 
     cup3DModel.waterLevelProperty.set( cup3DModel.waterLevelProperty.value + actualDelta );

@@ -2,6 +2,7 @@
 
 /**
  * Representation for the ticks marks on 2D water cup nodes.
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */

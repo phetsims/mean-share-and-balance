@@ -15,17 +15,19 @@ import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from './model/MeanShareAndBalanceModel.js';
 import MeanShareAndBalanceScreenView from './view/MeanShareAndBalanceScreenView.js';
+import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
 type SelfOptions = EmptyObjectType;
 
-type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
+type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem' | 'keyboardHelpNode'>;
 
 export default class MeanShareAndBalanceScreen<T extends MeanShareAndBalanceModel, V extends MeanShareAndBalanceScreenView> extends Screen<T, V> {
 
   public constructor( createModel: () => T, createView: ( m: T ) => V, providedOptions: MeanShareAndBalanceScreenOptions ) {
 
     const options = optionize<MeanShareAndBalanceScreenOptions, SelfOptions, ScreenOptions>()( {
-      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
+      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
+      keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
 
     super( createModel, createView, options );
