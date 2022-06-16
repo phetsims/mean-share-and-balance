@@ -56,7 +56,7 @@ export default class WaterCup3DNode extends Node {
       beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
-    introModel.isShowingTickMarksProperty.link( isShowingTickMarks => waterCup.setShowTicks( isShowingTickMarks ) );
+    introModel.isShowingTickMarksProperty.link( isShowingTickMarks => waterCup.setTicksVisible( isShowingTickMarks ) );
 
     // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
