@@ -11,7 +11,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import { FireListener, Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, Node, LinearGradient, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -24,7 +24,10 @@ type SelfOptions = EmptyObjectType;
 
 type PipeNodeOptions = SelfOptions & NodeOptions;
 
-const VALVE_RADIUS = 10;
+const VALVE_RADIUS = 8;
+const PIPE_WIDTH = 4;
+const HANDLE_HEIGHT = 15;
+const HANDLE_WIDTH = 4;
 
 export default class PipeNode extends Node {
   private readonly pipeModel: PipeModel;
@@ -34,6 +37,7 @@ export default class PipeNode extends Node {
   private readonly pipeRectangle: Rectangle;
   private readonly innerValve: Path;
   private readonly outerValve: Path;
+  private readonly innerPipe: Rectangle;
 
   public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -45,10 +49,10 @@ export default class PipeNode extends Node {
     this.pipeModel = pipeModel;
 
     // Pipe & valve dimensions
-    const pipeWidth = 3;
-    const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, pipeWidth / 2 );
-    this.pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, pipeWidth,
-      { stroke: 'black', fill: MeanShareAndBalanceColors.waterFillColorProperty } );
+    const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, PIPE_WIDTH / 2 );
+    const pipeGradient = new LinearGradient( 0, 0, 0, PIPE_WIDTH ).addColorStop( 0, 'white' ).addColorStop( 1, 'dimGray' );
+    this.pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, PIPE_WIDTH,
+      { stroke: 'black', fill: pipeGradient } );
 
     // Function to create circle with center rectangle cut out.
     const createInnerCircle = ( radius: number, rectangleWidth: number ): Shape => {
@@ -73,24 +77,27 @@ export default class PipeNode extends Node {
 
 
     // Valve drawing
-    this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, pipeWidth + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH ),
+    this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, PIPE_WIDTH ),
       { fill: 'black' } );
     this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: 'gray' } );
 
-    const handleWidth = 4;
-    const handleHeight = 22;
+    // Inner pipe shows water color when pipe is opened.
+    this.innerPipe = new Rectangle( 0, 0, PIPE_WIDTH, VALVE_RADIUS * 2, {
+      fill: null,
+      center: this.innerValve.center
+    } );
 
-    this.handle = new Rectangle( 0, 0, handleWidth, handleHeight, {
+    this.handle = new Rectangle( 0, 0, HANDLE_WIDTH, HANDLE_HEIGHT, {
       fill: 'red',
       cornerRadius: 2,
       stroke: 'black',
-      y: this.outerValve.top - handleHeight,
-      x: this.innerValve.centerX - handleWidth / 2
+      y: this.outerValve.top - HANDLE_HEIGHT,
+      x: this.innerValve.centerX - HANDLE_WIDTH / 2
     } );
 
     // TODO: Sam please help me understand coordinate frames. The difference between setting center & x,y
     this.valveNode = new Node( {
-      children: [ this.handle, this.innerValve, this.outerValve ],
+      children: [ this.handle, this.innerPipe, this.innerValve, this.outerValve ],
       cursor: 'pointer',
       tandem: options.tandem?.createTandem( 'valveNode' ),
       tagName: 'button',
@@ -98,8 +105,7 @@ export default class PipeNode extends Node {
       x: pipeCenter.x
     } );
 
-    const pipeClipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
-    this.pipeRectangle.clipArea = pipeClipArea;
+    this.pipeRectangle.clipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
 
     // Set pointer areas for valveNode
     this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
@@ -125,42 +131,30 @@ export default class PipeNode extends Node {
     this.valveNode.addInputListener( this.valveRotationFireListener );
 
     // Sets pipe rotation to open if "Auto Share" is enabled.
-    // This prevents the valve node from rotating on entrance and continously rotating in
+    // This prevents the valve node from rotating on entrance and continuously rotating in
     // the state wrapper.
     if ( isAutoSharingProperty.value ) {
       this.valveNode.rotation = Math.PI / 2;
     }
 
-    // Linking to isOpenProperty to enable/disable pipe clip area
-    pipeModel.isOpenProperty.link( isOpen => {
-      if ( isOpen ) {
-        this.pipeRectangle.clipArea = null;
-      }
-      else {
-        this.pipeRectangle.clipArea = pipeClipArea;
-      }
-    } );
-
     this.addChild( this.pipeRectangle );
     this.addChild( this.valveNode );
 
     // Set position related to associated cup
-    this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH;
-    this.y = modelViewTransform.modelToViewY( 0 ) - pipeWidth;
+    this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH / 2;
+    this.y = modelViewTransform.modelToViewY( 0 ) - PIPE_WIDTH;
   }
 
   // Valve animation
-  private stepRotation( dt: number, isOpen: boolean ): void {
+  public step( dt: number ): void {
     const currentRotation = this.valveNode.rotation;
-    const targetRotation = isOpen ? Math.PI / 2 : 0;
+    const targetRotation = this.pipeModel.isOpenProperty.value ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;
     const rotationThreshold = Math.abs( this.valveNode.rotation - targetRotation ) * 0.4;
     const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;
     this.valveNode.rotation = rotationThreshold <= dt ? targetRotation : proposedRotation;
-  }
 
-  public step( dt: number ): void {
-    this.stepRotation( dt, this.pipeModel.isOpenProperty.value );
+    this.innerPipe.fill = this.valveNode.rotation >= ( Math.PI / 3 ) ? MeanShareAndBalanceColors.waterFillColorProperty : null;
   }
 
   public override dispose(): void {
