@@ -48,8 +48,8 @@ export default class WaterCup3DNode extends Node {
     const beakerLineWidth = 2;
     const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, {
       lineWidth: beakerLineWidth,
-      beakerHeight: beakerHeight,
       beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH,
+      beakerHeight: beakerHeight,
       solutionFill: MeanShareAndBalanceColors.waterFillColorProperty,
       solutionGlareFill: MeanShareAndBalanceColors.water3DCrescentFillColorProperty,
       solutionShadowFill: MeanShareAndBalanceColors.waterShadowFillColorProperty,
