@@ -136,10 +136,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       while ( numberOfCups < this.waterCup3DGroup.count ) {
         this.waterCup3DGroup.disposeElement( this.waterCup3DGroup.getLastElement() );
         this.waterCup2DGroup.disposeElement( this.waterCup2DGroup.getLastElement() );
-        this.matchCupWaterLevels();
         if ( numberOfCups > 0 ) {
           this.pipeGroup.disposeElement( this.pipeGroup.getLastElement() );
         }
+        this.matchCupWaterLevels();
       }
       this.updateMeanFrom3DCups();
 
@@ -238,6 +238,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    */
   public override syncData(): void {
     super.syncData();
+    this.assertConsistentState();
     this.isAutoSharingProperty.set( false );
     this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( false ) );
     this.matchCupWaterLevels();
@@ -247,7 +248,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * Visit pairs of 2D/3D cups
    */
   private iterateCups( callback: ( cup2D: WaterCupModel, cup3D: WaterCupModel ) => void ): void {
-    this.assertConsistentState();
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
       callback( this.waterCup2DGroup.getElement( i ), this.waterCup3DGroup.getElement( i ) );
     }
