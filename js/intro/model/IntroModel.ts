@@ -174,7 +174,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanProperty.set( calculateMean( this.waterCup3DGroup.map( waterCup3D => waterCup3D.waterLevelProperty.value ) ) );
   }
 
-  // Return array of sets of cups connected by open pipes
+  /**
+   * Return array of sets of cups connected by open pipes
+   */
   private getSetsOfConnectedCups(): Array<Set<WaterCupModel>> {
     const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
     let currentSet = new Set<WaterCupModel>();
@@ -200,7 +202,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   /**
    * Called during step(), levels out the water levels for the connected cups.
-   * // REVIEW: please document the dt parameter
+   * @param dt - time elapsed since last frame in seconds
    * // REVIEW: perhaps rename animateWater or stepWater or stepWaterLevels?
    */
   private levelWater( dt: number ): void {
@@ -220,16 +222,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  // Reset 2D waterLevelProperty to 3D waterLevelProperty.
+  /**
+   * Reset 2D waterLevelProperty to 3D waterLevelProperty.
+   */
   private matchCupWaterLevels(): void {
     this.iterateCups( ( cup2D, cup3D ) => {
       cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
     } );
   }
 
-  // Matches the 2D cup water level representations to their respective 3D cup water level
-  // Will close all open pipe valves
-  // Called when the syncDataRectangular button is pressed.
+  /**
+   * Matches the 2D cup water level representations to their respective 3D cup water level
+   * Will close all open pipe valves
+   * Called when the syncDataRectangularButton is pressed.
+   */
   public override syncData(): void {
     super.syncData();
     this.isAutoSharingProperty.set( false );
@@ -303,15 +309,25 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.assertConsistentState();
   }
 
-  // Constrains water level deltas within cup range.
+  /**
+   * Constrains water level deltas within cup range.
+   * @param delta - the number value between the oldWaterLevel and the newWaterLevel
+   * @param range - the allowed waterLevelProperty range in each cup
+   * @param waterLevelProperty - The property tracking the water level in each cup's model.
+   */
   private static constrainDelta( delta: number, range: Range, waterLevelProperty: NumberProperty ): number {
     const newWaterLevel = waterLevelProperty.value + delta;
     const constrainedWaterLevel = range.constrainValue( newWaterLevel );
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
-  // adapterProperty allows us to confirm water levels and their deltas are within range before setting each cups own waterLevelProperty.
-  // Without an adapter property waterLevels become disconnected, and our visual representations do not match the data set.
+  /**
+   * @param cup3DModel - The model for the affected 3D cup
+   * @param adapterProperty - allows us to confirm water levels and their deltas are within range before setting each cup's own waterLevelProperty.
+   *  Without an adapter property waterLevels become disconnected, and our visual representations do not match the data set.
+   * @param waterLevel - The current waterLevel
+   * @param oldWaterLevel - The previous waterLevel
+   */
   public changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
 
     const index = this.waterCup3DGroup.indexOf( cup3DModel );

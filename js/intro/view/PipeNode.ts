@@ -116,9 +116,6 @@ export default class PipeNode extends Node {
       fire: () => {
         pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
 
-        // REVIEW: Is the comment about re-entrance about the isCurrentlyClickedProperty?  If so, maybe it should be documented
-        // at that declaration?
-        // This does not support re-entrance.
         // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
         // it closes all the pipes, but when a user opens a pipe and auto-share is checked
         // only the clicked pipe should close and auto-share unchecks.
