@@ -160,6 +160,7 @@ export default class PipeNode extends Node {
   public override dispose(): void {
     super.dispose();
     this.valveRotationFireListener.dispose();
+    this.valveNode.dispose();
   }
 }
 
