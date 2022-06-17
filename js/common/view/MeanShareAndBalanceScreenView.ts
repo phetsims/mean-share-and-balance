@@ -125,6 +125,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
    * Resets the view.
    */
   public reset(): void {
+    // May be used for future screens
   }
 
   /**
@@ -132,6 +133,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
    * @param dt - time step, in seconds
    */
   public override step( dt: number ): void {
+    // See subclass for implementation
   }
 }
 
