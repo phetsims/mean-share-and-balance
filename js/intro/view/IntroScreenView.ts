@@ -12,8 +12,6 @@ import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import { Text, Node } from '../../../../scenery/js/imports.js';
-// TODO: why is this in Sun?
-// REVIEW: Can you please elaborate on the question?
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
