@@ -85,7 +85,7 @@ export default class WaterCup3DNode extends Node {
     this.waterLevelTriangle = new WaterLevelTriangleNode( this.adapterProperty, cup3DModel.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
-      top: waterCup.top + BeakerNode.DEFAULT_Y_RADIUS_OF_ENDS + beakerLineWidth / 2
+      top: waterCup.top + waterCup.yRadiusOfEnds + beakerLineWidth / 2
     } );
 
     this.addChild( waterCup );
