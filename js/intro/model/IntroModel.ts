@@ -121,7 +121,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     } );
 
     // add/remove water cups and pipes according to number spinner
-    this.numberOfCupsProperty.link( numberOfCups => {
+    const numberOfCupsListener = ( numberOfCups: number ) => {
       while ( numberOfCups > this.waterCup3DGroup.count ) {
 
         const lastWaterCup: WaterCupModel | null = this.waterCup3DGroup.count > 0 ? this.waterCup3DGroup.getLastElement() : null;
@@ -143,10 +143,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       }
       this.updateMeanFrom3DCups();
 
-      assert && assert( numberOfCups === this.waterCup3DGroup.count, `Expected ${numberOfCups} cups, but found: ${this.waterCup3DGroup.count}.` );
-      assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
-      assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
-    } );
+      this.assertConsistentState();
+    };
+    this.numberOfCupsProperty.link( numberOfCupsListener );
 
     // Opens pipes when auto share is enabled
     this.isAutoSharingProperty.link( isAutoSharing => {
@@ -157,6 +156,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       // isCurrentlyClickedProperty tracks the pipe's state to allow us to determine which pipes should open.
       const clickedPipe = this.pipeGroup.find( pipe => pipe.isCurrentlyClickedProperty.value );
       !clickedPipe && this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
+    } );
+
+    assert && phet.joist.sim.isSettingPhetioStateProperty.link( () => {
+
+      // In https://github.com/phetsims/mean-share-and-balance/issues/37, we found that after state set in some cases
+      // the number of cups wasn't being updated to match the numberOfCupsProperty. We are not sure why. But calling
+      // update manually here seems to work around the problem.
+      numberOfCupsListener( this.numberOfCupsProperty.value );
     } );
   }
 
@@ -215,11 +222,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   // Reset 2D waterLevelProperty to 3D waterLevelProperty.
   private matchCupWaterLevels(): void {
-    for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
-      const cup2D = this.waterCup2DGroup.getElement( i );
-      const cup3D = this.waterCup3DGroup.getElement( i );
+    this.iterateCups( ( cup2D, cup3D ) => {
       cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
-    }
+    } );
   }
 
   // Matches the 2D cup water level representations to their respective 3D cup water level
@@ -232,15 +237,29 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.matchCupWaterLevels();
   }
 
+  /**
+   * Visit pairs of 2D/3D cups
+   */
+  private iterateCups( callback: ( cup2D: WaterCupModel, cup3D: WaterCupModel ) => void ): void {
+    this.assertConsistentState();
+    for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
+      callback( this.waterCup2DGroup.getElement( i ), this.waterCup3DGroup.getElement( i ) );
+    }
+  }
+
+  /**
+   * @param dt - in seconds
+   */
   public override step( dt: number ): void {
+
+    this.assertConsistentState();
+
     super.step( dt );
     this.levelWater( dt );
 
-    for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
-      const cup2D = this.waterCup2DGroup.getElement( i );
-      const cup3D = this.waterCup3DGroup.getElement( i );
+    assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
 
-      //TODO: Create method that takes 2D Cup and 3D cup to factor out code below
+    this.iterateCups( ( cup2D, cup3D ) => {
 
       // Whichever cup (2D or 3D) has more determines how high the user can drag that value.
       // If the 3D cup has more, the user can drag to 1.
@@ -252,7 +271,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
       // Constrain range based on remaining space in cups.
       cup3D.enabledRangeProperty.set( new Range( min, max ) );
-    }
+    } );
+  }
+
+  private assertConsistentState(): void {
+    const numberOfCups = this.numberOfCupsProperty.value;
+    assert && assert( numberOfCups === this.waterCup3DGroup.count, `Expected ${numberOfCups} cups, but found: ${this.waterCup3DGroup.count}.` );
+    assert && assert( numberOfCups === this.waterCup2DGroup.count, `Expected ${numberOfCups} cups, but found: ${this.waterCup2DGroup.count}.` );
+    assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
+    assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
   }
 
   public override reset(): void {
@@ -273,6 +300,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup2DGroup.forEach( waterCup2D => waterCup2D.reset() );
 
     this.meanProperty.reset();
+    this.assertConsistentState();
   }
 
   // Constrains water level deltas within cup range.
