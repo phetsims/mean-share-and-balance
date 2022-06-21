@@ -26,18 +26,19 @@ type PipeNodeOptions = SelfOptions & NodeOptions;
 
 const VALVE_RADIUS = 8;
 const PIPE_WIDTH = 4;
-const HANDLE_HEIGHT = 15;
+const HANDLE_HEIGHT = 10;
 const HANDLE_WIDTH = 4;
 
 export default class PipeNode extends Node {
   private readonly pipeModel: PipeModel;
   private readonly valveRotationFireListener: FireListener;
-  private readonly handle: Rectangle;
+  private readonly handleGrip: Path;
   private readonly valveNode: Node;
   private readonly pipeRectangle: Rectangle;
   private readonly innerValve: Path;
   private readonly outerValve: Path;
   private readonly innerPipe: Rectangle;
+  private readonly handleBase: Rectangle;
 
   public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
@@ -87,17 +88,29 @@ export default class PipeNode extends Node {
       center: this.innerValve.center
     } );
 
-    this.handle = new Rectangle( 0, 0, HANDLE_WIDTH, HANDLE_HEIGHT, {
-      fill: 'red',
-      cornerRadius: 2,
+    this.handleBase = new Rectangle( 0, 0, HANDLE_WIDTH, 3, {
+      fill: pipeGradient,
       stroke: 'black',
-      y: this.outerValve.top - HANDLE_HEIGHT,
+      y: this.outerValve.top - 3,
       x: this.innerValve.centerX - HANDLE_WIDTH / 2
+    } );
+
+    const handleShape = new Shape()
+      .moveTo( -2, 0 )
+      .lineTo( -4, -HANDLE_HEIGHT )
+      .ellipticalArc( 0, -HANDLE_HEIGHT, 4, 3, 0, Math.PI, 0, false )
+      .lineTo( 2, 0 )
+      .close();
+
+    this.handleGrip = new Path( handleShape, {
+      fill: 'red',
+      stroke: 'black',
+      y: this.handleBase.top + 1
     } );
 
     // TODO: Sam please help me understand coordinate frames. The difference between setting center & x,y
     this.valveNode = new Node( {
-      children: [ this.handle, this.innerPipe, this.innerValve, this.outerValve ],
+      children: [ this.handleBase, this.handleGrip, this.innerPipe, this.innerValve, this.outerValve ],
       cursor: 'pointer',
       tandem: options.tandem?.createTandem( 'valveNode' ),
       tagName: 'button',
