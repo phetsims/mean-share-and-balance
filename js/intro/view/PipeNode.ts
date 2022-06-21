@@ -11,7 +11,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import { FireListener, Node, LinearGradient, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, Node, LinearGradient, NodeOptions, Path, Rectangle, RadialGradient } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -78,15 +78,18 @@ export default class PipeNode extends Node {
 
 
     // Valve drawing
+    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 ).addColorStop( 0, 'white' ).addColorStop( 1, 'grey' );
     this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, PIPE_WIDTH ),
       { fill: 'black' } );
-    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: 'gray' } );
+    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: valveGradient } );
 
     // Inner pipe shows water color when pipe is opened.
     this.innerPipe = new Rectangle( 0, 0, PIPE_WIDTH, VALVE_RADIUS * 2, {
       fill: null,
       center: this.innerValve.center
     } );
+
+    const handleGripGradient = new LinearGradient( -2, -2, 8, 0 ).addColorStop( 0, 'red' ).addColorStop( 0.4, 'firebrick' );
 
     this.handleBase = new Rectangle( 0, 0, HANDLE_WIDTH, 3, {
       fill: pipeGradient,
@@ -103,7 +106,7 @@ export default class PipeNode extends Node {
       .close();
 
     this.handleGrip = new Path( handleShape, {
-      fill: 'red',
+      fill: handleGripGradient,
       stroke: 'black',
       y: this.handleBase.top + 1
     } );
