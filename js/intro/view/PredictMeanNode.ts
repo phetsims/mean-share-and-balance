@@ -21,7 +21,8 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
 type SelfOptions = EmptyObjectType;
-type PredictMeanNodeOptions = SelfOptions & AccessibleSliderOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled'>
+type ParentOptions = AccessibleSliderOptions & NodeOptions;
+type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled'>
 
 export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
@@ -31,7 +32,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
 
   public constructor( model: IntroModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
-    const options = optionize<PredictMeanNodeOptions, SelfOptions, AccessibleSliderOptions>()( {
+    const options = optionize<PredictMeanNodeOptions, SelfOptions, ParentOptions>()( {
       cursor: 'pointer',
       focusable: true
     }, providedOptions );
