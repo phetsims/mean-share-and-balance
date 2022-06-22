@@ -46,7 +46,7 @@ export default class WaterCup3DNode extends Node {
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
 
     const beakerLineWidth = 2;
-    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty, {
+    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty.asRanged(), {
       lineWidth: beakerLineWidth,
       beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH,
       beakerHeight: beakerHeight,
