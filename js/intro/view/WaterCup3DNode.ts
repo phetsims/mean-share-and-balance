@@ -28,9 +28,11 @@ export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
   private readonly cup3DModel: WaterCupModel;
   private readonly adapterProperty: NumberProperty;
+  private readonly introModel: IntroModel;
+  private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( introModel: IntroModel, cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
-               providedOptions?: WaterCup3DNodeOptions ) {
+                      providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
@@ -40,6 +42,7 @@ export default class WaterCup3DNode extends Node {
     super();
 
     this.cup3DModel = cup3DModel;
+    this.introModel = introModel;
 
     // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
     // so they don't seem disproportionately tall
@@ -56,7 +59,9 @@ export default class WaterCup3DNode extends Node {
       beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
-    introModel.isShowingTickMarksProperty.link( isShowingTickMarks => waterCup.setTicksVisible( isShowingTickMarks ) );
+    this.showTickMarksLink = ( isShowingTickMarks: boolean ) => waterCup.setTicksVisible( isShowingTickMarks );
+
+    introModel.isShowingTickMarksProperty.link( this.showTickMarksLink );
 
     // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
@@ -90,7 +95,6 @@ export default class WaterCup3DNode extends Node {
 
     this.addChild( waterCup );
     this.addChild( this.waterLevelTriangle );
-
     this.mutate( options );
   }
 
@@ -98,6 +102,7 @@ export default class WaterCup3DNode extends Node {
     super.dispose();
     this.waterLevelTriangle.dispose();
     this.adapterProperty.dispose();
+    this.introModel.isShowingTickMarksProperty.unlink( this.showTickMarksLink );
     this.cup3DModel.resetEmitter.removeAllListeners();
   }
 }
