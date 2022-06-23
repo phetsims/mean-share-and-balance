@@ -82,7 +82,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
 
   private setPointerAreas(): void {
     this.predictMeanLine.mouseArea = this.predictMeanLine.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
-    this.predictMeanLine.touchArea = this.predictMeanLine.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
+    this.predictMeanLine.touchArea = this.predictMeanLine.mouseArea;
     this.predictMeanHandle.mouseArea = this.predictMeanHandle.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
     this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
   }
