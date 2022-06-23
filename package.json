@@ -18,6 +18,7 @@
       "adapted-from-phet",
       "phet-io"
     ],
+    "generatedUnitTests": true,
     "supportsOutputJS": true,
     "simFeatures": {
       "supportsInteractiveDescription": true
