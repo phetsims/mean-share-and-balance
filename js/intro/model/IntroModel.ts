@@ -20,6 +20,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import WaterCupModel from './WaterCupModel.js';
+import Utils from '../../../../dot/js/Utils.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -215,9 +216,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         const currentWaterLevel = cup.waterLevelProperty.value;
         const delta = waterMean - currentWaterLevel;
 
+        let discrepancy = 5;
+
+        if ( waterMean >= 0.9 ) {
+          discrepancy = Utils.linear( 0.9, 1, 5, 50, waterMean );
+        }
+        else if ( waterMean <= 0.1 ) {
+          discrepancy = Utils.linear( 0.1, 0, 5, 50, waterMean );
+        }
+
         // Animate water non-linearly. Higher discrepancy means the water will flow faster.
         // When the water levels are closer, it will slow down.
-        cup.waterLevelProperty.set( currentWaterLevel + delta * dt * 5 );
+        const newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+
+        cup.waterLevelProperty.set( newWaterLevel );
       } );
     } );
   }
@@ -359,7 +371,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const total2DWater = _.sum( this.waterCup2DGroup.map( cup => cup.waterLevelProperty.value ) );
     const total3DWater = _.sum( this.waterCup3DGroup.map( cup => cup.waterLevelProperty.value ) );
     const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
-    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+    assert && assert( totalWaterThreshold <= 1E-4, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 }
 
