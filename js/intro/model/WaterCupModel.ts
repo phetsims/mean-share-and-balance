@@ -50,16 +50,16 @@ export default class WaterCupModel extends PhetioObject {
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       phetioType: WaterCupModel.WaterCupModelIO,
       phetioDynamicElement: true,
-      waterHeightRange: new Range( 0, 1 )
+      waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
     }, providedOptions );
     super( options );
 
     this.x = options.x;
     this.y = options.y;
     this.resetEmitter = new Emitter();
-    this.enabledRangeProperty = new Property<Range>( new Range( 0, 1 ), { reentrant: true } );
+    this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), { reentrant: true } );
     this.waterLevelProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, combineOptions<NumberPropertyOptions>( {
-      range: new Range( 0, 1 ),
+      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' ),
 
       // Changing the adapterProperty calls changeWaterLevel, which changes the level of waterLevelProperty,

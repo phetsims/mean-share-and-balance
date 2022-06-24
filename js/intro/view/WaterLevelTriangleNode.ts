@@ -53,7 +53,7 @@ export default class WaterLevelTriangleNode extends Node {
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
-    this.slider = new VSlider( waterLevelProperty, new Range( 0, 1 ), {
+    this.slider = new VSlider( waterLevelProperty, new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), {
       thumbNode: waterLevelTriangle,
       tandem: sliderTandem,
       enabledRangeProperty: enabledRangeProperty,

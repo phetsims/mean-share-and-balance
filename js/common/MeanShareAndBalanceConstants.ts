@@ -18,6 +18,8 @@ const MeanShareAndBalanceConstants = {
   INITIAL_NUMBER_OF_CUPS: 1,
   CUP_WIDTH: 60,
   CUP_HEIGHT: 120,
+  CUP_RANGE_MIN: 0,
+  CUP_RANGE_MAX: 1,
   WATER_LEVEL_DEFAULT: 0.5,
   PIPE_STROKE_WIDTH: 1,
   PIPE_LENGTH: 50,
@@ -33,7 +35,6 @@ const MeanShareAndBalanceConstants = {
 
   MAX_CONTROLS_TEXT_WIDTH: 175
 
-  // TODO: How to factor out new Range(0,1) but without letting one reference disrupt others?
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

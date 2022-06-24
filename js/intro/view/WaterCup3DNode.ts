@@ -67,9 +67,7 @@ export default class WaterCup3DNode extends Node {
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
     // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
     this.adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
-
-      // REVIEW: Is this range defined elsewhere?  Should it be factored out?
-      range: new Range( 0, 1 ),
+      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
 
       // When the slider is changed it triggers a value change in the adapter property
       // This value then updates the 2D & 3D waterLevels which may trigger a change in the slider enabledRangeProperty
