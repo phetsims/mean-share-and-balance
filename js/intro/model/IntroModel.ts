@@ -204,9 +204,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   /**
    * Called during step(), levels out the water levels for the connected cups.
    * @param dt - time elapsed since last frame in seconds
-   * // REVIEW: perhaps rename animateWater or stepWater or stepWaterLevels?
    */
-  private levelWater( dt: number ): void {
+  private stepWaterLevels( dt: number ): void {
     const setsOfConnectedCups = this.getSetsOfConnectedCups();
 
     // calculate and set mean
@@ -218,6 +217,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
         let discrepancy = 5;
 
+        // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
         if ( waterMean >= 0.9 ) {
           discrepancy = Utils.linear( 0.9, 1, 5, 50, waterMean );
         }
@@ -273,7 +273,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.assertConsistentState();
 
     super.step( dt );
-    this.levelWater( dt );
+    this.stepWaterLevels( dt );
 
     assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
 
