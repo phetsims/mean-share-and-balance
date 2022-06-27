@@ -9,19 +9,18 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Shape } from '../../../../kite/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, NodeOptions, Path } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
-import Matrix3 from '../../../../dot/js/Matrix3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 
 type SelfOptions = EmptyObjectType;
 type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled'>
@@ -30,26 +29,17 @@ export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;
 
   public constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>, height: number,
-               providedOptions?: WaterLevelTriangleNodeOptions ) {
+                      providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'
       },
       providedOptions );
     super();
 
-    const sideLength = 15;
-
-    const triangleShape = new Shape()
-      .moveTo( 0, 0 )
-      .lineTo( Math.cos( Math.PI / 6 ) * sideLength, -Math.sin( Math.PI / 6 ) * sideLength )
-      .lineTo( Math.cos( Math.PI / 6 ) * sideLength, Math.sin( Math.PI / 6 ) * sideLength )
-      .close()
-      .transformed( Matrix3.rotation2( Math.PI / 2 ) );
-
     const sliderTandem = options.tandem.createTandem( 'waterLevelVSlider' );
-    const waterLevelTriangle = new Path( triangleShape, {
+    const waterLevelTriangle = new TriangleNode( {
+      pointDirection: 'down',
       fill: '#51CEF4',
-      stroke: 'black',
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
