@@ -227,7 +227,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
         // Animate water non-linearly. Higher discrepancy means the water will flow faster.
         // When the water levels are closer, it will slow down.
-        const newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+        let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+
+        if ( waterMean > currentWaterLevel ) {
+          newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, waterMean );
+        }
+        else {
+          newWaterLevel = Utils.clamp( newWaterLevel, waterMean, currentWaterLevel );
+        }
 
         cup.waterLevelProperty.set( newWaterLevel );
       } );
@@ -371,7 +378,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const total2DWater = _.sum( this.waterCup2DGroup.map( cup => cup.waterLevelProperty.value ) );
     const total3DWater = _.sum( this.waterCup3DGroup.map( cup => cup.waterLevelProperty.value ) );
     const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
-    assert && assert( totalWaterThreshold <= 1E-4, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 }
 
