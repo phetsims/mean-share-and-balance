@@ -40,6 +40,18 @@ const meanShareAndBalanceColors = {
   } ),
   waterCup3DGlareFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterCup3DGlareFill', {
     default: new Color( 255, 255, 255, 0.4 )
+  } ),
+  pipeGradientLightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'pipeGradientLight', {
+    default: 'white'
+  } ),
+  pipeGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'pipeGradientDark', {
+    default: '#4d4d4d'
+  } ),
+  handleGradientLightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'handleGradientLight', {
+    default: 'red'
+  } ),
+  handleGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'handleGradientDark', {
+    default: 'firebrick'
   } )
 };
 

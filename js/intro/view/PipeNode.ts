@@ -51,7 +51,9 @@ export default class PipeNode extends Node {
 
     // Pipe & valve dimensions
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, PIPE_WIDTH / 2 );
-    const pipeGradient = new LinearGradient( 0, 0, 0, PIPE_WIDTH ).addColorStop( 0, 'white' ).addColorStop( 1, 'dimGray' );
+    const pipeGradient = new LinearGradient( 0, 0, 0, PIPE_WIDTH )
+      .addColorStop( 0, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
+      .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty );
     this.pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, PIPE_WIDTH,
       { stroke: 'black', fill: pipeGradient } );
 
@@ -78,7 +80,10 @@ export default class PipeNode extends Node {
 
 
     // Valve drawing
-    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 ).addColorStop( 0.5, 'white' ).addColorStop( 1, 'grey' );
+    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 )
+      .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
+      .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty );
+
     this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, PIPE_WIDTH ),
       { fill: 'black' } );
     this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: valveGradient, stroke: 'black' } );
@@ -89,7 +94,9 @@ export default class PipeNode extends Node {
       center: this.innerValve.center
     } );
 
-    const handleGripGradient = new LinearGradient( -2, -2, 8, 0 ).addColorStop( 0, 'red' ).addColorStop( 0.4, 'firebrick' );
+    const handleGripGradient = new LinearGradient( -2, -2, 8, 0 )
+      .addColorStop( 0, MeanShareAndBalanceColors.handleGradientLightColorProperty )
+      .addColorStop( 0.4, MeanShareAndBalanceColors.handleGradientDarkColorProperty );
 
     this.handleBase = new Rectangle( 0, 0, HANDLE_WIDTH, 3, {
       fill: pipeGradient,
