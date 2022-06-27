@@ -57,7 +57,7 @@ export default class PipeNode extends Node {
 
     // Function to create circle with center rectangle cut out.
     const createInnerCircle = ( radius: number, rectangleWidth: number ): Shape => {
-      const circle = Shape.circle( radius );
+      const circle = Shape.circle( radius - 1 );
       const rectangle = Shape.rectangle( -rectangleWidth / 2, -radius - 5, rectangleWidth, ( radius + 5 ) * 2 );
       return circle.shapeDifference( rectangle );
     };
@@ -78,10 +78,10 @@ export default class PipeNode extends Node {
 
 
     // Valve drawing
-    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 ).addColorStop( 0, 'white' ).addColorStop( 1, 'grey' );
+    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 ).addColorStop( 0.5, 'white' ).addColorStop( 1, 'grey' );
     this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, PIPE_WIDTH ),
       { fill: 'black' } );
-    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: valveGradient } );
+    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: valveGradient, stroke: 'black' } );
 
     // Inner pipe shows water color when pipe is opened.
     this.innerPipe = new Rectangle( 0, 0, PIPE_WIDTH, VALVE_RADIUS * 2, {
@@ -113,7 +113,7 @@ export default class PipeNode extends Node {
 
     // TODO: Sam please help me understand coordinate frames. The difference between setting center & x,y
     this.valveNode = new Node( {
-      children: [ this.handleBase, this.handleGrip, this.innerPipe, this.innerValve, this.outerValve ],
+      children: [ this.handleBase, this.handleGrip, this.innerPipe, this.outerValve, this.innerValve ],
       cursor: 'pointer',
       tandem: options.tandem?.createTandem( 'valveNode' ),
       tagName: 'button',
