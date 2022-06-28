@@ -21,7 +21,6 @@ const MeanShareAndBalanceConstants = {
   CUP_RANGE_MIN: 0,
   CUP_RANGE_MAX: 1,
   WATER_LEVEL_DEFAULT: 0.5,
-  //REVIEW Should this be renamed PIPE_LINE_WIDTH, and be used to set lineWidth for the pipe?
   PIPE_STROKE_WIDTH: 1,
   PIPE_LENGTH: 50,
   CONTROLS_VERTICAL_MARGIN: 30,
