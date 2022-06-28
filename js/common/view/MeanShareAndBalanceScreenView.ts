@@ -18,7 +18,6 @@ import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { AlignBox, GridBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
-import merge from '../../../../phet-core/js/merge.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
@@ -43,10 +42,13 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     super( options );
 
-    //TODO https://github.com/phetsims/mean-share-and-balance/issues/48 eliminate merge by combining object literals
-    this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
-      tandem: options.tandem.createTandem( 'questionBar' )
-    }, { labelText: meanShareAndBalanceStrings.introQuestion, barFill: '#2496D6' } ) );
+    // TODO: Can QuestionBar be built in a way that allows changing barFill and labelText after construction?
+    // see: https://github.com/phetsims/scenery-phet/issues/751
+     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
+      tandem: options.tandem.createTandem( 'questionBar' ),
+      labelText: meanShareAndBalanceStrings.introQuestion,
+      barFill: '#2496D6'
+    } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
