@@ -56,7 +56,8 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         new Text( meanShareAndBalanceStrings.sync, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
-          fontSize: 12, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncRadius
+          fontSize: 12,
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncRadius
         } )
       ]
     } );
