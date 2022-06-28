@@ -24,7 +24,7 @@ import Utils from '../../../../dot/js/Utils.js';
 
 type SelfOptions = EmptyObjectType;
 
-type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
+type IntroModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 
 export default class IntroModel extends MeanShareAndBalanceModel {
 
@@ -46,9 +46,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public readonly pipeGroup: PhetioGroup<PipeModel, [ x: number, y: number, isOpen?: boolean ]>;
 
-  public constructor( providedOptions?: LevelingOutModelOptions ) {
+  public constructor( providedOptions?: IntroModelOptions ) {
 
-    const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
+    const options = optionize<IntroModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
     super( options );
 
     this.isShowingPredictMeanProperty = new BooleanProperty( false, {

@@ -30,6 +30,8 @@ const MeanShareAndBalanceConstants = {
   CUPS_3D_Y_VALUE: 525,
   CUPS_2D_Y_VALUE: 275,
 
+  INITIAL_NUMBER_OF_PEOPLE: 1,
+
   MOUSE_DILATION: 5,
   TOUCH_DILATION: 10,
 
