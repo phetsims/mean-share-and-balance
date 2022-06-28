@@ -1,6 +1,6 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW Nothing about the name of this class tells me that it's a line.
+//REVIEW Nothing about the name of this class tells me that it's a line. And in fact it's a slider! Change to PredictMeanSlider?
 /**
  * Representation for the draggable predict mean line
  *
