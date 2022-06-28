@@ -1,5 +1,6 @@
 // Copyright 2022, University of Colorado Boulder
 
+//REVIEW what is "Leveling Out Screen"? Do you mean "Intro screen"?
 /**
  * Representation for the Leveling Out Screen, displaying 2D/3D water cups, pipes, and various interactive options.
  *

@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
+//REVIEW what is "Leveling Out Screen"? Do you mean "Intro screen"?
 /**
- * Model for the Leveling Out screen, which includes 2d cups, 3d cups, connecting pipes, and view options.
+ * Model for the Leveling Out screen, which includes 2D cups, 3D cups, connecting pipes, and view options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

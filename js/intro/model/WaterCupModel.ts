@@ -1,7 +1,9 @@
 // Copyright 2022, University of Colorado Boulder
 
+//REVIEW Incorrect doc. There is nothing abstract about this class. And I see no subclasses, so it's not even a base class.
+//REVIEW Needs more description - tell me about "water cup" in this sim.
 /**
- * Abstract parent class for 2 & 3 water cup models.
+ * Abstract parent class for 2D & 3D water cup models.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

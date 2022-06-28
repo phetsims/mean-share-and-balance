@@ -22,6 +22,8 @@ import IntroModel from '../model/IntroModel.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptyObjectType;
+//REVIEW should phetioDynamicElement be omitted from NodeOptions?
+//REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
 type WaterCup3DNodeOptions = SelfOptions & NodeOptions
 
 export default class WaterCup3DNode extends Node {

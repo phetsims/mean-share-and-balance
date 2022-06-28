@@ -1,5 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
+//REVIEW Incorrect doc. This is not a base class for PipeNode. It's the model for the pipe.
+//REVIEW Needs more description - what is a "pipe", etc.
 /**
  * Base class for Pipe Node
  *

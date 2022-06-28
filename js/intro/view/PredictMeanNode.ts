@@ -1,5 +1,6 @@
 // Copyright 2022, University of Colorado Boulder
 
+//REVIEW Nothing about the name of this class tells me that it's a line.
 /**
  * Representation for the draggable predict mean line
  *
@@ -22,6 +23,7 @@ import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
 type SelfOptions = EmptyObjectType;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
+//REVIEW should 'focusable' and 'cursor' also be omitted?
 type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled'>
 
 export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {

@@ -22,6 +22,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 
 type SelfOptions = EmptyObjectType;
 
+//REVIEW should 'phetioDynamicElement' be omitted from NodeOptions?
 type PipeNodeOptions = SelfOptions & NodeOptions;
 
 const VALVE_RADIUS = 8;

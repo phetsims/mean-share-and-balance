@@ -23,6 +23,8 @@ import { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
 
 type SelfOptions = EmptyObjectType;
 
+//REVIEW should phetioDynamicElement be omitted from NodeOptions?
+//REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
 type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
 
 export default class WaterCup2DNode extends Node {
