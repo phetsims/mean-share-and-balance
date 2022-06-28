@@ -24,6 +24,7 @@ type StateObject = {
 
 type SelfOptions = {
   //REVIEW non-obvious options are supposed to be documented where defined, and these are not obvious to the reviewer
+  //REVIEW if x and y are the pipe's position, then position: Vector2 is preferable
   x: number;
   y: number;
   isOpen?: boolean;
@@ -37,6 +38,7 @@ export default class PipeModel extends PhetioObject {
   //REVIEW non-obvious fields are supposed to be documented where declared, and these are not obvious to the reviewer
   public readonly isOpenProperty: BooleanProperty;
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
+  //REVIEW if x and y are the pipe's position, then position: Vector2 is preferable
   public readonly x: number;
   public readonly y: number;
 
