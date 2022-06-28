@@ -4,6 +4,7 @@ import { Path, Node } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import ResetShape from '../../../../scenery-phet/js/ResetShape.js';
 
+//REVIEW Recommended to use fontawesome fa:refresh icon here instead. See https://fontawesome.com/v4/icon/refresh
 /**
  * Draws sync icon
  * Sync icon takes the form of two curved arrows pointing at each other's tail. The curved arrows split the bottom
