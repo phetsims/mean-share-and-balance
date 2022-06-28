@@ -35,6 +35,7 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
+  //REVIEW document
   private readonly pipeMap: Map<PipeModel, PipeNode>;
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
@@ -92,6 +93,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       // The range is constant
       new Property( model.numberOfCupsRange ), {
         arrowsPosition: 'leftRight',
+        //REVIEW tandem name does not match numberOfCupsNumberSpinner
         tandem: options.tandem.createTandem( 'numberOfCupsNumberPicker' ),
         accessibleName: meanShareAndBalanceStrings.numberOfCups,
         layoutOptions: {

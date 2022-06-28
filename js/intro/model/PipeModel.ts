@@ -21,14 +21,18 @@ type StateObject = {
 }
 
 type SelfOptions = {
+  //REVIEW non-obvious options are supposed to be documented where defined, and these are not obvious to the reviewer
   x: number;
   y: number;
   isOpen?: boolean;
 };
+
+//REVIEW Shouldn't 'phetioType' | 'phetioDynamicElement' be omitted from PhetioObjectOptions?
 export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 
 export default class PipeModel extends PhetioObject {
 
+  //REVIEW non-obvious fields are supposed to be documented where declared, and these are not obvious to the reviewer
   public readonly isOpenProperty: BooleanProperty;
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
   public readonly x: number;
