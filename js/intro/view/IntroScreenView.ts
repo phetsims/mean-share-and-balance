@@ -228,6 +228,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     ];
   }
 
+  //REVIEW Missing call to super.step()? If super.step actually does something in the future, it won't get done.
   public override step( dt: number ): void {
     for ( const pipe of this.pipeMap.values() ) {
       pipe.step( dt );
