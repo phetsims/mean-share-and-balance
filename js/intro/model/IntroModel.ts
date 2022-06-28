@@ -37,6 +37,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly isShowingPredictMeanProperty: BooleanProperty;
   public readonly isShowingMeanProperty: BooleanProperty;
   public readonly isShowingTickMarksProperty: BooleanProperty;
+  //REVIEW Document isAutoSharingProperty. I have no idea what this does, never figure it out during code review.
   public readonly isAutoSharingProperty: BooleanProperty;
   public readonly numberOfCupsProperty: NumberProperty;
   public readonly meanPredictionProperty: NumberProperty;
