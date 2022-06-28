@@ -30,6 +30,7 @@ type SelfOptions = {
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
 
+//REVIEW should be StateObject (uppercase)
 type stateObject = {
   x: number;
   y: number;
