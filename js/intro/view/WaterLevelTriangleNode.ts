@@ -40,6 +40,7 @@ export default class WaterLevelTriangleNode extends Node {
     const waterLevelTriangle = new TriangleNode( {
       pointDirection: 'down',
       fill: '#51CEF4',
+      //REVIEW tandem name does not match waterLevelTriangle
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 

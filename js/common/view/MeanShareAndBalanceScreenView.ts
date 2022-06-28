@@ -75,6 +75,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       accessibleName: meanShareAndBalanceStrings.sync,
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
+      //REVIEW tandem name does not match this.syncDataButton
       tandem: options.tandem.createTandem( 'syncRepresentationsButton' ),
       layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     } );

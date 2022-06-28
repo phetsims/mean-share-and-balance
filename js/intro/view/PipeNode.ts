@@ -146,6 +146,7 @@ export default class PipeNode extends Node {
         isAutoSharingProperty.set( false );
         pipeModel.isCurrentlyClickedProperty.set( false );
       },
+      //REVIEW tandem name does not match this.valveRotationFireListener
       tandem: options.tandem.createTandem( 'fireListener' )
     } );
     this.valveNode.addInputListener( this.valveRotationFireListener );

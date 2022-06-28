@@ -60,6 +60,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
     this.dragListener = new DragListener( {
       positionProperty: predictMeanPositionProperty,
       transform: modelViewTransform,
+      //REVIEW tandem name does not match this.dragListener
       tandem: options.tandem.createTandem( 'predictMeanDragListener' )
     } );
 
