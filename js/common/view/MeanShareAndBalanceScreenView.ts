@@ -15,7 +15,7 @@ import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { AlignBox, GridBox, VBox, Text, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import merge from '../../../../phet-core/js/merge.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
@@ -45,7 +45,8 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       tandem: options.tandem.createTandem( 'questionBar' )
     }, { labelText: meanShareAndBalanceStrings.levelingOutQuestion, barFill: '#2496D6' } ) );
 
-    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height, this.layoutBounds.maxX, this.layoutBounds.maxY );
+    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
+      this.layoutBounds.maxX, this.layoutBounds.maxY );
 
     const syncRadius = 15;
     const syncIcon = new SyncIcon( syncRadius );
