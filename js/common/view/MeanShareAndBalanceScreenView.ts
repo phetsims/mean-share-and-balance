@@ -29,6 +29,7 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
+  //REVIEW more descriptive name or doc. What "data" is this synchronizing?
   public readonly syncDataButton: RectangularPushButton;
   public readonly controlsVBox: VBox;
   public readonly numberSpinnerVBox: VBox;

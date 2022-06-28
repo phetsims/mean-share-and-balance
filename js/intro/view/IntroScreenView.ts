@@ -104,6 +104,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     );
 
     //Predict Mean Line
+    //REVIEW const name doesn't match class name. See REVIEW comment in PredictMeanNode.ts about renaming it.
     const predictMeanLine = new PredictMeanNode(
       model,
       modelViewTransform2DCups, {

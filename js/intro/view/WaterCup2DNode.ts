@@ -33,6 +33,7 @@ export default class WaterCup2DNode extends Node {
   private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCupModel: WaterCupModel;
   private readonly tickMarks: TickMarksNode;
+  //REVIEW Consider renaming to simply meanLine. Its visibleProperty is set to isShowingMeanProperty, but does that need to be part of the name?
   private readonly showMeanLine: Line;
 
   public constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
