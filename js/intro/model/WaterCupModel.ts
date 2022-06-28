@@ -24,7 +24,6 @@ import Emitter from '../../../../axon/js/Emitter.js';
 
 type SelfOptions = {
   //REVIEW non-obvious options are supposed to be documented where defined, and these are not obvious to the reviewer
-  //REVIEW if x and y are the pipe's position, then position: Vector2 is preferable
   x: number;
   y: number;
   waterHeightRange?: Range;
@@ -32,7 +31,6 @@ type SelfOptions = {
 };
 
 type stateObject = {
-  //REVIEW if x and y are the pipe's position, then position: Vector2 is preferable
   x: number;
   y: number;
 };
@@ -43,7 +41,6 @@ export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequi
 export default class WaterCupModel extends PhetioObject {
 
   //REVIEW non-obvious fields are supposed to be documented where declared, and these are not obvious to the reviewer
-  //REVIEW if x and y are the pipe's position, then position: Vector2 is preferable
   public readonly x: number;
   public readonly y: number;
   public readonly waterLevelProperty: NumberProperty;
