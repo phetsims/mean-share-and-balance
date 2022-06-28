@@ -229,6 +229,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         // When the water levels are closer, it will slow down.
         let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
 
+        // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
         if ( waterMean > currentWaterLevel ) {
           newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, waterMean );
         }
