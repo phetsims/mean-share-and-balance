@@ -28,6 +28,8 @@ type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pick
 export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;
 
+  //REVIEW why is waterLevelProperty not Property<number>, as in VSlider?
+  //REVIEW why is enabledRangeProperty not IReadOnlyProperty<Range>, as in VSlider trait AccessibleValueHandler?
   public constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>, height: number,
                       providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
