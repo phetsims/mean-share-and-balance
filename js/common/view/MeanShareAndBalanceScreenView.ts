@@ -53,7 +53,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    //REVIEW Factor everything related to this.syncDataButton (next 26 lines) into 'class SyncButton extends RectangularPushButton'.
     const syncRadius = 15;
     const syncIcon = new SyncIcon( syncRadius );
     const syncContent = new Node( {
