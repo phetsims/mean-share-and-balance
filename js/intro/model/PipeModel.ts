@@ -46,6 +46,7 @@ export default class PipeModel extends PhetioObject {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
       phetioType: PipeModel.PipeModelIO,
+      //REVIEW replace with PickRequired<PhetioObjectOptions, 'tandem'>
       tandem: Tandem.REQUIRED,
       phetioDynamicElement: true
     }, providedOptions );
