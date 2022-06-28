@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Instantiates Leveling Out Model and Screen View.
+ * Instantiates Intro Model and Screen View.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -16,14 +16,16 @@ import IntroScreenView from './view/IntroScreenView.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceScreen from '../common/MeanShareAndBalanceScreen.js';
+import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptyObjectType;
 
-type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
+type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
 
 export default class IntroScreen extends MeanShareAndBalanceScreen<IntroModel, IntroScreenView> {
-  public constructor( providedOptions: LevelingOutScreenOptions ) {
-    const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
+  public constructor( providedOptions: IntroScreenOptions ) {
+    const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
+      name: meanShareAndBalanceStrings.screen.intro,
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
     }, providedOptions );
     super(

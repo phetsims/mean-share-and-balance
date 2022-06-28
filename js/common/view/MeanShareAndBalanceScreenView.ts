@@ -43,7 +43,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, merge( {
       tandem: options.tandem.createTandem( 'questionBar' )
-    }, { labelText: meanShareAndBalanceStrings.levelingOutQuestion, barFill: '#2496D6' } ) );
+    }, { labelText: meanShareAndBalanceStrings.introQuestion, barFill: '#2496D6' } ) );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );

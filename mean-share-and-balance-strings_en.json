@@ -2,6 +2,12 @@
   "mean-share-and-balance.title": {
     "value": "Mean: Share and Balance"
   },
+  "screen.intro": {
+    "value": "Intro"
+  },
+  "screen.levelingOut": {
+    "value": "Leveling Out"
+  },
   "predictMean": {
     "value": "Predict Mean"
   },
@@ -20,7 +26,7 @@
   "numberOfCups": {
     "value": "Number of Cups"
   },
-  "levelingOutQuestion": {
+  "introQuestion": {
     "value": "What is the average amount of water per cup?"
   }
 }

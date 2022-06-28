@@ -11,13 +11,17 @@ type StringsType = {
   'mean-share-and-balance': {
     'title': string;
   };
+  'screen': {
+    'intro': string;
+    'levelingOut': string;
+  };
   'predictMean': string;
   'showMean': string;
   'tickMarks': string;
   'autoShare': string;
   'sync': string;
   'numberOfCups': string;
-  'levelingOutQuestion': string;
+  'introQuestion': string;
 };
 
 const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
