@@ -1,5 +1,6 @@
 // Copyright 2022, University of Colorado Boulder
 
+//REVIEW It would be advantageous to factor ValueNode out as a separate class.
 /**
  * Representation for the 2D pipe and valve between each water cup.
  *
