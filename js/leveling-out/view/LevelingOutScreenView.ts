@@ -13,10 +13,11 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import { Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { Color, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -30,10 +31,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     super( levelingOutModel, options );
 
+    MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#F97A69' ) );
+
     const meanNode = new Rectangle( 0, 0, 40, 20, { fill: 'brown' } );
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
-      expandedProperty: levelingOutModel.isMeanAccordianExpandedProperty,
+      expandedProperty: levelingOutModel.isMeanAccordionExpandedProperty,
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
     } );
 

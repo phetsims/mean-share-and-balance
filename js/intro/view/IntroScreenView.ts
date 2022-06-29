@@ -10,7 +10,7 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import { Text, Node } from '../../../../scenery/js/imports.js';
+import { Text, Node, Color } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -27,6 +27,7 @@ import WaterCup3DNode from './WaterCup3DNode.js';
 import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -46,7 +47,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, {
+      fontSize: 15,
+      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+    } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
@@ -54,6 +58,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
+
+    MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#2496D6' ) );
 
     // Checkbox Group
     const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );

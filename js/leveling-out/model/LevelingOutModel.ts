@@ -22,9 +22,9 @@ type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceMod
 
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
-  public readonly numberOfPeopleRange = new Range( 1, 5 );
+  public readonly numberOfPeopleRange = new Range( 1, 7 );
   public readonly numberOfPeopleProperty: NumberProperty;
-  public readonly isMeanAccordianExpandedProperty: BooleanProperty;
+  public readonly isMeanAccordionExpandedProperty: BooleanProperty;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -37,8 +37,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       range: this.numberOfPeopleRange
     } );
 
-    this.isMeanAccordianExpandedProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isMeanAccordianExpandedProperty' )
+    this.isMeanAccordionExpandedProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
   }
 

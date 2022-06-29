@@ -23,6 +23,9 @@ const meanShareAndBalanceColors = {
   screenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'background', {
     default: '#FFF9F0'
   } ),
+  questionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'questionBar', {
+    default: '#2496D6'
+  } ),
   waterFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterSide3DFill', {
     default: '#A5D9F2'
   } ),
