@@ -20,11 +20,12 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import IntroModel from '../model/IntroModel.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 type SelfOptions = EmptyObjectType;
-//REVIEW should phetioDynamicElement be omitted from NodeOptions?
+
 //REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type WaterCup3DNodeOptions = SelfOptions & NodeOptions
+type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' |'top' | 'bottom' | 'phetioDynamicElement'>;
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;

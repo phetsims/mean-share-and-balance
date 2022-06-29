@@ -23,8 +23,7 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 
 type SelfOptions = EmptyObjectType;
-//REVIEW should 'cursor' also be omitted?
-type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled'>
+type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled' | 'cursor'>
 
 export default class WaterLevelTriangleNode extends Node {
   private readonly slider: VSlider;

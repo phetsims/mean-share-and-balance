@@ -1,9 +1,11 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW Incorrect doc. There is nothing abstract about this class. And I see no subclasses, so it's not even a base class.
 //REVIEW Needs more description - tell me about "water cup" in this sim.
 /**
- * Abstract parent class for 2D & 3D water cup models.
+ * Class for 2D & 3D water cup models.
+ * A water cup holds a certain level of water that can be manipulated by the user.
+ * A cup is empty when waterLevelProperty.value = 0, and full when waterLevelProperty.value = 1
+ * Water level is controlled in the 3D view representation through a vertical slider.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -23,15 +25,13 @@ import Property from '../../../../axon/js/Property.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 
 type SelfOptions = {
-  //REVIEW non-obvious options are supposed to be documented where defined, and these are not obvious to the reviewer
-  x: number;
-  y: number;
+  x: number; // The cup's x-position in the view
+  y: number; // THe cup's y-position in the view
   waterHeightRange?: Range;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
 
-//REVIEW should be StateObject (uppercase)
-type stateObject = {
+type StateObject = {
   x: number;
   y: number;
 };
@@ -41,10 +41,14 @@ export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequi
 
 export default class WaterCupModel extends PhetioObject {
 
-  //REVIEW non-obvious fields are supposed to be documented where declared, and these are not obvious to the reviewer
+  // The x and y positions for the cup in the view.
   public readonly x: number;
   public readonly y: number;
+
+  // The amount of water contained in the cup. 0 is empty, and 1 is full.
   public readonly waterLevelProperty: NumberProperty;
+
+  // Emits when reset is called
   public readonly resetEmitter: Emitter;
 
   // This determines the allowed drag range in the slider control
@@ -95,7 +99,7 @@ WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {
   toStateObject: ( waterCupModel: WaterCupModel ) => ( {
     x: waterCupModel.x
   } ),
-  stateToArgsForConstructor: ( stateObject: stateObject ) => {
+  stateToArgsForConstructor: ( stateObject: StateObject ) => {
     return [ stateObject.x ];
   },
   stateSchema: {

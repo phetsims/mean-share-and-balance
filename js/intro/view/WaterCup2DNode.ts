@@ -20,12 +20,12 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 type SelfOptions = EmptyObjectType;
 
-//REVIEW should phetioDynamicElement be omitted from NodeOptions?
 //REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type cup2DModel2DNodeOptions = SelfOptions & NodeOptions;
+type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' |'top' | 'bottom' | 'phetioDynamicElement'>;
 
 export default class WaterCup2DNode extends Node {
   private readonly meanProperty: NumberProperty;
@@ -33,8 +33,7 @@ export default class WaterCup2DNode extends Node {
   private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCupModel: WaterCupModel;
   private readonly tickMarks: TickMarksNode;
-  //REVIEW Consider renaming to simply meanLine. Its visibleProperty is set to isShowingMeanProperty, but does that need to be part of the name?
-  private readonly showMeanLine: Line;
+  private readonly meanLine: Line;
 
   public constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
@@ -80,7 +79,7 @@ export default class WaterCup2DNode extends Node {
     // show mean line accurately in relation to water levels.
     let meanInverse = 1 - meanProperty.value;
 
-    this.showMeanLine = new Line(
+    this.meanLine = new Line(
       0,
       MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
       MeanShareAndBalanceConstants.CUP_WIDTH,
@@ -93,8 +92,8 @@ export default class WaterCup2DNode extends Node {
 
     this.meanLink = ( mean: number ) => {
       meanInverse = 1 - mean;
-      this.showMeanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
-      this.showMeanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
+      this.meanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
+      this.meanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
     };
 
     meanProperty.link( this.meanLink );
@@ -102,7 +101,7 @@ export default class WaterCup2DNode extends Node {
     this.addChild( waterCupBackgroundRectangle );
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
-    this.addChild( this.showMeanLine );
+    this.addChild( this.meanLine );
     this.addChild( this.tickMarks );
 
     this.mutate( options );
@@ -113,7 +112,7 @@ export default class WaterCup2DNode extends Node {
     this.meanProperty.unlink( this.meanLink );
     this.waterCupModel.waterLevelProperty.unlink( this.waterLevelLink );
     this.tickMarks.dispose();
-    this.showMeanLine.dispose();
+    this.meanLine.dispose();
   }
 }
 

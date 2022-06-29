@@ -3,7 +3,7 @@
 //REVIEW Nothing about the name of this class tells me that it's a line. And in fact it's a slider! Change to PredictMeanSlider?
 //REVIEW Improve documentation.
 /**
- * Representation for the draggable predict mean line
+ * Representation for the draggable predict mean line.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -62,8 +62,7 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
     this.dragListener = new DragListener( {
       positionProperty: predictMeanPositionProperty,
       transform: modelViewTransform,
-      //REVIEW tandem name does not match this.dragListener
-      tandem: options.tandem.createTandem( 'predictMeanDragListener' )
+      tandem: options.tandem.createTandem( 'dragListener' )
     } );
 
     this.addInputListener( this.dragListener );

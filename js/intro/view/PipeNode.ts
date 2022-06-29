@@ -20,11 +20,11 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { Shape } from '../../../../kite/js/imports.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 type SelfOptions = EmptyObjectType;
 
-//REVIEW should 'phetioDynamicElement' be omitted from NodeOptions?
-type PipeNodeOptions = SelfOptions & NodeOptions;
+type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement'>;
 
 const VALVE_RADIUS = 8;
 const PIPE_WIDTH = 4;
