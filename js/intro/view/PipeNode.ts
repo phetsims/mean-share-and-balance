@@ -133,8 +133,8 @@ export default class PipeNode extends Node {
     this.pipeRectangle.clipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
 
     // Set pointer areas for valveNode
-    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
-    this.valveNode.touchArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
+    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
+    this.valveNode.touchArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
     // Valve rotation event listener
     this.valveRotationFireListener = new FireListener( {
@@ -148,8 +148,7 @@ export default class PipeNode extends Node {
         isAutoSharingProperty.set( false );
         pipeModel.isCurrentlyClickedProperty.set( false );
       },
-      //REVIEW tandem name does not match this.valveRotationFireListener
-      tandem: options.tandem.createTandem( 'fireListener' )
+      tandem: options.tandem.createTandem( 'valveRotationFireListener' )
     } );
     this.valveNode.addInputListener( this.valveRotationFireListener );
 

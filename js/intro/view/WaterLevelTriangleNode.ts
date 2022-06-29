@@ -63,8 +63,8 @@ export default class WaterLevelTriangleNode extends Node {
     } );
 
     // Set pointer areas for slider thumb node.
-    waterLevelTriangle.mouseArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_DILATION );
-    waterLevelTriangle.touchArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_DILATION );
+    waterLevelTriangle.mouseArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
+    waterLevelTriangle.touchArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
     this.addChild( this.slider );
     this.mutate( options );

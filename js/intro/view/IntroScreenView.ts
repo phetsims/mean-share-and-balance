@@ -1,8 +1,6 @@
 // Copyright 2022, University of Colorado Boulder
-
-//REVIEW what is "Leveling Out Screen"? Do you mean "Intro screen"?
 /**
- * Representation for the Leveling Out Screen, displaying 2D/3D water cups, pipes, and various interactive options.
+ * Representation for the Intro Screen, displaying 2D/3D water cups, pipes, and various interactive options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -45,8 +43,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     super( model, options );
 
-    const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-    const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
@@ -224,7 +222,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       predictMeanLine,
       numberOfCupsNumberSpinner,
       waterCupLayerNode,
-      this.syncDataButton
+      this.syncRepresentationsButton
     ];
 
     this.pdomControlAreaNode.pdomOrder = [
@@ -232,8 +230,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     ];
   }
 
-  //REVIEW Missing call to super.step()? If super.step actually does something in the future, it won't get done.
   public override step( dt: number ): void {
+    super.step( dt );
     for ( const pipe of this.pipeMap.values() ) {
       pipe.step( dt );
     }

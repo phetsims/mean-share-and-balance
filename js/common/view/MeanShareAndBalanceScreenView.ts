@@ -1,8 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW This is an incomplete description of MeanShareAndBalanceScreen, and resetAll isn't really significant.
 /**
- * Representation for the MeanShareAndBalanceScreen, contains resetAll button
+ * Parent ScreenView that contains components shared across screens such as: QuestionBar, Controls Layout,
+ * SyncDataButton, and ResetAll
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -29,16 +29,15 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
-  //REVIEW more descriptive name or doc. What "data" is this synchronizing?
-  public readonly syncDataButton: RectangularPushButton;
+  // Syncs the two representations on each screen. ie. in intro, syncs the 3D and 2D cups.
+  public readonly syncRepresentationsButton: RectangularPushButton;
   public readonly controlsVBox: VBox;
   public readonly numberSpinnerVBox: VBox;
   public readonly questionBar: QuestionBar;
 
   private readonly controlsAlignBox: AlignBox;
 
-  //REVIEW If you don't intend MeanShareAndBalanceScreenView to be instantiated directly, then constructor should be protected.
-  public constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  protected constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
 
     super( options );
@@ -68,7 +67,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       ]
     } );
 
-    this.syncDataButton = new RectangularPushButton( {
+    this.syncRepresentationsButton = new RectangularPushButton( {
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.syncData();
@@ -77,7 +76,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       accessibleName: meanShareAndBalanceStrings.sync,
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
-      //REVIEW tandem name does not match this.syncDataButton
       tandem: options.tandem.createTandem( 'syncRepresentationsButton' ),
       layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     } );
@@ -108,7 +106,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const controlsGridBox = new GridBox( {
       children: [
         this.controlsVBox,
-        this.syncDataButton,
+        this.syncRepresentationsButton,
         this.numberSpinnerVBox
       ],
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
@@ -128,22 +126,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     this.addChild( this.controlsAlignBox );
   }
 
-  //REVIEW Since this does nothing, I would delete it until it's actually needed by a future screen.
   /**
    * Resets the view.
    */
   public reset(): void {
     // May be used for future screens
-  }
-
-  //REVIEW This is not necessary. ScreenView already has an identical (do nothing) implementation. Add this if/when ScreenView does something different.
-  //REVIEW It's also dangerous to override without calling super.step().  If ScreenView implementation actually does something in the future, it won't get done.
-  /**
-   * Steps the view.
-   * @param dt - time step, in seconds
-   */
-  public override step( dt: number ): void {
-    // See subclass for implementation
   }
 }
 

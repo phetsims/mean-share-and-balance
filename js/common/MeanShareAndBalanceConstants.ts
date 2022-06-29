@@ -26,16 +26,13 @@ const MeanShareAndBalanceConstants = {
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 15,
 
-  // Sets center Y value for cups.
-  //REVIEW If these set centerY, then they should be named CUPS_3D_CENTER_Y and CUPS_2D_CENTER_Y. The current names correspond to a Node's y property.
-  CUPS_3D_Y_VALUE: 525,
-  CUPS_2D_Y_VALUE: 275,
+  CUPS_3D_CENTER_Y: 525,
+  CUPS_2D_CENTER_Y: 275,
 
   INITIAL_NUMBER_OF_PEOPLE: 1,
 
-  //REVIEW These names are a little vague/incorrect. MOUSE_AREA_DILATION and TOUCH_AREA_DILATION dilation would be clearer.
-  MOUSE_DILATION: 5,
-  TOUCH_DILATION: 10,
+  MOUSE_AREA_DILATION: 5,
+  TOUCH_AREA_DILATION: 10,
 
   MAX_CONTROLS_TEXT_WIDTH: 175
 

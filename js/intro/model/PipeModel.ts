@@ -1,9 +1,10 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW Incorrect doc. This is not a base class for PipeNode. It's the model for the pipe.
-//REVIEW Needs more description - what is a "pipe", etc.
 /**
- * Base class for Pipe Node
+ * Model for pipes and valves.
+ * The pipes visually connect the 2D cup representations and the valves control whether water is shared or not.
+ * When the valves are open the water flows between all connected cups, and when the valves are closed
+ * water is not allowed to flow between cups.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -23,9 +24,8 @@ type StateObject = {
 }
 
 type SelfOptions = {
-  //REVIEW non-obvious options are supposed to be documented where defined, and these are not obvious to the reviewer
-  x: number;
-  y: number;
+  x: number; // the x-position of the pipe in the view
+  y: number; // the y-position of the pipe in the view
   isOpen?: boolean;
 };
 
@@ -34,9 +34,11 @@ export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
 
 export default class PipeModel extends PhetioObject {
 
-  //REVIEW non-obvious fields are supposed to be documented where declared, and these are not obvious to the reviewer
+  // Property tracks whether pipe's valve is open or not.
   public readonly isOpenProperty: BooleanProperty;
+  // Property tracks if the pipe's valve is in a clicked state.
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
+  // The x and y positions of the pipe in the view.
   public readonly x: number;
   public readonly y: number;
 

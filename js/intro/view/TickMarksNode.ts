@@ -16,7 +16,6 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 type SelfOptions = EmptyObjectType;
 type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
 
-// Should tick marks be common code?
 export default class TickMarksNode extends Node {
 
   public constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {

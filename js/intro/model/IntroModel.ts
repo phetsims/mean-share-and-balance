@@ -1,8 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW what is "Leveling Out Screen"? Do you mean "Intro screen"?
 /**
- * Model for the Leveling Out screen, which includes 2D cups, 3D cups, connecting pipes, and view options.
+ * Model for the Intro screen, which includes 2D cups, 3D cups, connecting pipes, and view options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -37,7 +36,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly isShowingPredictMeanProperty: BooleanProperty;
   public readonly isShowingMeanProperty: BooleanProperty;
   public readonly isShowingTickMarksProperty: BooleanProperty;
-  //REVIEW Document isAutoSharingProperty. I have no idea what this does, never figure it out during code review.
+  // Property that tracks whether auto-share is enabled or not.
   public readonly isAutoSharingProperty: BooleanProperty;
   public readonly numberOfCupsProperty: NumberProperty;
   public readonly meanPredictionProperty: NumberProperty;
@@ -83,7 +82,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       return new WaterCupModel( {
         tandem: tandem,
         x: x,
-        y: MeanShareAndBalanceConstants.CUPS_3D_Y_VALUE
+        y: MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y
       } );
     }, [ 0 ], {
       phetioType: PhetioGroup.PhetioGroupIO( WaterCupModel.WaterCupModelIO ),
@@ -95,7 +94,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       return new WaterCupModel( {
         tandem: tandem,
         x: x,
-        y: MeanShareAndBalanceConstants.CUPS_2D_Y_VALUE,
+        y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
         }
