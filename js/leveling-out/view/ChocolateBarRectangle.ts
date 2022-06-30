@@ -11,13 +11,14 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import { Rectangle, RectangleOptions } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   visiblePieces?: number; // The number of visible chocolate pieces in the bar. max of 4, min of 1
 }
 type ChocolateBarNodeOptions = SelfOptions & RectangleOptions;
 
-export default class ChocolateBarNode extends Rectangle {
+export default class ChocolateBarRectangle extends Rectangle {
   public constructor( providedOptions?: ChocolateBarNodeOptions ) {
 
     const options = optionize<ChocolateBarNodeOptions, SelfOptions, RectangleOptions>()( {
@@ -32,3 +33,5 @@ export default class ChocolateBarNode extends Rectangle {
     super( 0, 0, x2, y2, options );
   }
 }
+
+meanShareAndBalance.register( 'ChocolateBarRectangle', ChocolateBarRectangle );
