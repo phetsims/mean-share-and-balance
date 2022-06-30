@@ -30,6 +30,7 @@ const VALVE_RADIUS = 8;
 const PIPE_WIDTH = 4;
 const HANDLE_HEIGHT = 10;
 const HANDLE_WIDTH = 4;
+const LINE_WIDTH = 1;
 
 export default class PipeNode extends Node {
   private readonly pipeModel: PipeModel;
@@ -87,8 +88,9 @@ export default class PipeNode extends Node {
       .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty );
 
     this.innerValve = new Path( createInnerCircle( VALVE_RADIUS, PIPE_WIDTH ),
-      { fill: 'black' } );
-    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ), { fill: valveGradient, stroke: 'black' } );
+      { fill: 'black', lineWidth: LINE_WIDTH } );
+    this.outerValve = new Path( createOuterCircle( VALVE_RADIUS ),
+      { fill: valveGradient, stroke: 'black', lineWidth: LINE_WIDTH } );
 
     // Inner pipe shows water color when pipe is opened.
     this.innerPipe = new Rectangle( 0, 0, PIPE_WIDTH, VALVE_RADIUS * 2, {
@@ -103,6 +105,7 @@ export default class PipeNode extends Node {
     this.handleBase = new Rectangle( 0, 0, HANDLE_WIDTH, 3, {
       fill: pipeGradient,
       stroke: 'black',
+      lineWidth: LINE_WIDTH,
       y: this.outerValve.top - 3,
       x: this.innerValve.centerX - HANDLE_WIDTH / 2
     } );
@@ -117,6 +120,7 @@ export default class PipeNode extends Node {
     this.handleGrip = new Path( handleShape, {
       fill: handleGripGradient,
       stroke: 'black',
+      lineWidth: LINE_WIDTH,
       y: this.handleBase.top + 1
     } );
 
@@ -163,7 +167,7 @@ export default class PipeNode extends Node {
     this.addChild( this.valveNode );
 
     // Set position related to associated cup
-    this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_STROKE_WIDTH / 2;
+    this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
     this.y = modelViewTransform.modelToViewY( 0 ) - PIPE_WIDTH;
   }
 
