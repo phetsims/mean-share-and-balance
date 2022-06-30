@@ -10,18 +10,26 @@
  */
 
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-//import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import IOType from '../../../../tandem/js/types/IOType.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 
 type SelfOptions = {
   x: number;
   y: number;
 }
 
-type ChocolateOptions = SelfOptions & PhetioObjectOptions;
-  //& PickRequired<PhetioObjectOptions, 'tandem'>
+type StateObject = {
+  x: number;
+  y: number;
+}
+
+type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>
 
 export default class Chocolate extends PhetioObject {
 
@@ -29,8 +37,14 @@ export default class Chocolate extends PhetioObject {
   public readonly y: number;
   public readonly chocolateBarsNumberProperty: NumberProperty;
 
+  public static ChocolateIO: IOType<Chocolate>;
+
   public constructor( providedOptions: ChocolateOptions ) {
-    super( providedOptions );
+    const options = optionize<ChocolateOptions, EmptyObjectType, PhetioObjectOptions>()( {
+      phetioType: Chocolate.ChocolateIO,
+      phetioDynamicElement: true
+    }, providedOptions );
+    super( options );
 
     this.x = providedOptions.x;
     this.y = providedOptions.y;
@@ -38,5 +52,18 @@ export default class Chocolate extends PhetioObject {
 
   }
 }
+
+Chocolate.ChocolateIO = new IOType<Chocolate>( 'ChocolateIO', {
+  valueType: Chocolate,
+  toStateObject: ( chocolate: Chocolate ) => ( {
+    x: chocolate.x
+  } ),
+  stateToArgsForConstructor: ( stateObject: StateObject ) => {
+    return [ stateObject.x ];
+  },
+  stateSchema: {
+    x: NumberIO
+  }
+} );
 
 meanShareAndBalance.register( 'Chocolate', Chocolate );

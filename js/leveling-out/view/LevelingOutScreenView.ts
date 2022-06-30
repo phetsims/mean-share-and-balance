@@ -13,7 +13,7 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import { Color, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { Color, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -27,11 +27,11 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
-  public constructor( levelingOutModel: LevelingOutModel, providedOptions?: LevelingOutScreenViewOptions ) {
+  public constructor( model: LevelingOutModel, providedOptions?: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
-    super( levelingOutModel, options );
+    super( model, options );
 
     MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#F97A69' ) );
 
@@ -40,28 +40,36 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
-      expandedProperty: levelingOutModel.isMeanAccordionExpandedProperty,
+      expandedProperty: model.isMeanAccordionExpandedProperty,
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
     } );
 
     const numberOfPeopleText = new Text( 'Number of People', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
 
     const numberOfPeopleNumberSpinner = new NumberSpinner(
-      levelingOutModel.numberOfPeopleProperty,
-      new Property( levelingOutModel.numberOfPeopleRange ), {
+      model.numberOfPeopleProperty,
+      new Property( model.numberOfPeopleRange ), {
         arrowsPosition: 'leftRight',
         tandem: options.tandem.createTandem( 'numberOfPeopleNumberSpinner' )
       } );
 
-    const chocolateModel = new Chocolate( { x: 200, y: 200 } );
+    const plateLayerNode = new Node( { x: 50, y: 100 } );
 
-    const chocolateBarContainer = new ChocolateBarsContainerNode( chocolateModel );
+    function createAddChocolatePlateListener() {
+      return ( chocolateModel: Chocolate ) => {
+        console.log( 'chocolate made' );
+        const chocolateBarContainer = new ChocolateBarsContainerNode( chocolateModel );
+        plateLayerNode.addChild( chocolateBarContainer );
+      };
+    }
+
+    model.plateChocolateGroup.elementCreatedEmitter.addListener( createAddChocolatePlateListener );
 
 
     this.controlsVBox.addChild( meanAccordionBox );
     this.numberSpinnerVBox.addChild( numberOfPeopleText );
     this.numberSpinnerVBox.addChild( numberOfPeopleNumberSpinner );
-    this.addChild( chocolateBarContainer );
+    this.addChild( plateLayerNode );
   }
 
 }
