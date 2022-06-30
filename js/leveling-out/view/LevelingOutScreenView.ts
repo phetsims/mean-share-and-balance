@@ -18,6 +18,7 @@ import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import ChocolateBarRectangle from './ChocolateBarRectangle.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -51,10 +52,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         tandem: options.tandem.createTandem( 'numberOfPeopleNumberSpinner' )
       } );
 
+    const chocolateBar = new ChocolateBarRectangle();
+
 
     this.controlsVBox.addChild( meanAccordionBox );
     this.numberSpinnerVBox.addChild( numberOfPeopleText );
     this.numberSpinnerVBox.addChild( numberOfPeopleNumberSpinner );
+    this.addChild( chocolateBar );
   }
 
 }

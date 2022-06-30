@@ -8,7 +8,7 @@
  */
 
 import optionize from '../../../../phet-core/js/optionize.js';
-import { Rectangle, RectangleOptions } from '../../../../scenery/js/imports.js';
+import { Line, Rectangle, RectangleOptions } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
@@ -23,14 +23,23 @@ export default class ChocolateBarRectangle extends Rectangle {
 
     const options = optionize<ChocolateBarNodeOptions, SelfOptions, RectangleOptions>()( {
       fill: MeanShareAndBalanceColors.chocolateColorProperty,
-      visiblePieces: 4
+      visiblePieces: 4,
+      stroke: MeanShareAndBalanceColors.chocolateColorProperty
     }, providedOptions );
 
-    // TODO: Will change depending on number of visible pieces.
-    const x2 = MeanShareAndBalanceConstants.CHOCOLATE_WIDTH;
+    // When a fraction of the chocolate bar needs to be represented x2 will change to reflect
+    // the new width of the partial chocolate bar.
+    const x2 = ( MeanShareAndBalanceConstants.CHOCOLATE_WIDTH / 4 ) * options.visiblePieces;
     const y2 = MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT;
 
     super( 0, 0, x2, y2, options );
+
+    for ( let i = 1; i < options.visiblePieces; i++ ) {
+      const xPosition = ( x2 / options.visiblePieces ) * i;
+      const dividerLine = new Line( xPosition, 0, xPosition, y2,
+        { stroke: MeanShareAndBalanceColors.chocolateHighlightColorProperty } );
+      this.addChild( dividerLine );
+    }
   }
 }
 
