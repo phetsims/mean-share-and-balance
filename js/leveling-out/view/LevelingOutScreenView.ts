@@ -33,7 +33,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#F97A69' ) );
 
-    const meanNode = new Rectangle( 0, 0, 40, 20, { fill: 'brown' } );
+    const meanNode = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT,
+      { fill: MeanShareAndBalanceColors.chocolateColorProperty } );
+
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
       expandedProperty: levelingOutModel.isMeanAccordionExpandedProperty,

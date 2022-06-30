@@ -55,6 +55,9 @@ const meanShareAndBalanceColors = {
   } ),
   handleGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'handleGradientDark', {
     default: 'firebrick'
+  } ),
+  chocolateColorProperty: new ProfileColorProperty( meanShareAndBalance, 'chocolate', {
+    default: '#41220C'
   } )
 };
 
