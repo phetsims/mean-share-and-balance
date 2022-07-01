@@ -39,15 +39,14 @@ export default class WaterLevelTriangleNode extends Node {
     super();
 
     const sliderTandem = options.tandem.createTandem( 'waterLevelVSlider' );
-    const waterLevelTriangle = new TriangleNode( {
+    const thumbNode = new TriangleNode( {
       pointDirection: 'down',
       fill: '#51CEF4',
-      //REVIEW tandem name does not match waterLevelTriangle
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
 
     this.slider = new VSlider( waterLevelProperty, new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), {
-      thumbNode: waterLevelTriangle,
+      thumbNode: thumbNode,
       tandem: sliderTandem,
       enabledRangeProperty: enabledRangeProperty,
       trackSize: new Dimension2( 10, height ),
@@ -62,8 +61,8 @@ export default class WaterLevelTriangleNode extends Node {
     } );
 
     // Set pointer areas for slider thumb node.
-    waterLevelTriangle.mouseArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
-    waterLevelTriangle.touchArea = waterLevelTriangle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
+    thumbNode.mouseArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
+    thumbNode.touchArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
     this.addChild( this.slider );
     this.mutate( options );
