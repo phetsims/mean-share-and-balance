@@ -16,30 +16,24 @@ type SelfOptions = EmptyObjectType;
 
 export type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class MeanShareAndBalanceModel {
+export default abstract class MeanShareAndBalanceModel {
 
-  public constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
+  protected constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
     // Here for potential future use.
   }
 
-  public syncData(): void {
-    // See subclass for implementation
-  }
+  public abstract syncData(): void
 
   /**
    * Resets the model.
    */
-  public reset(): void {
-    // See subclass for implementation
-  }
+  public abstract reset(): void
 
   /**
    * Steps the model.
    * @param dt - time step, in seconds
    */
-  public step( dt: number ): void {
-    // See subclass for implementation
-  }
+  public abstract step( dt: number ): void
 }
 
 meanShareAndBalance.register( 'MeanShareAndBalanceModel', MeanShareAndBalanceModel );

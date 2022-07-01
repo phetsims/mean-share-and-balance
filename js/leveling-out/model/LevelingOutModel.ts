@@ -70,6 +70,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     }
   }
 
+  public override reset(): void {
+    this.isMeanAccordionExpandedProperty.reset();
+    this.numberOfPeopleProperty.reset();
+  }
+
+  public syncData(): void {
+    // future implementation
+  }
+
+  public step( dt: number ): void {
+    // future implementation
+  }
+
 }
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );

@@ -257,8 +257,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * Will close all open pipe valves
    * Called when the syncDataRectangularButton is pressed.
    */
-  public override syncData(): void {
-    super.syncData();
+  public syncData(): void {
     this.assertConsistentState();
     this.isAutoSharingProperty.set( false );
     this.pipeGroup.forEach( pipe => pipe.isOpenProperty.set( false ) );
@@ -277,11 +276,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   /**
    * @param dt - in seconds
    */
-  public override step( dt: number ): void {
+  public step( dt: number ): void {
 
     this.assertConsistentState();
 
-    super.step( dt );
     this.stepWaterLevels( dt );
 
     assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
@@ -309,8 +307,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
   }
 
-  public override reset(): void {
-    super.reset();
+  public reset(): void {
     this.isShowingPredictMeanProperty.reset();
     this.isShowingMeanProperty.reset();
     this.isShowingTickMarksProperty.reset();
