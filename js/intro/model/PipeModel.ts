@@ -12,6 +12,7 @@
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
@@ -29,8 +30,7 @@ type SelfOptions = {
   isOpen?: boolean;
 };
 
-//REVIEW Shouldn't 'phetioType' | 'phetioDynamicElement' be omitted from PhetioObjectOptions?
-export type PipeModelOptions = SelfOptions & PhetioObjectOptions;
+export type PipeModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType' | 'phetioDynamicElement'>;
 
 export default class PipeModel extends PhetioObject {
 
