@@ -20,7 +20,7 @@ import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCupModel from '../model/WaterCupModel.js';
-import PredictMeanNode from './PredictMeanNode.js';
+import PredictMeanSlider from './PredictMeanSlider.js';
 import PipeNode from './PipeNode.js';
 import PipeModel from '../model/PipeModel.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
@@ -106,9 +106,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    //Predict Mean Line
-    //REVIEW const name doesn't match class name. See REVIEW comment in PredictMeanNode.ts about renaming it.
-    const predictMeanLine = new PredictMeanNode(
+    //Predict Mean Line that acts as a slider for alternative input.
+    const predictMeanSlider = new PredictMeanSlider(
       model,
       modelViewTransform2DCups, {
         visibleProperty: model.isShowingPredictMeanProperty,
@@ -150,7 +149,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
-      predictMeanLine.x = waterCupLayerNode.x;
+      predictMeanSlider.x = waterCupLayerNode.x;
     };
 
     // Connect nodes to view
@@ -220,11 +219,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.numberSpinnerVBox.children = [ numberOfCupsText, numberOfCupsNumberSpinner ];
 
     this.addChild( waterCupLayerNode );
-    this.addChild( predictMeanLine );
+    this.addChild( predictMeanSlider );
 
     this.pdomPlayAreaNode.pdomOrder = [
       introOptionsCheckboxGroup,
-      predictMeanLine,
+      predictMeanSlider,
       numberOfCupsNumberSpinner,
       waterCupLayerNode,
       this.syncRepresentationsButton

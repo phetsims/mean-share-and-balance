@@ -1,9 +1,9 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW Nothing about the name of this class tells me that it's a line. And in fact it's a slider! Change to PredictMeanSlider?
-//REVIEW Improve documentation.
 /**
  * Representation for the draggable predict mean line.
+ * Users are able to manipulate line to predict what they believe the mean of water is across visible cups.
+ * Extends AccessibleSlider for alternative input.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -26,7 +26,7 @@ type SelfOptions = EmptyObjectType;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' >
 
-export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
+export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
   private readonly model: IntroModel;
@@ -96,4 +96,4 @@ export default class PredictMeanNode extends AccessibleSlider( Node, 0 ) {
   }
 }
 
-meanShareAndBalance.register( 'PredictMeanNode', PredictMeanNode );
+meanShareAndBalance.register( 'PredictMeanSlider', PredictMeanSlider );
