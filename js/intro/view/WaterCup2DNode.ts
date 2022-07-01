@@ -14,7 +14,7 @@ import { Rectangle, Node, Line, NodeOptions } from '../../../../scenery/js/impor
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCupModel from '../model/WaterCupModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import TickMarksNode from './TickMarksNode.js';
+import WaterCup2DTickMarksNode from './WaterCup2DTickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -32,7 +32,7 @@ export default class WaterCup2DNode extends Node {
   private readonly meanLink: PropertyLinkListener<number>;
   private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCupModel: WaterCupModel;
-  private readonly tickMarks: TickMarksNode;
+  private readonly tickMarks: WaterCup2DTickMarksNode;
   private readonly meanLine: Line;
 
   public constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
@@ -49,7 +49,7 @@ export default class WaterCup2DNode extends Node {
     this.waterCupModel = waterCupModel;
 
     this.meanProperty = meanProperty;
-    this.tickMarks = new TickMarksNode(
+    this.tickMarks = new WaterCup2DTickMarksNode(
       MeanShareAndBalanceConstants.CUP_HEIGHT,
       {
         visibleProperty: isShowingTickMarksProperty,

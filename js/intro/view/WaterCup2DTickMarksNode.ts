@@ -1,6 +1,5 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW a more specific name would be nice here, like WaterCup2DTickMarksNode
 /**
  * Representation for the ticks marks on 2D water cup nodes.
  *
@@ -16,7 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 type SelfOptions = EmptyObjectType;
 type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
 
-export default class TickMarksNode extends Node {
+export default class WaterCup2DTickMarksNode extends Node {
 
   public constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
     super( providedOptions );
@@ -39,4 +38,4 @@ export default class TickMarksNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'TickMarksNode', TickMarksNode );
+meanShareAndBalance.register( 'WaterCup2DTickMarksNode', WaterCup2DTickMarksNode );
