@@ -35,8 +35,7 @@ type StateObject = {
   y: number;
 };
 
-//REVIEW Shouldn't 'phetioType' | 'phetioDynamicElement' be omitted from PhetioObjectOptions?
-export type WaterCupModelOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+export type WaterCupModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType' | 'phetioDynamicElement'> & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
 
