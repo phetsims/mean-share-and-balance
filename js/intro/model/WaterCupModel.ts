@@ -1,6 +1,5 @@
 // Copyright 2022, University of Colorado Boulder
 
-//REVIEW Needs more description - tell me about "water cup" in this sim.
 /**
  * Class for 2D & 3D water cup models.
  * A water cup holds a certain level of water that can be manipulated by the user.
