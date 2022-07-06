@@ -111,7 +111,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // add/remove water cups and pipes according to number spinner
     const numberOfCupsListener = ( numberOfCups: number ) => {
-      // TODO: This can be optimized
+      // TODO: This can be optimized, like cup2D.isActiveProperty = indexOf(cup2D)<numberOfCups
 
       while ( numberOfCups > this.getNumberOfActiveCups() ) {
         const cup3D = this.waterCup3DArray[ this.getNumberOfActiveCups() ];
