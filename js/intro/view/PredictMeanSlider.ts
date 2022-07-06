@@ -68,13 +68,10 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    model.waterCup2DGroup.elementCreatedEmitter.addListener( waterCup2D => {
+    model.waterCup2DArray.elementAddedEmitter.addListener( waterCup2D => {
       this.updateLine( waterCup2D.x + 75 );
     } );
 
-    model.waterCup2DGroup.elementDisposedEmitter.addListener( waterCup2D => {
-      this.updateLine( waterCup2D.x - 25 );
-    } );
 
     this.setPointerAreas();
     this.addChild( this.predictMeanLine );

@@ -10,7 +10,7 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import { Text, Node, Color } from '../../../../scenery/js/imports.js';
+import { Color, Node, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -24,8 +24,6 @@ import PredictMeanSlider from './PredictMeanSlider.js';
 import PipeNode from './PipeNode.js';
 import PipeModel from '../model/PipeModel.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
-import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
@@ -125,25 +123,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const waterCupLayerNode = new Node();
 
     // 2D/3D water cup nodes addition and removal
-    const waterCup2DNodeGroup = new PhetioGroup<WaterCup2DNode, [ WaterCupModel ]>( ( tandem: Tandem, waterCup2DModel: WaterCupModel ) => {
-      return new WaterCup2DNode( waterCup2DModel, modelViewTransform2DCups,
-        model.meanProperty,
-        model.isShowingTickMarksProperty,
-        model.isShowingMeanProperty, { tandem: tandem } );
-    }, () => [ model.waterCup2DGroup.archetype ], {
-      phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
-      tandem: options.tandem.createTandem( 'waterCup2DNodeGroup' ),
-      supportsDynamicState: false
-    } );
-
-    const waterCup3DNodeGroup = new PhetioGroup<WaterCup3DNode, [ WaterCupModel ]>( ( tandem: Tandem, waterCup3DModel: WaterCupModel ) => {
-      return new WaterCup3DNode( model, waterCup3DModel, modelViewTransform3DCups, { tandem: tandem } );
-    }, () => [ model.waterCup3DGroup.archetype ], {
-      phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
-      tandem: options.tandem.createTandem( 'waterCup3DNodeGroup' ),
-      supportsDynamicState: false
-    } );
-
     // Center 2D & 3D cups
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
@@ -157,62 +136,45 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const waterCup3DMap = new Map<WaterCupModel, WaterCup3DNode>();
 
     // callback functions to add and remove water cups
-    function createAddWaterCupListener<U extends Node>( map: Map<WaterCupModel, U>, nodeGroup: PhetioGroup<U, [ WaterCupModel ]> ) {
+    function createAddWaterCup2DListener( map: Map<WaterCupModel, WaterCup2DNode> ) {
       return ( cupModel: WaterCupModel ) => {
-        const cupNode = nodeGroup.createCorrespondingGroupElement( cupModel.tandem.name, cupModel );
+        const index = model.waterCup2DArray.indexOf( cupModel );
+        const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.isShowingTickMarksProperty, model.isShowingMeanProperty,
+          { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
         waterCupLayerNode.addChild( cupNode );
         map.set( cupModel, cupNode );
         centerWaterCupLayerNode();
       };
     }
 
-    function createRemoveWaterCupListener<U extends Node>( phetioGroup: PhetioGroup<U, [ WaterCupModel ]>, map: Map<WaterCupModel, U> ) {
+    function createAddWaterCup3DListener( map: Map<WaterCupModel, WaterCup3DNode> ) {
       return ( cupModel: WaterCupModel ) => {
-        const cupNode = map.get( cupModel )!;
-        waterCupLayerNode.removeChild( cupNode );
+        const index = model.waterCup3DArray.indexOf( cupModel );
+        const cupNode = new WaterCup3DNode( model, cupModel, modelViewTransform3DCups,
+          { tandem: options.tandem.createTandem( `waterCup3DNode${index}` ) } );
+        waterCupLayerNode.addChild( cupNode );
+        map.set( cupModel, cupNode );
         centerWaterCupLayerNode();
-        map.delete( cupModel );
-        phetioGroup.disposeElement( cupNode );
       };
     }
 
     // add initial starting cups
-    model.waterCup2DGroup.forEach( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
-    model.waterCup3DGroup.forEach( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
-
-    // add and remove cups according to model groups
-    model.waterCup2DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup2DMap, waterCup2DNodeGroup ) );
-    model.waterCup3DGroup.elementCreatedEmitter.addListener( createAddWaterCupListener( waterCup3DMap, waterCup3DNodeGroup ) );
-    model.waterCup2DGroup.elementDisposedEmitter.addListener( createRemoveWaterCupListener( waterCup2DNodeGroup, waterCup2DMap ) );
-    model.waterCup3DGroup.elementDisposedEmitter.addListener( createRemoveWaterCupListener( waterCup3DNodeGroup, waterCup3DMap ) );
+    model.waterCup2DArray.forEach( createAddWaterCup2DListener( waterCup2DMap ) );
+    model.waterCup3DArray.forEach( createAddWaterCup3DListener( waterCup3DMap ) );
 
     // Pipe nodes addition and removal
     this.pipeMap = new Map<PipeModel, PipeNode>();
 
-    const pipeNodeGroup = new PhetioGroup<PipeNode, [ PipeModel ]>( ( tandem: Tandem, pipeModel: PipeModel ) => {
-      return new PipeNode( pipeModel, modelViewTransform2DCups, model.isAutoSharingProperty,
-        { tandem: tandem } );
-    }, () => [ model.pipeGroup.archetype ], {
-      phetioType: PhetioGroup.PhetioGroupIO( Node.NodeIO ),
-      tandem: options.tandem.createTandem( 'pipeNodeGroup' ),
-      supportsDynamicState: false
-    } );
 
     const createPipeNode = ( pipeModel: PipeModel ) => {
-      const pipeNode = pipeNodeGroup.createCorrespondingGroupElement( pipeModel.tandem.name, pipeModel );
+      const index = model.pipeArray.indexOf( pipeModel );
+      const pipeNode = new PipeNode( pipeModel, modelViewTransform2DCups, model.isAutoSharingProperty,
+        { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
       waterCupLayerNode.addChild( pipeNode );
       this.pipeMap.set( pipeModel, pipeNode );
     };
 
-    const removePipeNode = ( pipeModel: PipeModel ) => {
-      const pipeNode = this.pipeMap.get( pipeModel )!;
-      waterCupLayerNode.removeChild( pipeNode );
-      pipeNodeGroup.disposeElement( pipeNode );
-      this.pipeMap.delete( pipeModel );
-    };
-
-    model.pipeGroup.elementCreatedEmitter.addListener( createPipeNode );
-    model.pipeGroup.elementDisposedEmitter.addListener( removePipeNode );
+    model.pipeArray.forEach( createPipeNode );
 
     // Configure layout
     this.controlsVBox.addChild( introOptionsCheckboxGroup );

@@ -15,13 +15,12 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import Property from '../../../../axon/js/Property.js';
 import Emitter from '../../../../axon/js/Emitter.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = {
   x: number; // The cup's x-position in the view
@@ -30,14 +29,15 @@ type SelfOptions = {
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
 
-type StateObject = {
-  x: number;
-  y: number;
-};
-
-export type WaterCupModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType' | 'phetioDynamicElement'> & PickRequired<PhetioObjectOptions, 'tandem'>;
+export type WaterCupModelOptions =
+  SelfOptions
+  & StrictOmit<PhetioObjectOptions, 'phetioType' | 'phetioDynamicElement'>
+  & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
+
+  // Whether the cup is enabled in view and data calculations
+  public readonly isEnabledProperty: BooleanProperty;
 
   // The x and y positions for the cup in the view.
   public readonly x: number;
@@ -52,17 +52,14 @@ export default class WaterCupModel extends PhetioObject {
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
 
-  public static WaterCupModelIO: IOType<WaterCupModel>;
-
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
-      phetioType: WaterCupModel.WaterCupModelIO,
-      phetioDynamicElement: true,
       waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
     }, providedOptions );
     super( options );
 
+    this.isEnabledProperty = new BooleanProperty( false );
     this.x = options.x;
     this.y = options.y;
     this.resetEmitter = new Emitter();
@@ -94,16 +91,3 @@ export default class WaterCupModel extends PhetioObject {
     this.resetEmitter.dispose();
   }
 }
-
-WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {
-  valueType: WaterCupModel,
-  toStateObject: ( waterCupModel: WaterCupModel ) => ( {
-    x: waterCupModel.x
-  } ),
-  stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.x ];
-  },
-  stateSchema: {
-    x: NumberIO
-  }
-} );

@@ -66,7 +66,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         const lastPlate = this.plateChocolateGroup.getLastElement();
         this.plateChocolateGroup.createNextElement( lastPlate.x + 50 );
       }
-      console.log( this.plateChocolateGroup );
     }
   }
 
