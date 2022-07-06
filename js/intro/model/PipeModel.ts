@@ -24,12 +24,12 @@ type SelfOptions = {
   isOpen?: boolean;
 };
 
-export type PipeModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType' | 'phetioDynamicElement'>;
+export type PipeModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType'>;
 
 export default class PipeModel extends PhetioObject {
 
   // Whether pipe is enabled in view and data calculations
-  public readonly isEnabledProperty: BooleanProperty;
+  public readonly isActiveProperty: BooleanProperty;
   // Property tracks whether pipe's valve is open or not.
   public readonly isOpenProperty: BooleanProperty;
   // Property tracks if the pipe's valve is in a clicked state.
@@ -43,13 +43,12 @@ export default class PipeModel extends PhetioObject {
   public constructor( providedOptions?: PipeModelOptions ) {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
-      tandem: Tandem.REQUIRED,
-      phetioDynamicElement: true
+      tandem: Tandem.REQUIRED
     }, providedOptions );
 
     super( options );
 
-    this.isEnabledProperty = new BooleanProperty( false );
+    this.isActiveProperty = new BooleanProperty( false );
     this.isOpenProperty = new BooleanProperty( options.isOpen, {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );

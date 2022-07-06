@@ -19,7 +19,6 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import WaterCupModel from './WaterCupModel.js';
 import Utils from '../../../../dot/js/Utils.js';
-import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -41,9 +40,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly meanPredictionProperty: NumberProperty;
   public readonly meanProperty: NumberProperty;
 
-  public readonly waterCup3DArray: ObservableArray<WaterCupModel>;
-  public readonly waterCup2DArray: ObservableArray<WaterCupModel>;
-  public readonly pipeArray: ObservableArray<PipeModel>;
+  public readonly waterCup3DArray: WaterCupModel[];
+  public readonly waterCup2DArray: WaterCupModel[];
+  public readonly pipeArray: PipeModel[];
 
   public constructor( providedOptions?: IntroModelOptions ) {
 
@@ -74,12 +73,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: this.numberOfCupsRange
     } );
 
-    // The 3D cups are the "ground truth" and the 2D cups mirror them
-    this.waterCup3DArray = createObservableArray();
-    this.waterCup2DArray = createObservableArray();
-
-    this.pipeArray = createObservableArray();
-
     // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
     // the number of cups varies
     this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
@@ -89,57 +82,58 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
     } );
 
-    for ( let i = 0; i < 7; i++ ) {
-      const lastWaterCup: WaterCupModel | null = this.waterCup3DArray.length > 0 ? this.waterCup3DArray.get( this.waterCup3DArray.length - 1 )! : null;
-      const x = lastWaterCup ?
-                lastWaterCup.x + ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH ) :
-                0;
+    // The 3D cups are the "ground truth" and the 2D cups mirror them
+    this.waterCup3DArray = [];
+    this.waterCup2DArray = [];
+    this.pipeArray = [];
+
+    for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
+      const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
+
       this.waterCup3DArray.push( new WaterCupModel( {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
         x: x,
         y: MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y
       } ) );
-      const new2DCup = new WaterCupModel( {
+
+      this.waterCup2DArray.push( new WaterCupModel( {
         tandem: options.tandem.createTandem( `waterCup2D${i}` ),
         x: x,
         y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
         }
-      } );
-
-      this.waterCup2DArray.push( new2DCup );
-      if ( lastWaterCup ) {
-        const pipe = new PipeModel( { x: new2DCup.x, y: new2DCup.y, isOpen: false, tandem: options.tandem.createTandem( `pipe${i - 1}` ) } );
-        this.pipeArray.push( pipe );
+      } ) );
+      if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
+        this.pipeArray.push( new PipeModel( { x: x, y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y, isOpen: false, tandem: options.tandem.createTandem( `pipe${i}` ) } ) );
       }
     }
 
     // add/remove water cups and pipes according to number spinner
     const numberOfCupsListener = ( numberOfCups: number ) => {
-      assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
-      assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
-      while ( numberOfCups > this.enabledCupsCount() ) {
-        const cup3D = this.waterCup3DArray.get( this.enabledCupsCount() )!;
-        const cup2D = this.waterCup2DArray.get( this.enabledCupsCount() )!;
-        cup3D.isEnabledProperty.set( true );
-        cup2D.isEnabledProperty.set( true );
+      // TODO: This can be optimized
+
+      while ( numberOfCups > this.getNumberOfActiveCups() ) {
+        const cup3D = this.waterCup3DArray[ this.getNumberOfActiveCups() ];
+        const cup2D = this.waterCup2DArray[ this.getNumberOfActiveCups() ];
+        cup3D.isActiveProperty.set( true );
+        cup2D.isActiveProperty.set( true );
 
         if ( numberOfCups > 1 ) {
-          const pipe = this.pipeArray.get( this.enabledCupsCount() - 2 )!;
-          pipe.isEnabledProperty.set( true );
+          const pipe = this.pipeArray[ this.getNumberOfActiveCups() - 2 ];
+          pipe.isActiveProperty.set( true );
         }
       }
-      while ( numberOfCups < this.enabledCupsCount() ) {
-        const cup3D = this.waterCup3DArray.get( this.enabledCupsCount() - 1 )!;
-        const cup2D = this.waterCup2DArray.get( this.enabledCupsCount() - 1 )!;
-        cup3D.isEnabledProperty.set( false );
-        cup2D.isEnabledProperty.set( false );
+      while ( numberOfCups < this.getNumberOfActiveCups() ) {
+        const cup3D = this.waterCup3DArray[ this.getNumberOfActiveCups() - 1 ];
+        const cup2D = this.waterCup2DArray[ this.getNumberOfActiveCups() - 1 ];
+        cup3D.isActiveProperty.set( false );
+        cup2D.isActiveProperty.set( false );
 
         //TODO: is this doing anything?
         if ( numberOfCups > 0 ) {
-          const pipe = this.pipeArray.get( this.enabledCupsCount() - 1 )!;
-          pipe.isEnabledProperty.set( false );
+          const pipe = this.pipeArray[ this.getNumberOfActiveCups() - 1 ];
+          pipe.isActiveProperty.set( false );
         }
         this.matchCupWaterLevels();
       }
@@ -169,24 +163,23 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  private enabledCupsCount(): number {
-    const enabledCups = this.waterCup3DArray.filter( waterCup => waterCup.isEnabledProperty.value );
-    return enabledCups.length;
+  private getNumberOfActiveCups(): number {
+    return this.getActive3DCups().length;
   }
 
-  private enabled3DCups(): Array<WaterCupModel> {
-    return this.waterCup3DArray.filter( waterCup => waterCup.isEnabledProperty.value );
+  public getActive3DCups(): Array<WaterCupModel> {
+    return this.waterCup3DArray.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
-  private enabled2DCups(): Array<WaterCupModel> {
-    return this.waterCup2DArray.filter( waterCup => waterCup.isEnabledProperty.value );
+  public getActive2DCups(): Array<WaterCupModel> {
+    return this.waterCup2DArray.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
   /**
    * The 3D cups define the ground truth of the amount of water, this updates the mean from those values.
    */
   private updateMeanFrom3DCups(): void {
-    this.meanProperty.set( calculateMean( this.waterCup3DArray.map( waterCup3D => waterCup3D.waterLevelProperty.value ) ) );
+    this.meanProperty.set( calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) ) );
   }
 
   /**
@@ -201,13 +194,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup2DArray.forEach( cup => {
       currentSet.add( cup );
       if ( this.pipeArray.length > index ) {
-        if ( !this.pipeArray.get( index )?.isOpenProperty.value ) {
+        if ( !this.pipeArray[ index ].isOpenProperty.value ) {
           setsOfConnectedCups.push( currentSet );
           currentSet = new Set<WaterCupModel>();
         }
         index += 1;
       }
-      else if ( this.waterCup2DArray.get( this.waterCup2DArray.length - 1 ) === cup ) {
+      else if ( this.waterCup2DArray[ this.waterCup2DArray.length - 1 ] === cup ) {
         setsOfConnectedCups.push( currentSet );
       }
     } );
@@ -284,7 +277,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
-      callback( this.waterCup2DArray.get( i )!, this.waterCup3DArray.get( i )! );
+      callback( this.waterCup2DArray[ i ], this.waterCup3DArray[ i ] );
     }
   }
 
@@ -317,7 +310,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   private assertConsistentState(): void {
     const numberOfCups = this.numberOfCupsProperty.value;
     // TODO: only asserts 3D enabled cups
-    assert && assert( numberOfCups === this.enabledCupsCount(), `Expected ${numberOfCups} cups, but found: ${this.enabledCupsCount()}.` );
+    assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
     assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
     // assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
   }
@@ -331,13 +324,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanPredictionProperty.reset();
 
     while ( this.waterCup3DArray.length > MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS ) {
-      const cup3D = this.waterCup3DArray.get( this.waterCup3DArray.length - 1 );
-      const cup2D = this.waterCup2DArray.get( this.waterCup2DArray.length - 1 );
-      cup3D?.isEnabledProperty.set( false );
-      cup2D?.isEnabledProperty.set( false );
+      const cup3D = this.waterCup3DArray[ this.waterCup3DArray.length - 1 ];
+      const cup2D = this.waterCup2DArray[ this.waterCup2DArray.length - 1 ];
+      cup3D.isActiveProperty.set( false );
+      cup2D.isActiveProperty.set( false );
     }
 
-    this.pipeArray.forEach( pipe => pipe.isEnabledProperty.set( false ) );
+    this.pipeArray.forEach( pipe => pipe.isActiveProperty.set( false ) );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
 
@@ -369,7 +362,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
 
     const index = this.waterCup3DArray.indexOf( cup3DModel );
-    const new2DCup = this.waterCup2DArray.get( index )!;
+    const new2DCup = this.waterCup2DArray[ index ];
 
     const proposedDelta = waterLevel - oldWaterLevel;
 
@@ -394,8 +387,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
     this.updateMeanFrom3DCups();
 
-    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
-    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
+    const total2DWater = _.sum( this.getActive2DCups().map( cup => cup.waterLevelProperty.value ) );
+    const total3DWater = _.sum( this.getActive3DCups().map( cup => cup.waterLevelProperty.value ) );
     const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
     assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }

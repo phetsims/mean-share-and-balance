@@ -25,7 +25,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 type SelfOptions = EmptyObjectType;
 
 //REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' |'top' | 'bottom' | 'phetioDynamicElement'>;
+type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom' >;
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
@@ -40,7 +40,7 @@ export default class WaterCup3DNode extends Node {
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: cup3DModel.x,
-      phetioDynamicElement: true
+      visibleProperty: cup3DModel.isActiveProperty
     }, providedOptions );
     super();
 

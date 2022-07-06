@@ -19,10 +19,8 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import WaterCupModel from '../model/WaterCupModel.js';
 import PredictMeanSlider from './PredictMeanSlider.js';
 import PipeNode from './PipeNode.js';
-import PipeModel from '../model/PipeModel.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
@@ -32,9 +30,7 @@ type SelfOptions = EmptyObjectType;
 type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
-
-  // Keeps track of pipeNode's and their respective pipeModel for disposal.
-  private readonly pipeMap: Map<PipeModel, PipeNode>;
+  private readonly pipeNodes: PipeNode[];
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -120,7 +116,9 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     );
 
     // This also includes the pipes that connect the 2D cups as well as the draggable water level triangle
-    const waterCupLayerNode = new Node();
+    const waterCupLayerNode = new Node( {
+      excludeInvisibleChildrenFromBounds: true
+    } );
 
     // 2D/3D water cup nodes addition and removal
     // Center 2D & 3D cups
@@ -131,50 +129,33 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       predictMeanSlider.x = waterCupLayerNode.x;
     };
 
-    // Connect nodes to view
-    const waterCup2DMap = new Map<WaterCupModel, WaterCup2DNode>();
-    const waterCup3DMap = new Map<WaterCupModel, WaterCup3DNode>();
+    // add all cup nodes to the view
+    model.waterCup2DArray.forEach( cupModel => {
 
-    // callback functions to add and remove water cups
-    function createAddWaterCup2DListener( map: Map<WaterCupModel, WaterCup2DNode> ) {
-      return ( cupModel: WaterCupModel ) => {
-        const index = model.waterCup2DArray.indexOf( cupModel );
-        const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.isShowingTickMarksProperty, model.isShowingMeanProperty,
-          { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
-        waterCupLayerNode.addChild( cupNode );
-        map.set( cupModel, cupNode );
-        centerWaterCupLayerNode();
-      };
-    }
+      // TODO: Better way of matching indices or tandems?
+      const index = model.waterCup2DArray.indexOf( cupModel );
+      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.isShowingTickMarksProperty, model.isShowingMeanProperty,
+        { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
+      waterCupLayerNode.addChild( cupNode );
+      centerWaterCupLayerNode();
+    } );
+    model.waterCup3DArray.forEach( cupModel => {
+      const index = model.waterCup3DArray.indexOf( cupModel );
+      const cupNode = new WaterCup3DNode( model, cupModel, modelViewTransform3DCups,
+        { tandem: options.tandem.createTandem( `waterCup3DNode${index}` ) } );
+      waterCupLayerNode.addChild( cupNode );
+      centerWaterCupLayerNode();
+    } );
 
-    function createAddWaterCup3DListener( map: Map<WaterCupModel, WaterCup3DNode> ) {
-      return ( cupModel: WaterCupModel ) => {
-        const index = model.waterCup3DArray.indexOf( cupModel );
-        const cupNode = new WaterCup3DNode( model, cupModel, modelViewTransform3DCups,
-          { tandem: options.tandem.createTandem( `waterCup3DNode${index}` ) } );
-        waterCupLayerNode.addChild( cupNode );
-        map.set( cupModel, cupNode );
-        centerWaterCupLayerNode();
-      };
-    }
-
-    // add initial starting cups
-    model.waterCup2DArray.forEach( createAddWaterCup2DListener( waterCup2DMap ) );
-    model.waterCup3DArray.forEach( createAddWaterCup3DListener( waterCup3DMap ) );
-
-    // Pipe nodes addition and removal
-    this.pipeMap = new Map<PipeModel, PipeNode>();
-
-
-    const createPipeNode = ( pipeModel: PipeModel ) => {
+    this.pipeNodes = model.pipeArray.map( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, modelViewTransform2DCups, model.isAutoSharingProperty,
         { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
       waterCupLayerNode.addChild( pipeNode );
-      this.pipeMap.set( pipeModel, pipeNode );
-    };
+      return pipeNode;
+    } );
 
-    model.pipeArray.forEach( createPipeNode );
+    model.numberOfCupsProperty.link( centerWaterCupLayerNode );
 
     // Configure layout
     this.controlsVBox.addChild( introOptionsCheckboxGroup );
@@ -198,9 +179,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
   public override step( dt: number ): void {
     super.step( dt );
-    for ( const pipe of this.pipeMap.values() ) {
-      pipe.step( dt );
-    }
+    this.pipeNodes.forEach( pipeNode => pipeNode.step( dt ) );
   }
 }
 

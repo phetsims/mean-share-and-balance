@@ -41,8 +41,7 @@ export default class Chocolate extends PhetioObject {
 
   public constructor( providedOptions: ChocolateOptions ) {
     const options = optionize<ChocolateOptions, EmptyObjectType, PhetioObjectOptions>()( {
-      phetioType: Chocolate.ChocolateIO,
-      phetioDynamicElement: true
+      phetioType: Chocolate.ChocolateIO
     }, providedOptions );
     super( options );
 

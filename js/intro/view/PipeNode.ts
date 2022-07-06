@@ -45,7 +45,7 @@ export default class PipeNode extends Node {
 
   public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
-      phetioDynamicElement: true
+      visibleProperty: pipeModel.isActiveProperty
     }, providedOptions );
 
     super( options );
@@ -173,6 +173,8 @@ export default class PipeNode extends Node {
 
   // Valve animation
   public step( dt: number ): void {
+
+    // TODO: Maybe move this to the model?
     const currentRotation = this.valveNode.rotation;
     const targetRotation = this.pipeModel.isOpenProperty.value ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;

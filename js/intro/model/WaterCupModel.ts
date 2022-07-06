@@ -31,13 +31,13 @@ type SelfOptions = {
 
 export type WaterCupModelOptions =
   SelfOptions
-  & StrictOmit<PhetioObjectOptions, 'phetioType' | 'phetioDynamicElement'>
+  & PhetioObjectOptions
   & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class WaterCupModel extends PhetioObject {
 
   // Whether the cup is enabled in view and data calculations
-  public readonly isEnabledProperty: BooleanProperty;
+  public readonly isActiveProperty: BooleanProperty;
 
   // The x and y positions for the cup in the view.
   public readonly x: number;
@@ -59,7 +59,7 @@ export default class WaterCupModel extends PhetioObject {
     }, providedOptions );
     super( options );
 
-    this.isEnabledProperty = new BooleanProperty( false );
+    this.isActiveProperty = new BooleanProperty( false );
     this.x = options.x;
     this.y = options.y;
     this.resetEmitter = new Emitter();

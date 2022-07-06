@@ -24,7 +24,7 @@ import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
 type SelfOptions = EmptyObjectType;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
-type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' >
+type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
@@ -68,10 +68,11 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    model.waterCup2DArray.elementAddedEmitter.addListener( waterCup2D => {
+    model.numberOfCupsProperty.link( numberOfCups => {
+      const active2DCups = model.getActive2DCups();
+      const waterCup2D = active2DCups[ active2DCups.length - 1 ];
       this.updateLine( waterCup2D.x + 75 );
     } );
-
 
     this.setPointerAreas();
     this.addChild( this.predictMeanLine );

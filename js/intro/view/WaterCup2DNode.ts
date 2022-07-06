@@ -25,7 +25,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 type SelfOptions = EmptyObjectType;
 
 //REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' |'top' | 'bottom' | 'phetioDynamicElement'>;
+type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;
 
 export default class WaterCup2DNode extends Node {
   private readonly meanProperty: NumberProperty;
@@ -36,12 +36,12 @@ export default class WaterCup2DNode extends Node {
   private readonly meanLine: Line;
 
   public constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
-               isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
-               providedOptions?: cup2DModel2DNodeOptions ) {
+                      isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
+                      providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: waterCupModel.x,
-      phetioDynamicElement: true
+      visibleProperty: waterCupModel.isActiveProperty
     }, providedOptions );
 
     super();
