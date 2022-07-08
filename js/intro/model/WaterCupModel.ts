@@ -82,6 +82,7 @@ export default class WaterCupModel extends PhetioObject {
     this.resetEmitter.emit();
     this.enabledRangeProperty.reset();
     this.waterLevelProperty.reset();
+    this.isActiveProperty.reset();
   }
 
   public override dispose(): void {

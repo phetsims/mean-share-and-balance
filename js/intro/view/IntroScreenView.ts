@@ -139,6 +139,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
     } );
+
     model.waterCup3DArray.forEach( cupModel => {
       const index = model.waterCup3DArray.indexOf( cupModel );
       const cupNode = new WaterCup3DNode( model, cupModel, modelViewTransform3DCups,

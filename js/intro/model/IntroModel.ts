@@ -105,7 +105,12 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         }
       } ) );
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
-        this.pipeArray.push( new PipeModel( { x: x, y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y, isOpen: false, tandem: options.tandem.createTandem( `pipe${i}` ) } ) );
+        this.pipeArray.push( new PipeModel( {
+          x: x,
+          y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
+          isOpen: false,
+          tandem: options.tandem.createTandem( `pipe${i}` )
+        } ) );
       }
     }
 
@@ -281,7 +286,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
-      callback( this.waterCup2DArray[ i ], this.waterCup3DArray[ i ] );
+      callback( this.getActive2DCups()[ i ], this.getActive3DCups()[ i ] );
     }
   }
 
@@ -327,18 +332,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
 
-    while ( this.waterCup3DArray.length > MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS ) {
-      const cup3D = this.waterCup3DArray[ this.waterCup3DArray.length - 1 ];
-      const cup2D = this.waterCup2DArray[ this.waterCup2DArray.length - 1 ];
-      cup3D.isActiveProperty.set( false );
-      cup2D.isActiveProperty.set( false );
-    }
-
     this.pipeArray.forEach( pipe => pipe.isActiveProperty.set( false ) );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
 
+    this.waterCup3DArray[ 0 ].isActiveProperty.set( true );
+    this.waterCup2DArray[ 0 ].isActiveProperty.set( true );
+
     this.meanProperty.reset();
+
+
     this.assertConsistentState();
   }
 
