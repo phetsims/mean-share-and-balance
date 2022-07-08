@@ -175,6 +175,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return this.waterCup2DArray.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
+  public getActivePipes(): Array<PipeModel> {
+    return this.pipeArray.filter( pipe => pipe.isActiveProperty.value );
+  }
+
   /**
    * The 3D cups define the ground truth of the amount of water, this updates the mean from those values.
    */
@@ -191,16 +195,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     let index = 0;
 
     // organize into sets of connected cups
-    this.waterCup2DArray.forEach( cup => {
+    this.getActive2DCups().forEach( cup => {
       currentSet.add( cup );
-      if ( this.pipeArray.length > index ) {
+      if ( this.getActivePipes().length > index ) {
         if ( !this.pipeArray[ index ].isOpenProperty.value ) {
           setsOfConnectedCups.push( currentSet );
           currentSet = new Set<WaterCupModel>();
         }
         index += 1;
       }
-      else if ( this.waterCup2DArray[ this.waterCup2DArray.length - 1 ] === cup ) {
+      else if ( this.getActive2DCups()[ this.getActive2DCups().length - 1 ] === cup ) {
         setsOfConnectedCups.push( currentSet );
       }
     } );
