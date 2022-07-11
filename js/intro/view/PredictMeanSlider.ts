@@ -24,7 +24,7 @@ import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 
 type SelfOptions = EmptyObjectType;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
-type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>
+type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>;
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;

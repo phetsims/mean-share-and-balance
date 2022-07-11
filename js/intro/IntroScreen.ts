@@ -20,7 +20,7 @@ import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptyObjectType;
 
-type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
+type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
 export default class IntroScreen extends MeanShareAndBalanceScreen<IntroModel, IntroScreenView> {
   public constructor( providedOptions: IntroScreenOptions ) {

@@ -17,7 +17,7 @@ import Chocolate from '../model/Chocolate.js';
 import ChocolateBarRectangle from './ChocolateBarRectangle.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
-type ChocolateBarsContainerNodeOptions = StrictOmit<NodeOptions, 'x' | 'y' | 'left' | 'right' | 'top' | 'bottom'>
+type ChocolateBarsContainerNodeOptions = StrictOmit<NodeOptions, 'x' | 'y' | 'left' | 'right' | 'top' | 'bottom'>;
 
 export default class ChocolateBarsContainerNode extends Node {
   public constructor( chocolateModel: Chocolate, providedOptions?: ChocolateBarsContainerNodeOptions ) {

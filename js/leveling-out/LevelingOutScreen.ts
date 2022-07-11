@@ -20,7 +20,7 @@ import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptyObjectType;
 
-type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>
+type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
 export default class LevelingOutScreen extends MeanShareAndBalanceScreen<LevelingOutModel, LevelingOutScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {

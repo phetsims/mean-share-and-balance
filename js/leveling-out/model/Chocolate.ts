@@ -22,14 +22,14 @@ import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 type SelfOptions = {
   x: number;
   y: number;
-}
+};
 
 type StateObject = {
   x: number;
   y: number;
-}
+};
 
-type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>
+type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class Chocolate extends PhetioObject {
 

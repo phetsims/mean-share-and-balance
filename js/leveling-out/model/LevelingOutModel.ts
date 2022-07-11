@@ -21,7 +21,7 @@ import Chocolate from './Chocolate.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 
 type SelfOptions = EmptyObjectType;
-type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>
+type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
 

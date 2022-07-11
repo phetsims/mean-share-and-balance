@@ -15,7 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   visiblePieces?: number; // The number of visible chocolate pieces in the bar. max of 4, min of 1
-}
+};
 type ChocolateBarNodeOptions = SelfOptions & RectangleOptions;
 
 export default class ChocolateBarRectangle extends Rectangle {
