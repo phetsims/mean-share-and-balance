@@ -90,20 +90,24 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
 
+      const isActive = i === 0;
       this.waterCup3DArray.push( new WaterCupModel( {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
         x: x,
-        y: MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y
+        y: MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y,
+        isActive: isActive
       } ) );
 
       this.waterCup2DArray.push( new WaterCupModel( {
         tandem: options.tandem.createTandem( `waterCup2D${i}` ),
         x: x,
         y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
+        isActive: isActive,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
         }
       } ) );
+
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
         this.pipeArray.push( new PipeModel( {
           x: x,
@@ -116,32 +120,12 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // add/remove water cups and pipes according to number spinner
     const numberOfCupsListener = ( numberOfCups: number ) => {
-      // TODO: This can be optimized, like cup2D.isActiveProperty = indexOf(cup2D)<numberOfCups
 
-      while ( numberOfCups > this.getNumberOfActiveCups() ) {
-        const cup3D = this.waterCup3DArray[ this.getNumberOfActiveCups() ];
-        const cup2D = this.waterCup2DArray[ this.getNumberOfActiveCups() ];
-        cup3D.isActiveProperty.set( true );
-        cup2D.isActiveProperty.set( true );
+      this.waterCup2DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
+      this.waterCup3DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
+      this.pipeArray.forEach( ( pipe, i ) => pipe.isActiveProperty.set( i < numberOfCups - 1 ) );
 
-        if ( numberOfCups > 1 ) {
-          const pipe = this.pipeArray[ this.getNumberOfActiveCups() - 2 ];
-          pipe.isActiveProperty.set( true );
-        }
-      }
-      while ( numberOfCups < this.getNumberOfActiveCups() ) {
-        const cup3D = this.waterCup3DArray[ this.getNumberOfActiveCups() - 1 ];
-        const cup2D = this.waterCup2DArray[ this.getNumberOfActiveCups() - 1 ];
-        cup3D.isActiveProperty.set( false );
-        cup2D.isActiveProperty.set( false );
-
-        //TODO: is this doing anything?
-        if ( numberOfCups > 0 ) {
-          const pipe = this.pipeArray[ this.getNumberOfActiveCups() - 1 ];
-          pipe.isActiveProperty.set( false );
-        }
-        this.matchCupWaterLevels();
-      }
+      this.matchCupWaterLevels();
       this.updateMeanFrom3DCups();
       this.assertConsistentState();
     };

@@ -25,6 +25,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 type SelfOptions = {
   x: number; // The cup's x-position in the view
   y: number; // THe cup's y-position in the view
+  isActive?: boolean;
   waterHeightRange?: Range;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
@@ -55,11 +56,12 @@ export default class WaterCupModel extends PhetioObject {
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
-      waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
+      waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
+      isActive: false
     }, providedOptions );
     super( options );
 
-    this.isActiveProperty = new BooleanProperty( false );
+    this.isActiveProperty = new BooleanProperty( options.isActive );
     this.x = options.x;
     this.y = options.y;
     this.resetEmitter = new Emitter();
