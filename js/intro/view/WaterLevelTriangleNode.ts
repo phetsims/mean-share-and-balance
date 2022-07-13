@@ -40,7 +40,6 @@ export default class WaterLevelTriangleNode extends Node {
 
     const sliderTandem = options.tandem.createTandem( 'waterLevelVSlider' );
     const thumbNode = new TriangleNode( {
-      pointDirection: 'down',
       fill: '#51CEF4',
       tandem: sliderTandem.createTandem( 'thumbNode' )
     } );
