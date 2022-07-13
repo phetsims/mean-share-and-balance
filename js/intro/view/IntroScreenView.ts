@@ -84,6 +84,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
+    model.isAutoSharingProperty.lazyLink( isAutoSharing => this.interruptSubtreeInput() );
+
     //Number Picker
     const numberOfCupsNumberSpinner = new NumberSpinner(
       model.numberOfCupsProperty,
