@@ -64,7 +64,7 @@ export default class WaterCup3DNode extends Node {
 
     this.showTickMarksLink = ( isShowingTickMarks: boolean ) => waterCup.setTicksVisible( isShowingTickMarks );
 
-    introModel.isShowingTickMarksProperty.link( this.showTickMarksLink );
+    introModel.tickMarksVisibleProperty.link( this.showTickMarksLink );
 
     // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
@@ -103,7 +103,7 @@ export default class WaterCup3DNode extends Node {
     super.dispose();
     this.waterLevelTriangle.dispose();
     this.adapterProperty.dispose();
-    this.introModel.isShowingTickMarksProperty.unlink( this.showTickMarksLink );
+    this.introModel.tickMarksVisibleProperty.unlink( this.showTickMarksLink );
     this.cup3DModel.resetEmitter.removeAllListeners();
   }
 }
