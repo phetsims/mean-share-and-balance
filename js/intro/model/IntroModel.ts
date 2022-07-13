@@ -31,7 +31,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly dragRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
   public readonly cupRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
 
-  public readonly isShowingPredictMeanProperty: BooleanProperty;
+  public readonly predictMeanVisibleProperty: BooleanProperty;
   public readonly isShowingMeanProperty: BooleanProperty;
   public readonly isShowingTickMarksProperty: BooleanProperty;
   // Property that tracks whether auto-share is enabled or not.
@@ -49,8 +49,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const options = optionize<IntroModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
     super( options );
 
-    this.isShowingPredictMeanProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isShowingPredictMeanProperty' )
+    this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
     this.isShowingMeanProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isShowingMeanProperty' )
@@ -309,7 +309,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   public reset(): void {
-    this.isShowingPredictMeanProperty.reset();
+    this.predictMeanVisibleProperty.reset();
     this.isShowingMeanProperty.reset();
     this.isShowingTickMarksProperty.reset();
     this.isAutoSharingProperty.reset();

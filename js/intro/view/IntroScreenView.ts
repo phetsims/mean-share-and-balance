@@ -58,7 +58,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
     const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
         node: predictMeanText,
-        property: model.isShowingPredictMeanProperty,
+        property: model.predictMeanVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.predictMean }
       }, {
@@ -103,7 +103,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const predictMeanSlider = new PredictMeanSlider(
       model,
       modelViewTransform2DCups, {
-        visibleProperty: model.isShowingPredictMeanProperty,
+        visibleProperty: model.predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
 
         // Constant range
