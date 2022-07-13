@@ -63,7 +63,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         options: { accessibleName: meanShareAndBalanceStrings.predictMean }
       }, {
         node: showMeanText,
-        property: model.isShowingMeanProperty,
+        property: model.meanVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.showMean }
       }, {
@@ -133,7 +133,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
       // TODO: Better way of matching indices or tandems?
       const index = model.waterCup2DArray.indexOf( cupModel );
-      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.isShowingTickMarksProperty, model.isShowingMeanProperty,
+      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.isShowingTickMarksProperty, model.meanVisibleProperty,
         { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
