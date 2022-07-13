@@ -18,8 +18,6 @@ import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import ChocolateBarsContainerNode from './ChocolateBarsContainerNode.js';
-import Chocolate from '../model/Chocolate.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -54,16 +52,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       } );
 
     const plateLayerNode = new Node( { x: 50, y: 100 } );
-
-    function createAddChocolatePlateListener() {
-      return ( chocolateModel: Chocolate ) => {
-        console.log( 'chocolate made' );
-        const chocolateBarContainer = new ChocolateBarsContainerNode( chocolateModel );
-        plateLayerNode.addChild( chocolateBarContainer );
-      };
-    }
-
-    model.plateChocolateGroup.elementCreatedEmitter.addListener( createAddChocolatePlateListener );
 
 
     this.controlsVBox.addChild( meanAccordionBox );

@@ -16,9 +16,7 @@ import Range from '../../../../dot/js/Range.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import PhetioGroup from '../../../../tandem/js/PhetioGroup.js';
 import Chocolate from './Chocolate.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 
 type SelfOptions = EmptyObjectType;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -29,7 +27,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly numberOfPeopleProperty: NumberProperty;
   public readonly isMeanAccordionExpandedProperty: BooleanProperty;
 
-  public readonly plateChocolateGroup: PhetioGroup<Chocolate, [ number ]>;
+  public readonly plateChocolateArray: Array<Chocolate>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -46,26 +44,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
 
-    this.plateChocolateGroup = new PhetioGroup( ( tandem: Tandem, x: number ) => {
-      return new Chocolate( {
-        tandem: tandem,
-        x: x,
-        y: 200
-      } );
-    }, [ 0 ], {
-      phetioType: PhetioGroup.PhetioGroupIO( Chocolate.ChocolateIO ),
-      phetioDocumentation: 'Holds the models for chocolate on plates.',
-      tandem: options.tandem.createTandem( 'plateChocolateGroup' )
-    } );
+    this.plateChocolateArray = [];
 
     for ( let i = 0; i < 7; i++ ) {
-      if ( i === 0 ) {
-        this.plateChocolateGroup.createNextElement( 0 );
-      }
-      else {
-        const lastPlate = this.plateChocolateGroup.getLastElement();
-        this.plateChocolateGroup.createNextElement( lastPlate.x + 50 );
-      }
+      const x = i * 50;
+      const chocolate = new Chocolate( { x: x, y: 150, tandem: options.tandem.createTandem( 'plateChocolateArray' ) } );
+      this.plateChocolateArray.push( chocolate );
     }
   }
 
