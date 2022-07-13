@@ -30,8 +30,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
     super( model, options );
-
-    MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#F97A69' ) );
+    this.visibleProperty.link( visible => visible && MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#F97A69' ) ) );
 
     const meanNode = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT,
       { fill: MeanShareAndBalanceColors.chocolateColorProperty } );

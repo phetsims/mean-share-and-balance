@@ -52,8 +52,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
-
-    MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#2496D6' ) );
+    this.visibleProperty.link( visible => visible && MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#2496D6' ) ) );
 
     // Checkbox Group
     const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
