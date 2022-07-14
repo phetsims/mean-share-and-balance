@@ -7,7 +7,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { FireListener, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCupModel from '../model/WaterCupModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -25,7 +25,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 type SelfOptions = EmptyObjectType;
 
 //REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom' >;
+type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
@@ -35,7 +35,7 @@ export default class WaterCup3DNode extends Node {
   private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( introModel: IntroModel, cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
-                      providedOptions?: WaterCup3DNodeOptions ) {
+                      interruptCupsListener: FireListener, providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
@@ -91,7 +91,8 @@ export default class WaterCup3DNode extends Node {
     this.waterLevelTriangle = new WaterLevelTriangleNode( this.adapterProperty, cup3DModel.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
-      top: waterCup.top + waterCup.yRadiusOfEnds + beakerLineWidth / 2
+      top: waterCup.top + waterCup.yRadiusOfEnds + beakerLineWidth / 2,
+      inputListeners: [ interruptCupsListener ]
     } );
 
     this.addChild( waterCup );
