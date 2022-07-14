@@ -47,7 +47,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       stroke: 'purple',
       lineWidth: 2
     } );
-    this.predictMeanHandle = new ShadedSphereNode( 10, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
+    this.predictMeanHandle = new ShadedSphereNode( 20, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
     // track predictMeanLine drag position
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, model.meanPredictionProperty.value ) );
