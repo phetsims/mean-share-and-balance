@@ -16,7 +16,7 @@ type StringsType = {
     'levelingOut': string;
   };
   'predictMean': string;
-  'showMean': string;
+  'mean': string;
   'tickMarks': string;
   'sync': string;
   'numberOfCups': string;

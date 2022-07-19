@@ -45,7 +45,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
-    const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const meanText = new Text( meanShareAndBalanceStrings.mean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
@@ -61,10 +61,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.predictMean }
       }, {
-        node: showMeanText,
+        node: meanText,
         property: model.meanVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.showMean }
+        options: { accessibleName: meanShareAndBalanceStrings.mean }
       }, {
         node: tickMarksText,
         property: model.tickMarksVisibleProperty,
