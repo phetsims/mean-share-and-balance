@@ -17,7 +17,6 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -43,7 +42,7 @@ export default class PipeNode extends Node {
   private readonly innerPipe: Rectangle;
   private readonly handleBase: Rectangle;
 
-  public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, isAutoSharingProperty: BooleanProperty, providedOptions?: PipeNodeOptions ) {
+  public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       visibleProperty: pipeModel.isActiveProperty
     }, providedOptions );
@@ -153,19 +152,11 @@ export default class PipeNode extends Node {
         // it closes all the pipes, but when a user opens a pipe and auto-share is checked
         // only the clicked pipe should close and auto-share unchecks.
         pipeModel.isCurrentlyClickedProperty.set( true );
-        isAutoSharingProperty.set( false );
         pipeModel.isCurrentlyClickedProperty.set( false );
       },
       tandem: options.tandem.createTandem( 'valveRotationFireListener' )
     } );
     this.valveNode.addInputListener( this.valveRotationFireListener );
-
-    // Sets pipe rotation to open if "Auto Share" is enabled.
-    // This prevents the valve node from rotating on entrance and continuously rotating in
-    // the state wrapper.
-    if ( isAutoSharingProperty.value ) {
-      this.valveNode.rotation = Math.PI / 2;
-    }
 
     this.addChild( this.pipeRectangle );
     this.addChild( this.valveNode );

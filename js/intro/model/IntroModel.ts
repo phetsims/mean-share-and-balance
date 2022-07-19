@@ -35,7 +35,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly meanVisibleProperty: BooleanProperty;
   public readonly tickMarksVisibleProperty: BooleanProperty;
   // Property that tracks whether auto-share is enabled or not.
-  public readonly isAutoSharingProperty: BooleanProperty;
   public readonly numberOfCupsProperty: NumberProperty;
   public readonly meanPredictionProperty: NumberProperty;
   public readonly meanProperty: NumberProperty;
@@ -57,9 +56,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isShowingTickMarksProperty' )
-    } );
-    this.isAutoSharingProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isAutoSharingProperty' )
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
@@ -131,17 +127,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     };
 
     this.numberOfCupsProperty.link( numberOfCupsListener );
-
-    // Opens pipes when auto share is enabled
-    this.isAutoSharingProperty.link( isAutoSharing => {
-
-      // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
-      // it closes all the pipes, but when a user opens a pipe and auto-share is checked
-      // only the clicked pipe should close and auto-share unchecks.
-      // isCurrentlyClickedProperty tracks the pipe's state to allow us to determine which pipes should open.
-      const clickedPipe = this.pipeArray.find( pipe => pipe.isCurrentlyClickedProperty.value );
-      !clickedPipe && this.pipeArray.forEach( pipe => pipe.isOpenProperty.set( isAutoSharing ) );
-    } );
 
     assert && phet.joist.sim.isSettingPhetioStateProperty.link( () => {
 
@@ -258,7 +243,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    */
   public syncData(): void {
     this.assertConsistentState();
-    this.isAutoSharingProperty.set( false );
     this.pipeArray.forEach( pipe => pipe.isOpenProperty.set( false ) );
     this.matchCupWaterLevels();
   }
@@ -312,7 +296,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.predictMeanVisibleProperty.reset();
     this.meanVisibleProperty.reset();
     this.tickMarksVisibleProperty.reset();
-    this.isAutoSharingProperty.reset();
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
 

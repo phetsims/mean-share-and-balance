@@ -18,7 +18,6 @@ type StringsType = {
   'predictMean': string;
   'showMean': string;
   'tickMarks': string;
-  'autoShare': string;
   'sync': string;
   'numberOfCups': string;
   'introQuestion': string;

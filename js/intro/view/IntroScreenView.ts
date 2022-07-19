@@ -47,7 +47,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
     const showMeanText = new Text( meanShareAndBalanceStrings.showMean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
-    const autoShareText = new Text( meanShareAndBalanceStrings.autoShare, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
@@ -71,11 +70,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         property: model.tickMarksVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
-      }, {
-        node: autoShareText,
-        property: model.isAutoSharingProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'autoShareCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.autoShare }
       } ], {
 
         checkboxOptions: {
@@ -83,8 +77,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         }
       }
     );
-
-    model.isAutoSharingProperty.lazyLink( isAutoSharing => this.interruptSubtreeInput() );
 
     //Number Picker
     const numberOfCupsNumberSpinner = new NumberSpinner(
@@ -151,7 +143,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     this.pipeNodes = model.pipeArray.map( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
-      const pipeNode = new PipeNode( pipeModel, modelViewTransform2DCups, model.isAutoSharingProperty,
+      const pipeNode = new PipeNode( pipeModel, modelViewTransform2DCups,
         { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
       waterCupLayerNode.addChild( pipeNode );
       return pipeNode;
