@@ -32,7 +32,7 @@ const HANDLE_WIDTH = 4;
 const LINE_WIDTH = 1;
 
 export default class PipeNode extends Node {
-  private readonly pipeModel: Pipe;
+  private readonly pipe: Pipe;
   private readonly valveRotationFireListener: FireListener;
   private readonly handleGrip: Path;
   private readonly valveNode: Node;
@@ -42,14 +42,14 @@ export default class PipeNode extends Node {
   private readonly innerPipe: Rectangle;
   private readonly handleBase: Rectangle;
 
-  public constructor( pipeModel: Pipe, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
+  public constructor( pipe: Pipe, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
-      visibleProperty: pipeModel.isActiveProperty
+      visibleProperty: pipe.isActiveProperty
     }, providedOptions );
 
     super( options );
 
-    this.pipeModel = pipeModel;
+    this.pipe = pipe;
 
     // Pipe & valve dimensions
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, PIPE_WIDTH / 2 );
@@ -146,13 +146,13 @@ export default class PipeNode extends Node {
     // Valve rotation event listener
     this.valveRotationFireListener = new FireListener( {
       fire: () => {
-        pipeModel.isOpenProperty.set( !pipeModel.isOpenProperty.value );
+        pipe.isOpenProperty.set( !pipe.isOpenProperty.value );
 
         // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
         // it closes all the pipes, but when a user opens a pipe and auto-share is checked
         // only the clicked pipe should close and auto-share unchecks.
-        pipeModel.isCurrentlyClickedProperty.set( true );
-        pipeModel.isCurrentlyClickedProperty.set( false );
+        pipe.isCurrentlyClickedProperty.set( true );
+        pipe.isCurrentlyClickedProperty.set( false );
       },
       tandem: options.tandem.createTandem( 'valveRotationFireListener' )
     } );
@@ -162,7 +162,7 @@ export default class PipeNode extends Node {
     this.addChild( this.valveNode );
 
     // Set position related to associated cup
-    this.x = pipeModel.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
+    this.x = pipe.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
     this.y = modelViewTransform.modelToViewY( 0 ) - PIPE_WIDTH;
   }
 
@@ -171,7 +171,7 @@ export default class PipeNode extends Node {
 
     // TODO: Maybe move this to the model?
     const currentRotation = this.valveNode.rotation;
-    const targetRotation = this.pipeModel.isOpenProperty.value ? Math.PI / 2 : 0;
+    const targetRotation = this.pipe.isOpenProperty.value ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;
     const rotationThreshold = Math.abs( this.valveNode.rotation - targetRotation ) * 0.4;
     const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;
