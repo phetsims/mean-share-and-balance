@@ -17,7 +17,7 @@ import PipeModel from './PipeModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import WaterCupModel from './WaterCupModel.js';
+import WaterCup from './WaterCup.js';
 import Utils from '../../../../dot/js/Utils.js';
 
 type SelfOptions = EmptyObjectType;
@@ -39,8 +39,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly meanPredictionProperty: NumberProperty;
   public readonly meanProperty: NumberProperty;
 
-  public readonly waterCup3DArray: WaterCupModel[];
-  public readonly waterCup2DArray: WaterCupModel[];
+  public readonly waterCup3DArray: WaterCup[];
+  public readonly waterCup2DArray: WaterCup[];
   public readonly pipeArray: PipeModel[];
 
   public constructor( providedOptions?: IntroModelOptions ) {
@@ -87,14 +87,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
 
       const isActive = i === 0;
-      this.waterCup3DArray.push( new WaterCupModel( {
+      this.waterCup3DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
         x: x,
         y: MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y,
         isActive: isActive
       } ) );
 
-      this.waterCup2DArray.push( new WaterCupModel( {
+      this.waterCup2DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup2D${i}` ),
         x: x,
         y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
@@ -141,11 +141,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return this.getActive3DCups().length;
   }
 
-  public getActive3DCups(): Array<WaterCupModel> {
+  public getActive3DCups(): Array<WaterCup> {
     return this.waterCup3DArray.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
-  public getActive2DCups(): Array<WaterCupModel> {
+  public getActive2DCups(): Array<WaterCup> {
     return this.waterCup2DArray.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
@@ -163,9 +163,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   /**
    * Return array of sets of cups connected by open pipes
    */
-  private getSetsOfConnectedCups(): Array<Set<WaterCupModel>> {
-    const setsOfConnectedCups: Array<Set<WaterCupModel>> = [];
-    let currentSet = new Set<WaterCupModel>();
+  private getSetsOfConnectedCups(): Array<Set<WaterCup>> {
+    const setsOfConnectedCups: Array<Set<WaterCup>> = [];
+    let currentSet = new Set<WaterCup>();
     let index = 0;
 
     // organize into sets of connected cups
@@ -174,7 +174,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       if ( this.getActivePipes().length > index ) {
         if ( !this.pipeArray[ index ].isOpenProperty.value ) {
           setsOfConnectedCups.push( currentSet );
-          currentSet = new Set<WaterCupModel>();
+          currentSet = new Set<WaterCup>();
         }
         index += 1;
       }
@@ -250,7 +250,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   /**
    * Visit pairs of 2D/3D cups
    */
-  private iterateCups( callback: ( cup2D: WaterCupModel, cup3D: WaterCupModel ) => void ): void {
+  private iterateCups( callback: ( cup2D: WaterCup, cup3D: WaterCup ) => void ): void {
     assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
@@ -331,7 +331,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param waterLevel - The current waterLevel
    * @param oldWaterLevel - The previous waterLevel
    */
-  public changeWaterLevel( cup3DModel: WaterCupModel, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
+  public changeWaterLevel( cup3DModel: WaterCup, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
     assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
 

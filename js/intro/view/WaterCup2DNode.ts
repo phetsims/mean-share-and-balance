@@ -12,7 +12,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import { Rectangle, Node, Line, NodeOptions } from '../../../../scenery/js/imports.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import WaterCupModel from '../model/WaterCupModel.js';
+import WaterCup from '../model/WaterCup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DTickMarksNode from './WaterCup2DTickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -31,11 +31,11 @@ export default class WaterCup2DNode extends Node {
   private readonly meanProperty: NumberProperty;
   private readonly meanLink: PropertyLinkListener<number>;
   private readonly waterLevelLink: PropertyLinkListener<number>;
-  private readonly waterCupModel: WaterCupModel;
+  private readonly waterCupModel: WaterCup;
   private readonly tickMarks: WaterCup2DTickMarksNode;
   private readonly meanLine: Line;
 
-  public constructor( waterCupModel: WaterCupModel, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
+  public constructor( waterCupModel: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                       isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                       providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {

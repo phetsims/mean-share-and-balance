@@ -9,7 +9,7 @@
 
 import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import WaterCupModel from '../model/WaterCupModel.js';
+import WaterCup from '../model/WaterCup.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
@@ -29,12 +29,12 @@ type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | '
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
-  private readonly cup3DModel: WaterCupModel;
+  private readonly cup3DModel: WaterCup;
   private readonly adapterProperty: NumberProperty;
   private readonly introModel: IntroModel;
   private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
-  public constructor( introModel: IntroModel, cup3DModel: WaterCupModel, modelViewTransform: ModelViewTransform2,
+  public constructor( introModel: IntroModel, cup3DModel: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {

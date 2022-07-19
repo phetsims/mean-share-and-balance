@@ -42,7 +42,7 @@ export type WaterCupModelOptions =
   & PhetioObjectOptions
   & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class WaterCupModel extends PhetioObject {
+export default class WaterCup extends PhetioObject {
 
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: BooleanProperty;
@@ -60,14 +60,14 @@ export default class WaterCupModel extends PhetioObject {
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
 
-  public static WaterCupModelIO: IOType<WaterCupModel>;
+  public static WaterCupModelIO: IOType<WaterCup>;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       isActive: false,
-      phetioType: WaterCupModel.WaterCupModelIO
+      phetioType: WaterCup.WaterCupModelIO
     }, providedOptions );
     super( options );
 
@@ -105,9 +105,9 @@ export default class WaterCupModel extends PhetioObject {
   }
 }
 
-WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {
-  valueType: WaterCupModel,
-  toStateObject: ( waterCupModel: WaterCupModel ) => ( {
+WaterCup.WaterCupModelIO = new IOType<WaterCup>( 'WaterCupModelIO', {
+  valueType: WaterCup,
+  toStateObject: ( waterCupModel: WaterCup ) => ( {
     x: waterCupModel.x
   } ),
   stateToArgsForConstructor: ( stateObject: StateObject ) => {
