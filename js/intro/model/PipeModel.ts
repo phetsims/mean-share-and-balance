@@ -16,12 +16,18 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   x: number; // the x-position of the pipe in the view
   y: number; // the y-position of the pipe in the view
   isOpen?: boolean;
+};
+
+type StateObject = {
+  x: number;
+  y: number;
 };
 
 export type PipeModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType'>;
@@ -43,7 +49,8 @@ export default class PipeModel extends PhetioObject {
   public constructor( providedOptions?: PipeModelOptions ) {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
-      tandem: Tandem.REQUIRED
+      tandem: Tandem.REQUIRED,
+      phetioType: PipeModel.PipeModelIO
     }, providedOptions );
 
     super( options );
@@ -63,5 +70,18 @@ export default class PipeModel extends PhetioObject {
     this.isCurrentlyClickedProperty.dispose();
   }
 }
+
+PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
+  valueType: PipeModel,
+  toStateObject: ( pipeModel: PipeModel ) => ( {
+    x: pipeModel.x
+  } ),
+  stateToArgsForConstructor: ( stateObject: StateObject ) => {
+    return [ stateObject.x ];
+  },
+  stateSchema: {
+    x: NumberIO
+  }
+} );
 
 meanShareAndBalance.register( 'PipeModel', PipeModel );

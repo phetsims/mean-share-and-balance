@@ -48,7 +48,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     for ( let i = 0; i < 7; i++ ) {
       const x = i * 50;
-      const chocolate = new Chocolate( { x: x, y: 150, tandem: options.tandem.createTandem( 'plateChocolateArray' ) } );
+      const chocolate = new Chocolate( { x: x, y: 150, tandem: options.tandem.createTandem( `plateChocolate${i}` ) } );
       this.plateChocolateArray.push( chocolate );
     }
   }

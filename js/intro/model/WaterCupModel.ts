@@ -21,6 +21,8 @@ import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 import Property from '../../../../axon/js/Property.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import IOType from '../../../../tandem/js/types/IOType.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 
 type SelfOptions = {
   x: number; // The cup's x-position in the view
@@ -28,6 +30,11 @@ type SelfOptions = {
   isActive?: boolean;
   waterHeightRange?: Range;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
+};
+
+type StateObject = {
+  x: number;
+  y: number;
 };
 
 export type WaterCupModelOptions =
@@ -53,11 +60,14 @@ export default class WaterCupModel extends PhetioObject {
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
 
+  public static WaterCupModelIO: IOType<WaterCupModel>;
+
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
-      isActive: false
+      isActive: false,
+      phetioType: WaterCupModel.WaterCupModelIO
     }, providedOptions );
     super( options );
 
@@ -94,3 +104,16 @@ export default class WaterCupModel extends PhetioObject {
     this.resetEmitter.dispose();
   }
 }
+
+WaterCupModel.WaterCupModelIO = new IOType<WaterCupModel>( 'WaterCupModelIO', {
+  valueType: WaterCupModel,
+  toStateObject: ( waterCupModel: WaterCupModel ) => ( {
+    x: waterCupModel.x
+  } ),
+  stateToArgsForConstructor: ( stateObject: StateObject ) => {
+    return [ stateObject.x ];
+  },
+  stateSchema: {
+    x: NumberIO
+  }
+} );
