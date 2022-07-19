@@ -10,7 +10,7 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import { Color, FireListener, Node, Text } from '../../../../scenery/js/imports.js';
+import { Color, Node, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -31,7 +31,6 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   private readonly pipeNodes: PipeNode[];
-  private readonly interruptCupsListener: FireListener;
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -121,12 +120,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const waterCupLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true
     } );
-    this.interruptCupsListener = new FireListener( {
-      fire: () => {
-        waterCupLayerNode.interruptSubtreeInput();
-        console.log( 'Interrupted!' );
-      }
-    } );
 
     // 2D/3D water cup nodes addition and removal
     // Center 2D & 3D cups
@@ -151,7 +144,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.waterCup3DArray.forEach( cupModel => {
       const index = model.waterCup3DArray.indexOf( cupModel );
       const cupNode = new WaterCup3DNode( model, cupModel, modelViewTransform3DCups,
-        this.interruptCupsListener,
         { tandem: options.tandem.createTandem( `waterCup3DNode${index}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
