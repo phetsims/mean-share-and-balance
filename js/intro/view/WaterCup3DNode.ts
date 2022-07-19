@@ -29,22 +29,22 @@ type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | '
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
-  private readonly cup3DModel: WaterCup;
+  private readonly waterCup: WaterCup;
   private readonly adapterProperty: NumberProperty;
   private readonly introModel: IntroModel;
   private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
-  public constructor( introModel: IntroModel, cup3DModel: WaterCup, modelViewTransform: ModelViewTransform2,
+  public constructor( introModel: IntroModel, waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: cup3DModel.x,
-      visibleProperty: cup3DModel.isActiveProperty
+      left: waterCup.x,
+      visibleProperty: waterCup.isActiveProperty
     }, providedOptions );
     super();
 
-    this.cup3DModel = cup3DModel;
+    this.waterCup = waterCup;
     this.introModel = introModel;
 
     // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
@@ -52,7 +52,7 @@ export default class WaterCup3DNode extends Node {
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
 
     const beakerLineWidth = 2;
-    const waterCup = new BeakerNode( cup3DModel.waterLevelProperty.asRanged(), {
+    const waterCupNode = new BeakerNode( waterCup.waterLevelProperty.asRanged(), {
       lineWidth: beakerLineWidth,
       beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH,
       beakerHeight: beakerHeight,
@@ -62,7 +62,7 @@ export default class WaterCup3DNode extends Node {
       beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
-    this.showTickMarksLink = ( isShowingTickMarks: boolean ) => waterCup.setTicksVisible( isShowingTickMarks );
+    this.showTickMarksLink = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
 
     introModel.tickMarksVisibleProperty.link( this.showTickMarksLink );
 
@@ -82,19 +82,19 @@ export default class WaterCup3DNode extends Node {
 
     this.adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
       if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
-        introModel.changeWaterLevel( cup3DModel, this.adapterProperty, waterLevel, oldWaterLevel );
+        introModel.changeWaterLevel( waterCup, this.adapterProperty, waterLevel, oldWaterLevel );
       }
     } );
 
-    cup3DModel.resetEmitter.addListener( () => this.adapterProperty.reset() );
+    waterCup.resetEmitter.addListener( () => this.adapterProperty.reset() );
 
-    this.waterLevelTriangle = new WaterLevelTriangleNode( this.adapterProperty, cup3DModel.enabledRangeProperty, beakerHeight, {
+    this.waterLevelTriangle = new WaterLevelTriangleNode( this.adapterProperty, waterCup.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
-      top: waterCup.top + waterCup.yRadiusOfEnds + beakerLineWidth / 2
+      top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2
     } );
 
-    this.addChild( waterCup );
+    this.addChild( waterCupNode );
     this.addChild( this.waterLevelTriangle );
     this.mutate( options );
   }
@@ -104,7 +104,7 @@ export default class WaterCup3DNode extends Node {
     this.waterLevelTriangle.dispose();
     this.adapterProperty.dispose();
     this.introModel.tickMarksVisibleProperty.unlink( this.showTickMarksLink );
-    this.cup3DModel.resetEmitter.removeAllListeners();
+    this.waterCup.resetEmitter.removeAllListeners();
   }
 }
 

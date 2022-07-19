@@ -31,22 +31,22 @@ export default class WaterCup2DNode extends Node {
   private readonly meanProperty: NumberProperty;
   private readonly meanLink: PropertyLinkListener<number>;
   private readonly waterLevelLink: PropertyLinkListener<number>;
-  private readonly waterCupModel: WaterCup;
+  private readonly waterCup: WaterCup;
   private readonly tickMarks: WaterCup2DTickMarksNode;
   private readonly meanLine: Line;
 
-  public constructor( waterCupModel: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
+  public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
                       isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
                       providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: waterCupModel.x,
-      visibleProperty: waterCupModel.isActiveProperty
+      left: waterCup.x,
+      visibleProperty: waterCup.isActiveProperty
     }, providedOptions );
 
     super();
 
-    this.waterCupModel = waterCupModel;
+    this.waterCup = waterCup;
 
     this.meanProperty = meanProperty;
     this.tickMarks = new WaterCup2DTickMarksNode(
@@ -58,7 +58,7 @@ export default class WaterCup2DNode extends Node {
     );
 
     // 0 is empty, 1 is full
-    const y = Utils.linear( 0, 1, MeanShareAndBalanceConstants.CUP_HEIGHT, 0, waterCupModel.waterLevelProperty.value );
+    const y = Utils.linear( 0, 1, MeanShareAndBalanceConstants.CUP_HEIGHT, 0, waterCup.waterLevelProperty.value );
 
     const waterCupRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT,
       { stroke: 'black' }
@@ -66,14 +66,14 @@ export default class WaterCup2DNode extends Node {
 
     const waterCupBackgroundRectangle = new Rectangle( waterCupRectangle.localBounds, { fill: 'white' } );
     const waterLevelRectangle = new Rectangle( 0, y, MeanShareAndBalanceConstants.CUP_WIDTH,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * waterCupModel.waterLevelProperty.value,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * waterCup.waterLevelProperty.value,
       { fill: MeanShareAndBalanceColors.waterFillColorProperty }
     );
 
     this.waterLevelLink = ( waterLevel: number ) => {
       waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
     };
-    waterCupModel.waterLevelProperty.link( this.waterLevelLink );
+    waterCup.waterLevelProperty.link( this.waterLevelLink );
 
     // Model view transform inverts Y mapping, therefore the mean inverse is needed to place
     // show mean line accurately in relation to water levels.
@@ -110,7 +110,7 @@ export default class WaterCup2DNode extends Node {
   public override dispose(): void {
     super.dispose();
     this.meanProperty.unlink( this.meanLink );
-    this.waterCupModel.waterLevelProperty.unlink( this.waterLevelLink );
+    this.waterCup.waterLevelProperty.unlink( this.waterLevelLink );
     this.tickMarks.dispose();
     this.meanLine.dispose();
   }
