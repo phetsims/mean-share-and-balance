@@ -32,7 +32,7 @@ type StateObject = {
 
 export type PipeModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType'>;
 
-export default class PipeModel extends PhetioObject {
+export default class Pipe extends PhetioObject {
 
   // Whether pipe is enabled in view and data calculations
   public readonly isActiveProperty: BooleanProperty;
@@ -44,13 +44,13 @@ export default class PipeModel extends PhetioObject {
   public readonly x: number;
   public readonly y: number;
 
-  public static PipeModelIO: IOType<PipeModel>;
+  public static PipeModelIO: IOType<Pipe>;
 
   public constructor( providedOptions?: PipeModelOptions ) {
     const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
       tandem: Tandem.REQUIRED,
-      phetioType: PipeModel.PipeModelIO
+      phetioType: Pipe.PipeModelIO
     }, providedOptions );
 
     super( options );
@@ -77,9 +77,9 @@ export default class PipeModel extends PhetioObject {
   }
 }
 
-PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
-  valueType: PipeModel,
-  toStateObject: ( pipeModel: PipeModel ) => ( {
+Pipe.PipeModelIO = new IOType<Pipe>( 'PipeModelIO', {
+  valueType: Pipe,
+  toStateObject: ( pipeModel: Pipe ) => ( {
     x: pipeModel.x
   } ),
   stateToArgsForConstructor: ( stateObject: StateObject ) => {
@@ -90,4 +90,4 @@ PipeModel.PipeModelIO = new IOType<PipeModel>( 'PipeModelIO', {
   }
 } );
 
-meanShareAndBalance.register( 'PipeModel', PipeModel );
+meanShareAndBalance.register( 'Pipe', Pipe );

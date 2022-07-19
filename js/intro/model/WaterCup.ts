@@ -23,6 +23,7 @@ import Emitter from '../../../../axon/js/Emitter.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   x: number; // The cup's x-position in the view
@@ -117,3 +118,5 @@ WaterCup.WaterCupModelIO = new IOType<WaterCup>( 'WaterCupModelIO', {
     x: NumberIO
   }
 } );
+
+meanShareAndBalance.register( 'WaterCup', WaterCup );

@@ -14,7 +14,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import { FireListener, LinearGradient, Node, NodeOptions, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import PipeModel from '../model/PipeModel.js';
+import Pipe from '../model/Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -32,7 +32,7 @@ const HANDLE_WIDTH = 4;
 const LINE_WIDTH = 1;
 
 export default class PipeNode extends Node {
-  private readonly pipeModel: PipeModel;
+  private readonly pipeModel: Pipe;
   private readonly valveRotationFireListener: FireListener;
   private readonly handleGrip: Path;
   private readonly valveNode: Node;
@@ -42,7 +42,7 @@ export default class PipeNode extends Node {
   private readonly innerPipe: Rectangle;
   private readonly handleBase: Rectangle;
 
-  public constructor( pipeModel: PipeModel, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
+  public constructor( pipeModel: Pipe, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       visibleProperty: pipeModel.isActiveProperty
     }, providedOptions );

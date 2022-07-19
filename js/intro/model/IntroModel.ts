@@ -13,7 +13,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import PipeModel from './PipeModel.js';
+import Pipe from './Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
@@ -41,7 +41,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];
-  public readonly pipeArray: PipeModel[];
+  public readonly pipeArray: Pipe[];
 
   public constructor( providedOptions?: IntroModelOptions ) {
 
@@ -105,7 +105,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } ) );
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
-        this.pipeArray.push( new PipeModel( {
+        this.pipeArray.push( new Pipe( {
           x: x,
           y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
           isOpen: false,
@@ -149,7 +149,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return this.waterCup2DArray.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
-  public getActivePipes(): Array<PipeModel> {
+  public getActivePipes(): Array<Pipe> {
     return this.pipeArray.filter( pipe => pipe.isActiveProperty.value );
   }
 
