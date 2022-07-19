@@ -12,7 +12,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
-import { FireListener, Node, LinearGradient, NodeOptions, Path, Rectangle, RadialGradient } from '../../../../scenery/js/imports.js';
+import { FireListener, LinearGradient, Node, NodeOptions, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PipeModel from '../model/PipeModel.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -74,13 +74,17 @@ export default class PipeNode extends Node {
       return outerCircle.shapeDifference( innerCircle );
     };
 
+    const outerValveDiameter = ( VALVE_RADIUS + 3 ) * 2;
+
+    // Base valve centering off of valve's 'open' position.
+    const valveCenterOffset = ( outerValveDiameter + HANDLE_HEIGHT - 3 ) / 2 - outerValveDiameter;
+
     // Function to create pipe clip area when valve is closed
     const createPipeClipArea = ( bounds: Bounds2, radius: number ): Shape => {
       const clipAreaRectangle = Shape.bounds( bounds );
-      const clipAreaCircle = Shape.circle( bounds.center, radius );
+      const clipAreaCircle = Shape.circle( new Vector2( bounds.centerX + valveCenterOffset, bounds.centerY ), radius );
       return clipAreaRectangle.shapeDifference( clipAreaCircle );
     };
-
 
     // Valve drawing
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 )
@@ -131,7 +135,7 @@ export default class PipeNode extends Node {
       tandem: options.tandem?.createTandem( 'valveNode' ),
       tagName: 'button',
       y: pipeCenter.y,
-      x: pipeCenter.x
+      x: pipeCenter.x + valveCenterOffset
     } );
 
     this.pipeRectangle.clipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
