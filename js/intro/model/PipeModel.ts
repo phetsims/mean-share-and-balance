@@ -62,6 +62,12 @@ export default class PipeModel extends PhetioObject {
 
     this.x = options.x;
     this.y = options.y;
+
+    this.isActiveProperty.lazyLink( isActive => !isActive && this.reset() );
+  }
+
+  public reset(): void {
+    this.isOpenProperty.reset();
   }
 
   public override dispose(): void {
