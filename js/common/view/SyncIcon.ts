@@ -1,6 +1,6 @@
 // Copyright 2022, University of Colorado Boulder
 
-import { Path, Node } from '../../../../scenery/js/imports.js';
+import { Node, Path } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import ResetShape from '../../../../scenery-phet/js/ResetShape.js';
 
