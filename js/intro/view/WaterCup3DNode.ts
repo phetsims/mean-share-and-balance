@@ -18,9 +18,9 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
-import IntroModel from '../model/IntroModel.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -31,10 +31,12 @@ export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
   private readonly waterCup: WaterCup;
   private readonly adapterProperty: NumberProperty;
-  private readonly introModel: IntroModel;
+  private readonly tickMarksVisibleProperty: BooleanProperty;
   private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
-  public constructor( introModel: IntroModel, waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
+  public constructor( tickMarksVisibleProperty: BooleanProperty,
+                      changeWaterLevel: ( cup3DModel: WaterCup, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ) => void,
+                      waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
@@ -45,7 +47,6 @@ export default class WaterCup3DNode extends Node {
     super();
 
     this.waterCup = waterCup;
-    this.introModel = introModel;
 
     // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
     // so they don't seem disproportionately tall
@@ -64,7 +65,7 @@ export default class WaterCup3DNode extends Node {
 
     this.showTickMarksLink = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
 
-    introModel.tickMarksVisibleProperty.link( this.showTickMarksLink );
+    tickMarksVisibleProperty.link( this.showTickMarksLink );
 
     // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
@@ -82,7 +83,7 @@ export default class WaterCup3DNode extends Node {
 
     this.adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
       if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
-        introModel.changeWaterLevel( waterCup, this.adapterProperty, waterLevel, oldWaterLevel );
+        changeWaterLevel( waterCup, this.adapterProperty, waterLevel, oldWaterLevel );
       }
     } );
 
@@ -97,13 +98,15 @@ export default class WaterCup3DNode extends Node {
     this.addChild( waterCupNode );
     this.addChild( this.waterLevelTriangle );
     this.mutate( options );
+
+    this.tickMarksVisibleProperty = tickMarksVisibleProperty;
   }
 
   public override dispose(): void {
     super.dispose();
     this.waterLevelTriangle.dispose();
     this.adapterProperty.dispose();
-    this.introModel.tickMarksVisibleProperty.unlink( this.showTickMarksLink );
+    this.tickMarksVisibleProperty.unlink( this.showTickMarksLink );
     this.waterCup.resetEmitter.removeAllListeners();
   }
 }
