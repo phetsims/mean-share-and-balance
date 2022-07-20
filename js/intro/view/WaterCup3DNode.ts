@@ -39,7 +39,7 @@ export default class WaterCup3DNode extends Node {
 
     const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: waterCup.x,
+      left: waterCup.position.x,
       visibleProperty: waterCup.isActiveProperty
     }, providedOptions );
     super();

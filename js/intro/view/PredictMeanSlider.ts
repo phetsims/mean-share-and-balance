@@ -71,7 +71,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     model.numberOfCupsProperty.link( numberOfCups => {
       const active2DCups = model.getActive2DCups();
       const waterCup2D = active2DCups[ active2DCups.length - 1 ];
-      this.updateLine( waterCup2D.x + 75 );
+      this.updateLine( waterCup2D.position.x + 75 );
     } );
 
     this.setPointerAreas();

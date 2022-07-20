@@ -24,18 +24,17 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = {
-  x: number; // The cup's x-position in the view
-  y: number; // THe cup's y-position in the view
+  position: Vector2; // the cups x & y position in the view
   isActive?: boolean;
   waterHeightRange?: Range;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
 };
 
 type StateObject = {
-  x: number;
-  y: number;
+  position: Vector2;
 };
 
 export type WaterCupModelOptions =
@@ -49,8 +48,7 @@ export default class WaterCup extends PhetioObject {
   public readonly isActiveProperty: BooleanProperty;
 
   // The x and y positions for the cup in the view.
-  public readonly x: number;
-  public readonly y: number;
+  public readonly position: Vector2;
 
   // The amount of water contained in the cup. 0 is empty, and 1 is full.
   public readonly waterLevelProperty: NumberProperty;
@@ -73,8 +71,7 @@ export default class WaterCup extends PhetioObject {
     super( options );
 
     this.isActiveProperty = new BooleanProperty( options.isActive );
-    this.x = options.x;
-    this.y = options.y;
+    this.position = options.position;
     this.resetEmitter = new Emitter();
 
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
@@ -109,10 +106,10 @@ export default class WaterCup extends PhetioObject {
 WaterCup.WaterCupModelIO = new IOType<WaterCup>( 'WaterCupModelIO', {
   valueType: WaterCup,
   toStateObject: ( waterCupModel: WaterCup ) => ( {
-    x: waterCupModel.x
+    position: waterCupModel.position
   } ),
   stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.x ];
+    return [ stateObject.position ];
   },
   stateSchema: {
     x: NumberIO

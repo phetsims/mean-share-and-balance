@@ -19,6 +19,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import WaterCup from './WaterCup.js';
 import Utils from '../../../../dot/js/Utils.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptyObjectType;
 
@@ -85,19 +86,18 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
-
+      const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
       const isActive = i === 0;
       this.waterCup3DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
-        x: x,
-        y: MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y,
+        position: position3D,
         isActive: isActive
       } ) );
 
+      const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );
       this.waterCup2DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup2D${i}` ),
-        x: x,
-        y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
+        position: position2D,
         isActive: isActive,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
