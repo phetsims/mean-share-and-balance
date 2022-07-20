@@ -14,13 +14,15 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import IntroModel from '../model/IntroModel.js';
+import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import WaterCup from '../model/WaterCup.js';
 
 type SelfOptions = EmptyObjectType;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
@@ -29,10 +31,10 @@ type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable'
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
-  private readonly model: IntroModel;
   private readonly dragListener: DragListener;
 
-  public constructor( model: IntroModel, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
+  public constructor( meanPredictionProperty: NumberProperty, dragRange: Range, numberOfCupsProperty: NumberProperty,
+                      getActive2DCups: () => Array<WaterCup>, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
     const options = optionize<PredictMeanNodeOptions, SelfOptions, ParentOptions>()( {
       cursor: 'pointer',
@@ -41,8 +43,6 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     super( options );
 
-    this.model = model;
-
     this.predictMeanLine = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH + 25, 0, {
       stroke: 'purple',
       lineWidth: 2
@@ -50,12 +50,12 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanHandle = new ShadedSphereNode( 20, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
     // track predictMeanLine drag position
-    const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, model.meanPredictionProperty.value ) );
+    const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
     predictMeanPositionProperty.link( predictMeanPosition => {
-      model.meanPredictionProperty.value = model.dragRange.constrainValue( predictMeanPosition.y );
+      meanPredictionProperty.value = dragRange.constrainValue( predictMeanPosition.y );
     } );
 
-    model.meanPredictionProperty.link( prediction => {
+    meanPredictionProperty.link( prediction => {
       this.centerY = modelViewTransform.modelToViewY( prediction );
     } );
 
@@ -68,8 +68,8 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    model.numberOfCupsProperty.link( numberOfCups => {
-      const active2DCups = model.getActive2DCups();
+    numberOfCupsProperty.link( numberOfCups => {
+      const active2DCups = getActive2DCups();
       const waterCup2D = active2DCups[ active2DCups.length - 1 ];
       this.updateLine( waterCup2D.position.x + 75 );
     } );
