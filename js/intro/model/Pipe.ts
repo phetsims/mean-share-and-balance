@@ -11,26 +11,24 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
-  x: number; // the x-position of the pipe in the view
-  y: number; // the y-position of the pipe in the view
+  position: Vector2; // the x & y-position of the pipe in the view
   isOpen?: boolean;
 };
 
 type StateObject = {
-  x: number;
-  y: number;
+  position: Vector2;
 };
 
-export type PipeModelOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType'>;
+export type PipeOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType'>;
 
 export default class Pipe extends PhetioObject {
 
@@ -41,16 +39,15 @@ export default class Pipe extends PhetioObject {
   // Property tracks if the pipe's valve is in a clicked state.
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
   // The x and y positions of the pipe in the view.
-  public readonly x: number;
-  public readonly y: number;
+  public readonly position: Vector2;
 
-  public static PipeModelIO: IOType<Pipe>;
+  public static PipeIO: IOType<Pipe>;
 
-  public constructor( providedOptions?: PipeModelOptions ) {
-    const options = optionize<PipeModelOptions, SelfOptions, PhetioObjectOptions>()( {
+  public constructor( providedOptions?: PipeOptions ) {
+    const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
       tandem: Tandem.REQUIRED,
-      phetioType: Pipe.PipeModelIO
+      phetioType: Pipe.PipeIO
     }, providedOptions );
 
     super( options );
@@ -60,8 +57,7 @@ export default class Pipe extends PhetioObject {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );
 
-    this.x = options.x;
-    this.y = options.y;
+    this.position = options.position;
 
     this.isActiveProperty.lazyLink( isActive => !isActive && this.reset() );
   }
@@ -77,17 +73,15 @@ export default class Pipe extends PhetioObject {
   }
 }
 
-Pipe.PipeModelIO = new IOType<Pipe>( 'PipeModelIO', {
+Pipe.PipeIO = new IOType<Pipe>( 'PipeIO', {
   valueType: Pipe,
-  toStateObject: ( pipeModel: Pipe ) => ( {
-    x: pipeModel.x
+  toStateObject: ( pipe: Pipe ) => ( {
+    position: pipe.position
   } ),
   stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.x ];
+    return [ stateObject.position ];
   },
-  stateSchema: {
-    x: NumberIO
-  }
+  stateSchema: {}
 } );
 
 meanShareAndBalance.register( 'Pipe', Pipe );

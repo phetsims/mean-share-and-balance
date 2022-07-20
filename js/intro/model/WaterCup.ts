@@ -22,7 +22,6 @@ import Property from '../../../../axon/js/Property.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 
@@ -111,9 +110,7 @@ WaterCup.WaterCupModelIO = new IOType<WaterCup>( 'WaterCupModelIO', {
   stateToArgsForConstructor: ( stateObject: StateObject ) => {
     return [ stateObject.position ];
   },
-  stateSchema: {
-    x: NumberIO
-  }
+  stateSchema: {}
 } );
 
 meanShareAndBalance.register( 'WaterCup', WaterCup );

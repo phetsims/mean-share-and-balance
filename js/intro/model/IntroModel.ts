@@ -106,8 +106,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
         this.pipeArray.push( new Pipe( {
-          x: x,
-          y: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y,
+          position: position2D,
           isOpen: false,
           tandem: options.tandem.createTandem( `pipe${i}` )
         } ) );

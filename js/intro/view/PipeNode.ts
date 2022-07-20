@@ -162,7 +162,7 @@ export default class PipeNode extends Node {
     this.addChild( this.valveNode );
 
     // Set position related to associated cup
-    this.x = pipe.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
+    this.x = pipe.position.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
     this.y = modelViewTransform.modelToViewY( 0 ) - PIPE_WIDTH;
   }
 
