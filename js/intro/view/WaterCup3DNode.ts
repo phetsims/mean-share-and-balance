@@ -13,7 +13,7 @@ import WaterCup from '../model/WaterCup.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
@@ -22,7 +22,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 
 //REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
 type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;

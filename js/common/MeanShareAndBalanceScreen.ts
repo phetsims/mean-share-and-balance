@@ -9,7 +9,7 @@
 
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import optionize from '../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
@@ -17,7 +17,7 @@ import MeanShareAndBalanceModel from './model/MeanShareAndBalanceModel.js';
 import MeanShareAndBalanceScreenView from './view/MeanShareAndBalanceScreenView.js';
 import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 
 type MeanShareAndBalanceScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem' | 'keyboardHelpNode'>;
 

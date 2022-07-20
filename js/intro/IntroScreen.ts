@@ -9,7 +9,7 @@
 
 import { ScreenOptions } from '../../../joist/js/Screen.js';
 import optionize from '../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import IntroModel from './model/IntroModel.js';
 import IntroScreenView from './view/IntroScreenView.js';
@@ -18,7 +18,7 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceScreen from '../common/MeanShareAndBalanceScreen.js';
 import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 
 type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 

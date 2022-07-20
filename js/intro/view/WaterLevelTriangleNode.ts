@@ -13,7 +13,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -22,7 +22,7 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled' | 'cursor'>;
 
 export default class WaterLevelTriangleNode extends Node {

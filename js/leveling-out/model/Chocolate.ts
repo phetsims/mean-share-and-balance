@@ -15,7 +15,7 @@ import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioO
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 
@@ -40,7 +40,7 @@ export default class Chocolate extends PhetioObject {
   public static ChocolateIO: IOType<Chocolate>;
 
   public constructor( providedOptions: ChocolateOptions ) {
-    const options = optionize<ChocolateOptions, EmptyObjectType, PhetioObjectOptions>()( {
+    const options = optionize<ChocolateOptions, EmptySelfOptions, PhetioObjectOptions>()( {
       phetioType: Chocolate.ChocolateIO
     }, providedOptions );
     super( options );

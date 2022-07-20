@@ -10,7 +10,7 @@
 import MeanShareAndBalanceScreen from '../common/MeanShareAndBalanceScreen.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
-import EmptyObjectType from '../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import { ScreenOptions } from '../../../joist/js/Screen.js';
 import optionize from '../../../phet-core/js/optionize.js';
@@ -18,7 +18,7 @@ import LevelingOutModel from './model/LevelingOutModel.js';
 import LevelingOutScreenView from './view/LevelingOutScreenView.js';
 import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 

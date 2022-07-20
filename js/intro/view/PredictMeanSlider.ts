@@ -16,7 +16,7 @@ import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -24,7 +24,7 @@ import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCup from '../model/WaterCup.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>;
 

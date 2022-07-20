@@ -11,7 +11,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { FireListener, LinearGradient, Node, NodeOptions, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
@@ -21,7 +21,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 
 type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement'>;
 

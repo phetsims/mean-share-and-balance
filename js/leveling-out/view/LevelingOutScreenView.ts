@@ -8,7 +8,7 @@
  */
 
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
@@ -19,7 +19,7 @@ import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 
 type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 

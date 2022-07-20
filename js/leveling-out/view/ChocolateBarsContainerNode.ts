@@ -9,7 +9,7 @@
 
 
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
@@ -21,7 +21,7 @@ type ChocolateBarsContainerNodeOptions = StrictOmit<NodeOptions, 'x' | 'y' | 'le
 
 export default class ChocolateBarsContainerNode extends Node {
   public constructor( chocolateModel: Chocolate, providedOptions?: ChocolateBarsContainerNodeOptions ) {
-    const options = optionize<ChocolateBarsContainerNodeOptions, EmptyObjectType, NodeOptions>()( {
+    const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: chocolateModel.x,
       y: chocolateModel.y
     }, providedOptions );

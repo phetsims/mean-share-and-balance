@@ -8,7 +8,7 @@
  */
 
 import optionize from '../../../../phet-core/js/optionize.js';
-import EmptyObjectType from '../../../../phet-core/js/types/EmptyObjectType.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceModel, { MeanShareAndBalanceModelOptions } from '../../common/model/MeanShareAndBalanceModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
@@ -18,7 +18,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Chocolate from './Chocolate.js';
 
-type SelfOptions = EmptyObjectType;
+type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
