@@ -96,7 +96,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     //Predict Mean Line that acts as a slider for alternative input.
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
-      model.numberOfCupsProperty, model.getActive2DCups,
+      model.numberOfCupsProperty, () => model.getActive2DCups(),
       modelViewTransform2DCups, {
         visibleProperty: model.predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
@@ -128,15 +128,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
       // TODO: Better way of matching indices or tandems?
       const index = model.waterCup2DArray.indexOf( cupModel );
-      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.tickMarksVisibleProperty, model.meanVisibleProperty,
-        { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
+      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.tickMarksVisibleProperty,
+        model.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
     } );
 
     model.waterCup3DArray.forEach( cupModel => {
       const index = model.waterCup3DArray.indexOf( cupModel );
-      const cupNode = new WaterCup3DNode( model.tickMarksVisibleProperty, model.changeWaterLevel, cupModel, modelViewTransform3DCups,
+      const cupNode = new WaterCup3DNode( model.tickMarksVisibleProperty, model.changeWaterLevel.bind( model ), cupModel, modelViewTransform3DCups,
         { tandem: options.tandem.createTandem( `waterCup3DNode${index}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();

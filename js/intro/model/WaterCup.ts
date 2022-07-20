@@ -24,6 +24,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import IEmitter from '../../../../axon/js/IEmitter.js';
 
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
@@ -53,7 +54,7 @@ export default class WaterCup extends PhetioObject {
   public readonly waterLevelProperty: NumberProperty;
 
   // Emits when reset is called
-  public readonly resetEmitter: Emitter;
+  public readonly resetEmitter: IEmitter;
 
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;

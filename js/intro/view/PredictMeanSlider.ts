@@ -68,7 +68,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    numberOfCupsProperty.link( numberOfCups => {
+    numberOfCupsProperty.lazyLink( numberOfCups => {
       const active2DCups = getActive2DCups();
       const waterCup2D = active2DCups[ active2DCups.length - 1 ];
       this.updateLine( waterCup2D.position.x + 75 );
