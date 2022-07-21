@@ -86,7 +86,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
-      const waterLevel = i === 0 ? 0.8 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
+      const waterLevel = i === 0 ? 0.75 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
       this.waterCup3DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
         waterLevel: waterLevel,

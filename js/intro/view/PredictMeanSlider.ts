@@ -47,7 +47,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       stroke: 'purple',
       lineWidth: 2
     } );
-    this.predictMeanHandle = new ShadedSphereNode( 20, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
+    this.predictMeanHandle = new ShadedSphereNode( 15, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
     // track predictMeanLine drag position
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
@@ -71,7 +71,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     numberOfCupsProperty.link( numberOfCups => {
       const active2DCups = getActive2DCups();
       const waterCup2D = active2DCups[ active2DCups.length - 1 ];
-      this.updateLine( waterCup2D.position.x + 80 );
+      this.updateLine( waterCup2D.position.x + 92.5 );
     } );
 
     this.setPointerAreas();

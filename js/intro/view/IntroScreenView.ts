@@ -120,7 +120,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
-      predictMeanSlider.x = waterCupLayerNode.x;
+      predictMeanSlider.x = waterCupLayerNode.x - 12.5;
     };
 
     // add all cup nodes to the view
