@@ -43,7 +43,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     super( options );
 
-    this.predictMeanLine = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH + 25, 0, {
+    this.predictMeanLine = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 0, {
       stroke: 'purple',
       lineWidth: 2
     } );
@@ -68,10 +68,10 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( this.dragListener );
 
     // Update line length and dilation based on water cups
-    numberOfCupsProperty.lazyLink( numberOfCups => {
+    numberOfCupsProperty.link( numberOfCups => {
       const active2DCups = getActive2DCups();
       const waterCup2D = active2DCups[ active2DCups.length - 1 ];
-      this.updateLine( waterCup2D.position.x + 75 );
+      this.updateLine( waterCup2D.position.x + 80 );
     } );
 
     this.setPointerAreas();
