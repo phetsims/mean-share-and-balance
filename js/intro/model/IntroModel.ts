@@ -86,18 +86,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
-      const isActive = i === 0;
+      const waterLevel = i === 0 ? 0.8 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
       this.waterCup3DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
+        waterLevel: waterLevel,
         position: position3D,
-        isActive: isActive
+        isActive: i <= 1
       } ) );
 
       const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );
       this.waterCup2DArray.push( new WaterCup( {
         tandem: options.tandem.createTandem( `waterCup2D${i}` ),
+        waterLevel: waterLevel,
         position: position2D,
-        isActive: isActive,
+        isActive: i <= 1,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
         }
@@ -107,6 +109,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         this.pipeArray.push( new Pipe( {
           position: position2D,
           isOpen: false,
+          isActive: i === 0,
           tandem: options.tandem.createTandem( `pipe${i}` )
         } ) );
       }
@@ -297,12 +300,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
 
-    this.pipeArray.forEach( pipe => pipe.isActiveProperty.set( false ) );
+    this.pipeArray.forEach( pipe => pipe.reset() );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
-
-    this.waterCup3DArray[ 0 ].isActiveProperty.set( true );
-    this.waterCup2DArray[ 0 ].isActiveProperty.set( true );
 
     this.meanProperty.reset();
 

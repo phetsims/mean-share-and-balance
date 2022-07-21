@@ -22,6 +22,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 type SelfOptions = {
   position: Vector2; // the x & y-position of the pipe in the view
   isOpen?: boolean;
+  isActive?: boolean;
 };
 
 type StateObject = {
@@ -46,13 +47,14 @@ export default class Pipe extends PhetioObject {
   public constructor( providedOptions?: PipeOptions ) {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
+      isActive: false,
       tandem: Tandem.REQUIRED,
       phetioType: Pipe.PipeIO
     }, providedOptions );
 
     super( options );
 
-    this.isActiveProperty = new BooleanProperty( false );
+    this.isActiveProperty = new BooleanProperty( options.isActive );
     this.isOpenProperty = new BooleanProperty( options.isOpen, {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
     } );
@@ -64,6 +66,7 @@ export default class Pipe extends PhetioObject {
 
   public reset(): void {
     this.isOpenProperty.reset();
+    this.isActiveProperty.reset();
   }
 
   public override dispose(): void {
