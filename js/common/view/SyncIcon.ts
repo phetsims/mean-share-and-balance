@@ -1,29 +1,27 @@
 // Copyright 2022, University of Colorado Boulder
 
-import { Node, Path } from '../../../../scenery/js/imports.js';
+import { Node } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import ResetShape from '../../../../scenery-phet/js/ResetShape.js';
+import LineArrowNode from '../../../../scenery-phet/js/LineArrowNode.js';
 
 /**
- * Draws sync icon
- * Sync icon takes the form of two curved arrows pointing at each other's tail. The curved arrows split the bottom
- * and top half of a circle and the arrows point in a counter-clockwise direction.
+ * Sync icon takes the form of two side-by-side straight arrows, one pointing down and the other pointing up.
+ * Arrows are a wireframe style with rounded caps and joins.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
+const ARROW_LENGTH = 30;
+const ARROW_SPACING = 15;
+
 export default class SyncIcon extends Node {
-  public constructor( radius: number ) {
-    super();
-    const bottomArrowShape = new ResetShape( radius, { startAngle: Math.PI * 0.9, endAngle: -2 * Math.PI * 0.45 } );
-    const topArrowShape = new ResetShape( radius, { startAngle: Math.PI * -0.09, endAngle: -2 * Math.PI * 0.45 } );
+  public constructor() {
+    const arrowOptions = { headLineWidth: 5, tailLineWidth: 5, headWidth: 12.9, headHeight: 6.88, lineJoin: 'round', lineCap: 'round' } as const;
+    const downArrow = new LineArrowNode( 0, 0, 0, ARROW_LENGTH, arrowOptions );
+    const upArrow = new LineArrowNode( ARROW_SPACING, ARROW_LENGTH, ARROW_SPACING, 0, arrowOptions );
 
-    const bottomArrow = new Path( bottomArrowShape, { fill: 'black' } );
-    const topArrow = new Path( topArrowShape, { fill: 'black' } );
-
-    this.addChild( bottomArrow );
-    this.addChild( topArrow );
+    super( { children: [ downArrow, upArrow ], scale: 0.5 } );
   }
 }
 meanShareAndBalance.register( 'SyncIcon', SyncIcon );

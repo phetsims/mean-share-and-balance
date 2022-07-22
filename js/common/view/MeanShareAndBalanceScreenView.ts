@@ -53,16 +53,15 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    const syncRadius = 15;
-    const syncIcon = new SyncIcon( syncRadius );
+    const syncIcon = new SyncIcon();
     const syncContent = new Node( {
       children: [
         syncIcon,
         new Text( meanShareAndBalanceStrings.sync, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
-          fontSize: 12,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncRadius
+          fontSize: 15,
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncIcon.width
         } )
       ]
     } );
