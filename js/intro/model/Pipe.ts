@@ -61,7 +61,7 @@ export default class Pipe extends PhetioObject {
 
     this.position = options.position;
 
-    this.isActiveProperty.lazyLink( isActive => !isActive && this.reset() );
+    this.isActiveProperty.lazyLink( () => this.isOpenProperty.reset() );
   }
 
   public reset(): void {

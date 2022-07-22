@@ -88,12 +88,19 @@ export default class WaterCup extends PhetioObject {
       // which in turn can change the adapterProperty again.
       reentrant: true
     }, options.waterLevelPropertyOptions ) );
+
+    this.isActiveProperty.lazyLink( isActive => this.partialReset() );
+  }
+
+  // these properties are the only ones that should be reset when a cup is no longer active
+  private partialReset(): void {
+    this.enabledRangeProperty.reset();
+    this.waterLevelProperty.reset();
   }
 
   public reset(): void {
+    this.partialReset();
     this.resetEmitter.emit();
-    this.enabledRangeProperty.reset();
-    this.waterLevelProperty.reset();
     this.isActiveProperty.reset();
   }
 
