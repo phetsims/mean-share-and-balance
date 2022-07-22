@@ -69,7 +69,7 @@ export default class WaterCup3DNode extends Node {
     // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
     // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
-    this.adapterProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
+    this.adapterProperty = new NumberProperty( waterCup.waterLevelProperty.value, {
       range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
 
       // When the slider is changed it triggers a value change in the adapter property
