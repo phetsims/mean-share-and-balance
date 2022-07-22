@@ -139,7 +139,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   private getNumberOfActiveCups(): number {
-    return this.getActive3DCups().length;
+    const numberOf3DCups = this.getActive3DCups().length;
+    const numberOf2DCups = this.getActive2DCups().length;
+
+    assert && assert( numberOf3DCups === numberOf2DCups, `Number of cups should be equal. 2D cups: ${numberOf2DCups} 3D cups: ${numberOf3DCups}` );
+    return numberOf3DCups;
   }
 
   public getActive3DCups(): Array<WaterCup> {
@@ -287,10 +291,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   private assertConsistentState(): void {
     const numberOfCups = this.numberOfCupsProperty.value;
-    // TODO: only asserts 3D enabled cups
     assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
     assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
-    // assert && assert( this.waterCup3DGroup.count - 1 === this.pipeGroup.count, `The length of pipes is: ${this.pipeGroup.count}, but should be one less the length of water cups or: ${this.waterCup3DGroup.count - 1}.` );
+    assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
   }
 
   public reset(): void {
@@ -305,7 +308,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
 
     this.meanProperty.reset();
-
 
     this.assertConsistentState();
   }
@@ -359,8 +361,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
     this.updateMeanFrom3DCups();
 
-    const total2DWater = _.sum( this.getActive2DCups().map( cup => cup.waterLevelProperty.value ) );
-    const total3DWater = _.sum( this.getActive3DCups().map( cup => cup.waterLevelProperty.value ) );
+    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
+    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
     const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
     assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
