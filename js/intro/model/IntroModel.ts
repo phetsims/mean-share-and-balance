@@ -70,15 +70,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: this.numberOfCupsRange
     } );
 
-    // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
-    // the number of cups varies
-    this.meanProperty = new NumberProperty( MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT, {
-      tandem: options.tandem.createTandem( 'meanProperty' ),
-      phetioDocumentation: 'The ground truth water level mean.',
-      phetioReadOnly: true,
-      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
-    } );
-
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DArray = [];
     this.waterCup2DArray = [];
@@ -115,6 +106,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         } ) );
       }
     }
+
+    // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
+    // the number of cups varies
+    this.meanProperty = new NumberProperty( calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) ), {
+      tandem: options.tandem.createTandem( 'meanProperty' ),
+      phetioDocumentation: 'The ground truth water level mean.',
+      phetioReadOnly: true,
+      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
+    } );
 
     // add/remove water cups and pipes according to number spinner
     const numberOfCupsListener = ( numberOfCups: number ) => {
