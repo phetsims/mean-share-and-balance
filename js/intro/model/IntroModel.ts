@@ -42,6 +42,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];
   public readonly pipeArray: Pipe[];
+  private isResetting = false;
 
   public constructor( providedOptions?: IntroModelOptions ) {
 
@@ -297,6 +298,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   public reset(): void {
+
+    // Short circuit changeWaterLevel during reset.
+    this.isResetting = true;
+
     this.predictMeanVisibleProperty.reset();
     this.meanVisibleProperty.reset();
     this.tickMarksVisibleProperty.reset();
@@ -306,8 +311,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.pipeArray.forEach( pipe => pipe.reset() );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
-
     this.meanProperty.reset();
+
+    this.isResetting = false;
 
     this.assertConsistentState();
   }
@@ -332,6 +338,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param oldWaterLevel - The previous waterLevel
    */
   public changeWaterLevel( cup3DModel: WaterCup, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
+
+    // During reset we only want to specify the exact values of the adapterProperty and waterLevelProperties.
+    // We do not want to compensate with waterLevel deltas.
+    if ( this.isResetting ) {
+      return;
+    }
+
     assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
 
