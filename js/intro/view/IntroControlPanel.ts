@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO
+ * Control panel for the intro screen that contains a checkbox group with visibility toggling for: predictMean, mean, and tickMarks
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
