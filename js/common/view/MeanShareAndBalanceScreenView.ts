@@ -15,13 +15,12 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { AlignBox, GridBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
-import SyncIcon from './SyncIcon.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import SyncButton from './SyncButton.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -30,12 +29,11 @@ export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<Sc
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
   // Syncs the two representations on each screen. ie. in intro, syncs the 3D and 2D cups.
-  public readonly syncRepresentationsButton: RectangularPushButton;
   public readonly controlsVBox: VBox;
   public readonly numberSpinnerVBox: VBox;
   public readonly questionBar: QuestionBar;
-
   private readonly controlsAlignBox: AlignBox;
+  public readonly syncButton: SyncButton;
 
   protected constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
@@ -44,7 +42,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     // TODO: Can QuestionBar be built in a way that allows changing barFill and labelText after construction?
     // see: https://github.com/phetsims/scenery-phet/issues/751
-     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
+    this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       tandem: options.tandem.createTandem( 'questionBar' ),
       labelText: meanShareAndBalanceStrings.introQuestion,
       barFill: MeanShareAndBalanceColors.questionBarColorProperty
@@ -53,31 +51,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    const syncIcon = new SyncIcon();
-    const syncContent = new Node( {
-      children: [
-        syncIcon,
-        new Text( meanShareAndBalanceStrings.sync, {
-          left: syncIcon.right + 5,
-          centerY: syncIcon.centerY,
-          fontSize: 15,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncIcon.width
-        } )
-      ]
-    } );
-
-    this.syncRepresentationsButton = new RectangularPushButton( {
-      listener: () => {
-        this.interruptSubtreeInput(); // cancel interactions that may be in progress
-        model.syncData();
-      },
-      content: syncContent,
-      accessibleName: meanShareAndBalanceStrings.sync,
-      right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
-      baseColor: 'white',
-      tandem: options.tandem.createTandem( 'syncRepresentationsButton' ),
-      layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
-    } );
+    this.syncButton = new SyncButton( model, this.layoutBounds, options.tandem );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
@@ -105,7 +79,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const controlsGridBox = new GridBox( {
       children: [
         this.controlsVBox,
-        this.syncRepresentationsButton,
+        this.syncButton,
         this.numberSpinnerVBox
       ],
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,

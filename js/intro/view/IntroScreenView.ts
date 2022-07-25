@@ -134,7 +134,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       numberOfCupsNumberSpinner,
       controlPanel,
       predictMeanSlider,
-      this.syncRepresentationsButton
+      this.syncButton
     ];
 
     this.pdomControlAreaNode.pdomOrder = [
