@@ -12,7 +12,6 @@ import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import meanShareAndBalanceStrings from './meanShareAndBalanceStrings.js';
 import IntroScreen from './intro/IntroScreen.js';
-import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
 
 const meanShareAndBalanceTitleString = meanShareAndBalanceStrings[ 'mean-share-and-balance' ].title;
 
@@ -35,8 +34,7 @@ const simOptions: SimOptions = {
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
   const sim = new Sim( meanShareAndBalanceTitleString, [
-    new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } ),
-    new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } )
+    new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } )
   ], simOptions );
   sim.start();
 } );
