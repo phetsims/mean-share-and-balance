@@ -7,7 +7,6 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { Color, Node, Text } from '../../../../scenery/js/imports.js';
@@ -24,6 +23,7 @@ import PipeNode from './PipeNode.js';
 import WaterCup3DNode from './WaterCup3DNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import IntroControlPanel from './IntroControlPanel.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -41,42 +41,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, {
-      fontSize: 15,
-      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
-    } );
-    const meanText = new Text( meanShareAndBalanceStrings.mean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
     this.visibleProperty.link( visible => visible && MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#2496D6' ) ) );
-
-    // Checkbox Group
-    const introOptionsCheckboxGroupTandem = options.tandem.createTandem( 'introOptionsCheckboxGroup' );
-    const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
-        node: predictMeanText,
-        property: model.predictMeanVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.predictMean }
-      }, {
-        node: meanText,
-        property: model.meanVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.mean }
-      }, {
-        node: tickMarksText,
-        property: model.tickMarksVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
-      } ], {
-
-        checkboxOptions: {
-          boxWidth: 16
-        }
-      }
-    );
 
     //Number Picker
     const numberOfCupsNumberSpinner = new NumberSpinner(
@@ -153,17 +122,18 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.numberOfCupsProperty.link( centerWaterCupLayerNode );
 
     // Configure layout
-    this.controlsVBox.addChild( introOptionsCheckboxGroup );
+    const controlPanel = new IntroControlPanel( model, options.tandem );
+    this.controlsVBox.addChild( controlPanel );
     this.numberSpinnerVBox.children = [ numberOfCupsText, numberOfCupsNumberSpinner ];
 
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanSlider );
 
     this.pdomPlayAreaNode.pdomOrder = [
-      introOptionsCheckboxGroup,
-      predictMeanSlider,
-      numberOfCupsNumberSpinner,
       waterCupLayerNode,
+      numberOfCupsNumberSpinner,
+      controlPanel,
+      predictMeanSlider,
       this.syncRepresentationsButton
     ];
 
