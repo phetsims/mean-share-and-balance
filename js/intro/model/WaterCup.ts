@@ -96,11 +96,11 @@ export default class WaterCup extends PhetioObject {
   private partialReset(): void {
     this.enabledRangeProperty.reset();
     this.waterLevelProperty.reset();
+    this.resetEmitter.emit();
   }
 
   public reset(): void {
     this.partialReset();
-    this.resetEmitter.emit();
     this.isActiveProperty.reset();
   }
 
