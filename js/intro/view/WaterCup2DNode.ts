@@ -30,7 +30,7 @@ export default class WaterCup2DNode extends Node {
   private readonly meanLink: PropertyLinkListener<number>;
   private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCup: WaterCup;
-  private readonly tickMarks: WaterCup2DTickMarksNode;
+  private readonly tickMarks: Node;
   private readonly meanLine: Line;
 
   public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: IReadOnlyProperty<number>,

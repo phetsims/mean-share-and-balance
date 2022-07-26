@@ -19,12 +19,13 @@ import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
+import Slider from '../../../../sun/js/Slider.js';
 
 type SelfOptions = EmptySelfOptions;
 type WaterLevelTriangleNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'pickable' | 'inputEnabled' | 'cursor'>;
 
 export default class WaterLevelTriangleNode extends Node {
-  private readonly slider: VSlider;
+  private readonly slider: Slider;
 
   //REVIEW why is waterLevelProperty not Property<number>, as in VSlider?
   //REVIEW why is enabledRangeProperty not IReadOnlyProperty<Range>, as in VSlider trait AccessibleValueHandler?

@@ -11,6 +11,7 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -34,9 +35,9 @@ export type PipeOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioT
 export default class Pipe extends PhetioObject {
 
   // Whether pipe is enabled in view and data calculations
-  public readonly isActiveProperty: BooleanProperty;
+  public readonly isActiveProperty: Property<boolean>;
   // Property tracks whether pipe's valve is open or not.
-  public readonly isOpenProperty: BooleanProperty;
+  public readonly isOpenProperty: Property<boolean>;
   // Property tracks if the pipe's valve is in a clicked state.
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
   // The x and y positions of the pipe in the view.
