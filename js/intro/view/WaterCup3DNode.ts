@@ -27,7 +27,7 @@ type SelfOptions = EmptySelfOptions;
 type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;
 
 export default class WaterCup3DNode extends Node {
-  private readonly waterLevelTriangle: WaterLevelTriangleNode;
+  private readonly waterLevelTriangle: Node;
   private readonly waterCup: WaterCup;
   private readonly adapterProperty: Property<number>;
   private readonly tickMarksVisibleProperty: Property<boolean>;
