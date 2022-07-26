@@ -1,5 +1,5 @@
 {
-  "comment": "# mean-share-and-balance 1.0.0-dev.5 Mon Jul 25 2022 09:18:22 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# mean-share-and-balance 1.0.0-dev.6 Tue Jul 26 2022 12:07:54 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "c13a8c7741d95fbd8e37619c66ebcca8686dffe7",
     "branch": "master"
@@ -13,7 +13,7 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "95d5d999809cdbfef7bf4a81f90d188fe0347088",
+    "sha": "9777ede7578b2cea64bcdeb7df5245f110580fc2",
     "branch": "master"
   },
   "dot": {
@@ -21,7 +21,7 @@
     "branch": "master"
   },
   "joist": {
-    "sha": "7b717a468e5e51c297aef7e8629e6e50d8c2ce83",
+    "sha": "efd4e738f4505a6f9e7d98c141a235eb5208c0f6",
     "branch": "master"
   },
   "kite": {
@@ -29,11 +29,11 @@
     "branch": "master"
   },
   "mean-share-and-balance": {
-    "sha": "9791b78c5e623c76b31f9ee4618365d6b49e2331",
+    "sha": "7ab3abb568ac787bf68bd1d5d0fef5b075037488",
     "branch": "master"
   },
   "perennial-alias": {
-    "sha": "0fce7e00373cc691a07f02f55ddec7c2867e4b5d",
+    "sha": "9dc4a76e521ae95a14d6695353cca803fd075363",
     "branch": "master"
   },
   "phet-core": {
@@ -45,11 +45,11 @@
     "branch": "master"
   },
   "phet-io-sim-specific": {
-    "sha": "fad265ebd249fabdbf787adc7eba4a9ba2ad8598",
+    "sha": "f34204b747540a0cf482aa9dacc2cb71c74672eb",
     "branch": "master"
   },
   "phet-io-wrappers": {
-    "sha": "6f79eecc22cba21d35df38ab05e98d354851262c",
+    "sha": "ff31029bbb59d7b377cde5460ebda0b952e6e5ba",
     "branch": "master"
   },
   "phetcommon": {
@@ -65,11 +65,11 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "a9e2e7516b3e0932fb8cdaeb80ab202647c9cdae",
+    "sha": "ad0b89f48b84468019689f97fe4730d70b6bd6ad",
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "f8a7916f67d4c01f6f58b63f16ca6cae4151011b",
+    "sha": "b04932ae4e2328cdb462775eb02b1ced2abd0bab",
     "branch": "master"
   },
   "sherpa": {
@@ -81,7 +81,7 @@
     "branch": "master"
   },
   "sun": {
-    "sha": "dd9a4b974f7f36a8ee57564351c033ae799e2ba7",
+    "sha": "cef8ae9aba5feb40f9eaddf14060a32234e30d52",
     "branch": "master"
   },
   "tambo": {
@@ -97,7 +97,7 @@
     "branch": "master"
   },
   "utterance-queue": {
-    "sha": "3ce11a01d3530686ca4b16348295288e48d209fa",
+    "sha": "03e6296bb7dbe1e0f738d8a81ff30e982343bc2c",
     "branch": "master"
   }
 }
