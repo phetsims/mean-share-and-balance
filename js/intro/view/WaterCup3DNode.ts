@@ -29,12 +29,12 @@ type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | '
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
   private readonly waterCup: WaterCup;
-  private readonly adapterProperty: NumberProperty;
+  private readonly adapterProperty: Property<number>;
   private readonly tickMarksVisibleProperty: Property<boolean>;
   private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
-                      changeWaterLevel: ( cup3DModel: WaterCup, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ) => void,
+                      changeWaterLevel: ( cup3DModel: WaterCup, adapterProperty: Property<number>, waterLevel: number, oldWaterLevel: number ) => void,
                       waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {
 

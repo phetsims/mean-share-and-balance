@@ -13,7 +13,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import VSlider from '../../../../sun/js/VSlider.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
@@ -29,7 +28,7 @@ export default class WaterLevelTriangleNode extends Node {
 
   //REVIEW why is waterLevelProperty not Property<number>, as in VSlider?
   //REVIEW why is enabledRangeProperty not IReadOnlyProperty<Range>, as in VSlider trait AccessibleValueHandler?
-  public constructor( waterLevelProperty: NumberProperty, enabledRangeProperty: Property<Range>, height: number,
+  public constructor( waterLevelProperty: Property<number>, enabledRangeProperty: Property<Range>, height: number,
                       providedOptions?: WaterLevelTriangleNodeOptions ) {
     const options = optionize<WaterLevelTriangleNodeOptions, SelfOptions, NodeOptions>()( {
         cursor: 'pointer'

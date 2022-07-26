@@ -15,13 +15,11 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCup from '../model/WaterCup.js';
 import Property from '../../../../axon/js/Property.js';
 
@@ -34,7 +32,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanHandle: Circle;
   private readonly dragListener: DragListener;
 
-  public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: NumberProperty,
+  public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: Property<number>,
                       getActive2DCups: () => Array<WaterCup>, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
     const options = optionize<PredictMeanNodeOptions, SelfOptions, ParentOptions>()( {

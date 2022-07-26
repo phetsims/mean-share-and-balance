@@ -38,7 +38,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly meanVisibleProperty: Property<boolean>;
   public readonly tickMarksVisibleProperty: Property<boolean>;
 
-  public readonly numberOfCupsProperty: NumberProperty;
+  public readonly numberOfCupsProperty: Property<number>;
   public readonly meanPredictionProperty: Property<number>;
   public readonly meanProperty: IReadOnlyProperty<number>;
 
@@ -321,7 +321,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param range - the allowed waterLevelProperty range in each cup
    * @param waterLevelProperty - The property tracking the water level in each cup's model.
    */
-  private static constrainDelta( delta: number, range: Range, waterLevelProperty: NumberProperty ): number {
+  private static constrainDelta( delta: number, range: Range, waterLevelProperty: Property<number> ): number {
     const newWaterLevel = waterLevelProperty.value + delta;
     const constrainedWaterLevel = range.constrainValue( newWaterLevel );
     return constrainedWaterLevel - waterLevelProperty.value;
@@ -334,7 +334,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param waterLevel - The current waterLevel
    * @param oldWaterLevel - The previous waterLevel
    */
-  public changeWaterLevel( cup3DModel: WaterCup, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ): void {
+  public changeWaterLevel( cup3DModel: WaterCup, adapterProperty: Property<number>, waterLevel: number, oldWaterLevel: number ): void {
 
     // During reset we only want to specify the exact values of the adapterProperty and waterLevelProperties.
     // We do not want to compensate with waterLevel deltas.

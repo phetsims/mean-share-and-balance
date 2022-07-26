@@ -46,7 +46,7 @@ export type WaterCupModelOptions =
 export default class WaterCup extends PhetioObject {
 
   // Whether the cup is enabled in view and data calculations
-  public readonly isActiveProperty: BooleanProperty;
+  public readonly isActiveProperty: Property<boolean>;
 
   // The x and y positions for the cup in the view.
   public readonly position: Vector2;
