@@ -19,6 +19,9 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import WaterCup from './WaterCup.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import IReadOnlyProperty from '../../../../axon/js/IReadOnlyProperty.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -31,13 +34,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly dragRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
   public readonly cupRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
 
-  public readonly predictMeanVisibleProperty: BooleanProperty;
-  public readonly meanVisibleProperty: BooleanProperty;
-  public readonly tickMarksVisibleProperty: BooleanProperty;
-  // Property that tracks whether auto-share is enabled or not.
+  public readonly predictMeanVisibleProperty: Property<boolean>;
+  public readonly meanVisibleProperty: Property<boolean>;
+  public readonly tickMarksVisibleProperty: Property<boolean>;
+
   public readonly numberOfCupsProperty: NumberProperty;
-  public readonly meanPredictionProperty: NumberProperty;
-  public readonly meanProperty: NumberProperty;
+  public readonly meanPredictionProperty: Property<number>;
+  public readonly meanProperty: IReadOnlyProperty<number>;
 
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];
@@ -109,12 +112,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
     // the number of cups varies
-    this.meanProperty = new NumberProperty( calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) ), {
-      tandem: options.tandem.createTandem( 'meanProperty' ),
-      phetioDocumentation: 'The ground truth water level mean.',
-      phetioReadOnly: true,
-      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
-    } );
+    // @ts-ignore - .map() does not preserve a property of .length required for DerivedProperty
+    this.meanProperty = new DerivedProperty( this.waterCup3DArray.map( waterCup => waterCup.waterLevelProperty ),
+      () => calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) ),
+      {
+        tandem: options.tandem.createTandem( 'meanProperty' ),
+        phetioDocumentation: 'The ground truth water level mean.',
+        phetioReadOnly: true,
+        range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
+      } );
 
     // add/remove water cups and pipes according to number spinner
     const numberOfCupsListener = ( numberOfCups: number ) => {
@@ -124,7 +130,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       this.pipeArray.forEach( ( pipe, i ) => pipe.isActiveProperty.set( i < numberOfCups - 1 ) );
 
       this.matchCupWaterLevels();
-      this.updateMeanFrom3DCups();
       this.assertConsistentState();
     };
 
@@ -157,13 +162,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public getActivePipes(): Array<Pipe> {
     return this.pipeArray.filter( pipe => pipe.isActiveProperty.value );
-  }
-
-  /**
-   * The 3D cups define the ground truth of the amount of water, this updates the mean from those values.
-   */
-  private updateMeanFrom3DCups(): void {
-    this.meanProperty.set( calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) ) );
   }
 
   /**
@@ -311,7 +309,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.pipeArray.forEach( pipe => pipe.reset() );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
-    this.meanProperty.reset();
 
     this.isResetting = false;
 
@@ -372,7 +369,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // Constrain range based on remaining space in cups.
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
-    this.updateMeanFrom3DCups();
 
     const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
     const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );

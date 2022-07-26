@@ -19,7 +19,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -30,10 +30,10 @@ export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: WaterLevelTriangleNode;
   private readonly waterCup: WaterCup;
   private readonly adapterProperty: NumberProperty;
-  private readonly tickMarksVisibleProperty: BooleanProperty;
+  private readonly tickMarksVisibleProperty: Property<boolean>;
   private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
 
-  public constructor( tickMarksVisibleProperty: BooleanProperty,
+  public constructor( tickMarksVisibleProperty: Property<boolean>,
                       changeWaterLevel: ( cup3DModel: WaterCup, adapterProperty: NumberProperty, waterLevel: number, oldWaterLevel: number ) => void,
                       waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {

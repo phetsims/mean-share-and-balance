@@ -10,16 +10,15 @@
 import Utils from '../../../../dot/js/Utils.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { Line, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCup from '../model/WaterCup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DTickMarksNode from './WaterCup2DTickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
+import IReadOnlyProperty, { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -27,15 +26,15 @@ type SelfOptions = EmptySelfOptions;
 type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;
 
 export default class WaterCup2DNode extends Node {
-  private readonly meanProperty: NumberProperty;
+  private readonly meanProperty: IReadOnlyProperty<number>;
   private readonly meanLink: PropertyLinkListener<number>;
   private readonly waterLevelLink: PropertyLinkListener<number>;
   private readonly waterCup: WaterCup;
   private readonly tickMarks: WaterCup2DTickMarksNode;
   private readonly meanLine: Line;
 
-  public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: NumberProperty,
-                      isShowingTickMarksProperty: BooleanProperty, isShowingMeanProperty: BooleanProperty,
+  public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: IReadOnlyProperty<number>,
+                      isShowingTickMarksProperty: Property<boolean>, isShowingMeanProperty: Property<boolean>,
                       providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,

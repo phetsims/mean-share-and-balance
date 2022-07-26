@@ -23,6 +23,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import WaterCup from '../model/WaterCup.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
@@ -33,7 +34,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanHandle: Circle;
   private readonly dragListener: DragListener;
 
-  public constructor( meanPredictionProperty: NumberProperty, dragRange: Range, numberOfCupsProperty: NumberProperty,
+  public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: NumberProperty,
                       getActive2DCups: () => Array<WaterCup>, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
     const options = optionize<PredictMeanNodeOptions, SelfOptions, ParentOptions>()( {
