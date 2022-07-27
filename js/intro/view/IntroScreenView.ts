@@ -7,8 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { Color, Node, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
@@ -61,6 +60,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         }
       }
     );
+
+    model.numberOfCupsProperty.lazyLink( () => this.interruptSubtreeInput );
 
     //Predict Mean Line that acts as a slider for alternative input.
     const predictMeanSlider = new PredictMeanSlider(
