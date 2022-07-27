@@ -14,9 +14,9 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
@@ -30,7 +30,10 @@ type StateObject = {
   position: Vector2;
 };
 
-export type PipeOptions = SelfOptions & StrictOmit<PhetioObjectOptions, 'phetioType'>;
+export type PipeOptions =
+  SelfOptions
+  & StrictOmit<PhetioObjectOptions, 'phetioType'>
+  & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class Pipe extends PhetioObject {
 
@@ -49,7 +52,6 @@ export default class Pipe extends PhetioObject {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
       isOpen: false,
       isActive: false,
-      tandem: Tandem.REQUIRED,
       phetioType: Pipe.PipeIO
     }, providedOptions );
 
