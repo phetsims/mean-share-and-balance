@@ -8,17 +8,19 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
+import RectangularPushButton, { RectangularPushButtonOptions } from '../../../../sun/js/buttons/RectangularPushButton.js';
 import SyncIcon from './SyncIcon.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
-import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+
+type SelfOptions = EmptySelfOptions;
+type SyncButtonOptions = SelfOptions & RectangularPushButtonOptions;
 
 export default class SyncButton extends RectangularPushButton {
-  public constructor( model: MeanShareAndBalanceModel, layoutBounds: Bounds2, tandem: Tandem ) {
+  public constructor( layoutBounds: Bounds2, providedOptions: SyncButtonOptions ) {
     const syncIcon = new SyncIcon();
     const syncContent = new Node( {
       children: [
@@ -32,18 +34,16 @@ export default class SyncButton extends RectangularPushButton {
       ]
     } );
 
-    super( {
-      listener: () => {
-        this.interruptSubtreeInput(); // cancel interactions that may be in progress
-        model.syncData();
-      },
+    const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {
       content: syncContent,
       accessibleName: meanShareAndBalanceStrings.sync,
       right: layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
-      tandem: tandem.createTandem( 'syncRepresentationsButton' ),
       layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
-    } );
+    }, providedOptions );
+
+
+    super( options );
   }
 }
 

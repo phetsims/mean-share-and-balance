@@ -51,7 +51,13 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    this.syncButton = new SyncButton( model, this.layoutBounds, options.tandem );
+    this.syncButton = new SyncButton( this.layoutBounds, {
+      listener: () => {
+        this.interruptSubtreeInput(); // cancel interactions that may be in progress
+        model.syncData();
+      },
+      tandem: options.tandem.createTandem( 'syncRepresentationsButton' )
+    } );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
