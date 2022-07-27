@@ -126,7 +126,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } );
 
     // add/remove water cups and pipes according to number spinner
-    const numberOfCupsListener = ( numberOfCups: number ) => {
+    this.numberOfCupsProperty.link( ( numberOfCups: number ) => {
 
       this.waterCup2DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
       this.waterCup3DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
@@ -134,16 +134,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
       this.matchCupWaterLevels();
       this.assertConsistentState();
-    };
-
-    this.numberOfCupsProperty.link( numberOfCupsListener );
-
-    assert && phet.joist.sim.isSettingPhetioStateProperty.link( () => {
-
-      // In https://github.com/phetsims/mean-share-and-balance/issues/37, we found that after state set in some cases
-      // the number of cups wasn't being updated to match the numberOfCupsProperty. We are not sure why. But calling
-      // update manually here seems to work around the problem.
-      numberOfCupsListener( this.numberOfCupsProperty.value );
     } );
   }
 
