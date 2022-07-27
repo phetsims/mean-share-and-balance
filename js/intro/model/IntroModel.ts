@@ -46,7 +46,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];
   public readonly pipeArray: Pipe[];
-  public isResetting = new BooleanProperty( false );
+  private readonly isResetting = new BooleanProperty( false, { phetioFeatured: false } );
 
   public constructor( providedOptions?: IntroModelOptions ) {
 
@@ -57,10 +57,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
     this.meanVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isShowingMeanProperty' )
+      tandem: options.tandem.createTandem( 'meanVisibleProperty' )
     } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isShowingTickMarksProperty' )
+      tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
