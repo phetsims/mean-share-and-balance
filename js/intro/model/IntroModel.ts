@@ -114,15 +114,23 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
     // the number of cups varies
-    // @ts-ignore - .map() does not preserve a property of .length required for DerivedProperty
-    this.meanProperty = new DerivedProperty( this.waterCup3DArray.map( waterCup => waterCup.waterLevelProperty ),
-      () => calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) ),
+    const dependencies = [
+      ...this.waterCup3DArray.map( waterCup => waterCup.waterLevelProperty ),
+      ...this.waterCup3DArray.map( waterCup => waterCup.isActiveProperty )
+    ];
+
+    // map() does not preserve a property of .length required for DerivedProperty
+    this.meanProperty = DerivedProperty.deriveAny( dependencies,
+      () => {
+        const mean = calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) );
+        assert && assert( mean >= MeanShareAndBalanceConstants.CUP_RANGE_MIN && mean <= MeanShareAndBalanceConstants.CUP_RANGE_MAX, 'mean out of bounds: ' + mean );
+        return mean;
+      },
       {
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioDocumentation: 'The ground truth water level mean.',
         phetioReadOnly: true,
-        phetioType: DerivedProperty.DerivedPropertyIO( NumberIO ),
-        range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
+        phetioType: DerivedProperty.DerivedPropertyIO( NumberIO )
       } );
 
     // add/remove water cups and pipes according to number spinner
