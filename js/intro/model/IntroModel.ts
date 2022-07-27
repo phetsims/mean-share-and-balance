@@ -22,6 +22,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import IReadOnlyProperty from '../../../../axon/js/IReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -119,6 +120,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioDocumentation: 'The ground truth water level mean.',
         phetioReadOnly: true,
+        phetioType: DerivedProperty.DerivedPropertyIO( NumberIO ),
         range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
       } );
 
