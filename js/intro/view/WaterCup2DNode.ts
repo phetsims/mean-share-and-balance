@@ -27,8 +27,8 @@ type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' |
 
 export default class WaterCup2DNode extends Node {
   private readonly meanProperty: IReadOnlyProperty<number>;
-  private readonly meanLink: PropertyLinkListener<number>;
-  private readonly waterLevelLink: PropertyLinkListener<number>;
+  private readonly meanListener: PropertyLinkListener<number>;
+  private readonly waterLevelListener: PropertyLinkListener<number>;
   private readonly waterCup: WaterCup;
   private readonly tickMarks: Node;
   private readonly meanLine: Line;
@@ -68,10 +68,10 @@ export default class WaterCup2DNode extends Node {
       { fill: MeanShareAndBalanceColors.waterFillColorProperty }
     );
 
-    this.waterLevelLink = ( waterLevel: number ) => {
+    this.waterLevelListener = ( waterLevel: number ) => {
       waterLevelRectangle.setRectHeightFromBottom( MeanShareAndBalanceConstants.CUP_HEIGHT * waterLevel );
     };
-    waterCup.waterLevelProperty.link( this.waterLevelLink );
+    waterCup.waterLevelProperty.link( this.waterLevelListener );
 
     // Model view transform inverts Y mapping, therefore the mean inverse is needed to place
     // show mean line accurately in relation to water levels.
@@ -88,13 +88,13 @@ export default class WaterCup2DNode extends Node {
         visibleProperty: isShowingMeanProperty
       } );
 
-    this.meanLink = ( mean: number ) => {
+    this.meanListener = ( mean: number ) => {
       meanInverse = 1 - mean;
       this.meanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
       this.meanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
     };
 
-    meanProperty.link( this.meanLink );
+    meanProperty.link( this.meanListener );
 
     this.addChild( waterCupBackgroundRectangle );
     this.addChild( waterLevelRectangle );
@@ -107,8 +107,8 @@ export default class WaterCup2DNode extends Node {
 
   public override dispose(): void {
     super.dispose();
-    this.meanProperty.unlink( this.meanLink );
-    this.waterCup.waterLevelProperty.unlink( this.waterLevelLink );
+    this.meanProperty.unlink( this.meanListener );
+    this.waterCup.waterLevelProperty.unlink( this.waterLevelListener );
     this.tickMarks.dispose();
     this.meanLine.dispose();
   }

@@ -31,7 +31,7 @@ export default class WaterCup3DNode extends Node {
   private readonly waterCup: WaterCup;
   private readonly adapterProperty: Property<number>;
   private readonly tickMarksVisibleProperty: Property<boolean>;
-  private readonly showTickMarksLink: ( isShowingTickMarks: boolean ) => void;
+  private readonly isShowingTickMarksListener: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
                       changeWaterLevel: ( cup3DModel: WaterCup, adapterProperty: Property<number>, waterLevel: number, oldWaterLevel: number ) => void,
@@ -62,9 +62,9 @@ export default class WaterCup3DNode extends Node {
       beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
     } );
 
-    this.showTickMarksLink = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
+    this.isShowingTickMarksListener = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
 
-    tickMarksVisibleProperty.link( this.showTickMarksLink );
+    tickMarksVisibleProperty.link( this.isShowingTickMarksListener );
 
     // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
@@ -105,7 +105,7 @@ export default class WaterCup3DNode extends Node {
     super.dispose();
     this.waterLevelTriangle.dispose();
     this.adapterProperty.dispose();
-    this.tickMarksVisibleProperty.unlink( this.showTickMarksLink );
+    this.tickMarksVisibleProperty.unlink( this.isShowingTickMarksListener );
     this.waterCup.resetEmitter.removeAllListeners();
   }
 }
