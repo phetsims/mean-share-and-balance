@@ -100,14 +100,6 @@ export default class WaterCup3DNode extends Node {
 
     this.tickMarksVisibleProperty = tickMarksVisibleProperty;
   }
-
-  public override dispose(): void {
-    super.dispose();
-    this.waterLevelTriangle.dispose();
-    this.adapterProperty.dispose();
-    this.tickMarksVisibleProperty.unlink( this.isShowingTickMarksListener );
-    this.waterCup.resetEmitter.removeAllListeners();
-  }
 }
 
 meanShareAndBalance.register( 'WaterCup3DNode', WaterCup3DNode );

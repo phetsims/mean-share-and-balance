@@ -104,14 +104,6 @@ export default class WaterCup2DNode extends Node {
 
     this.mutate( options );
   }
-
-  public override dispose(): void {
-    super.dispose();
-    this.meanProperty.unlink( this.meanListener );
-    this.waterCup.waterLevelProperty.unlink( this.waterLevelListener );
-    this.tickMarks.dispose();
-    this.meanLine.dispose();
-  }
 }
 
 meanShareAndBalance.register( 'WaterCup2DNode', WaterCup2DNode );

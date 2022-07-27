@@ -87,7 +87,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         tandem: options.tandem.createTandem( `waterCup3D${i}` ),
         waterLevel: waterLevel,
         position: position3D,
-        isActive: i <= 1
+        isActive: i <= 1,
+        isResetting: this.isResetting
       } ) );
 
       const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );

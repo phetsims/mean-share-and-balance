@@ -29,6 +29,7 @@ import IEmitter from '../../../../axon/js/IEmitter.js';
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
   isActive?: boolean;
+  isResetting?: boolean;
   waterHeightRange?: Range;
   waterLevel?: number;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
@@ -61,12 +62,14 @@ export default class WaterCup extends PhetioObject {
   public readonly enabledRangeProperty: Property<Range>;
 
   public static WaterCupModelIO: IOType<WaterCup>;
+  private isResetting: boolean;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       isActive: false,
+      isResetting: false,
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       phetioType: WaterCup.WaterCupModelIO
     }, providedOptions );
@@ -75,6 +78,7 @@ export default class WaterCup extends PhetioObject {
     this.isActiveProperty = new BooleanProperty( options.isActive );
     this.position = options.position;
     this.resetEmitter = new Emitter();
+    this.isResetting = options.isResetting;
 
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
     // If the range shrinks, an out of range adapterProperty will be constrained updating the waterLevels of 2D and 3D cups,
@@ -94,9 +98,11 @@ export default class WaterCup extends PhetioObject {
 
   // these properties are the only ones that should be reset when a cup is no longer active
   private partialReset(): void {
+    this.isResetting = true;
     this.enabledRangeProperty.reset();
     this.waterLevelProperty.reset();
     this.resetEmitter.emit();
+    this.isResetting = false;
   }
 
   public reset(): void {
