@@ -46,7 +46,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];
   public readonly pipeArray: Pipe[];
-  private isResetting = false;
+  public isResetting = new BooleanProperty( false );
 
   public constructor( providedOptions?: IntroModelOptions ) {
 
@@ -301,7 +301,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public reset(): void {
 
     // Short circuit changeWaterLevel during reset.
-    this.isResetting = true;
+    this.isResetting.set( true );
 
     this.predictMeanVisibleProperty.reset();
     this.meanVisibleProperty.reset();
@@ -313,7 +313,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
 
-    this.isResetting = false;
+    this.isResetting.set( false );
 
     this.assertConsistentState();
   }
@@ -341,7 +341,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // During reset we only want to specify the exact values of the adapterProperty and waterLevelProperties.
     // We do not want to compensate with waterLevel deltas.
-    if ( this.isResetting ) {
+    if ( this.isResetting.value ) {
       return;
     }
 
