@@ -134,13 +134,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } );
 
     // add/remove water cups and pipes according to number spinner
-    this.numberOfCupsProperty.link( ( numberOfCups: number ) => {
+    this.numberOfCupsProperty.lazyLink( ( numberOfCups: number, oldNumberOfCups: number ) => {
+
+      // We only care about comparing water levels when a cup is removed, and need to grab the value before the cup is reset
+      const removed3DCupWaterLevel = this.waterCup3DArray[ numberOfCups ].waterLevelProperty.value;
+      const removed2DCupWaterLevel = this.waterCup2DArray[ numberOfCups ].waterLevelProperty.value;
 
       this.waterCup2DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
       this.waterCup3DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
       this.pipeArray.forEach( ( pipe, i ) => pipe.isActiveProperty.set( i < numberOfCups - 1 ) );
 
-      this.matchCupWaterLevels();
+      if ( numberOfCups < oldNumberOfCups && removed3DCupWaterLevel !== removed2DCupWaterLevel ) {
+        this.matchCupWaterLevels();
+      }
+
       this.assertConsistentState();
     } );
   }
