@@ -126,8 +126,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.numberOfCupsProperty.lazyLink( ( numberOfCups: number, oldNumberOfCups: number ) => {
 
       // We only care about comparing water levels when a cup is removed, and need to grab the value before the cup is reset
-      const removed3DCupWaterLevel = this.waterCup3DArray[ numberOfCups ].waterLevelProperty.value;
-      const removed2DCupWaterLevel = this.waterCup2DArray[ numberOfCups ].waterLevelProperty.value;
+      const removed3DCupWaterLevel = this.waterCup3DArray[ oldNumberOfCups - 1 ].waterLevelProperty.value;
+      const removed2DCupWaterLevel = this.waterCup2DArray[ oldNumberOfCups - 1 ].waterLevelProperty.value;
 
       this.waterCup2DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
       this.waterCup3DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
