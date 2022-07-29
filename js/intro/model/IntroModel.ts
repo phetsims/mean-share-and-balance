@@ -23,6 +23,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import IReadOnlyProperty from '../../../../axon/js/IReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -134,6 +135,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
       if ( numberOfCups < oldNumberOfCups && removed3DCupWaterLevel !== removed2DCupWaterLevel ) {
         this.matchCupWaterLevels();
+      }
+
+      if ( !MeanShareAndBalanceQueryParameters.showAnimation ) {
+        this.stepWaterLevels( 1 );
       }
 
       this.assertConsistentState();
