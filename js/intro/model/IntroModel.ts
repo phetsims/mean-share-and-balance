@@ -35,10 +35,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly dragRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
   public readonly cupRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
 
-  public readonly predictMeanVisibleProperty: Property<boolean>;
-  public readonly meanVisibleProperty: Property<boolean>;
-  public readonly tickMarksVisibleProperty: Property<boolean>;
-
   public readonly numberOfCupsProperty: Property<number>;
   public readonly meanPredictionProperty: Property<number>;
   public readonly meanProperty: IReadOnlyProperty<number>;
@@ -53,15 +49,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const options = optionize<IntroModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
     super( options );
 
-    this.predictMeanVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
-    } );
-    this.meanVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'meanVisibleProperty' )
-    } );
-    this.tickMarksVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
-    } );
+
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
       phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup',
@@ -308,9 +296,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     // Short circuit changeWaterLevel during reset.
     this.isResetting.set( true );
 
-    this.predictMeanVisibleProperty.reset();
-    this.meanVisibleProperty.reset();
-    this.tickMarksVisibleProperty.reset();
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
 

@@ -23,6 +23,7 @@ import WaterCup3DNode from './WaterCup3DNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import IntroControlPanel from './IntroControlPanel.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -30,12 +31,25 @@ type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewO
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   private readonly pipeNodes: PipeNode[];
+  public readonly predictMeanVisibleProperty: Property<boolean>;
+  public readonly meanVisibleProperty: Property<boolean>;
+  public readonly tickMarksVisibleProperty: Property<boolean>;
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
     super( model, options );
+
+    this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
+    } );
+    this.meanVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'meanVisibleProperty' )
+    } );
+    this.tickMarksVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
+    } );
 
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
@@ -68,7 +82,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       model.meanPredictionProperty, model.dragRange,
       model.numberOfCupsProperty, () => model.getActive2DCups(),
       modelViewTransform2DCups, {
-        visibleProperty: model.predictMeanVisibleProperty,
+        visibleProperty: this.predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
 
         // Constant range
@@ -98,15 +112,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
       // TODO: Better way of matching indices or tandems?
       const index = model.waterCup2DArray.indexOf( cupModel );
-      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, model.tickMarksVisibleProperty,
-        model.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
+      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, this.tickMarksVisibleProperty,
+        this.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
     } );
 
     model.waterCup3DArray.forEach( cupModel => {
       const index = model.waterCup3DArray.indexOf( cupModel );
-      const cupNode = new WaterCup3DNode( model.tickMarksVisibleProperty, model.changeWaterLevel.bind( model ), cupModel, modelViewTransform3DCups,
+      const cupNode = new WaterCup3DNode( this.tickMarksVisibleProperty, model.changeWaterLevel.bind( model ), cupModel, modelViewTransform3DCups,
         { tandem: options.tandem.createTandem( `waterCup3DNode${index}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
@@ -123,7 +137,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.numberOfCupsProperty.link( centerWaterCupLayerNode );
 
     // Configure layout
-    const controlPanel = new IntroControlPanel( model, options.tandem );
+    const controlPanel = new IntroControlPanel( this.tickMarksVisibleProperty, this.meanVisibleProperty, this.predictMeanVisibleProperty, options.tandem );
     this.controlsVBox.addChild( controlPanel );
     this.numberSpinnerVBox.children = [ numberOfCupsText, numberOfCupsNumberSpinner ];
 
@@ -146,6 +160,13 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   public override step( dt: number ): void {
     super.step( dt );
     this.pipeNodes.forEach( pipeNode => pipeNode.step( dt ) );
+  }
+
+  public override reset(): void {
+    super.reset();
+    this.predictMeanVisibleProperty.reset();
+    this.meanVisibleProperty.reset();
+    this.tickMarksVisibleProperty.reset();
   }
 }
 

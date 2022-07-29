@@ -8,14 +8,15 @@
  */
 import { Node, Text } from '../../../../scenery/js/imports.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
-import IntroModel from '../model/IntroModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import Property from '../../../../axon/js/Property.js';
 
 export default class IntroControlPanel extends Node {
-  public constructor( model: IntroModel, tandem: Tandem ) {
+  public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
+                      predictMeanVisibleProperty: Property<boolean>, tandem: Tandem ) {
 
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, {
       fontSize: 15,
@@ -28,17 +29,17 @@ export default class IntroControlPanel extends Node {
     const introOptionsCheckboxGroupTandem = tandem.createTandem( 'introOptionsCheckboxGroup' );
     const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
         node: predictMeanText,
-        property: model.predictMeanVisibleProperty,
+        property: predictMeanVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.predictMean }
       }, {
         node: meanText,
-        property: model.meanVisibleProperty,
+        property: meanVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.mean }
       }, {
         node: tickMarksText,
-        property: model.tickMarksVisibleProperty,
+        property: tickMarksVisibleProperty,
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
       } ], {
