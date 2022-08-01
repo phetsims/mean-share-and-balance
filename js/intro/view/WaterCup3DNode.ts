@@ -16,7 +16,6 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Range from '../../../../dot/js/Range.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
@@ -70,7 +69,7 @@ export default class WaterCup3DNode extends Node {
     // when the adapterProperty values change a method in the introModel compares delta between current and past value
     // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
     this.adapterProperty = new NumberProperty( waterCup.waterLevelProperty.value, {
-      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
+      range: MeanShareAndBalanceConstants.WATER_LEVEL_RANGE,
 
       // When the slider is changed it triggers a value change in the adapter property
       // This value then updates the 2D & 3D waterLevels which may trigger a change in the slider enabledRangeProperty

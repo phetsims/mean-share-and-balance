@@ -8,6 +8,7 @@
  */
 
 import meanShareAndBalance from '../meanShareAndBalance.js';
+import Range from '../../../dot/js/Range.js';
 
 const DEFAULT_MARGIN = 15;
 
@@ -21,6 +22,8 @@ const MeanShareAndBalanceConstants = {
   CUP_HEIGHT: 120,
   CUP_RANGE_MIN: 0,
   CUP_RANGE_MAX: 1,
+
+  WATER_LEVEL_RANGE: new Range( 0, 1 ),
   WATER_LEVEL_DEFAULT: 0.5,
   PIPE_LENGTH: 50,
   CONTROLS_VERTICAL_MARGIN: 30,

@@ -33,8 +33,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   // TODO: Should this be able to go to 0 for PhET-iO? https://github.com/phetsims/mean-share-and-balance/issues/18
   public readonly numberOfCupsRange = new Range( 1, 7 );
-  public readonly dragRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
-  public readonly cupRange = new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX );
+  public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
+  public readonly cupRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
 
   public readonly numberOfCupsProperty: Property<number>;
   public readonly meanPredictionProperty: Property<number>;
@@ -54,7 +54,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanPredictionProperty = new NumberProperty( 0, {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
       phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup',
-      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX )
+      range: MeanShareAndBalanceConstants.WATER_LEVEL_RANGE
     } );
 
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {

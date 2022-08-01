@@ -52,7 +52,7 @@ export default class WaterLevelTriangleSlider extends VSlider {
       },
       providedOptions );
 
-    super( waterLevelProperty, new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), options );
+    super( waterLevelProperty, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE, options );
 
     // Set pointer areas for slider thumb node.
     thumbNode.mouseArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
