@@ -11,7 +11,7 @@ import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup from '../model/WaterCup.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import WaterLevelTriangleNode from './WaterLevelTriangleNode.js';
+import WaterLevelTriangleSlider from './WaterLevelTriangleSlider.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
@@ -88,7 +88,7 @@ export default class WaterCup3DNode extends Node {
 
     waterCup.resetEmitter.addListener( () => this.adapterProperty.reset() );
 
-    this.waterLevelTriangle = new WaterLevelTriangleNode( this.adapterProperty, waterCup.enabledRangeProperty, beakerHeight, {
+    this.waterLevelTriangle = new WaterLevelTriangleSlider( this.adapterProperty, waterCup.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2
