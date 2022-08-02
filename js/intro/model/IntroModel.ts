@@ -315,6 +315,35 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
+  public calculateWaterDistribution( waterDelta: number, cup2DWaterLevel: number ): number {
+    if ( waterDelta > 0 ) {
+      return Math.min( 1 - cup2DWaterLevel, waterDelta );
+    }
+    else if ( waterDelta < 0 ) {
+      return Math.max( -cup2DWaterLevel, waterDelta );
+    }
+    else {
+      return 0;
+    }
+  }
+
+  public distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
+    let remainingWaterDelta = waterDelta;
+    for ( let distance = 0; distance < 6; distance++ ) {
+      const targetCups = connectedCups.filter( cup => {
+        const numberOfCupsAway = Math.abs( startingCup.linePlacement - cup.linePlacement );
+        return distance === numberOfCupsAway;
+      } );
+
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      targetCups.forEach( cup => {
+        const delta = this.calculateWaterDistribution( remainingWaterDelta, cup.waterLevelProperty.value );
+        cup.waterLevelProperty.value += delta;
+        remainingWaterDelta -= delta;
+      } );
+    }
+  }
+
   /**
    * @param cup3DModel - The model for the affected 3D cup
    * @param adapterProperty - allows us to confirm water levels and their deltas are within range before setting each cup's own waterLevelProperty.
@@ -339,36 +368,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const setsOfConnectedCups = this.getSetsOfConnectedCups();
     const connectedCups = setsOfConnectedCups.filter( set => set.has( cup2DModel ) )[ 0 ];
 
-    let waterToDistribute = waterLevel - oldWaterLevel;
+    const waterDelta = waterLevel - oldWaterLevel;
 
-    if ( waterToDistribute !== 0 ) {
-      for ( let distance = 0; distance < 7; distance++ ) {
-        const targetCups = Array.from( connectedCups ).filter( cup => {
-          const numberOfCupsAway = Math.abs( cup2DModel.linePlacement - cup.linePlacement );
-          return distance === numberOfCupsAway;
-        } );
-
-        // eslint-disable-next-line @typescript-eslint/no-loop-func
-        targetCups.forEach( cup => {
-          if ( waterToDistribute > 0 ) {
-            const delta = Math.min( 1 - cup2DModel.waterLevelProperty.value, waterToDistribute );
-            cup.waterLevelProperty.value += delta;
-            waterToDistribute -= delta;
-          }
-          else if ( waterToDistribute < 0 ) {
-            const delta = Math.min( cup2DModel.waterLevelProperty.value, Math.abs( waterToDistribute ) );
-            cup.waterLevelProperty.value -= delta;
-            waterToDistribute += delta;
-          }
-        } );
-      }
-
+    if ( waterDelta !== 0 ) {
+      this.distributeWater( Array.from( connectedCups ), cup2DModel, waterDelta );
     }
 
-    // const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
-    // const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
-    // const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
-    // assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
+    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
+    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
+    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 
   private updateEnabledRange( cup3DModel: WaterCup, cup2DModel: WaterCup ): void {
