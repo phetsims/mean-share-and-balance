@@ -83,7 +83,10 @@ export default class WaterCup extends PhetioObject {
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
     // If the range shrinks, an out of range adapterProperty will be constrained updating the waterLevels of 2D and 3D cups,
     // which may trigger another change in this enabledRangeProperty requiring reentrant: true
-    this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), { reentrant: true } );
+    this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), {
+      reentrant: true,
+      useDeepEquality: true
+    } );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
       range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' ),

@@ -274,19 +274,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
 
-    this.iterateCups( ( cup2D, cup3D ) => {
-
-      // Whichever cup (2D or 3D) has more determines how high the user can drag that value.
-      // If the 3D cup has more, the user can drag to 1.
-      const max = Math.min( 1 - cup2D.waterLevelProperty.value + cup3D.waterLevelProperty.value, 1 );
-
-      // Whichever cup (2d or 3d cup) has less determines how low the user can drag that value.
-      // If the 3d cup has less, the user can drag all the way to 0.
-      const min = Math.max( cup3D.waterLevelProperty.value - cup2D.waterLevelProperty.value, 0 );
-
-      // Constrain range based on remaining space in cups.
-      cup3D.enabledRangeProperty.set( new Range( min, max ) );
-    } );
+    this.iterateCups( ( cup2D, cup3D ) => this.updateEnabledRange( cup3D, cup2D ) );
   }
 
   private assertConsistentState(): void {
@@ -357,6 +345,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     cup3DModel.waterLevelProperty.set( cup3DModel.waterLevelProperty.value + actualDelta );
     new2DCup.waterLevelProperty.set( new2DCup.waterLevelProperty.value + actualDelta );
 
+    this.updateEnabledRange( cup3DModel, new2DCup );
+
+    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
+    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
+    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
+    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+  }
+
+  private updateEnabledRange( cup3DModel: WaterCup, new2DCup: WaterCup ): void {
+
     // Whichever cup (2D or 3D) has more determines how high the user can drag that value.
     // If the 3D cup has more, the user can drag to 1.
     const max = Math.min( 1 - new2DCup.waterLevelProperty.value + cup3DModel.waterLevelProperty.value, 1 );
@@ -367,11 +365,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // Constrain range based on remaining space in cups.
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
-
-    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
-    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
-    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
-    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 }
 
