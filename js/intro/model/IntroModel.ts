@@ -77,7 +77,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         waterLevel: waterLevel,
         position: position3D,
         isActive: i <= 1,
-        isResetting: this.isResetting
+        isResetting: this.isResetting,
+        linePlacement: i
       } ) );
 
       const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );
@@ -86,6 +87,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         waterLevel: waterLevel,
         position: position2D,
         isActive: i <= 1,
+        linePlacement: i,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
         }
@@ -320,7 +322,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param waterLevel - The current waterLevel
    * @param oldWaterLevel - The previous waterLevel
    */
-  public changeWaterLevel( cup3DModel: WaterCup, adapterProperty: Property<number>, waterLevel: number, oldWaterLevel: number ): void {
+  public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ): void {
 
     // During reset we only want to specify the exact values of the adapterProperty and waterLevelProperties.
     // We do not want to compensate with waterLevel deltas.
@@ -332,38 +334,60 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
 
     const index = this.waterCup3DArray.indexOf( cup3DModel );
-    const new2DCup = this.waterCup2DArray[ index ];
+    const cup2DModel = this.waterCup2DArray[ index ];
 
-    const proposedDelta = waterLevel - oldWaterLevel;
+    const setsOfConnectedCups = this.getSetsOfConnectedCups();
+    const connectedCups = setsOfConnectedCups.filter( set => set.has( cup2DModel ) )[ 0 ];
 
-    const constrained2DDelta = IntroModel.constrainDelta( proposedDelta, this.cupRange, new2DCup.waterLevelProperty );
-    const constrained3DDelta = IntroModel.constrainDelta( proposedDelta, this.cupRange, cup3DModel.waterLevelProperty );
+    let waterToDistribute = waterLevel - oldWaterLevel;
 
-    // Use whichever delta is more limiting
-    const actualDelta = Math.abs( constrained2DDelta ) < Math.abs( constrained3DDelta ) ? constrained2DDelta : constrained3DDelta;
+    if ( waterToDistribute !== 0 ) {
+      for ( let distance = 0; distance < 7; distance++ ) {
+        const targetCups = Array.from( connectedCups ).filter( cup => {
+          const numberOfCupsAway = Math.abs( cup2DModel.linePlacement - cup.linePlacement );
+          return distance === numberOfCupsAway;
+        } );
 
-    cup3DModel.waterLevelProperty.set( cup3DModel.waterLevelProperty.value + actualDelta );
-    new2DCup.waterLevelProperty.set( new2DCup.waterLevelProperty.value + actualDelta );
+        // eslint-disable-next-line @typescript-eslint/no-loop-func
+        targetCups.forEach( cup => {
+          if ( waterToDistribute > 0 ) {
+            const delta = Math.min( 1 - cup2DModel.waterLevelProperty.value, waterToDistribute );
+            cup.waterLevelProperty.value += delta;
+            waterToDistribute -= delta;
+          }
+          else if ( waterToDistribute < 0 ) {
+            const delta = Math.min( cup2DModel.waterLevelProperty.value, Math.abs( waterToDistribute ) );
+            cup.waterLevelProperty.value -= delta;
+            waterToDistribute += delta;
+          }
+        } );
+      }
 
-    this.updateEnabledRange( cup3DModel, new2DCup );
+    }
 
-    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
-    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
-    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
-    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+    // const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
+    // const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
+    // const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
+    // assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 
-  private updateEnabledRange( cup3DModel: WaterCup, new2DCup: WaterCup ): void {
+  private updateEnabledRange( cup3DModel: WaterCup, cup2DModel: WaterCup ): void {
 
-    // Whichever cup (2D or 3D) has more determines how high the user can drag that value.
-    // If the 3D cup has more, the user can drag to 1.
-    const max = Math.min( 1 - new2DCup.waterLevelProperty.value + cup3DModel.waterLevelProperty.value, 1 );
+    const setsOfConnectedCups = this.getSetsOfConnectedCups();
+    const connectedCups = setsOfConnectedCups.filter( set => set.has( cup2DModel ) )[ 0 ];
 
-    // Whichever cup (2d or 3d cup) has less determines how low the user can drag that value.
-    // If the 3d cup has less, the user can drag all the way to 0.
-    const min = Math.max( cup3DModel.waterLevelProperty.value - new2DCup.waterLevelProperty.value, 0 );
+    // Add up the total amount of water in the connected cups
+    const totalWater = _.sum( Array.from( connectedCups ).map( cup => cup.waterLevelProperty.value ) );
+    const maxWater = connectedCups.size;
 
-    // Constrain range based on remaining space in cups.
+    const missingWater = maxWater - totalWater;
+    const maxValue = cup3DModel.waterLevelProperty.value + missingWater;
+    const max = Math.min( maxValue, 1 );
+
+    assert && assert( totalWater >= 0, `Total water should be non-negative. Total water: ${totalWater}` );
+    const amountWeCanDragItDown = totalWater;
+    const min = Math.max( cup3DModel.waterLevelProperty.value - amountWeCanDragItDown, 0 );
+
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
   }
 }

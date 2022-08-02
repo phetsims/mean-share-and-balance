@@ -33,12 +33,15 @@ type SelfOptions = {
   waterHeightRange?: Range;
   waterLevel?: number;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
+  linePlacement: number;
 };
 
 type StateObject = {
   position: Vector2;
 };
 
+
+let index = 0;
 export type WaterCupModelOptions =
   SelfOptions
   & PhetioObjectOptions
@@ -61,8 +64,12 @@ export default class WaterCup extends PhetioObject {
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
 
+  public readonly linePlacement: number;
+
   public static WaterCupModelIO: IOType<WaterCup>;
   private isResetting: Property<boolean>;
+
+  public name: number = index++;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 
@@ -79,6 +86,7 @@ export default class WaterCup extends PhetioObject {
     this.position = options.position;
     this.resetEmitter = new Emitter();
     this.isResetting = options.isResetting;
+    this.linePlacement = options.linePlacement;
 
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
     // If the range shrinks, an out of range adapterProperty will be constrained updating the waterLevels of 2D and 3D cups,
@@ -87,6 +95,7 @@ export default class WaterCup extends PhetioObject {
       reentrant: true,
       useDeepEquality: true
     } );
+    this.enabledRangeProperty.debug( 'enabled range for cup: ' + this.name );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
       range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' ),

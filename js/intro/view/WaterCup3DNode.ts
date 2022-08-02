@@ -15,7 +15,6 @@ import WaterLevelTriangleSlider from './WaterLevelTriangleSlider.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
@@ -28,12 +27,11 @@ type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | '
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: Node;
   private readonly waterCup: WaterCup;
-  private readonly adapterProperty: Property<number>;
   private readonly tickMarksVisibleProperty: Property<boolean>;
   private readonly isShowingTickMarksListener: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
-                      changeWaterLevel: ( cup3DModel: WaterCup, adapterProperty: Property<number>, waterLevel: number, oldWaterLevel: number ) => void,
+                      changeWaterLevel: ( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ) => void,
                       waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {
 
@@ -65,29 +63,11 @@ export default class WaterCup3DNode extends Node {
 
     tickMarksVisibleProperty.link( this.isShowingTickMarksListener );
 
-    // adapterProperty double-checks the constraints and deltas in the water levels between the 2D and 3D cups.
-    // when the adapterProperty values change a method in the introModel compares delta between current and past value
-    // ensures it's within each cup's range, and then sets the water level for each cup accordingly.
-    this.adapterProperty = new NumberProperty( waterCup.waterLevelProperty.value, {
-      range: MeanShareAndBalanceConstants.WATER_LEVEL_RANGE,
-
-      // When the slider is changed it triggers a value change in the adapter property
-      // This value then updates the 2D & 3D waterLevels which may trigger a change in the slider enabledRangeProperty
-      // If the range shrinks and the adapterProperty is out of range then it will be constrained requiring a reentrant: true
-      reentrant: true,
-      tandem: options.tandem?.createTandem( 'adapterProperty' ),
-      phetioReadOnly: true
+    waterCup.waterLevelProperty.lazyLink( ( newWaterLevel, oldWaterLevel ) => {
+      changeWaterLevel( waterCup, newWaterLevel, oldWaterLevel );
     } );
 
-    this.adapterProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
-      if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
-        changeWaterLevel( waterCup, this.adapterProperty, waterLevel, oldWaterLevel );
-      }
-    } );
-
-    waterCup.resetEmitter.addListener( () => this.adapterProperty.reset() );
-
-    this.waterLevelTriangle = new WaterLevelTriangleSlider( this.adapterProperty, waterCup.enabledRangeProperty, beakerHeight, {
+    this.waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2
