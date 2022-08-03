@@ -1,9 +1,9 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Unit tests for ratio-and-proportion.
+ * Unit tests for Mean: Share and Balance
  *
- * @author
+ * @author Marla Schulz (PhET Interactive Simulations)
  */
 
 import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
@@ -15,66 +15,55 @@ import Tandem from '../../tandem/js/Tandem.js';
 
 const introModel = new IntroModel( { tandem: Tandem.OPT_OUT } );
 const position = new Vector2( 50, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
-const connectedCups = [ new WaterCup( { waterLevel: 0.5, linePlacement: 0, position: position, tandem: Tandem.OPT_OUT } ),
-  new WaterCup( { waterLevel: 0.75, linePlacement: 1, position: position, tandem: Tandem.OPT_OUT } ),
-  new WaterCup( { waterLevel: 0.25, linePlacement: 2, position: position, tandem: Tandem.OPT_OUT } )
-];
+
+function testApproximatelyEquals( actual: number[], expected: number[], tolerance: number, assert: Assert, message: string ) {
+  assert.equal( actual.length, expected.length, message );
+
+  let failed = false;
+  for ( let i = 0; i < actual.length; i++ ) {
+
+
+    if ( Math.abs( actual[ i ] - expected[ i ] ) > tolerance ) {
+      failed = true;
+    }
+  }
+  assert.ok( !failed, message + ', expected = ' + expected + ', actual = ' + actual );
+}
+
 
 QUnit.test( 'Can calculate amount of water to Distribute', assert => {
-  const cup1WaterLevel = connectedCups[ 0 ].waterLevelProperty.value;
-  const cup2WaterLevel = connectedCups[ 1 ].waterLevelProperty.value;
-  const cup3WaterLevel = connectedCups[ 2 ].waterLevelProperty.value;
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( 0.1, 0.5 ), 0.1, 'adding distribution under' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( 0.2, 0.5 ), 0.2, 'adding distribution under' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( 0.5, 0.5 ), 0.5, 'adding distribution matches' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( 0.6, 0.5 ), 0.5, 'adding distribution over' );
 
-  let newWaterLevel = 1;
-  const oldWaterLevel = 0.5;
-  const waterDeltaAdd = newWaterLevel - oldWaterLevel;
-
-  let waterDistributionAdd = introModel[ 'calculateWaterDistribution' ]( waterDeltaAdd, cup1WaterLevel );
-  assert.deepEqual( waterDistributionAdd, 0.5, 'adding distribution matches' );
-
-  waterDistributionAdd = introModel[ 'calculateWaterDistribution' ]( waterDeltaAdd, cup2WaterLevel );
-  assert.deepEqual( waterDistributionAdd, 0.25, 'adding distribution over' );
-
-  waterDistributionAdd = introModel[ 'calculateWaterDistribution' ]( waterDeltaAdd, cup3WaterLevel );
-  assert.deepEqual( waterDistributionAdd, 0.5, 'adding distribution under' );
-
-  newWaterLevel = 0;
-  const waterDeltaRemove = newWaterLevel - oldWaterLevel;
-
-  let waterDistributionRemove = introModel[ 'calculateWaterDistribution' ]( waterDeltaRemove, cup1WaterLevel );
-  assert.deepEqual( waterDistributionRemove, -0.5, 'removing distribution matches' );
-
-  waterDistributionRemove = introModel[ 'calculateWaterDistribution' ]( waterDeltaRemove, cup3WaterLevel );
-  assert.deepEqual( waterDistributionRemove, -0.25, 'removing distribution over' );
-
-  waterDistributionRemove = introModel[ 'calculateWaterDistribution' ]( waterDeltaRemove, cup2WaterLevel );
-  assert.deepEqual( waterDistributionRemove, -0.5, 'removing distribution under' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( -0.1, 0.5 ), -0.1, 'removing distribution under' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( -0.2, 0.5 ), -0.2, 'removing distribution under' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( -0.5, 0.5 ), -0.5, 'removing distribution matches' );
+  assert.deepEqual( introModel[ 'calculateWaterDistribution' ]( -0.6, 0.5 ), -0.5, 'removing distribution over' );
 } );
 
 QUnit.test( 'Can distribute water', assert => {
-  let waterDelta = 0.5;
 
-  introModel[ 'distributeWater' ]( connectedCups, connectedCups[ 0 ], waterDelta );
-  assert.deepEqual( connectedCups[ 0 ].waterLevelProperty.value, 1, 'add distribution to 1 cup' );
-  connectedCups[ 0 ].reset();
+  function testDistribution( waterLevels: number[], waterDelta: number, index: number, expectedLevels: number[], message: string ): void {
+    const connectedCups = waterLevels.map( ( waterLevel, index ) => {
+      return new WaterCup( { waterLevel: waterLevel, linePlacement: index, position: position, tandem: Tandem.OPT_OUT } );
+    } );
+    introModel[ 'distributeWater' ]( connectedCups, connectedCups[ index ], waterDelta );
 
-  introModel[ 'distributeWater' ]( connectedCups, connectedCups[ 1 ], waterDelta );
-  assert.deepEqual( connectedCups[ 1 ].waterLevelProperty.value, 1, 'add distribution to 2 cups' );
-  assert.deepEqual( connectedCups[ 0 ].waterLevelProperty.value, 0.75, 'add distribution to 2 cups' );
-  assert.deepEqual( connectedCups[ 2 ].waterLevelProperty.value, 0.25, 'add distribution to 2 cups' );
-  connectedCups[ 0 ].reset();
-  connectedCups[ 1 ].reset();
-  connectedCups[ 2 ].reset();
+    const actual = connectedCups.map( cup => cup.waterLevelProperty.value );
+    testApproximatelyEquals( actual, expectedLevels, 1E-8, assert, message );
+  }
 
-  waterDelta = -0.5;
-  introModel[ 'distributeWater' ]( connectedCups, connectedCups[ 0 ], waterDelta );
-  assert.deepEqual( connectedCups[ 0 ].waterLevelProperty.value, 0, 'remove distribution to 1 cup' );
-  connectedCups[ 0 ].reset();
+  testDistribution( [ 0.5, 0.75, 0.25 ], 0.5, 0, [ 1.0, 0.75, 0.25 ], 'One cup can accept all the water' );
 
-  introModel[ 'distributeWater' ]( connectedCups, connectedCups[ 2 ], waterDelta );
-  assert.deepEqual( connectedCups[ 0 ].waterLevelProperty.value, 0.5, 'remove distribution to 2 cups' );
-  assert.deepEqual( connectedCups[ 1 ].waterLevelProperty.value, 0.5, 'remove distribution to 2 cups' );
-  assert.deepEqual( connectedCups[ 2 ].waterLevelProperty.value, 0, 'remove distribution to 2 cups' );
+  // TODO: Can the overflow water be evenly distributed to neighbors?
+  testDistribution( [ 0.5, 0.75, 0.25 ], 0.5, 1, [ 0.75, 1.0, 0.25 ], 'Overflow water all goes to the lowest index neighbor' );
+  testDistribution( [ 0.5, 0.75, 0.25 ], -0.5, 0, [ 0.0, 0.75, 0.25 ], 'One cup can lose all its water' );
+  testDistribution( [ 0.5, 0.75, 0.25 ], -0.5, 2, [ 0.5, 0.5, 0.0 ], 'One cup can lose all its water' );
+  testDistribution( [ 0.9, 1.0, 0 ], 0.2, 0, [ 1.0, 1.0, 0.1 ], 'Flowing two cups away' );
+
+  // TODO: Let's add tests of more than 3 cups
 } );
 
 qunitStart();

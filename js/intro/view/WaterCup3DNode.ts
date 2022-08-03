@@ -18,6 +18,7 @@ import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
+import IntroModel from '../model/IntroModel.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -31,7 +32,7 @@ export default class WaterCup3DNode extends Node {
   private readonly isShowingTickMarksListener: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
-                      changeWaterLevel: ( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ) => void,
+                      model: Pick<IntroModel, 'changeWaterLevel'>,
                       waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: WaterCup3DNodeOptions ) {
 
@@ -64,7 +65,7 @@ export default class WaterCup3DNode extends Node {
     tickMarksVisibleProperty.link( this.isShowingTickMarksListener );
 
     waterCup.waterLevelProperty.lazyLink( ( newWaterLevel, oldWaterLevel ) => {
-      changeWaterLevel( waterCup, newWaterLevel, oldWaterLevel );
+      model.changeWaterLevel( waterCup, newWaterLevel - oldWaterLevel );
     } );
 
     this.waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {

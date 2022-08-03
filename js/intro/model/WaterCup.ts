@@ -27,7 +27,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
   isActive?: boolean;
-  isResetting?: Property<boolean>;
+  isResettingProperty?: Property<boolean>;
   waterHeightRange?: Range;
   waterLevel?: number;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
@@ -37,7 +37,6 @@ type SelfOptions = {
 type StateObject = {
   position: Vector2;
 };
-
 
 export type WaterCupModelOptions =
   SelfOptions
@@ -61,14 +60,14 @@ export default class WaterCup extends PhetioObject {
   public readonly linePlacement: number;
 
   public static WaterCupModelIO: IOType<WaterCup>;
-  private isResetting: Property<boolean>;
+  private isResettingProperty: Property<boolean>;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       isActive: false,
-      isResetting: new BooleanProperty( false ),
+      isResettingProperty: new BooleanProperty( false ),
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       phetioType: WaterCup.WaterCupModelIO
     }, providedOptions );
@@ -76,7 +75,7 @@ export default class WaterCup extends PhetioObject {
 
     this.isActiveProperty = new BooleanProperty( options.isActive );
     this.position = options.position;
-    this.isResetting = options.isResetting;
+    this.isResettingProperty = options.isResettingProperty;
     this.linePlacement = options.linePlacement;
 
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
@@ -100,10 +99,10 @@ export default class WaterCup extends PhetioObject {
 
   // these properties are the only ones that should be reset when a cup is no longer active
   private partialReset(): void {
-    this.isResetting.set( true );
+    this.isResettingProperty.set( true );
     this.enabledRangeProperty.reset();
     this.waterLevelProperty.reset();
-    this.isResetting.set( false );
+    this.isResettingProperty.set( false );
   }
 
   public reset(): void {
