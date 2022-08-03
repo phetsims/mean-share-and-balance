@@ -313,8 +313,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
-  //TODO: This needs to be private but is public for testing.
-  public calculateWaterDistribution( waterDelta: number, cup2DWaterLevel: number ): number {
+  /**
+   * Calculate the amount of water that can be added (positive) or removed (negative) from the cup without overflowing or underflowing.
+   */
+  private calculateWaterDistribution( waterDelta: number, cup2DWaterLevel: number ): number {
     if ( waterDelta > 0 ) {
       return Math.min( 1 - cup2DWaterLevel, waterDelta );
     }
@@ -326,8 +328,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
   }
 
-  //TODO: This needs to be private, but is public for testing.
-  public distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
+  private distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
     let remainingWaterDelta = waterDelta;
     for ( let distance = 0; distance < 6; distance++ ) {
       const targetCups = connectedCups.filter( cup => {
