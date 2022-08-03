@@ -68,6 +68,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup2DArray = [];
     this.pipeArray = [];
 
+    // Statically allocate cups and pipes
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
@@ -103,8 +104,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       }
     }
 
-    // This value is derived from the water levels in all the cups, but cannot be modeled as a DerivedProperty since
-    // the number of cups varies
     const dependencies = [
       ...this.waterCup3DArray.map( waterCup => waterCup.waterLevelProperty ),
       ...this.waterCup3DArray.map( waterCup => waterCup.isActiveProperty )
@@ -258,8 +257,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * Visit pairs of 2D/3D cups
    */
   private iterateCups( callback: ( cup2D: WaterCup, cup3D: WaterCup ) => void ): void {
-    assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
-    assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
+    this.assertConsistentState();
+
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
       callback( this.getActive2DCups()[ i ], this.getActive3DCups()[ i ] );
     }
@@ -269,11 +268,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param dt - in seconds
    */
   public step( dt: number ): void {
-
     this.assertConsistentState();
-
     this.stepWaterLevels( dt );
-
     assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
 
     this.iterateCups( ( cup2D, cup3D ) => this.updateEnabledRange( cup3D, cup2D ) );
@@ -284,6 +280,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
     assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
     assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
+    assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
+    assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
   }
 
   public reset(): void {
@@ -315,6 +313,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
+  //TODO: This needs to be private but is public for testing.
   public calculateWaterDistribution( waterDelta: number, cup2DWaterLevel: number ): number {
     if ( waterDelta > 0 ) {
       return Math.min( 1 - cup2DWaterLevel, waterDelta );
@@ -327,6 +326,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
   }
 
+  //TODO: This needs to be private, but is public for testing.
   public distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
     let remainingWaterDelta = waterDelta;
     for ( let distance = 0; distance < 6; distance++ ) {
@@ -346,21 +346,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   /**
    * @param cup3DModel - The model for the affected 3D cup
-   * @param adapterProperty - allows us to confirm water levels and their deltas are within range before setting each cup's own waterLevelProperty.
-   *  Without an adapter property waterLevels become disconnected, and our visual representations do not match the data set.
    * @param waterLevel - The current waterLevel
    * @param oldWaterLevel - The previous waterLevel
    */
   public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ): void {
 
-    // During reset we only want to specify the exact values of the adapterProperty and waterLevelProperties.
+    // During reset we only want to specify the exact values of the waterLevelProperties.
     // We do not want to compensate with waterLevel deltas.
     if ( this.isResetting.value ) {
       return;
     }
-
-    assert && assert( this.waterCup3DArray.length === 7, 'There should be a static amount of 7 cups.' );
-    assert && assert( this.waterCup2DArray.length === 7, 'There should be a static amount of 7 cups.' );
 
     const index = this.waterCup3DArray.indexOf( cup3DModel );
     const cup2DModel = this.waterCup2DArray[ index ];
@@ -394,8 +389,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const max = Math.min( maxValue, 1 );
 
     assert && assert( totalWater >= 0, `Total water should be non-negative. Total water: ${totalWater}` );
-    const amountWeCanDragItDown = totalWater;
-    const min = Math.max( cup3DModel.waterLevelProperty.value - amountWeCanDragItDown, 0 );
+
+    // 3D cup's drag range is determined by the amount of total water and space in the connected 2D cup representations.
+    const min = Math.max( cup3DModel.waterLevelProperty.value - totalWater, 0 );
 
     cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
   }

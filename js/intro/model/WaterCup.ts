@@ -19,12 +19,10 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 import Property from '../../../../axon/js/Property.js';
-import Emitter from '../../../../axon/js/Emitter.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import IEmitter from '../../../../axon/js/IEmitter.js';
 
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
@@ -41,7 +39,6 @@ type StateObject = {
 };
 
 
-let index = 0;
 export type WaterCupModelOptions =
   SelfOptions
   & PhetioObjectOptions
@@ -58,9 +55,6 @@ export default class WaterCup extends PhetioObject {
   // The amount of water contained in the cup. 0 is empty, and 1 is full.
   public readonly waterLevelProperty: NumberProperty;
 
-  // Emits when reset is called
-  public readonly resetEmitter: IEmitter;
-
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
 
@@ -68,8 +62,6 @@ export default class WaterCup extends PhetioObject {
 
   public static WaterCupModelIO: IOType<WaterCup>;
   private isResetting: Property<boolean>;
-
-  public name: number = index++;
 
   public constructor( providedOptions: WaterCupModelOptions ) {
 
@@ -84,7 +76,6 @@ export default class WaterCup extends PhetioObject {
 
     this.isActiveProperty = new BooleanProperty( options.isActive );
     this.position = options.position;
-    this.resetEmitter = new Emitter();
     this.isResetting = options.isResetting;
     this.linePlacement = options.linePlacement;
 
@@ -95,7 +86,6 @@ export default class WaterCup extends PhetioObject {
       reentrant: true,
       useDeepEquality: true
     } );
-    this.enabledRangeProperty.debug( 'enabled range for cup: ' + this.name );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
       range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' ),
@@ -113,7 +103,6 @@ export default class WaterCup extends PhetioObject {
     this.isResetting.set( true );
     this.enabledRangeProperty.reset();
     this.waterLevelProperty.reset();
-    this.resetEmitter.emit();
     this.isResetting.set( false );
   }
 
@@ -126,7 +115,6 @@ export default class WaterCup extends PhetioObject {
     super.dispose();
     this.waterLevelProperty.dispose();
     this.enabledRangeProperty.dispose();
-    this.resetEmitter.dispose();
   }
 }
 
