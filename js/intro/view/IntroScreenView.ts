@@ -132,6 +132,12 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       const pipeNode = new PipeNode( pipeModel, modelViewTransform2DCups,
         { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
       waterCupLayerNode.addChild( pipeNode );
+      pipeModel.isCurrentlyClickedProperty.lazyLink( isCurrentlyClicked => {
+        if ( isCurrentlyClicked ) {
+          model.updateEnabledRange( model.waterCup3DArray[ index ], model.waterCup2DArray[ index ] );
+          model.updateEnabledRange( model.waterCup3DArray[ index + 1 ], model.waterCup2DArray[ index + 1 ] );
+        }
+      } );
       return pipeNode;
     } );
 

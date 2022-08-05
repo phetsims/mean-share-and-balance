@@ -281,11 +281,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
     assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup3DArray.length} cups` );
     assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup2DArray.length} cups` );
-
-    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
-    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
-    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
-    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
   }
 
   public reset(): void {
@@ -353,9 +348,17 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
         const waterDeltaBefore = remainingWaterDelta;
         remainingWaterDelta -= delta;
+
         assert && assert( Math.abs( remainingWaterDelta ) <= Math.abs( waterDeltaBefore ), 'remaining water to distribute should be decreasing' );
       } );
     }
+
+    if ( Math.abs( remainingWaterDelta ) > 1E-6 ) {
+      const associated3DCup = this.waterCup3DArray[ startingCup.linePlacement ];
+      associated3DCup.waterLevelProperty.value += remainingWaterDelta;
+    }
+
+    assert && assert( remainingWaterDelta <= 1E-6, `The remainingWaterDelta is too high: ${remainingWaterDelta}` );
   }
 
   /**
@@ -375,10 +378,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       const index = this.waterCup3DArray.indexOf( cup3DModel );
       const cup2DModel = this.waterCup2DArray[ index ];
       const connectedCups = this.getCupsConnectedToTargetCup( cup2DModel );
+      assert && assert( waterDelta <= connectedCups.length, `The water delta is: ${waterDelta}, but there are only ${connectedCups.length} connected cups.` );
       this.distributeWater( connectedCups, cup2DModel, waterDelta );
     }
 
-    this.assertConsistentState();
+    const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
+    const total3DWater = _.sum( this.waterCup3DArray.map( cup => cup.waterLevelProperty.value ) );
+    const totalWaterThreshold = Math.abs( total2DWater - total3DWater );
+
+    assert && assert( totalWaterThreshold <= 1E-8, `Total 2D and 3D water should be equal. 2D Water: ${total2DWater} 3D Water: ${total3DWater}` );
+
   }
 
   private getCupsConnectedToTargetCup( cup2DModel: WaterCup ): WaterCup[] {
@@ -388,7 +397,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return Array.from( setsThatContainTargetCup[ 0 ] );
   }
 
-  private updateEnabledRange( cup3DModel: WaterCup, cup2DModel: WaterCup ): void {
+  public updateEnabledRange( cup3DModel: WaterCup, cup2DModel: WaterCup ): void {
 
     const connectedCups = this.getCupsConnectedToTargetCup( cup2DModel );
 

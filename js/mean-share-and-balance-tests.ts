@@ -63,7 +63,8 @@ QUnit.test( 'Can distribute water', assert => {
   testDistribution( [ 0.5, 0.75, 0.25 ], -0.5, 2, [ 0.5, 0.5, 0.0 ], 'One cup can lose all its water' );
   testDistribution( [ 0.9, 1.0, 0 ], 0.2, 0, [ 1.0, 1.0, 0.1 ], 'Flowing two cups away' );
 
-  // TODO: Let's add tests of more than 3 cups
+  testDistribution( [ 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6 ], 1.0, 1, [ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 ], 'Filling all the cups' );
+  testDistribution( [ 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1 ], -0.7, 3, [ 0, 0, 0, 0, 0, 0, 0 ], 'Emptying all the cups' );
 } );
 
 qunitStart();
