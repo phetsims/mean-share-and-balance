@@ -12,11 +12,12 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import { Color, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -27,9 +28,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   public constructor( model: LevelingOutModel, providedOptions?: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
-
-    super( model, options );
-    this.visibleProperty.link( visible => visible && MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#F97A69' ) ) );
+    super( model, meanShareAndBalanceStrings.levelingOutQuestion, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, options );
 
     const meanNode = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT,
       { fill: MeanShareAndBalanceColors.chocolateColorProperty } );

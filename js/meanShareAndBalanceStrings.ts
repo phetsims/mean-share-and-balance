@@ -21,6 +21,7 @@ type StringsType = {
   'sync': string;
   'numberOfCups': string;
   'introQuestion': string;
+  'levelingOutQuestion': string;
 };
 
 const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

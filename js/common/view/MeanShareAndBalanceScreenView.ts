@@ -15,11 +15,9 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { AlignBox, GridBox, VBox } from '../../../../scenery/js/imports.js';
-import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import { AlignBox, GridBox, TColor, VBox } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import SyncButton from './SyncButton.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -35,17 +33,15 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
   private readonly controlsAlignBox: AlignBox;
   public readonly syncButton: SyncButton;
 
-  protected constructor( model: MeanShareAndBalanceModel, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  protected constructor( model: MeanShareAndBalanceModel, questionBarText: string, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
 
     super( options );
 
-    // TODO: Can QuestionBar be built in a way that allows changing barFill and labelText after construction?
-    // see: https://github.com/phetsims/scenery-phet/issues/751
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       tandem: options.tandem.createTandem( 'questionBar' ),
-      labelText: meanShareAndBalanceStrings.introQuestion,
-      barFill: MeanShareAndBalanceColors.questionBarColorProperty
+      labelText: questionBarText,
+      barFill: questionBarColor
     } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,

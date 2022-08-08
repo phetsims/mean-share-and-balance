@@ -8,7 +8,7 @@
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { Color, Node, Text } from '../../../../scenery/js/imports.js';
+import { Node, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -39,7 +39,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
 
-    super( model, options );
+    super( model, meanShareAndBalanceStrings.introQuestion, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
@@ -58,7 +58,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
-    this.visibleProperty.link( visible => visible && MeanShareAndBalanceColors.questionBarColorProperty.set( new Color( '#2496D6' ) ) );
 
     //Number Picker
     const numberOfCupsNumberSpinner = new NumberSpinner(

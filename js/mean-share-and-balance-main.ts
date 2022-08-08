@@ -12,6 +12,7 @@ import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import meanShareAndBalanceStrings from './meanShareAndBalanceStrings.js';
 import IntroScreen from './intro/IntroScreen.js';
+// import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
 
 const meanShareAndBalanceTitleString = meanShareAndBalanceStrings[ 'mean-share-and-balance' ].title;
 
@@ -35,6 +36,7 @@ const simOptions: SimOptions = {
 simLauncher.launch( () => {
   const sim = new Sim( meanShareAndBalanceTitleString, [
     new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } )
+    // new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } )
   ], simOptions );
   sim.start();
 } );

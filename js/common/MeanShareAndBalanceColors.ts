@@ -23,7 +23,7 @@ const meanShareAndBalanceColors = {
   screenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'background', {
     default: '#FFF9F0'
   } ),
-  questionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'questionBar', {
+  introQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introQuestionBar', {
     default: '#2496D6'
   } ),
   waterFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterSide3DFill', {
@@ -55,6 +55,9 @@ const meanShareAndBalanceColors = {
   } ),
   handleGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'handleGradientDark', {
     default: 'firebrick'
+  } ),
+  levelingOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutQuestionBar', {
+    default: '#F97A69'
   } ),
   chocolateColorProperty: new ProfileColorProperty( meanShareAndBalance, 'chocolate', {
     default: '#41220C'
