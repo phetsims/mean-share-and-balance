@@ -57,7 +57,6 @@ QUnit.test( 'Can distribute water', assert => {
 
   testDistribution( [ 0.5, 0.75, 0.25 ], 0.5, 0, [ 1.0, 0.75, 0.25 ], 'One cup can accept all the water' );
 
-  // TODO: Can the overflow water be evenly distributed to neighbors?
   testDistribution( [ 0.5, 0.75, 0.25 ], 0.5, 1, [ 0.75, 1.0, 0.25 ], 'Overflow water all goes to the lowest index neighbor' );
   testDistribution( [ 0.5, 0.75, 0.25 ], -0.5, 0, [ 0.0, 0.75, 0.25 ], 'One cup can lose all its water' );
   testDistribution( [ 0.5, 0.75, 0.25 ], -0.5, 2, [ 0.5, 0.5, 0.0 ], 'One cup can lose all its water' );

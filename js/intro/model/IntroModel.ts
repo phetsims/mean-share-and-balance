@@ -341,6 +341,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         return distance === numberOfCupsAway;
       } );
 
+      // Fills cups from left to right. Note that we expected this to show up as an asymmetry in the sim because the
+      // left cup is favored. However, in testing we saw that all the water balanced out so quickly it was impossible
+      // to see the asymmetry.
       // eslint-disable-next-line @typescript-eslint/no-loop-func
       targetCups.forEach( cup => {
         const delta = this.calculateWaterDistribution( remainingWaterDelta, cup.waterLevelProperty.value );
