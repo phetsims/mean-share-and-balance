@@ -24,6 +24,7 @@ const VALVE_RADIUS = 8;
 export default class ValveNode extends Node {
   private readonly isOpenProperty: Property<boolean>;
   private readonly innerPipe: Rectangle;
+
   public constructor( pipeCenter: Vector2, valveCenterOffset: number, pipeGradient: LinearGradient, isOpenProperty: Property<boolean>, tandem: Tandem ) {
     // Valve drawing
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 )
@@ -81,13 +82,12 @@ export default class ValveNode extends Node {
       y: handleBase.top + 1
     } );
 
-    // TODO: Sam please help me understand coordinate frames. The difference between setting center & x,y
     super( {
       children: [ handleBase, handleGrip, innerPipe, outerValve, innerValve ],
       cursor: 'pointer',
       tagName: 'button',
-      y: pipeCenter.y,
       x: pipeCenter.x + valveCenterOffset,
+      y: pipeCenter.y,
       tandem: tandem.createTandem( 'ValveNode' )
     } );
 
