@@ -18,12 +18,11 @@ const meanShareAndBalanceTitleString = meanShareAndBalanceStrings[ 'mean-share-a
 
 const simOptions: SimOptions = {
 
-  //TODO fill in credits, all of these fields are optional, see joist.CreditsNode
   credits: {
-    leadDesign: '',
+    leadDesign: 'Amanda McGarry',
     softwareDevelopment: 'Marla Schulz, Sam Reid',
-    team: '',
-    qualityAssurance: '',
+    team: 'Kelly Findley, Marilyn Hartzell, Ariel Paul, Kathy Perkins, David Webb',
+    qualityAssurance: 'Emily Miller, Nancy Salpepi, Kathryn Woessner',
     graphicArts: '',
     soundDesign: '',
     thanks: ''
