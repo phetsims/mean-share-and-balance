@@ -353,6 +353,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } );
     }
 
+    // If the 3D water cup tried to go further than it was allowed, then revert by that amount.
     if ( Math.abs( remainingWaterDelta ) > 1E-6 ) {
       const associated3DCup = this.waterCup3DArray[ startingCup.linePlacement ];
       associated3DCup.waterLevelProperty.value += remainingWaterDelta;
