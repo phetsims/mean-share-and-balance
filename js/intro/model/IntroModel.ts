@@ -277,6 +277,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public step( dt: number ): void {
     this.assertConsistentState();
     this.stepWaterLevels( dt );
+    this.pipeArray.forEach( pipe => pipe.step( dt ) );
+
     assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
 
     this.iterateCups( ( cup2D, cup3D ) => this.updateEnabledRange( cup3D, cup2D ) );

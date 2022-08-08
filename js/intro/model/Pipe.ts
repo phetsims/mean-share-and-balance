@@ -11,6 +11,7 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
@@ -45,6 +46,8 @@ export default class Pipe extends PhetioObject {
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
   // The x and y positions of the pipe in the view.
   public readonly position: Vector2;
+  // Holds the valve node rotation value. Closed is 0, and open is Pi/2
+  public readonly rotationProperty: Property<number>;
 
   public static PipeIO: IOType<Pipe>;
 
@@ -57,6 +60,7 @@ export default class Pipe extends PhetioObject {
 
     super( options );
 
+    this.rotationProperty = new NumberProperty( 0 );
     this.isActiveProperty = new BooleanProperty( options.isActive );
     this.isOpenProperty = new BooleanProperty( options.isOpen, {
       tandem: options.tandem.createTandem( 'isOpenProperty' )
@@ -76,6 +80,16 @@ export default class Pipe extends PhetioObject {
     super.dispose();
     this.isOpenProperty.dispose();
     this.isCurrentlyClickedProperty.dispose();
+  }
+
+  // Valve animation
+  public step( dt: number ): void {
+    const currentRotation = this.rotationProperty.value;
+    const targetRotation = this.isOpenProperty.value ? Math.PI / 2 : 0;
+    const delta = targetRotation - currentRotation;
+    const rotationThreshold = Math.abs( this.rotationProperty.value - targetRotation ) * 0.4;
+    const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;
+    this.rotationProperty.value = rotationThreshold <= dt ? targetRotation : proposedRotation;
   }
 }
 

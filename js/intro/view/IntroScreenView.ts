@@ -153,11 +153,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     ];
   }
 
-  public override step( dt: number ): void {
-    super.step( dt );
-    this.pipeNodes.forEach( pipeNode => pipeNode.step( dt ) );
-  }
-
   public override reset(): void {
     super.reset();
     this.predictMeanVisibleProperty.reset();

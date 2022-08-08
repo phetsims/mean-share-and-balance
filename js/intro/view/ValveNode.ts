@@ -22,10 +22,8 @@ const PIPE_WIDTH = 4;
 const VALVE_RADIUS = 8;
 
 export default class ValveNode extends Node {
-  private readonly isOpenProperty: Property<boolean>;
-  private readonly innerPipe: Rectangle;
 
-  public constructor( pipeCenter: Vector2, valveCenterOffset: number, pipeGradient: LinearGradient, isOpenProperty: Property<boolean>, tandem: Tandem ) {
+  public constructor( pipeCenter: Vector2, rotationProperty: Property<number>, valveCenterOffset: number, pipeGradient: LinearGradient, isOpenProperty: Property<boolean>, tandem: Tandem ) {
     // Valve drawing
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 )
       .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
@@ -91,22 +89,10 @@ export default class ValveNode extends Node {
       tandem: tandem.createTandem( 'ValveNode' )
     } );
 
-    this.isOpenProperty = isOpenProperty;
-    this.innerPipe = innerPipe;
-  }
-
-  // Valve animation
-  public step( dt: number ): void {
-
-    // TODO: Maybe move this to the model?
-    const currentRotation = this.rotation;
-    const targetRotation = this.isOpenProperty.value ? Math.PI / 2 : 0;
-    const delta = targetRotation - currentRotation;
-    const rotationThreshold = Math.abs( this.rotation - targetRotation ) * 0.4;
-    const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;
-    this.rotation = rotationThreshold <= dt ? targetRotation : proposedRotation;
-
-    this.innerPipe.fill = this.rotation >= ( Math.PI / 3 ) ? MeanShareAndBalanceColors.waterFillColorProperty : null;
+    rotationProperty.link( rotation => {
+      this.rotation = rotation;
+      innerPipe.fill = this.rotation >= ( Math.PI / 3 ) ? MeanShareAndBalanceColors.waterFillColorProperty : null;
+    } );
   }
 }
 

@@ -66,7 +66,7 @@ export default class PipeNode extends Node {
 
     this.pipeRectangle.clipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
 
-    this.valveNode = new ValveNode( pipeCenter, valveCenterOffset, pipeGradient, pipe.isOpenProperty, options.tandem );
+    this.valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, valveCenterOffset, pipeGradient, pipe.isOpenProperty, options.tandem );
 
     // Set pointer areas for valveNode
     this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
@@ -93,10 +93,6 @@ export default class PipeNode extends Node {
     // Set position related to associated cup
     this.x = pipe.position.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
     this.y = modelViewTransform.modelToViewY( 0 ) - PIPE_WIDTH;
-  }
-
-  public step( dt: number ): void {
-    this.valveNode.step( dt );
   }
 }
 
