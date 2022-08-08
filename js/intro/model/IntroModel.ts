@@ -368,7 +368,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   /**
    * @param cup3DModel - The model for the affected 3D cup
    * @param waterDelta - The amount of water added (positive) or removed (negative)
-   * TODO: This needs to be tested for multitouch
    */
   public changeWaterLevel( cup3DModel: WaterCup, waterDelta: number ): void {
 

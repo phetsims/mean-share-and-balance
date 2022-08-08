@@ -108,19 +108,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     // add all cup nodes to the view
     model.waterCup2DArray.forEach( cupModel => {
-
-      // TODO: Better way of matching indices or tandems?
-      const index = model.waterCup2DArray.indexOf( cupModel );
       const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, this.tickMarksVisibleProperty,
-        this.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${index}` ) } );
+        this.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
     } );
 
     model.waterCup3DArray.forEach( cupModel => {
-      const index = model.waterCup3DArray.indexOf( cupModel );
       const cupNode = new WaterCup3DNode( this.tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
-        tandem: options.tandem.createTandem( `waterCup3DNode${index}` )
+        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement}` )
       } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
