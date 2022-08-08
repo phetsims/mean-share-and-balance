@@ -94,12 +94,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } ) );
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
-        this.pipeArray.push( new Pipe( {
+        const pipe = new Pipe( {
           position: position2D,
           isOpen: false,
           isActive: i === 0,
           tandem: options.tandem.createTandem( `pipe${i}` )
-        } ) );
+        } );
+        this.pipeArray.push( pipe );
+
+        pipe.isCurrentlyClickedProperty.lazyLink( isCurrentlyClicked => {
+          if ( isCurrentlyClicked ) {
+            this.updateEnabledRange( this.waterCup3DArray[ i ], this.waterCup2DArray[ i ] );
+            this.updateEnabledRange( this.waterCup3DArray[ i + 1 ], this.waterCup2DArray[ i + 1 ] );
+          }
+        } );
       }
     }
 
