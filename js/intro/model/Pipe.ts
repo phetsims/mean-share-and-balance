@@ -76,12 +76,6 @@ export default class Pipe extends PhetioObject {
     this.isActiveProperty.reset();
   }
 
-  public override dispose(): void {
-    super.dispose();
-    this.isOpenProperty.dispose();
-    this.isCurrentlyClickedProperty.dispose();
-  }
-
   // Valve animation
   public step( dt: number ): void {
     const currentRotation = this.rotationProperty.value;

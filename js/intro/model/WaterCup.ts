@@ -109,12 +109,6 @@ export default class WaterCup extends PhetioObject {
     this.partialReset();
     this.isActiveProperty.reset();
   }
-
-  public override dispose(): void {
-    super.dispose();
-    this.waterLevelProperty.dispose();
-    this.enabledRangeProperty.dispose();
-  }
 }
 
 WaterCup.WaterCupModelIO = new IOType<WaterCup>( 'WaterCupModelIO', {
