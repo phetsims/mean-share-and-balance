@@ -20,7 +20,7 @@ import WaterCup from './WaterCup.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import IReadOnlyProperty from '../../../../axon/js/IReadOnlyProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
@@ -38,7 +38,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public readonly numberOfCupsProperty: Property<number>;
   public readonly meanPredictionProperty: Property<number>;
-  public readonly meanProperty: IReadOnlyProperty<number>;
+  public readonly meanProperty: TReadOnlyProperty<number>;
 
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];

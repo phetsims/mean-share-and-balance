@@ -19,7 +19,7 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import IReadOnlyProperty from '../../../../axon/js/IReadOnlyProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type WaterLevelTriangleSliderOptions =
@@ -29,7 +29,7 @@ type WaterLevelTriangleSliderOptions =
 
 export default class WaterLevelTriangleSlider extends VSlider {
 
-  public constructor( waterLevelProperty: Property<number>, enabledRangeProperty: IReadOnlyProperty<Range>, height: number,
+  public constructor( waterLevelProperty: Property<number>, enabledRangeProperty: TReadOnlyProperty<Range>, height: number,
                       providedOptions: WaterLevelTriangleSliderOptions ) {
 
     const thumbNode = new TriangleNode( {

@@ -16,7 +16,7 @@ import WaterCup2DTickMarksNode from './WaterCup2DTickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import IReadOnlyProperty, { PropertyLinkListener } from '../../../../axon/js/IReadOnlyProperty.js';
+import TReadOnlyProperty, { PropertyLinkListener } from '../../../../axon/js/TReadOnlyProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 
@@ -25,14 +25,14 @@ type SelfOptions = EmptySelfOptions;
 type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions>;
 
 export default class WaterCup2DNode extends Node {
-  private readonly meanProperty: IReadOnlyProperty<number>;
+  private readonly meanProperty: TReadOnlyProperty<number>;
   private readonly meanListener: PropertyLinkListener<number>;
   private readonly waterLevelListener: PropertyLinkListener<number>;
   private readonly waterCup: WaterCup;
   private readonly tickMarks: Node;
   private readonly meanLine: Line;
 
-  public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: IReadOnlyProperty<number>,
+  public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
                       isShowingTickMarksProperty: Property<boolean>, isShowingMeanProperty: Property<boolean>,
                       providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
