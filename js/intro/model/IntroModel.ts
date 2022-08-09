@@ -116,7 +116,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       ...this.waterCup3DArray.map( waterCup => waterCup.isActiveProperty )
     ];
 
-    // map() does not preserve a property of .length required for DerivedProperty
+    // The implementation of DerivedProperty requires that any dependencies array passed has 15 or fewer elements.
+    // .map() does not preserve a property of .length, requiring the usage of deriveAny.
     this.meanProperty = DerivedProperty.deriveAny( dependencies,
       () => {
         const mean = calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) );
@@ -125,7 +126,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       },
       {
         tandem: options.tandem.createTandem( 'meanProperty' ),
-        phetioDocumentation: 'The ground truth water level mean.',
+        phetioDocumentation: 'The ground-truth water-level mean.',
         phetioReadOnly: true,
         phetioType: DerivedProperty.DerivedPropertyIO( NumberIO )
       } );
