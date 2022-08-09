@@ -7,7 +7,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, NodeTransformOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup from '../model/WaterCup.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -22,8 +22,7 @@ import IntroModel from '../model/IntroModel.js';
 
 type SelfOptions = EmptySelfOptions;
 
-//REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;
+type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions>;
 
 export default class WaterCup3DNode extends Node {
   private readonly waterLevelTriangle: Node;

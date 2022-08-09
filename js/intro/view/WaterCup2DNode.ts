@@ -9,7 +9,7 @@
 
 import Utils from '../../../../dot/js/Utils.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { Line, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { Line, Node, NodeOptions, NodeTransformOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import WaterCup from '../model/WaterCup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DTickMarksNode from './WaterCup2DTickMarksNode.js';
@@ -22,8 +22,7 @@ import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
-//REVIEW is there a reason to include all NodeOptions? If a client provides any translation options, this Node won't sync with waterCupModel.
-type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'y' | 'x' | 'left' | 'right' | 'top' | 'bottom'>;
+type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions>;
 
 export default class WaterCup2DNode extends Node {
   private readonly meanProperty: IReadOnlyProperty<number>;
