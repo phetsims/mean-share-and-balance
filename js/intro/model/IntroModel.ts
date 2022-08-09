@@ -344,6 +344,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
   }
 
+  // recursive function
+  // base case: water delta can be distributed evenly amongst all connected cups
+  // => if so divide water delta equally among them.
+  // else: find bottleneck cup
+  //    - waterDelta positive = fullest cup
+  //    - waterDelta negative = lowest cup
+  // => take what you can from that cup, change waterDelta
+  // => remove bottleneck cup from connected cups
+  // Go again
+  // exit recursive function if set of connected cups is empty, then revert 3DCup by remaining waterDelta
   private distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
     let remainingWaterDelta = waterDelta;
     for ( let distance = 0; distance < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; distance++ ) {
