@@ -323,27 +323,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
-  /**
-   * Calculate the amount of water that can be added (positive) or removed (negative) from the cup without overflowing or underflowing.
-   */
-  private calculateWaterDistribution( waterDelta: number, cup2DWaterLevel: number ): number {
-    if ( waterDelta > 0 ) {
-      return Math.min( 1 - cup2DWaterLevel, waterDelta );
-    }
-    else if ( waterDelta < 0 ) {
-
-      // Example 1: Let's say a cup has 0.3 and we have waterDelta -0.5.
-      // Then this is max(-0.3,-0.5), so we can remove 0.3 from the cup
-      //
-      // Example 2: Let's say a cup has 0.3 and we have waterDelta -0.1
-      // Then we have max(-0.3,-0.1) which is -0.1
-      return Math.max( -cup2DWaterLevel, waterDelta );
-    }
-    else {
-      return 0;
-    }
-  }
-
   // recursive function
   // base case: water delta can be distributed evenly amongst all connected cups
   // => if so divide water delta equally among them.
@@ -354,28 +333,51 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   // => remove bottleneck cup from connected cups
   // Go again
   // exit recursive function if set of connected cups is empty, then revert 3DCup by remaining waterDelta
+
+  private evenlyDistributeWater( connectedCups: Array<WaterCup>, waterDelta: number ): number {
+
+    if ( !connectedCups.length ) {
+      return waterDelta;
+    }
+
+    const meanWaterDelta = waterDelta / connectedCups.length;
+    const isDivisible = connectedCups.every( cup => {
+      const remainingCupSpace = cup.waterLevelProperty.value + meanWaterDelta;
+      return remainingCupSpace >= 0 && remainingCupSpace <= 1;
+    } );
+
+    // base case
+    if ( isDivisible ) {
+      connectedCups.forEach( cup => { cup.waterLevelProperty.value += meanWaterDelta; } );
+      return 0;
+    }
+
+    // else case
+    let bottleneckCup: WaterCup;
+    if ( waterDelta < 0 ) {
+      bottleneckCup = connectedCups.reduce( ( previousCup, currentCup ) => ( previousCup.waterLevelProperty.value > currentCup.waterLevelProperty.value ) ? previousCup : currentCup );
+      waterDelta += bottleneckCup.waterLevelProperty.value;
+      bottleneckCup.waterLevelProperty.value = 0;
+    }
+    else {
+      bottleneckCup = connectedCups.reduce( ( previousCup, currentCup ) => ( previousCup.waterLevelProperty.value < currentCup.waterLevelProperty.value ) ? previousCup : currentCup );
+      waterDelta -= 1 - bottleneckCup.waterLevelProperty.value;
+      bottleneckCup.waterLevelProperty.value = 1;
+    }
+
+    const filteredCups = connectedCups.filter( cup => cup !== bottleneckCup );
+
+    return this.evenlyDistributeWater( filteredCups, waterDelta );
+  }
+
+  //TODO: distribute as much water to starting cup first then iterate out.
   private distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
     let remainingWaterDelta = waterDelta;
-    for ( let distance = 0; distance < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; distance++ ) {
-      const targetCups = connectedCups.filter( cup => {
-        const numberOfCupsAway = Math.abs( startingCup.linePlacement - cup.linePlacement );
-        return distance === numberOfCupsAway;
-      } );
 
-      // Fills cups from left to right. Note that we expected this to show up as an asymmetry in the sim because the
-      // left cup is favored. However, in testing we saw that all the water balanced out so quickly it was impossible
-      // to see the asymmetry.
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      targetCups.forEach( cup => {
-        const delta = this.calculateWaterDistribution( remainingWaterDelta, cup.waterLevelProperty.value );
-        cup.waterLevelProperty.value += delta;
+    const waterDeltaBefore = remainingWaterDelta;
+    remainingWaterDelta = this.evenlyDistributeWater( connectedCups, remainingWaterDelta );
+    assert && assert( Math.abs( remainingWaterDelta ) <= Math.abs( waterDeltaBefore ), 'remaining water to distribute should be decreasing' );
 
-        const waterDeltaBefore = remainingWaterDelta;
-        remainingWaterDelta -= delta;
-
-        assert && assert( Math.abs( remainingWaterDelta ) <= Math.abs( waterDeltaBefore ), 'remaining water to distribute should be decreasing' );
-      } );
-    }
 
     // If the 3D water cup tried to go further than it was allowed, then revert by that amount.
     if ( Math.abs( remainingWaterDelta ) > 1E-6 ) {
