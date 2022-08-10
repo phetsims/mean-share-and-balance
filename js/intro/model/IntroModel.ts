@@ -121,7 +121,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.meanProperty = DerivedProperty.deriveAny( dependencies,
       () => {
         const mean = calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) );
-        assert && assert( mean >= MeanShareAndBalanceConstants.CUP_RANGE_MIN && mean <= MeanShareAndBalanceConstants.CUP_RANGE_MAX, 'mean out of bounds: ' + mean );
+        assert && assert( mean >= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN && mean <= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX, 'mean out of bounds: ' + mean );
         return mean;
       },
       {

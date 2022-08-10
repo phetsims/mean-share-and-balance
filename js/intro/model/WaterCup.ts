@@ -65,7 +65,7 @@ export default class WaterCup extends PhetioObject {
   public constructor( providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
-      waterHeightRange: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
+      waterHeightRange: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
       isActive: false,
       isResettingProperty: new BooleanProperty( false ),
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
@@ -81,12 +81,12 @@ export default class WaterCup extends PhetioObject {
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
     // If the range shrinks, an out of range adapterProperty will be constrained updating the waterLevels of 2D and 3D cups,
     // which may trigger another change in this enabledRangeProperty requiring reentrant: true
-    this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ), {
+    this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ), {
       reentrant: true,
       useDeepEquality: true
     } );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
-      range: new Range( MeanShareAndBalanceConstants.CUP_RANGE_MIN, MeanShareAndBalanceConstants.CUP_RANGE_MAX ),
+      range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
       tandem: options.tandem.createTandem( 'waterLevelProperty' ),
 
       // Changing the adapterProperty calls changeWaterLevel, which changes the level of waterLevelProperty,
