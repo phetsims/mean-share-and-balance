@@ -18,6 +18,7 @@ import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import ChocolateBarRectangle from './ChocolateBarRectangle.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -48,7 +49,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         tandem: options.tandem.createTandem( 'numberOfPeopleNumberSpinner' )
       } );
 
-    const plateLayerNode = new Node( { x: 50, y: 100 } );
+    const plateLayerNode = new Node( { x: 50, y: 100, children: [ new ChocolateBarRectangle() ] } );
 
 
     this.controlsVBox.addChild( meanAccordionBox );

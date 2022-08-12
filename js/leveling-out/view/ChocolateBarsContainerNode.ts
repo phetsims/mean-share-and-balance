@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO
+ * Contains all the chocolate bars on a plate. Each plate has one ChocolateBarsContainerNode,
+ * and each container has a maximum of 10 chocolates bars.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
