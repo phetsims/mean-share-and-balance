@@ -64,6 +64,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     } );
 
     this.arePipesOpenProperty = new BooleanProperty( false, { tandem: options.tandem.createTandem( 'arePipesOpenProperty' ) } );
+    this.arePipesOpenProperty.lazyLink( arePipesOpen => this.matchCupWaterLevels() );
 
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DArray = [];
@@ -182,34 +183,36 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    */
   private stepWaterLevels( dt: number ): void {
 
-    this.getActive2DCups().forEach( cup => {
-      const currentWaterLevel = cup.waterLevelProperty.value;
-      const delta = this.meanProperty.value - currentWaterLevel;
+    if ( this.arePipesOpenProperty.value ) {
+      this.getActive2DCups().forEach( cup => {
+        const currentWaterLevel = cup.waterLevelProperty.value;
+        const delta = this.meanProperty.value - currentWaterLevel;
 
-      let discrepancy = 5;
+        let discrepancy = 5;
 
-      // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
-      if ( this.meanProperty.value >= 0.9 ) {
-        discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanProperty.value );
-      }
-      else if ( this.meanProperty.value <= 0.1 ) {
-        discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanProperty.value );
-      }
+        // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
+        if ( this.meanProperty.value >= 0.9 ) {
+          discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanProperty.value );
+        }
+        else if ( this.meanProperty.value <= 0.1 ) {
+          discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanProperty.value );
+        }
 
-      // Animate water non-linearly. Higher discrepancy means the water will flow faster.
-      // When the water levels are closer, it will slow down.
-      let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+        // Animate water non-linearly. Higher discrepancy means the water will flow faster.
+        // When the water levels are closer, it will slow down.
+        let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
 
-      // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
-      if ( this.meanProperty.value > currentWaterLevel ) {
-        newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanProperty.value );
-      }
-      else {
-        newWaterLevel = Utils.clamp( newWaterLevel, this.meanProperty.value, currentWaterLevel );
-      }
+        // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
+        if ( this.meanProperty.value > currentWaterLevel ) {
+          newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanProperty.value );
+        }
+        else {
+          newWaterLevel = Utils.clamp( newWaterLevel, this.meanProperty.value, currentWaterLevel );
+        }
 
-      cup.waterLevelProperty.set( newWaterLevel );
-    } );
+        cup.waterLevelProperty.set( newWaterLevel );
+      } );
+    }
   }
 
   /**
@@ -294,17 +297,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
-  // recursive function
-  // base case: water delta can be distributed evenly amongst all connected cups
-  // => if so divide water delta equally among them.
-  // else: find bottleneck cup
-  //    - waterDelta positive = fullest cup
-  //    - waterDelta negative = lowest cup
-  // => take what you can from that cup, change waterDelta
-  // => remove bottleneck cup from connected cups
-  // Go again
-  // exit recursive function if set of connected cups is empty, then revert 3DCup by remaining waterDelta
-
   private evenlyDistributeWater( connectedCups: Array<WaterCup>, waterDelta: number ): number {
 
     if ( !connectedCups.length ) {
@@ -374,9 +366,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     if ( waterDelta !== 0 ) {
       const index = this.waterCup3DArray.indexOf( cup3DModel );
       const cup2DModel = this.waterCup2DArray[ index ];
-      const connectedCups = this.getActive2DCups();
-      assert && assert( waterDelta <= connectedCups.length, `The water delta is: ${waterDelta}, but there are only ${connectedCups.length} connected cups.` );
-      this.distributeWater( connectedCups, cup2DModel, waterDelta );
+
+      if ( this.arePipesOpenProperty.value ) {
+        const connectedCups = this.getActive2DCups();
+        assert && assert( waterDelta <= connectedCups.length, `The water delta is: ${waterDelta}, but there are only ${connectedCups.length} connected cups.` );
+        this.distributeWater( connectedCups, cup2DModel, waterDelta );
+      }
+
     }
 
     const total2DWater = _.sum( this.waterCup2DArray.map( cup => cup.waterLevelProperty.value ) );
@@ -389,22 +385,21 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public updateEnabledRange( cup3DModel: WaterCup, cup2DModel: WaterCup ): void {
 
-    const connectedCups = this.getActive2DCups();
+    if ( this.arePipesOpenProperty.value ) {
+      const totalWater = _.sum( this.getActive2DCups().map( cup => cup.waterLevelProperty.value ) );
+      const maxWater = this.getActive2DCups().length;
+      const missingWater = maxWater - totalWater;
+      const maxValue = cup3DModel.waterLevelProperty.value + missingWater;
+      const max = Math.min( maxValue, 1 );
 
-    // Add up the total amount of water in the connected cups
-    const totalWater = _.sum( connectedCups.map( cup => cup.waterLevelProperty.value ) );
-    const maxWater = connectedCups.length;
+      assert && assert( totalWater >= 0, `Total water should be non-negative. Total water: ${totalWater}` );
 
-    const missingWater = maxWater - totalWater;
-    const maxValue = cup3DModel.waterLevelProperty.value + missingWater;
-    const max = Math.min( maxValue, 1 );
+      // 3D cup's drag range is determined by the amount of total water and space in the connected 2D cup representations.
+      const min = Math.max( cup3DModel.waterLevelProperty.value - totalWater, 0 );
 
-    assert && assert( totalWater >= 0, `Total water should be non-negative. Total water: ${totalWater}` );
+      cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
+    }
 
-    // 3D cup's drag range is determined by the amount of total water and space in the connected 2D cup representations.
-    const min = Math.max( cup3DModel.waterLevelProperty.value - totalWater, 0 );
-
-    cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
   }
 }
 
