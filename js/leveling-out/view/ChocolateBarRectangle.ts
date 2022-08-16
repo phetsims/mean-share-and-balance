@@ -35,29 +35,36 @@ export default class ChocolateBarRectangle extends Rectangle {
     // the new width of the partial chocolate bar.
     const x2 = ( MeanShareAndBalanceConstants.CHOCOLATE_WIDTH / 4 ) * options.visiblePieces;
     const y2 = MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT;
+    const outerOffset = MeanShareAndBalanceConstants.CHOCOLATE_WIDTH / 25;
+    const innerOffset = outerOffset * 2;
 
     super( 0, 0, x2, y2, options );
 
     const createChocolateEdge = ( xPosition: number ): Shape => {
-      const innerSquare = Shape.rectangle( xPosition + 5, 10, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - 20, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - 20 );
-      const outerSquare = Shape.rectangle( xPosition, 5, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - 10, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - 10 );
-      return outerSquare.shapeDifference( innerSquare );
+      const innerSquare = Shape.roundRect( xPosition + innerOffset, innerOffset, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - innerOffset * 2, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - innerOffset * 2, 3, 3 );
+      const outerSquare = Shape.roundRect( xPosition + outerOffset, outerOffset, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - innerOffset, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - innerOffset, 5, 5 );
+      const chocolateEdges = outerSquare.shapeDifference( innerSquare );
+      const clippingTriangle = new Shape().moveTo( xPosition + outerOffset, outerOffset )
+      .lineTo( xPosition + ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT / 2 ), MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT / 2 )
+      .lineTo( xPosition + outerOffset, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - outerOffset )
+      .close();
+
+      return chocolateEdges.shapeIntersection( clippingTriangle );
     };
 
     for ( let i = 0; i < options.visiblePieces; i++ ) {
-      const xPosition = ( ( x2 - 5 ) / options.visiblePieces ) * i;
+      const xPosition = ( ( x2 - outerOffset ) / options.visiblePieces ) * i;
 
-      const chocolateHighlight = new Path( createChocolateEdge( xPosition + 5 ), {
+      const chocolateHighlightLeft = new Path( createChocolateEdge( xPosition ), {
         fill: '#8C603D'
       } );
-
-      const innerChocolateSquare = new Rectangle( xPosition + 10, 10, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - 20, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT - 20, {
-        fill: MeanShareAndBalanceColors.chocolateColorProperty,
-        cornerRadius: 4
+      const chocolateHighlightRight = new Path( createChocolateEdge( xPosition ), {
+        fill: '#8C603D',
+        rotation: Math.PI / 2
       } );
-
-      this.addChild( innerChocolateSquare );
-      this.addChild( chocolateHighlight );
+      
+      this.addChild( chocolateHighlightLeft );
+      this.addChild( chocolateHighlightRight );
     }
   }
 }
