@@ -297,7 +297,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     return constrainedWaterLevel - waterLevelProperty.value;
   }
 
-  private evenlyDistributeWater( connectedCups: Array<WaterCup>, waterDelta: number ): number {
+  private distributeWater( connectedCups: Array<WaterCup>, waterDelta: number ): number {
 
     if ( !connectedCups.length ) {
       return waterDelta;
@@ -330,15 +330,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     const filteredCups = connectedCups.filter( cup => cup !== bottleneckCup );
 
-    return this.evenlyDistributeWater( filteredCups, waterDelta );
+    return this.distributeWater( filteredCups, waterDelta );
   }
 
-  //TODO: distribute as much water to starting cup first then iterate out.
-  private distributeWater( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
+  private controlDistribution( connectedCups: Array<WaterCup>, startingCup: WaterCup, waterDelta: number ): void {
     let remainingWaterDelta = waterDelta;
 
     const waterDeltaBefore = remainingWaterDelta;
-    remainingWaterDelta = this.evenlyDistributeWater( connectedCups, remainingWaterDelta );
+
+    remainingWaterDelta = this.distributeWater( connectedCups, remainingWaterDelta );
     assert && assert( Math.abs( remainingWaterDelta ) <= Math.abs( waterDeltaBefore ), 'remaining water to distribute should be decreasing' );
 
 
@@ -354,7 +354,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   /**
    * @param cup3DModel - The model for the affected 3D cup
    * @param waterDelta - The amount of water added (positive) or removed (negative)
-   */
+*/
   public changeWaterLevel( cup3DModel: WaterCup, waterDelta: number ): void {
 
     // During reset we only want to specify the exact values of the waterLevelProperties.
@@ -370,7 +370,21 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       if ( this.arePipesOpenProperty.value ) {
         const connectedCups = this.getActive2DCups();
         assert && assert( waterDelta <= connectedCups.length, `The water delta is: ${waterDelta}, but there are only ${connectedCups.length} connected cups.` );
-        this.distributeWater( connectedCups, cup2DModel, waterDelta );
+
+        // fill or empty target cup first
+        let targetCupDelta: number;
+        if ( waterDelta < 0 ) {
+          targetCupDelta = Math.abs( waterDelta ) <= cup2DModel.waterLevelProperty.value ? waterDelta : -cup2DModel.waterLevelProperty.value;
+        }
+        else {
+          targetCupDelta = waterDelta <= 1 - cup2DModel.waterLevelProperty.value ? waterDelta : 1 - cup2DModel.waterLevelProperty.value;
+        }
+        cup2DModel.waterLevelProperty.value += targetCupDelta;
+        waterDelta -= targetCupDelta;
+        waterDelta !== 0 && this.controlDistribution( connectedCups, cup2DModel, waterDelta );
+      }
+      else {
+        cup2DModel.waterLevelProperty.value += waterDelta;
       }
 
     }
