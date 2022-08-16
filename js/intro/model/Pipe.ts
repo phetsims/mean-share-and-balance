@@ -23,7 +23,6 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   position: Vector2; // the x & y-position of the pipe in the view
-  isOpen?: boolean;
   isActive?: boolean;
 };
 
@@ -40,20 +39,18 @@ export default class Pipe extends PhetioObject {
 
   // Whether pipe is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
-  // Property tracks whether pipe's valve is open or not.
-  public readonly isOpenProperty: Property<boolean>;
   // Property tracks if the pipe's valve is in a clicked state.
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
   // The x and y positions of the pipe in the view.
   public readonly position: Vector2;
   // Holds the valve node rotation value. Closed is 0, and open is Pi/2
   public readonly rotationProperty: Property<number>;
+  public readonly arePipesOpenProperty: Property<boolean>;
 
   public static PipeIO: IOType<Pipe>;
 
-  public constructor( providedOptions?: PipeOptions ) {
+  public constructor( arePipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
-      isOpen: false,
       isActive: false,
       phetioType: Pipe.PipeIO
     }, providedOptions );
@@ -61,25 +58,21 @@ export default class Pipe extends PhetioObject {
     super( options );
 
     this.rotationProperty = new NumberProperty( 0 );
+    this.arePipesOpenProperty = arePipesOpenProperty;
     this.isActiveProperty = new BooleanProperty( options.isActive );
-    this.isOpenProperty = new BooleanProperty( options.isOpen, {
-      tandem: options.tandem.createTandem( 'isOpenProperty' )
-    } );
 
     this.position = options.position;
 
-    this.isActiveProperty.lazyLink( () => this.isOpenProperty.reset() );
   }
 
   public reset(): void {
-    this.isOpenProperty.reset();
     this.isActiveProperty.reset();
   }
 
   // Valve animation
   public step( dt: number ): void {
     const currentRotation = this.rotationProperty.value;
-    const targetRotation = this.isOpenProperty.value ? Math.PI / 2 : 0;
+    const targetRotation = this.arePipesOpenProperty.value ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;
     const rotationThreshold = Math.abs( this.rotationProperty.value - targetRotation ) * 0.4;
     const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;

@@ -43,6 +43,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly waterCup3DArray: WaterCup[];
   public readonly waterCup2DArray: WaterCup[];
   public readonly pipeArray: Pipe[];
+  public readonly arePipesOpenProperty: Property<boolean>;
   private readonly isResettingProperty = new BooleanProperty( false, { phetioFeatured: false } );
 
   public constructor( providedOptions?: IntroModelOptions ) {
@@ -61,6 +62,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       numberType: 'Integer',
       range: this.numberOfCupsRange
     } );
+
+    this.arePipesOpenProperty = new BooleanProperty( false, { tandem: options.tandem.createTandem( 'arePipesOpenProperty' ) } );
 
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DArray = [];
@@ -94,9 +97,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } ) );
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
-        const pipe = new Pipe( {
+        const pipe = new Pipe( this.arePipesOpenProperty, {
           position: position2D,
-          isOpen: false,
           isActive: i === 0,
           tandem: options.tandem.createTandem( `pipe${i}` )
         } );
@@ -175,69 +177,38 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   /**
-   * Return array of sets of cups connected by open pipes
-   */
-  private getSetsOfConnectedCups(): Array<Set<WaterCup>> {
-    const setsOfConnectedCups: Array<Set<WaterCup>> = [];
-    let currentSet = new Set<WaterCup>();
-    let index = 0;
-
-    // organize into sets of connected cups
-    this.getActive2DCups().forEach( cup => {
-      currentSet.add( cup );
-      if ( this.getActivePipes().length > index ) {
-        if ( !this.pipeArray[ index ].isOpenProperty.value ) {
-          setsOfConnectedCups.push( currentSet );
-          currentSet = new Set<WaterCup>();
-        }
-        index += 1;
-      }
-      else if ( this.getActive2DCups()[ this.getActive2DCups().length - 1 ] === cup ) {
-        setsOfConnectedCups.push( currentSet );
-      }
-    } );
-
-    return setsOfConnectedCups;
-  }
-
-  /**
    * Called during step(), levels out the water levels for the connected cups.
    * @param dt - time elapsed since last frame in seconds
    */
   private stepWaterLevels( dt: number ): void {
-    const setsOfConnectedCups = this.getSetsOfConnectedCups();
 
-    // calculate and set mean
-    setsOfConnectedCups.forEach( cupsSet => {
-      const waterMean = calculateMean( Array.from( cupsSet ).map( cup => cup.waterLevelProperty.value ) );
-      cupsSet.forEach( cup => {
-        const currentWaterLevel = cup.waterLevelProperty.value;
-        const delta = waterMean - currentWaterLevel;
+    this.getActive2DCups().forEach( cup => {
+      const currentWaterLevel = cup.waterLevelProperty.value;
+      const delta = this.meanProperty.value - currentWaterLevel;
 
-        let discrepancy = 5;
+      let discrepancy = 5;
 
-        // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
-        if ( waterMean >= 0.9 ) {
-          discrepancy = Utils.linear( 0.9, 1, 5, 50, waterMean );
-        }
-        else if ( waterMean <= 0.1 ) {
-          discrepancy = Utils.linear( 0.1, 0, 5, 50, waterMean );
-        }
+      // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
+      if ( this.meanProperty.value >= 0.9 ) {
+        discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanProperty.value );
+      }
+      else if ( this.meanProperty.value <= 0.1 ) {
+        discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanProperty.value );
+      }
 
-        // Animate water non-linearly. Higher discrepancy means the water will flow faster.
-        // When the water levels are closer, it will slow down.
-        let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+      // Animate water non-linearly. Higher discrepancy means the water will flow faster.
+      // When the water levels are closer, it will slow down.
+      let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
 
-        // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
-        if ( waterMean > currentWaterLevel ) {
-          newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, waterMean );
-        }
-        else {
-          newWaterLevel = Utils.clamp( newWaterLevel, waterMean, currentWaterLevel );
-        }
+      // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
+      if ( this.meanProperty.value > currentWaterLevel ) {
+        newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanProperty.value );
+      }
+      else {
+        newWaterLevel = Utils.clamp( newWaterLevel, this.meanProperty.value, currentWaterLevel );
+      }
 
-        cup.waterLevelProperty.set( newWaterLevel );
-      } );
+      cup.waterLevelProperty.set( newWaterLevel );
     } );
   }
 
@@ -257,7 +228,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    */
   public syncData(): void {
     this.assertConsistentState();
-    this.pipeArray.forEach( pipe => pipe.isOpenProperty.set( false ) );
+    this.arePipesOpenProperty.set( false );
     this.matchCupWaterLevels();
   }
 
@@ -403,7 +374,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     if ( waterDelta !== 0 ) {
       const index = this.waterCup3DArray.indexOf( cup3DModel );
       const cup2DModel = this.waterCup2DArray[ index ];
-      const connectedCups = this.getCupsConnectedToTargetCup( cup2DModel );
+      const connectedCups = this.getActive2DCups();
       assert && assert( waterDelta <= connectedCups.length, `The water delta is: ${waterDelta}, but there are only ${connectedCups.length} connected cups.` );
       this.distributeWater( connectedCups, cup2DModel, waterDelta );
     }
@@ -416,16 +387,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   }
 
-  private getCupsConnectedToTargetCup( cup2DModel: WaterCup ): WaterCup[] {
-    const setsOfConnectedCups = this.getSetsOfConnectedCups();
-    const setsThatContainTargetCup = setsOfConnectedCups.filter( set => set.has( cup2DModel ) );
-    assert && assert( setsThatContainTargetCup.length === 1, 'there should be exactly one set with our target cup' );
-    return Array.from( setsThatContainTargetCup[ 0 ] );
-  }
-
   public updateEnabledRange( cup3DModel: WaterCup, cup2DModel: WaterCup ): void {
 
-    const connectedCups = this.getCupsConnectedToTargetCup( cup2DModel );
+    const connectedCups = this.getActive2DCups();
 
     // Add up the total amount of water in the connected cups
     const totalWater = _.sum( connectedCups.map( cup => cup.waterLevelProperty.value ) );

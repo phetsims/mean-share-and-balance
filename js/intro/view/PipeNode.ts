@@ -19,6 +19,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ValveNode from './ValveNode.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -35,7 +36,7 @@ export default class PipeNode extends Node {
   private readonly pipeRectangle: Rectangle;
   private readonly valveNode: ValveNode;
 
-  public constructor( pipe: Pipe, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
+  public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       visibleProperty: pipe.isActiveProperty
     }, providedOptions );
@@ -66,7 +67,7 @@ export default class PipeNode extends Node {
 
     this.pipeRectangle.clipArea = createPipeClipArea( this.pipeRectangle.localBounds, VALVE_RADIUS );
 
-    this.valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, valveCenterOffset, pipeGradient, pipe.isOpenProperty, options.tandem );
+    this.valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, valveCenterOffset, pipeGradient, options.tandem );
 
     // Set pointer areas for valveNode
     this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
@@ -75,11 +76,8 @@ export default class PipeNode extends Node {
     // Valve rotation event listener
     this.valveRotationFireListener = new FireListener( {
       fire: () => {
-        pipe.isOpenProperty.set( !pipe.isOpenProperty.value );
+        arePipesOpenProperty.set( !pipe.arePipesOpenProperty.value );
 
-        // When a user checks auto-share it should open all the pipes, when a user unchecks auto-share
-        // it closes all the pipes, but when a user opens a pipe and auto-share is checked
-        // only the clicked pipe should close and auto-share unchecks.
         pipe.isCurrentlyClickedProperty.set( true );
         pipe.isCurrentlyClickedProperty.set( false );
       },

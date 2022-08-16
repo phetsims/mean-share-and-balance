@@ -124,7 +124,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     this.pipeNodes = model.pipeArray.map( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
-      const pipeNode = new PipeNode( pipeModel, modelViewTransform2DCups,
+      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
         { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
       waterCupLayerNode.addChild( pipeNode );
       return pipeNode;

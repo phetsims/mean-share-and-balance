@@ -23,7 +23,7 @@ const VALVE_RADIUS = 8;
 
 export default class ValveNode extends Node {
 
-  public constructor( pipeCenter: Vector2, rotationProperty: Property<number>, valveCenterOffset: number, pipeGradient: LinearGradient, isOpenProperty: Property<boolean>, tandem: Tandem ) {
+  public constructor( pipeCenter: Vector2, rotationProperty: Property<number>, valveCenterOffset: number, pipeGradient: LinearGradient, tandem: Tandem ) {
     // Valve drawing
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 )
       .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
