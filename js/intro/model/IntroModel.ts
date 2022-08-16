@@ -225,17 +225,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   /**
-   * Matches the 2D cup water level representations to their respective 3D cup water level
-   * Will close all open pipe valves
-   * Called when the syncDataRectangularButton is pressed.
-   */
-  public syncData(): void {
-    this.assertConsistentState();
-    this.arePipesOpenProperty.set( false );
-    this.matchCupWaterLevels();
-  }
-
-  /**
    * Visit pairs of 2D/3D cups
    */
   private iterateCups( callback: ( cup2D: WaterCup, cup3D: WaterCup ) => void ): void {
@@ -275,6 +264,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
+    this.arePipesOpenProperty.reset();
 
     this.pipeArray.forEach( pipe => pipe.reset() );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
@@ -285,21 +275,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.assertConsistentState();
   }
 
-  /**
-   * Constrains water level deltas within cup range.
-   * @param delta - the number value between the oldWaterLevel and the newWaterLevel
-   * @param range - the allowed waterLevelProperty range in each cup
-   * @param waterLevelProperty - The property tracking the water level in each cup's model.
-   */
-  private static constrainDelta( delta: number, range: Range, waterLevelProperty: Property<number> ): number {
-    const newWaterLevel = waterLevelProperty.value + delta;
-    const constrainedWaterLevel = range.constrainValue( newWaterLevel );
-    return constrainedWaterLevel - waterLevelProperty.value;
-  }
-
   private distributeWater( connectedCups: Array<WaterCup>, waterDelta: number ): number {
 
-    if ( !connectedCups.length ) {
+    if ( connectedCups.length === 0 ) {
       return waterDelta;
     }
 
@@ -317,6 +295,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // else case
     let bottleneckCup: WaterCup;
+    console.log( 'else case' );
     if ( waterDelta < 0 ) {
       bottleneckCup = connectedCups.reduce( ( previousCup, currentCup ) => ( previousCup.waterLevelProperty.value > currentCup.waterLevelProperty.value ) ? previousCup : currentCup );
       waterDelta += bottleneckCup.waterLevelProperty.value;
@@ -414,6 +393,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       cup3DModel.enabledRangeProperty.set( new Range( min, max ) );
     }
 
+  }
+
+  public syncData(): void {
+    //abstract method... no longer need?
   }
 }
 
