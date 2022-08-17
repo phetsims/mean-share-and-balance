@@ -295,7 +295,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
     // else case
     let bottleneckCup: WaterCup;
-    console.log( 'else case' );
     if ( waterDelta < 0 ) {
       bottleneckCup = connectedCups.reduce( ( previousCup, currentCup ) => ( previousCup.waterLevelProperty.value > currentCup.waterLevelProperty.value ) ? previousCup : currentCup );
       waterDelta += bottleneckCup.waterLevelProperty.value;
