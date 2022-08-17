@@ -9,7 +9,6 @@
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
-import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -24,6 +23,8 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import IntroControlPanel from './IntroControlPanel.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import ABSwitch from '../../../../sun/js/ABSwitch.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -38,8 +39,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
-
-    super( model, meanShareAndBalanceStrings.introQuestion, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
+    super( model, meanShareAndBalanceStrings.introQuestion, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, options );
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
@@ -53,26 +53,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-
-    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
-      fontSize: 15,
-      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
-    } );
-
-    //Number Picker
-    const numberOfCupsNumberSpinner = new NumberSpinner(
-      model.numberOfCupsProperty,
-
-      // The range is constant
-      new Property( model.numberOfCupsRange ), {
-        arrowsPosition: 'leftRight',
-        tandem: options.tandem.createTandem( 'numberOfCupsNumberSpinner' ),
-        accessibleName: meanShareAndBalanceStrings.numberOfCups,
-        layoutOptions: {
-          align: 'left'
-        }
-      }
-    );
 
     model.numberOfCupsProperty.lazyLink( () => this.interruptSubtreeInput );
 
@@ -135,17 +115,23 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     // Configure layout
     const controlPanel = new IntroControlPanel( this.tickMarksVisibleProperty, this.meanVisibleProperty, this.predictMeanVisibleProperty, options.tandem );
     this.controlsVBox.addChild( controlPanel );
-    this.numberSpinnerVBox.children = [ numberOfCupsText, numberOfCupsNumberSpinner ];
+
+    // Pipe toggle
+    const pipeSwitch = new ABSwitch( model.arePipesOpenProperty, false, new Text( 'closed' ), true, new Text( 'open' ), {
+      tandem: options.tandem.createTandem( 'pipeSwitch' ),
+      toggleSwitchOptions: {
+        size: new Dimension2( 40, 20 )
+      }
+    } );
+    this.dataStateVBox.addChild( pipeSwitch );
 
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanSlider );
 
     this.pdomPlayAreaNode.pdomOrder = [
       waterCupLayerNode,
-      numberOfCupsNumberSpinner,
       controlPanel,
-      predictMeanSlider,
-      this.syncButton
+      predictMeanSlider
     ];
 
     this.pdomControlAreaNode.pdomOrder = [
