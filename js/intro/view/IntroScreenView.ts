@@ -8,7 +8,7 @@
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { Node, Text } from '../../../../scenery/js/imports.js';
+import { Node } from '../../../../scenery/js/imports.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -25,6 +25,7 @@ import IntroControlPanel from './IntroControlPanel.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import ValveNode from './ValveNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -117,12 +118,14 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.controlsVBox.addChild( controlPanel );
 
     // Pipe toggle
-    const pipeSwitch = new ABSwitch( model.arePipesOpenProperty, false, new Text( 'closed' ), true, new Text( 'open' ), {
-      tandem: options.tandem.createTandem( 'pipeSwitch' ),
-      toggleSwitchOptions: {
-        size: new Dimension2( 40, 20 )
-      }
-    } );
+    const pipeSwitch = new ABSwitch( model.arePipesOpenProperty,
+      false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem ),
+      true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem ), {
+        tandem: options.tandem.createTandem( 'pipeSwitch' ),
+        toggleSwitchOptions: {
+          size: new Dimension2( 40, 20 )
+        }
+      } );
     this.dataStateVBox.addChild( pipeSwitch );
 
     this.addChild( waterCupLayerNode );

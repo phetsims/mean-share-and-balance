@@ -10,22 +10,19 @@
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import { LinearGradient, Node, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
+import { Node, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
-const HANDLE_WIDTH = 4;
-const HANDLE_HEIGHT = 10;
 const LINE_WIDTH = 1;
-const PIPE_WIDTH = 4;
-const VALVE_RADIUS = 8;
 
 export default class ValveNode extends Node {
 
-  public constructor( pipeCenter: Vector2, rotationProperty: Property<number>, valveCenterOffset: number, pipeGradient: LinearGradient, tandem: Tandem ) {
+  public constructor( parentCenter: Vector2, rotationProperty: Property<number>, tandem: Tandem ) {
     // Valve drawing
-    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, VALVE_RADIUS + 2 )
+    const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, MeanShareAndBalanceConstants.VALVE_RADIUS + 2 )
       .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
       .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty );
 
@@ -43,49 +40,23 @@ export default class ValveNode extends Node {
       return outerCircle.shapeDifference( innerCircle );
     };
 
-    const innerValve = new Path( createInnerCircle( VALVE_RADIUS, PIPE_WIDTH ),
+    const innerValve = new Path( createInnerCircle( MeanShareAndBalanceConstants.VALVE_RADIUS, MeanShareAndBalanceConstants.PIPE_WIDTH ),
       { fill: 'black', lineWidth: LINE_WIDTH } );
-    const outerValve = new Path( createOuterCircle( VALVE_RADIUS ),
+    const outerValve = new Path( createOuterCircle( MeanShareAndBalanceConstants.VALVE_RADIUS ),
       { fill: valveGradient, stroke: 'black', lineWidth: LINE_WIDTH } );
 
     // Inner pipe shows water color when pipe is opened.
-    const innerPipe = new Rectangle( 0, 0, PIPE_WIDTH, VALVE_RADIUS * 2, {
+    const innerPipe = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_WIDTH, MeanShareAndBalanceConstants.VALVE_RADIUS * 2, {
       fill: null,
       center: innerValve.center
     } );
 
-    const handleGripGradient = new LinearGradient( -2, -2, 8, 0 )
-      .addColorStop( 0, MeanShareAndBalanceColors.handleGradientLightColorProperty )
-      .addColorStop( 0.4, MeanShareAndBalanceColors.handleGradientDarkColorProperty );
-
-    const handleBase = new Rectangle( 0, 0, HANDLE_WIDTH, 3, {
-      fill: pipeGradient,
-      stroke: 'black',
-      lineWidth: LINE_WIDTH,
-      y: outerValve.top - 3,
-      x: innerValve.centerX - HANDLE_WIDTH / 2
-    } );
-
-    const handleShape = new Shape()
-      .moveTo( -2, 0 )
-      .lineTo( -4, -HANDLE_HEIGHT )
-      .ellipticalArc( 0, -HANDLE_HEIGHT, 4, 3, 0, Math.PI, 0, false )
-      .lineTo( 2, 0 )
-      .close();
-
-    const handleGrip = new Path( handleShape, {
-      fill: handleGripGradient,
-      stroke: 'black',
-      lineWidth: LINE_WIDTH,
-      y: handleBase.top + 1
-    } );
-
     super( {
-      children: [ handleBase, handleGrip, innerPipe, outerValve, innerValve ],
+      children: [ innerPipe, outerValve, innerValve ],
       cursor: 'pointer',
       tagName: 'button',
-      x: pipeCenter.x + valveCenterOffset,
-      y: pipeCenter.y,
+      x: parentCenter.x,
+      y: parentCenter.y,
       tandem: tandem.createTandem( 'ValveNode' )
     } );
 

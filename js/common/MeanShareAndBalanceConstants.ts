@@ -9,6 +9,8 @@
 
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import Range from '../../../dot/js/Range.js';
+import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
+import { LinearGradient } from '../../../scenery/js/imports.js';
 
 const DEFAULT_MARGIN = 15;
 
@@ -27,6 +29,11 @@ const MeanShareAndBalanceConstants = {
   WATER_LEVEL_RANGE: new Range( 0, 1 ),
   WATER_LEVEL_DEFAULT: 0.5,
 
+  VALVE_RADIUS: 10,
+  PIPE_WIDTH: 4,
+  PIPE_GRADIENT: new LinearGradient( 0, 0, 0, 4 )
+    .addColorStop( 0, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
+    .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty ),
   PIPE_LENGTH: 50,
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 15,
