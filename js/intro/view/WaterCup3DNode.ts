@@ -63,8 +63,8 @@ export default class WaterCup3DNode extends Node {
 
     tickMarksVisibleProperty.link( this.isShowingTickMarksListener );
 
-    waterCup.waterLevelProperty.lazyLink( ( newWaterLevel, oldWaterLevel ) => {
-      model.changeWaterLevel( waterCup, newWaterLevel - oldWaterLevel );
+    waterCup.waterLevelProperty.lazyLink( waterLevel => {
+      model.changeWaterLevel( waterCup, waterLevel );
     } );
 
     this.waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
