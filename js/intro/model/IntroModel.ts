@@ -44,7 +44,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly waterCup2DArray: WaterCup[];
   public readonly pipeArray: Pipe[];
   public readonly arePipesOpenProperty: Property<boolean>;
-  private readonly isResettingProperty = new BooleanProperty( false, { phetioFeatured: false } );
 
   public constructor( providedOptions?: IntroModelOptions ) {
 
@@ -81,7 +80,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         waterLevel: waterLevel,
         position: position3D,
         isActive: i <= 1,
-        isResettingProperty: this.isResettingProperty,
         linePlacement: i
       } ) );
 
@@ -255,9 +253,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   public reset(): void {
 
-    // Short circuit changeWaterLevel during reset.
-    this.isResettingProperty.set( true );
-
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
     this.arePipesOpenProperty.reset();
@@ -266,26 +261,20 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
     this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
 
-    this.isResettingProperty.set( false );
-
     this.assertConsistentState();
   }
 
 
   /**
    * @param cup3DModel - The model for the affected 3D cup
-   * @param waterLevel -
-*/
-  public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number ): void {
-
-    // During reset we only want to specify the exact values of the waterLevelProperties.
-    // We do not want to compensate with waterLevel deltas.
-    // if ( this.isResettingProperty.value ) {
-    //   return;
-    // }
-
-   const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
-   cup2D.waterLevelProperty.set( waterLevel );
+   * @param waterLevel - the new water level from the 3D cup's listener
+   * @param oldWaterLevel - the old water level from the 3D cup's listener
+   */
+  public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ): void {
+    const delta = waterLevel - oldWaterLevel;
+    const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
+    const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
+    cup2D.waterLevelProperty.set( cup2DWaterLevel );
   }
 
   public syncData(): void {
