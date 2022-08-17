@@ -56,7 +56,8 @@ export default class WaterCup3DNode extends Node {
       solutionFill: MeanShareAndBalanceColors.waterFillColorProperty,
       solutionGlareFill: MeanShareAndBalanceColors.water3DCrescentFillColorProperty,
       solutionShadowFill: MeanShareAndBalanceColors.waterShadowFillColorProperty,
-      beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty
+      beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty,
+      emptyBeakerFill: MeanShareAndBalanceColors.emptyWaterCup3DColorProperty
     } );
 
     this.isShowingTickMarksListener = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );

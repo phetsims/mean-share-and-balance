@@ -26,6 +26,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ValveNode from './ValveNode.js';
+import TableNode from './TableNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -128,6 +129,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       } );
     this.dataStateVBox.addChild( pipeSwitch );
 
+    this.addChild( new TableNode( { centerX: waterCupLayerNode.centerX - 6, y: waterCupLayerNode.bottom - 28 } ) );
     this.addChild( waterCupLayerNode );
     this.addChild( predictMeanSlider );
 

@@ -38,6 +38,9 @@ const meanShareAndBalanceColors = {
   waterShadowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'water3DFrontEdgeFill', {
     default: '#8EC6DD'
   } ),
+  emptyWaterCup3DColorProperty: new ProfileColorProperty( meanShareAndBalance, 'emptyWaterCup3D', {
+    default: new Color( 249, 253, 255, 0.4 )
+  } ),
   water3DCrescentFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'water3DCrescentFill', {
     default: '#B4E5F9'
   } ),
