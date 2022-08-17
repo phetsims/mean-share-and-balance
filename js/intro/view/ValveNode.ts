@@ -47,7 +47,6 @@ export default class ValveNode extends Node {
 
     // Inner pipe shows water color when pipe is opened.
     const innerPipe = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_WIDTH, MeanShareAndBalanceConstants.VALVE_RADIUS * 2, {
-      fill: null,
       center: innerValve.center
     } );
 
@@ -62,7 +61,7 @@ export default class ValveNode extends Node {
 
     rotationProperty.link( rotation => {
       this.rotation = rotation;
-      innerPipe.fill = this.rotation >= ( Math.PI / 3 ) ? MeanShareAndBalanceColors.waterFillColorProperty : null;
+      innerPipe.fill = this.rotation >= ( Math.PI / 3 ) ? MeanShareAndBalanceColors.waterFillColorProperty : 'grey';
     } );
   }
 }
