@@ -169,6 +169,30 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   /**
+   * Called as part of dragListener on 3D cups from changeWaterLevel.
+   * Distributes water delta to neighbors at a gradually smaller fraction
+   * the further away from the target cup.
+   * @param connectedCups - passed in from changeWaterLevel for testing
+   * @param targetCup - the cup directly affected by the drag listener
+   * @param waterDelta - the amount of water added or removed
+   */
+  private distributeWaterRipple( connectedCups: Array<WaterCup>, targetCup: WaterCup, waterDelta: number ): void {
+    // Loop through neighbors with target cup at center
+    for ( let i = 1; i < 7; i++ ) {
+      const neighbors = connectedCups.filter( cup => Math.abs( targetCup.linePlacement - cup.linePlacement ) === i );
+
+      // the larger the denominator the more subtle the ripple
+      const fraction = waterDelta / ( i * 5 );
+
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      neighbors.forEach( neighbor => {
+        waterDelta -= fraction;
+        neighbor.waterLevelProperty.value += fraction;
+      } );
+    }
+  }
+
+  /**
    * Called during step(), levels out the water levels for the connected cups.
    * @param dt - time elapsed since last frame in seconds
    */
@@ -275,6 +299,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
     const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
     cup2D.waterLevelProperty.set( cup2DWaterLevel );
+    this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
   }
 
   public syncData(): void {
