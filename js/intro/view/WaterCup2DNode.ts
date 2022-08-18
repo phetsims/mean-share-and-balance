@@ -31,8 +31,9 @@ export default class WaterCup2DNode extends Node {
   private readonly waterCup: WaterCup;
   private readonly tickMarks: Node;
   private readonly meanLine: Line;
+  private readonly origLine: Line;
 
-  public constructor( waterCup: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
+  public constructor( waterCup: WaterCup, waterCup3D: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
                       isShowingTickMarksProperty: Property<boolean>, isShowingMeanProperty: Property<boolean>,
                       providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
@@ -87,6 +88,22 @@ export default class WaterCup2DNode extends Node {
         visibleProperty: isShowingMeanProperty
       } );
 
+    this.origLine = new Line(
+      0,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
+      MeanShareAndBalanceConstants.CUP_WIDTH,
+      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
+      {
+        stroke: MeanShareAndBalanceColors.waterShadowFillColorProperty,
+        lineWidth: 1
+      } );
+
+    waterCup3D.waterLevelProperty.link( wlp => {
+      meanInverse = 1 - wlp;
+      this.origLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
+      this.origLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
+    } );
+
     this.meanListener = ( mean: number ) => {
       meanInverse = 1 - mean;
       this.meanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
@@ -99,6 +116,7 @@ export default class WaterCup2DNode extends Node {
     this.addChild( waterLevelRectangle );
     this.addChild( waterCupRectangle );
     this.addChild( this.meanLine );
+    this.addChild( this.origLine );
     this.addChild( this.tickMarks );
 
     this.mutate( options );

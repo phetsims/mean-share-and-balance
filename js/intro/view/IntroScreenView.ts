@@ -89,8 +89,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     };
 
     // add all cup nodes to the view
-    model.waterCup2DArray.forEach( cupModel => {
-      const cupNode = new WaterCup2DNode( cupModel, modelViewTransform2DCups, model.meanProperty, this.tickMarksVisibleProperty,
+    model.waterCup2DArray.forEach( ( cupModel, index ) => {
+      const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, this.tickMarksVisibleProperty,
         this.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();

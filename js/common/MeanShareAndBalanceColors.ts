@@ -33,7 +33,10 @@ const meanShareAndBalanceColors = {
     default: 'white'
   } ),
   showMeanLineStrokeColorProperty: new ProfileColorProperty( meanShareAndBalance, 'showMeanLineStroke', {
-    default: 'red'
+    default: '#8500bd'
+  } ),
+  predictMeanSliderStrokeColorProperty: new ProfileColorProperty( meanShareAndBalance, 'predictMeanSlider', {
+    default: '#666666'
   } ),
   waterShadowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'water3DFrontEdgeFill', {
     default: '#8EC6DD'

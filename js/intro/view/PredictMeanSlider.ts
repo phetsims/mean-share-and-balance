@@ -22,6 +22,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 import WaterCup from '../model/WaterCup.js';
 import Property from '../../../../axon/js/Property.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
@@ -43,8 +44,9 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     super( options );
 
     this.predictMeanLine = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 0, {
-      stroke: 'purple',
-      lineWidth: 2
+      stroke: MeanShareAndBalanceColors.predictMeanSliderStrokeColorProperty,
+      lineWidth: 1.5,
+      lineDash: [ 5, 5 ]
     } );
     this.predictMeanHandle = new ShadedSphereNode( 15, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
