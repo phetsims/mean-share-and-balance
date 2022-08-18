@@ -187,7 +187,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       // eslint-disable-next-line @typescript-eslint/no-loop-func
       neighbors.forEach( neighbor => {
         waterDelta -= fraction;
-        neighbor.waterLevelProperty.value += fraction;
+
+        const proposedValue = neighbor.waterLevelProperty.value + fraction;
+        neighbor.waterLevelProperty.value = Utils.clamp( proposedValue, 0, 1 );
       } );
     }
   }
