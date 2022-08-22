@@ -299,7 +299,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
     const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
     cup2D.waterLevelProperty.set( cup2DWaterLevel );
-    this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
+
+    this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
   }
 
   public syncData(): void {
