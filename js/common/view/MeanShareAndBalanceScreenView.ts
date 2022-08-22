@@ -13,7 +13,6 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { AlignBox, GridBox, TColor, Text, VBox } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
@@ -23,9 +22,7 @@ import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 // import SyncButton from './SyncButton.js';
 
-type SelfOptions = EmptySelfOptions;
-
-export type MeanShareAndBalanceScreenViewOptions = SelfOptions & PickRequired<ScreenViewOptions, 'tandem'>;
+export type MeanShareAndBalanceScreenViewOptions = PickRequired<ScreenViewOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
@@ -35,10 +32,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly questionBar: QuestionBar;
   private readonly controlsAlignBox: AlignBox;
   public readonly dataStateVBox: VBox;
+
   // public readonly syncButton: SyncButton;
 
   protected constructor( model: MeanShareAndBalanceModel, questionBarText: string, questionBarColor: TColor, numberSpinnerProperty: Property<number>, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
-    const options = optionize<MeanShareAndBalanceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {}, providedOptions );
+    const options = providedOptions;
 
     super( options );
 

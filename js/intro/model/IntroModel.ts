@@ -15,7 +15,6 @@ import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from './Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import WaterCup from './WaterCup.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -25,9 +24,8 @@ import Property from '../../../../axon/js/Property.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 
-type SelfOptions = EmptySelfOptions;
 
-type IntroModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
+type IntroModelOptions = PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 
 export default class IntroModel extends MeanShareAndBalanceModel {
 
@@ -45,9 +43,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly pipeArray: Pipe[];
   public readonly arePipesOpenProperty: Property<boolean>;
 
-  public constructor( providedOptions?: IntroModelOptions ) {
+  public constructor( providedOptions: IntroModelOptions ) {
 
-    const options = optionize<IntroModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
+    const options = providedOptions;
     super( options );
 
     this.meanPredictionProperty = new NumberProperty( 0, {

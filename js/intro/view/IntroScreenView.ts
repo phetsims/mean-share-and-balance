@@ -7,7 +7,6 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { Node } from '../../../../scenery/js/imports.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
@@ -28,9 +27,8 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ValveNode from './ValveNode.js';
 import TableNode from './TableNode.js';
 
-type SelfOptions = EmptySelfOptions;
 
-type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
+type LevelingOutScreenViewOptions = MeanShareAndBalanceScreenViewOptions;
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   private readonly pipeNodes: PipeNode[];
@@ -40,7 +38,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
-    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
+    const options = providedOptions;
     super( model, meanShareAndBalanceStrings.introQuestion, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, options );
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {

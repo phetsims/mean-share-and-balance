@@ -7,13 +7,11 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-type SelfOptions = EmptySelfOptions;
-type TickMarksNodeOptions = SelfOptions & PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
+type TickMarksNodeOptions = PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
 
 export default class WaterCup2DTickMarksNode extends Node {
 
