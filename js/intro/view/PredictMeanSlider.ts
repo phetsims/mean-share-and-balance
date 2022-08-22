@@ -9,7 +9,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Circle, DragListener, Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Circle, DragListener, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
@@ -22,14 +22,15 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 import WaterCup from '../model/WaterCup.js';
 import Property from '../../../../axon/js/Property.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
+import Matrix3 from '../../../../dot/js/Matrix3.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>;
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
-  private readonly predictMeanLine: Line;
+  private readonly predictMeanLine: Rectangle;
   private readonly predictMeanHandle: Circle;
   private readonly dragListener: DragListener;
 
@@ -43,11 +44,10 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     super( options );
 
-    this.predictMeanLine = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 0, {
-      stroke: MeanShareAndBalanceColors.predictMeanSliderStrokeColorProperty,
-      lineWidth: 1.5,
-      lineDash: [ 5, 5 ]
-    } );
+    const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.scale( 0.2 ) );
+
+    this.predictMeanLine = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 2, { fill: linePattern } );
+
     this.predictMeanHandle = new ShadedSphereNode( 15, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
     // track predictMeanLine drag position
@@ -89,8 +89,8 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   }
 
   private updateLine( lineEnd: number ): void {
-    this.predictMeanLine.x2 = lineEnd;
-    this.predictMeanHandle.center = this.predictMeanLine.bounds.rightCenter;
+    this.predictMeanLine.rectWidth = lineEnd;
+    this.predictMeanHandle.center = this.predictMeanLine.rectBounds.rightCenter;
     this.setPointerAreas();
   }
 }
