@@ -120,8 +120,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     // Pipe toggle
     const pipeSwitch = new ABSwitch( model.arePipesOpenProperty,
-      false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem ),
-      true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem ), {
+      false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem.createTandem( 'closedValveIcon' ) ),
+      true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem.createTandem( 'openValveIcon' ) ), {
         tandem: options.tandem.createTandem( 'pipeSwitch' ),
         toggleSwitchOptions: {
           size: new Dimension2( 40, 20 )
