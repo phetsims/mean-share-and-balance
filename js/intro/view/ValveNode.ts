@@ -56,7 +56,7 @@ export default class ValveNode extends Node {
       tagName: 'button',
       x: parentCenter.x,
       y: parentCenter.y,
-      tandem: tandem.createTandem( 'ValveNode' )
+      tandem: tandem.createTandem( 'valveNode' )
     } );
 
     rotationProperty.link( rotation => {

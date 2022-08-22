@@ -35,7 +35,7 @@ export default class IntroControlPanel extends Node {
       }, {
         node: meanText,
         property: meanVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'showMeanCheckbox' ),
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'meanCheckbox' ),
         options: { accessibleName: meanShareAndBalanceStrings.mean }
       }, {
         node: tickMarksText,

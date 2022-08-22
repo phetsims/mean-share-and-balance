@@ -67,7 +67,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         // Constant range
         enabledRangeProperty: new Property( model.dragRange ),
 
-        tandem: options.tandem.createTandem( 'predictMeanLine' ),
+        tandem: options.tandem.createTandem( 'predictMeanSlider' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
