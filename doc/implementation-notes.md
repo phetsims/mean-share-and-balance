@@ -32,5 +32,5 @@ See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/master/do
 As a single screen, the central model is IntroModel. IntroModel tracks water levels across cups, ensures water levels change according to restrictions on space, and calculates mean across the data set.
 
 ### View
-- waterCupLayerNode holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also centers cups and pipes as they are activated/ deactivated by the numberSpinner.
-- WaterCup2DNode and WaterCup3DNode implement the model-view transform described [above](#model-view-transform).
+- In [IntroScreenView](https://github.com/phetsims/mean-share-and-balance/blob/master/js/intro/view/IntroScreenView.ts), `waterCupLayerNode` holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also centers cups and pipes as they are activated/ deactivated by the numberSpinner.
+- [WaterCup2DNode](https://github.com/phetsims/mean-share-and-balance/blob/master/js/intro/view/WaterCup2DNode.ts) and [WaterCup3DNode](https://github.com/phetsims/mean-share-and-balance/blob/master/js/intro/view/WaterCup3DNode.ts) implement the model-view transform described [above](#model-view-transform).
