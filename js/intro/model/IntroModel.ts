@@ -137,7 +137,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       if ( numberOfCups < oldNumberOfCups && removed3DCupWaterLevel !== removed2DCupWaterLevel ) {
         this.matchCupWaterLevels();
       }
-
       if ( !MeanShareAndBalanceQueryParameters.showAnimation ) {
         this.stepWaterLevels( 1 );
       }
@@ -233,9 +232,11 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * Reset 2D waterLevelProperty to 3D waterLevelProperty.
    */
   private matchCupWaterLevels(): void {
-    this.iterateCups( ( cup2D, cup3D ) => {
-      cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
-    } );
+    if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
+      this.iterateCups( ( cup2D, cup3D ) => {
+        cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
+      } );
+    }
   }
 
   /**
@@ -261,12 +262,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   private assertConsistentState(): void {
-    const numberOfCups = this.numberOfCupsProperty.value;
-    assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
-    assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
-    assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
-    assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup3DArray.length} cups` );
-    assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup2DArray.length} cups` );
+    if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
+      const numberOfCups = this.numberOfCupsProperty.value;
+      assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
+      assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
+      assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
+      assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup3DArray.length} cups` );
+      assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup2DArray.length} cups` );
+    }
   }
 
   public reset(): void {
@@ -289,12 +292,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param oldWaterLevel - the old water level from the 3D cup's listener
    */
   public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ): void {
-    const delta = waterLevel - oldWaterLevel;
-    const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
-    const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
-    cup2D.waterLevelProperty.set( cup2DWaterLevel );
+    if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
+      const delta = waterLevel - oldWaterLevel;
+      const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
+      const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
+      cup2D.waterLevelProperty.set( cup2DWaterLevel );
 
-    this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
+      this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
+    }
   }
 
   public syncData(): void {
