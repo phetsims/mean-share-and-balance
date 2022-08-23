@@ -22,9 +22,6 @@ export default abstract class MeanShareAndBalanceModel {
     // Here for potential future use.
   }
 
-  //TODO: Do we still need SyncData for other screens?
-  public abstract syncData(): void;
-
   /**
    * Resets the model.
    */

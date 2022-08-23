@@ -301,10 +301,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
     }
   }
-
-  public syncData(): void {
-    //abstract method... no longer need?
-  }
 }
 
 function calculateMean( values: number[] ): number {
