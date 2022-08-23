@@ -18,12 +18,12 @@ export default class IntroControlPanel extends Node {
   public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
                       predictMeanVisibleProperty: Property<boolean>, tandem: Tandem ) {
 
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMean, {
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMeanProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
-    const meanText = new Text( meanShareAndBalanceStrings.mean, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarks, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const meanText = new Text( meanShareAndBalanceStrings.meanProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarksProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
 
     // Checkbox Group
     const introOptionsCheckboxGroupTandem = tandem.createTandem( 'introOptionsCheckboxGroup' );

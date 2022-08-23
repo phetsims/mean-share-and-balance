@@ -24,7 +24,7 @@ type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 export default class IntroScreen extends Screen<IntroModel, IntroScreenView> {
   public constructor( providedOptions: IntroScreenOptions ) {
     const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
-      name: meanShareAndBalanceStrings.screen.intro,
+      name: meanShareAndBalanceStrings.screen.introProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
       keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );

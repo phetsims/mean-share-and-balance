@@ -14,8 +14,6 @@ import meanShareAndBalanceStrings from './meanShareAndBalanceStrings.js';
 import IntroScreen from './intro/IntroScreen.js';
 import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
 
-const meanShareAndBalanceTitleString = meanShareAndBalanceStrings[ 'mean-share-and-balance' ].title;
-
 const simOptions: SimOptions = {
 
   credits: {
@@ -33,7 +31,7 @@ const simOptions: SimOptions = {
 // launch the sim - beware that scenery Image nodes created outside of simLauncher.launch() will have zero bounds
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
-  const sim = new Sim( meanShareAndBalanceTitleString, [
+  const sim = new Sim( meanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleProperty, [
     new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } ),
     new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } )
   ], simOptions );

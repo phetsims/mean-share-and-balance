@@ -59,7 +59,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     //   tandem: options.tandem.createTandem( 'syncRepresentationsButton' )
     // } );
 
-    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCups, {
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCupsProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
@@ -71,12 +71,14 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       {
         arrowsPosition: 'leftRight',
         tandem: options.tandem.createTandem( 'numberSpinner' ),
-        accessibleName: meanShareAndBalanceStrings.numberOfCups,
         layoutOptions: {
           align: 'left'
         }
       }
     );
+    meanShareAndBalanceStrings.numberOfCupsProperty.link( numberOfCupsString => {
+      numberSpinner.accessibleName = numberOfCupsString;
+    } );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
