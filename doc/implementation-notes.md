@@ -33,4 +33,4 @@ As a single screen, the central model is IntroModel. IntroModel tracks water lev
 
 ### View
 - waterCupLayerNode holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also centers cups and pipes as they are activated/ deactivated by the numberSpinner.
-- WaterCup2DNode and WaterCup3DNOde implement the model-view transform described [above](#model-view-transform)
+- WaterCup2DNode and WaterCup3DNOde implement the model-view transform described [above](#model-view-transform).
