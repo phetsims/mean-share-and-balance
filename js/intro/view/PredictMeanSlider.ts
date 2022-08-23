@@ -9,7 +9,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Circle, DragListener, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
+import { Circle, DragListener, Node, NodeOptions, Pattern, Line } from '../../../../scenery/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
@@ -30,7 +30,7 @@ type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>;
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
-  private readonly predictMeanLine: Rectangle;
+  private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Circle;
   private readonly dragListener: DragListener;
 
@@ -44,9 +44,9 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     super( options );
 
-    const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.scale( 0.2 ) );
+    const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.2, 0, 0, 0, 0.2, 1.3 ) );
 
-    this.predictMeanLine = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 2, { fill: linePattern } );
+    this.predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), { lineWidth: 2.6, stroke: linePattern } );
 
     this.predictMeanHandle = new ShadedSphereNode( 15, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
 
@@ -89,8 +89,8 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   }
 
   private updateLine( lineEnd: number ): void {
-    this.predictMeanLine.rectWidth = lineEnd;
-    this.predictMeanHandle.center = this.predictMeanLine.rectBounds.rightCenter;
+    this.predictMeanLine.x2 = lineEnd;
+    this.predictMeanHandle.center = this.predictMeanLine.rightCenter;
     this.setPointerAreas();
   }
 }
