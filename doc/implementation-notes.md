@@ -17,9 +17,8 @@ This sim uses one model-view transform to map model coordinates (0, 1) to view c
 This transform is applied to both the 2D and 3D water cups and their water levels. The bottom of the cups is mapped to 0, and the top of the cups is mapped to 1. Any number in between is viewed as a percentage of water filled. 
 
 #### Memory Management
-- Static Allocation:
-  - All objects in this sim are allocated at startup and exist for the lifetime of the simulation. 
-  - Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink, removeListener, etc.`
+- Static Allocation: All objects in this sim are allocated at startup and exist for the lifetime of the simulation. 
+- Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink, removeListener, etc.`
 
 #### Intro Screen
 
