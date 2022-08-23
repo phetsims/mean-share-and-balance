@@ -39,7 +39,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = providedOptions;
-    super( model, meanShareAndBalanceStrings.introQuestion, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, options );
+    super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, options );
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )

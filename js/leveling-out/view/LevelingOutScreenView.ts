@@ -31,7 +31,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   public constructor( model: LevelingOutModel, providedOptions?: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {}, providedOptions );
-    super( model, meanShareAndBalanceStrings.levelingOutQuestion, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, model.numberOfPeopleProperty, options );
+    super( model, meanShareAndBalanceStrings.levelingOutQuestionProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, model.numberOfPeopleProperty, options );
 
     const meanNode = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT,
       { fill: MeanShareAndBalanceColors.chocolateColorProperty } );

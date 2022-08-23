@@ -20,6 +20,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 // import SyncButton from './SyncButton.js';
 
 export type MeanShareAndBalanceScreenViewOptions = PickRequired<ScreenViewOptions, 'tandem'>;
@@ -35,14 +36,14 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
   // public readonly syncButton: SyncButton;
 
-  protected constructor( model: MeanShareAndBalanceModel, questionBarText: string, questionBarColor: TColor, numberSpinnerProperty: Property<number>, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  protected constructor( model: MeanShareAndBalanceModel, questionBarText: TReadOnlyProperty<string>, questionBarColor: TColor, numberSpinnerProperty: Property<number>, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
 
     super( options );
 
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       tandem: options.tandem.createTandem( 'questionBar' ),
-      labelText: questionBarText,
+      labelText: questionBarText.value,
       barFill: questionBarColor
     } );
 
