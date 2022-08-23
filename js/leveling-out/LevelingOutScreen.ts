@@ -7,25 +7,26 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import MeanShareAndBalanceScreen from '../common/MeanShareAndBalanceScreen.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import { ScreenOptions } from '../../../joist/js/Screen.js';
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import LevelingOutModel from './model/LevelingOutModel.js';
 import LevelingOutScreenView from './view/LevelingOutScreenView.js';
 import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
+import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
 type SelfOptions = EmptySelfOptions;
 
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-export default class LevelingOutScreen extends MeanShareAndBalanceScreen<LevelingOutModel, LevelingOutScreenView> {
+export default class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: meanShareAndBalanceStrings.screen.levelingOut,
-      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
+      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
+      keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(
       () => new LevelingOutModel( { tandem: options.tandem.createTandem( 'model' ) } ),

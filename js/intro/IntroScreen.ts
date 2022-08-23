@@ -7,25 +7,26 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { ScreenOptions } from '../../../joist/js/Screen.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import IntroModel from './model/IntroModel.js';
 import IntroScreenView from './view/IntroScreenView.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
-import MeanShareAndBalanceScreen from '../common/MeanShareAndBalanceScreen.js';
 import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
+import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
 type SelfOptions = EmptySelfOptions;
 
 type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-export default class IntroScreen extends MeanShareAndBalanceScreen<IntroModel, IntroScreenView> {
+export default class IntroScreen extends Screen<IntroModel, IntroScreenView> {
   public constructor( providedOptions: IntroScreenOptions ) {
     const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
       name: meanShareAndBalanceStrings.screen.intro,
-      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty
+      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
+      keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(
       () => new IntroModel( { tandem: options.tandem.createTandem( 'model' ) } ),
