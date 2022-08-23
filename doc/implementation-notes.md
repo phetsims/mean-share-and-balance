@@ -18,7 +18,7 @@ This transform is applied to both the 2D and 3D water cups and their water level
 
 #### Memory Management
 - Static Allocation: All objects in this sim are allocated at startup and exist for the lifetime of the simulation. 
-- Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink, removeListener, etc.`
+- Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink, removeListener, etc.
 
 #### Intro Screen
 
