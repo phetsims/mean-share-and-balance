@@ -168,8 +168,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
   /**
    * Called as part of dragListener on 3D cups from changeWaterLevel.
-   * Distributes water delta to neighbors at a gradually smaller fraction
-   * the further away from the target cup.
+   * Distributes water delta to neighbors at a gradually smaller fraction the further away from the target cup.
    * @param connectedCups - passed in from changeWaterLevel for testing
    * @param targetCup - the cup directly affected by the drag listener
    * @param waterDelta - the amount of water added or removed
@@ -197,11 +196,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param dt - time elapsed since last frame in seconds
    */
   private stepWaterLevels( dt: number ): void {
-
-    // TODO: Rippling out
-    // Just look at neighbors for the mean, rather than across all of the cups
-    // iterate out from target cup
-    // the new mean calculation needs to include itself plus neighbor cups
 
     if ( this.arePipesOpenProperty.value ) {
       this.getActive2DCups().forEach( cup => {
