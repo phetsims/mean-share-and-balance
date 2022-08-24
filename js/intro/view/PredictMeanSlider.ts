@@ -9,7 +9,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Circle, DragListener, Node, NodeOptions, Pattern, Line } from '../../../../scenery/js/imports.js';
+import { DragListener, Image, Line, Node, NodeOptions, Pattern } from '../../../../scenery/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
@@ -19,11 +19,11 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import ShadedSphereNode from '../../../../scenery-phet/js/ShadedSphereNode.js';
 import WaterCup from '../model/WaterCup.js';
 import Property from '../../../../axon/js/Property.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
+import pencil_png from '../../../images/pencil_png.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
@@ -31,7 +31,7 @@ type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable'
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
-  private readonly predictMeanHandle: Circle;
+  private readonly predictMeanHandle: Node;
   private readonly dragListener: DragListener;
 
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: Property<number>,
@@ -44,11 +44,12 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     super( options );
 
-    const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.2, 0, 0, 0, 0.2, 1.3 ) );
+    const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) );
 
-    this.predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), { lineWidth: 2.6, stroke: linePattern } );
+    this.predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ),
+      { lineWidth: 1.95, stroke: linePattern, lineDash: [ 5, 3 ] } );
 
-    this.predictMeanHandle = new ShadedSphereNode( 15, { center: this.predictMeanLine.localBounds.rightCenter, mainColor: 'purple' } );
+    this.predictMeanHandle = new Image( pencil_png, { scale: 0.04, rotation: Math.PI / 4 } );
 
     // track predictMeanLine drag position
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
@@ -72,7 +73,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     numberOfCupsProperty.link( numberOfCups => {
       const active2DCups = getActive2DCups();
       const waterCup2D = active2DCups[ active2DCups.length - 1 ];
-      this.updateLine( waterCup2D.position.x + 92.5 );
+      this.updateLine( waterCup2D.position.x + 80 );
     } );
 
     this.setPointerAreas();
@@ -90,7 +91,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
   private updateLine( lineEnd: number ): void {
     this.predictMeanLine.x2 = lineEnd;
-    this.predictMeanHandle.center = this.predictMeanLine.rightCenter;
+    this.predictMeanHandle.leftCenter = this.predictMeanLine.rightCenter;
     this.setPointerAreas();
   }
 }
