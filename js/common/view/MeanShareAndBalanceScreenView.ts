@@ -77,7 +77,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         }
       }
     );
-    meanShareAndBalanceStrings.numberOfCupsProperty.link( numberOfCupsString => {
+
+    // TODO: This is a temporary fix for: https://github.com/phetsims/mean-share-and-balance/issues/99
+    const p = meanShareAndBalanceStrings.numberOfCupsProperty;
+
+    p.link( numberOfCupsString => {
       numberSpinner.accessibleName = numberOfCupsString;
     } );
 
