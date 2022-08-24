@@ -119,6 +119,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       {
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioDocumentation: 'The ground-truth water-level mean.',
+        phetioReadOnly: true, // clients should not be able to change the value of the meanProperty since this calculation is based on the water levels in the 3D cups
         phetioValueType: NumberIO
       } );
 
