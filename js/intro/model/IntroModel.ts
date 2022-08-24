@@ -60,7 +60,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       range: this.numberOfCupsRange
     } );
 
-    this.arePipesOpenProperty = new BooleanProperty( false, { tandem: options.tandem.createTandem( 'arePipesOpenProperty' ) } );
+    this.arePipesOpenProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'arePipesOpenProperty' )
+    } );
     this.arePipesOpenProperty.lazyLink( arePipesOpen => this.matchCupWaterLevels() );
 
     // The 3D cups are the "ground truth" and the 2D cups mirror them
@@ -73,8 +75,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
       const waterLevel = i === 0 ? 0.75 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
-      this.waterCup3DArray.push( new WaterCup( {
-        tandem: options.tandem.createTandem( `waterCup3D${i}` ),
+      this.waterCup3DArray.push( new WaterCup( options.tandem.createTandem( `waterCup3D${i}` ), {
         waterLevel: waterLevel,
         position: position3D,
         isActive: i <= 1,
@@ -82,8 +83,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } ) );
 
       const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );
-      this.waterCup2DArray.push( new WaterCup( {
-        tandem: options.tandem.createTandem( `waterCup2D${i}` ),
+      this.waterCup2DArray.push( new WaterCup( options.tandem.createTandem( `waterCup2D${i}` ), {
         waterLevel: waterLevel,
         position: position2D,
         isActive: i <= 1,
@@ -119,7 +119,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       {
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioDocumentation: 'The ground-truth water-level mean.',
-        phetioReadOnly: true,
         phetioValueType: NumberIO
       } );
 
@@ -232,11 +231,9 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * Reset 2D waterLevelProperty to 3D waterLevelProperty.
    */
   private matchCupWaterLevels(): void {
-    if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
-      this.iterateCups( ( cup2D, cup3D ) => {
-        cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
-      } );
-    }
+    this.iterateCups( ( cup2D, cup3D ) => {
+      cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
+    } );
   }
 
   /**
@@ -257,19 +254,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.assertConsistentState();
     this.stepWaterLevels( dt );
     this.pipeArray.forEach( pipe => pipe.step( dt ) );
-
-    assert && assert( !phet.joist.sim.isSettingPhetioStateProperty.value, 'Cannot step while setting state' );
   }
 
   private assertConsistentState(): void {
-    if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
-      const numberOfCups = this.numberOfCupsProperty.value;
-      assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
-      assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
-      assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
-      assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup3DArray.length} cups` );
-      assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup2DArray.length} cups` );
-    }
+    const numberOfCups = this.numberOfCupsProperty.value;
+    assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
+    assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
+    assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
+    assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup3DArray.length} cups` );
+    assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup2DArray.length} cups` );
   }
 
   public reset(): void {
@@ -292,14 +285,12 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param oldWaterLevel - the old water level from the 3D cup's listener
    */
   public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ): void {
-    if ( !phet.joist.sim.isSettingPhetioStateProperty.value ) {
-      const delta = waterLevel - oldWaterLevel;
-      const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
-      const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
-      cup2D.waterLevelProperty.set( cup2DWaterLevel );
+    const delta = waterLevel - oldWaterLevel;
+    const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
+    const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
+    cup2D.waterLevelProperty.set( cup2DWaterLevel );
 
-      this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
-    }
+    this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
   }
 }
 

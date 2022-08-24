@@ -12,17 +12,17 @@
 
 import NumberProperty, { NumberPropertyOptions } from '../../../../axon/js/NumberProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
@@ -33,16 +33,9 @@ type SelfOptions = {
   linePlacement: number;
 };
 
-type StateObject = {
-  position: Vector2;
-};
+export type WaterCupModelOptions = SelfOptions;
 
-export type WaterCupModelOptions =
-  SelfOptions
-  & PhetioObjectOptions
-  & PickRequired<PhetioObjectOptions, 'tandem'>;
-
-export default class WaterCup extends PhetioObject {
+export default class WaterCup {
 
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
@@ -60,34 +53,28 @@ export default class WaterCup extends PhetioObject {
 
   public static WaterCupModelIO: IOType<WaterCup>;
 
-  public constructor( providedOptions: WaterCupModelOptions ) {
+  public constructor( tandem: Tandem, providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
       isActive: false,
-      waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
-      phetioType: WaterCup.WaterCupModelIO
+      waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT
     }, providedOptions );
-    super( options );
 
-    this.isActiveProperty = new BooleanProperty( options.isActive );
+    this.isActiveProperty = new BooleanProperty( options.isActive, {
+      tandem: tandem.createTandem( 'isActiveProperty' ),
+      phetioReadOnly: true
+    } );
     this.position = options.position;
     this.linePlacement = options.linePlacement;
 
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
-    // If the range shrinks, an out of range adapterProperty will be constrained updating the waterLevels of 2D and 3D cups,
-    // which may trigger another change in this enabledRangeProperty requiring reentrant: true
     this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ), {
-      reentrant: true,
       useDeepEquality: true
     } );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
       range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
-      tandem: options.tandem.createTandem( 'waterLevelProperty' ),
-
-      // Changing the adapterProperty calls changeWaterLevel, which changes the level of waterLevelProperty,
-      // which in turn can change the adapterProperty again.
-      reentrant: true
+      tandem: tandem.createTandem( 'waterLevelProperty' )
     }, options.waterLevelPropertyOptions ) );
 
     this.isActiveProperty.lazyLink( isActive => this.partialReset() );
@@ -104,16 +91,5 @@ export default class WaterCup extends PhetioObject {
     this.isActiveProperty.reset();
   }
 }
-
-WaterCup.WaterCupModelIO = new IOType<WaterCup>( 'WaterCupModelIO', {
-  valueType: WaterCup,
-  toStateObject: ( waterCupModel: WaterCup ) => ( {
-    position: waterCupModel.position
-  } ),
-  stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.position ];
-  },
-  stateSchema: {}
-} );
 
 meanShareAndBalance.register( 'WaterCup', WaterCup );
