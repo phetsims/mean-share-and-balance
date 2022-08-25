@@ -30,18 +30,24 @@ export default class IntroControlPanel extends Node {
     const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
         node: predictMeanText,
         property: predictMeanVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.predictMean }
+        options: { accessibleName: meanShareAndBalanceStrings.predictMean },
+
+      // phet-io
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
       }, {
         node: meanText,
         property: meanVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'meanCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.mean }
+        options: { accessibleName: meanShareAndBalanceStrings.mean },
+
+        // phet-io
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'meanCheckbox' )
       }, {
         node: tickMarksText,
         property: tickMarksVisibleProperty,
-        tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' ),
-        options: { accessibleName: meanShareAndBalanceStrings.tickMarks }
+        options: { accessibleName: meanShareAndBalanceStrings.tickMarks },
+
+        // phet-io
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
       } ], {
 
         checkboxOptions: {

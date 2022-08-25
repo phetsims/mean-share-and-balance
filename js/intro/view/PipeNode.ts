@@ -70,6 +70,8 @@ export default class PipeNode extends Node {
         pipe.isCurrentlyClickedProperty.set( true );
         pipe.isCurrentlyClickedProperty.set( false );
       },
+
+      // phet-io
       tandem: options.tandem.createTandem( 'valveRotationFireListener' )
     } );
     this.valveNode.addInputListener( this.valveRotationFireListener );

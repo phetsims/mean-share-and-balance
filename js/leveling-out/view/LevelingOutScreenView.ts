@@ -39,6 +39,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
       expandedProperty: model.isMeanAccordionExpandedProperty,
+
+      // phet-io
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
     } );
 
@@ -48,6 +50,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       model.numberOfPeopleProperty,
       new Property( model.numberOfPeopleRange ), {
         arrowsPosition: 'leftRight',
+
+        // phet-io
         tandem: options.tandem.createTandem( 'numberOfPeopleNumberSpinner' )
       } );
 

@@ -62,6 +62,7 @@ export default class WaterCup {
     }, providedOptions );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
+      // phet-io
       tandem: tandem.createTandem( 'isActiveProperty' ),
       phetioReadOnly: true
     } );
@@ -74,6 +75,8 @@ export default class WaterCup {
     } );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
       range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
+
+      // phet-io
       tandem: tandem.createTandem( 'waterLevelProperty' )
     }, options.waterLevelPropertyOptions ) );
 

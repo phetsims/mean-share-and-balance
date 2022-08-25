@@ -34,12 +34,15 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     super( options );
 
     this.numberOfPeopleProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
-      tandem: options.tandem.createTandem( 'numberOfPeopleProperty' ),
       numberType: 'Integer',
-      range: this.numberOfPeopleRange
+      range: this.numberOfPeopleRange,
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'numberOfPeopleProperty' )
     } );
 
     this.isMeanAccordionExpandedProperty = new BooleanProperty( false, {
+      // phet-io
       tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
 

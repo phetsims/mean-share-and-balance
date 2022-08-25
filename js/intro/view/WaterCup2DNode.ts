@@ -51,6 +51,8 @@ export default class WaterCup2DNode extends Node {
       MeanShareAndBalanceConstants.CUP_HEIGHT,
       {
         visibleProperty: isShowingTickMarksProperty,
+
+        // phet-io
         tandem: options.tandem.createTandem( 'tickMarks' )
       }
     );

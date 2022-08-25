@@ -49,15 +49,19 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     super( options );
 
     this.meanPredictionProperty = new NumberProperty( 0, {
+      range: MeanShareAndBalanceConstants.WATER_LEVEL_RANGE,
+
+      // phet-io
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
-      phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup',
-      range: MeanShareAndBalanceConstants.WATER_LEVEL_RANGE
+      phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup'
     } );
 
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
-      tandem: options.tandem.createTandem( 'numberOfCupsProperty' ),
       numberType: 'Integer',
-      range: this.numberOfCupsRange
+      range: this.numberOfCupsRange,
+
+      // phetio
+      tandem: options.tandem.createTandem( 'numberOfCupsProperty' )
     } );
 
     this.arePipesOpenProperty = new BooleanProperty( false, {
@@ -97,6 +101,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         const pipe = new Pipe( this.arePipesOpenProperty, {
           position: position2D,
           isActive: i === 0,
+
+          // phet-io
           tandem: options.tandem.createTandem( `pipe${i}` )
         } );
         this.pipeArray.push( pipe );
@@ -117,6 +123,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         return mean;
       },
       {
+        // phet-io
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioDocumentation: 'The ground-truth water-level mean.',
         phetioValueType: NumberIO

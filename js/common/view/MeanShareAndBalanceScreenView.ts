@@ -42,9 +42,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     super( options );
 
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
-      tandem: options.tandem.createTandem( 'questionBar' ),
       labelText: questionBarText.value,
-      barFill: questionBarColor
+      barFill: questionBarColor,
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'questionBar' )
     } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
@@ -71,10 +73,12 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ),
       {
         arrowsPosition: 'leftRight',
-        tandem: options.tandem.createTandem( 'numberSpinner' ),
         layoutOptions: {
           align: 'left'
-        }
+        },
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'numberSpinner' )
       }
     );
 
@@ -91,9 +95,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         model.reset();
         this.reset();
       },
-      tandem: options.tandem.createTandem( 'resetAllButton' ),
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
-      bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN
+      bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN,
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
     this.controlsVBox = new VBox( {

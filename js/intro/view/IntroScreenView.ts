@@ -42,12 +42,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, options );
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      // phet-io
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
     this.meanVisibleProperty = new BooleanProperty( false, {
+      // phet-io
       tandem: options.tandem.createTandem( 'meanVisibleProperty' )
     } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
+      // phet-io
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
 
@@ -67,6 +70,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         // Constant range
         enabledRangeProperty: new Property( model.dragRange ),
 
+        // phet-io
         tandem: options.tandem.createTandem( 'predictMeanSlider' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
@@ -120,10 +124,12 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const pipeSwitch = new ABSwitch( model.arePipesOpenProperty,
       false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem.createTandem( 'closedValveIcon' ) ),
       true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem.createTandem( 'openValveIcon' ) ), {
-        tandem: options.tandem.createTandem( 'pipeSwitch' ),
         toggleSwitchOptions: {
           size: new Dimension2( 40, 20 )
-        }
+        },
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'pipeSwitch' )
       } );
     this.dataStateVBox.addChild( pipeSwitch );
 

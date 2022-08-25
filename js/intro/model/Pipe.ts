@@ -52,6 +52,8 @@ export default class Pipe extends PhetioObject {
   public constructor( arePipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
       isActive: false,
+
+      // phet-io
       phetioType: Pipe.PipeIO
     }, providedOptions );
 

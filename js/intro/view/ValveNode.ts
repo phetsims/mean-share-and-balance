@@ -56,6 +56,8 @@ export default class ValveNode extends Node {
       tagName: 'button',
       x: parentCenter.x,
       y: parentCenter.y,
+
+      // phet-io
       tandem: tandem.createTandem( 'valveNode' )
     } );
 

@@ -69,9 +69,11 @@ export default class WaterCup3DNode extends Node {
     } );
 
     this.waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
-      tandem: options.tandem.createTandem( 'waterLevelTriangle' ),
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
-      top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2
+      top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2,
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'waterLevelTriangle' )
     } );
 
     this.addChild( waterCupNode );

@@ -64,6 +64,8 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.dragListener = new DragListener( {
       positionProperty: predictMeanPositionProperty,
       transform: modelViewTransform,
+
+      // phet-io
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
 
