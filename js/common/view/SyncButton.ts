@@ -38,8 +38,7 @@ export default class SyncButton extends RectangularPushButton {
       content: syncContent,
       right: layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
-      layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' },
-      widthSizable: true
+      layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' }
     }, providedOptions );
 
     super( options );
