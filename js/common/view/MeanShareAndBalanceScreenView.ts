@@ -76,18 +76,12 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
         layoutOptions: {
           align: 'left'
         },
+        accessibleName: meanShareAndBalanceStrings.numberOfCupsProperty,
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberSpinner' )
       }
     );
-
-    // TODO: This is a temporary fix for: https://github.com/phetsims/mean-share-and-balance/issues/99
-    const p = meanShareAndBalanceStrings.numberOfCupsProperty;
-
-    p.link( numberOfCupsString => {
-      numberSpinner.accessibleName = numberOfCupsString;
-    } );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
