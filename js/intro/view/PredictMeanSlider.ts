@@ -15,7 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -24,32 +24,30 @@ import Property from '../../../../axon/js/Property.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import pencil_png from '../../../images/pencil_png.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
-type PredictMeanNodeOptions = SelfOptions & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>;
+type PredictMeanNodeOptions =
+  SelfOptions
+  & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>
+  & PickRequired<ParentOptions, 'tandem'>;
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Node;
-  private readonly dragListener: DragListener;
 
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: Property<number>,
                       getActive2DCups: () => Array<WaterCup>, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
-    const options = optionize<PredictMeanNodeOptions, SelfOptions, ParentOptions>()( {
-      cursor: 'pointer',
-      focusable: true
-    }, providedOptions );
-
-    super( options );
+    const options = providedOptions;
 
     const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) );
 
-    this.predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ),
+    const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ),
       { lineWidth: 1.95, stroke: linePattern, lineDash: [ 5, 3 ] } );
 
-    this.predictMeanHandle = new Image( pencil_png, { scale: 0.04, rotation: Math.PI / 4 } );
+    const predictMeanHandle = new Image( pencil_png, { scale: 0.04, rotation: Math.PI / 4 } );
 
     // track predictMeanLine drag position
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
@@ -57,11 +55,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       meanPredictionProperty.value = dragRange.constrainValue( predictMeanPosition.y );
     } );
 
-    meanPredictionProperty.link( prediction => {
-      this.centerY = modelViewTransform.modelToViewY( prediction );
-    } );
-
-    this.dragListener = new DragListener( {
+    const dragListener = new DragListener( {
       positionProperty: predictMeanPositionProperty,
       transform: modelViewTransform,
 
@@ -69,7 +63,18 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
 
-    this.addInputListener( this.dragListener );
+    const combinedOptions = combineOptions<PredictMeanNodeOptions>( { children: [ predictMeanLine, predictMeanHandle ] }, options );
+    super( combinedOptions );
+
+
+    meanPredictionProperty.link( prediction => {
+      this.centerY = modelViewTransform.modelToViewY( prediction );
+    } );
+
+    this.addInputListener( dragListener );
+
+    this.predictMeanLine = predictMeanLine;
+    this.predictMeanHandle = predictMeanHandle;
 
     // Update line length and dilation based on water cups
     numberOfCupsProperty.link( numberOfCups => {
@@ -79,8 +84,6 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     } );
 
     this.setPointerAreas();
-    this.addChild( this.predictMeanLine );
-    this.addChild( this.predictMeanHandle );
     this.centerY = modelViewTransform.modelToViewY( 0 );
   }
 
