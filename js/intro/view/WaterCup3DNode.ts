@@ -12,7 +12,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup from '../model/WaterCup.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleSlider from './WaterLevelTriangleSlider.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
@@ -25,10 +25,6 @@ type SelfOptions = EmptySelfOptions;
 type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions>;
 
 export default class WaterCup3DNode extends Node {
-  private readonly waterLevelTriangle: Node;
-  private readonly waterCup: WaterCup;
-  private readonly tickMarksVisibleProperty: Property<boolean>;
-  private readonly isShowingTickMarksListener: ( isShowingTickMarks: boolean ) => void;
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
                       model: Pick<IntroModel, 'changeWaterLevel'>,
@@ -40,9 +36,6 @@ export default class WaterCup3DNode extends Node {
       left: waterCup.position.x,
       visibleProperty: waterCup.isActiveProperty
     }, providedOptions );
-    super();
-
-    this.waterCup = waterCup;
 
     // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
     // so they don't seem disproportionately tall
@@ -60,15 +53,15 @@ export default class WaterCup3DNode extends Node {
       emptyBeakerFill: MeanShareAndBalanceColors.emptyWaterCup3DColorProperty
     } );
 
-    this.isShowingTickMarksListener = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
+    const isShowingTickMarksListener = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
 
-    tickMarksVisibleProperty.link( this.isShowingTickMarksListener );
+    tickMarksVisibleProperty.link( isShowingTickMarksListener );
 
     waterCup.waterLevelProperty.lazyLink( ( waterLevel, oldWaterlevel ) => {
       model.changeWaterLevel( waterCup, waterLevel, oldWaterlevel );
     } );
 
-    this.waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
+    const waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2,
 
@@ -76,11 +69,8 @@ export default class WaterCup3DNode extends Node {
       tandem: options.tandem.createTandem( 'waterLevelTriangle' )
     } );
 
-    this.addChild( waterCupNode );
-    this.addChild( this.waterLevelTriangle );
-    this.mutate( options );
-
-    this.tickMarksVisibleProperty = tickMarksVisibleProperty;
+    const combinedOptions = combineOptions<WaterCup3DNodeOptions>( { children: [ waterCupNode, waterLevelTriangle ] }, options );
+    super( combinedOptions );
   }
 }
 
