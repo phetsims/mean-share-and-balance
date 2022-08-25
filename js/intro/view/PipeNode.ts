@@ -9,7 +9,7 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { FireListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
@@ -19,32 +19,23 @@ import { Shape } from '../../../../kite/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ValveNode from './ValveNode.js';
 import Property from '../../../../axon/js/Property.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = EmptySelfOptions;
 
-type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement'>;
+type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement'> & PickRequired<NodeOptions, 'tandem'>;
 
 
 const LINE_WIDTH = 1;
 
 export default class PipeNode extends Node {
-  private readonly pipe: Pipe;
-  private readonly valveRotationFireListener: FireListener;
-  private readonly pipeRectangle: Rectangle;
-  private readonly valveNode: ValveNode;
 
-  public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, modelViewTransform: ModelViewTransform2, providedOptions?: PipeNodeOptions ) {
-    const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
-      visibleProperty: pipe.isActiveProperty
-    }, providedOptions );
-
-    super( options );
-
-    this.pipe = pipe;
+  public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
+    const options = providedOptions;
 
     // Pipe & valve dimensions
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, MeanShareAndBalanceConstants.PIPE_WIDTH / 2 );
-    this.pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH,
+    const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH,
       { stroke: 'black', fill: MeanShareAndBalanceConstants.PIPE_GRADIENT } );
 
     // Function to create pipe clip area when valve is closed
@@ -54,16 +45,16 @@ export default class PipeNode extends Node {
       return clipAreaRectangle.shapeDifference( clipAreaCircle );
     };
 
-    this.pipeRectangle.clipArea = createPipeClipArea( this.pipeRectangle.localBounds, MeanShareAndBalanceConstants.VALVE_RADIUS );
+    pipeRectangle.clipArea = createPipeClipArea( pipeRectangle.localBounds, MeanShareAndBalanceConstants.VALVE_RADIUS );
 
-    this.valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, options.tandem );
+    const valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, options.tandem );
 
     // Set pointer areas for valveNode
-    this.valveNode.mouseArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
-    this.valveNode.touchArea = this.valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
+    valveNode.mouseArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
+    valveNode.touchArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
     // Valve rotation event listener
-    this.valveRotationFireListener = new FireListener( {
+    const valveRotationFireListener = new FireListener( {
       fire: () => {
         arePipesOpenProperty.set( !pipe.arePipesOpenProperty.value );
 
@@ -74,10 +65,10 @@ export default class PipeNode extends Node {
       // phet-io
       tandem: options.tandem.createTandem( 'valveRotationFireListener' )
     } );
-    this.valveNode.addInputListener( this.valveRotationFireListener );
+    valveNode.addInputListener( valveRotationFireListener );
 
-    this.addChild( this.pipeRectangle );
-    this.addChild( this.valveNode );
+    const combinedOptions = combineOptions<PipeNodeOptions>( { visibleProperty: pipe.isActiveProperty, children: [ pipeRectangle, valveNode ] }, options );
+    super( combinedOptions );
 
     // Set position related to associated cup
     this.x = pipe.position.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
