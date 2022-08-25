@@ -28,7 +28,7 @@ export default class WaterCup2DNode extends Node {
 
   public constructor( waterCup: WaterCup, waterCup3D: WaterCup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
                       isShowingTickMarksProperty: Property<boolean>, isShowingMeanProperty: Property<boolean>,
-                      providedOptions?: cup2DModel2DNodeOptions ) {
+                      isShowingCupWaterLevelProperty: Property<boolean>, providedOptions?: cup2DModel2DNodeOptions ) {
     const options = optionize<cup2DModel2DNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: waterCup.position.x,
@@ -85,7 +85,8 @@ export default class WaterCup2DNode extends Node {
       MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
       {
         stroke: MeanShareAndBalanceColors.waterShadowFillColorProperty,
-        lineWidth: 1
+        lineWidth: 1,
+        visibleProperty: isShowingCupWaterLevelProperty
       } );
 
     waterCup3D.waterLevelProperty.link( wlp => {

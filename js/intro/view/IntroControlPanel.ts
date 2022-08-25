@@ -16,7 +16,7 @@ import Property from '../../../../axon/js/Property.js';
 
 export default class IntroControlPanel extends Node {
   public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
-                      predictMeanVisibleProperty: Property<boolean>, tandem: Tandem ) {
+                      predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>, tandem: Tandem ) {
 
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMeanProperty, {
       fontSize: 15,
@@ -24,6 +24,7 @@ export default class IntroControlPanel extends Node {
     } );
     const meanText = new Text( meanShareAndBalanceStrings.meanProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
     const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarksProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const cupWaterLevel = new Text( meanShareAndBalanceStrings.cupWaterLevelProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
 
     // Checkbox Group
     const introOptionsCheckboxGroupTandem = tandem.createTandem( 'introOptionsCheckboxGroup' );
@@ -48,6 +49,10 @@ export default class IntroControlPanel extends Node {
 
         // phet-io
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
+      }, {
+        node: cupWaterLevel,
+        property: cupWaterLevelVisibleProperty,
+        options: { accessibleName: meanShareAndBalanceStrings.cupWaterLevel }
       } ], {
 
         checkboxOptions: {

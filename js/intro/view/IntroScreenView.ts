@@ -35,6 +35,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly meanVisibleProperty: Property<boolean>;
   public readonly tickMarksVisibleProperty: Property<boolean>;
+  private readonly cupLevelVisibleProperty: Property<boolean>;
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -53,7 +54,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       // phet-io
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
-
+    this.cupLevelVisibleProperty = new BooleanProperty( false, {
+      // phet-io
+      tandem: options.tandem.createTandem( 'cupLevelVisibleProperty' )
+    } );
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
@@ -93,7 +97,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     // add all cup nodes to the view
     model.waterCup2DArray.forEach( ( cupModel, index ) => {
       const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, this.tickMarksVisibleProperty,
-        this.meanVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
+        this.meanVisibleProperty, this.cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
       waterCupLayerNode.addChild( cupNode );
       centerWaterCupLayerNode();
     } );
@@ -117,7 +121,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.numberOfCupsProperty.link( centerWaterCupLayerNode );
 
     // Configure layout
-    const controlPanel = new IntroControlPanel( this.tickMarksVisibleProperty, this.meanVisibleProperty, this.predictMeanVisibleProperty, options.tandem );
+    const controlPanel = new IntroControlPanel( this.tickMarksVisibleProperty, this.meanVisibleProperty, this.predictMeanVisibleProperty, this.cupLevelVisibleProperty, options.tandem );
     this.controlsVBox.addChild( controlPanel );
 
     // Pipe toggle
@@ -153,6 +157,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.predictMeanVisibleProperty.reset();
     this.meanVisibleProperty.reset();
     this.tickMarksVisibleProperty.reset();
+    this.cupLevelVisibleProperty.reset();
   }
 }
 

@@ -25,6 +25,8 @@ type StringsType = {
   'meanProperty': TReadOnlyProperty<string>;
   'tickMarks': string;
   'tickMarksProperty': TReadOnlyProperty<string>;
+  'cupWaterLevel': string;
+  'cupWaterLevelProperty': TReadOnlyProperty<string>;
   'sync': string;
   'syncProperty': TReadOnlyProperty<string>;
   'numberOfCups': string;
