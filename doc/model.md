@@ -7,17 +7,17 @@ This document is a high-level description of the model used in PhET's Mean: Shar
 This description currently pertains to the Intro Screen.
 
 ## Overview
-The goal of this simulation is to provide users an understanding of mean as it relates to a data set. More specifically, how mean can be calculated, and how changing the data set affects the mean. The Intro screen provides an experience of embodied math, allowing users to feel what the mean/average is in a qualitative sense as water levels out among cups.
+The goal of this simulation is to provide users an understanding of mean as it relates to a data set. More specifically, how mean can be calculated, and how individual data values impact the mean. The Intro screen provides an experience of embodied math, allowing users to feel what the mean/average is in a qualitative sense as water levels out among cups.
 
 ## Water Cup Data Set
 
 The data set is represented by water levels in cups. There are two sets of cups: 3D cups, and 2D cups. The total amount of water on the screen is always equal between both sets of cups. 
 
-In this sim, the 3D cups are treated as the "ground truth". Any calculations on mean, as well as reset or sync, are based off of the water levels in the 3D cups. 2D cups provide users with feedback on how the different water levels in the 3D set can be leveled out evenly. 
+<!-- In this sim, the 3D cups are treated as the "ground truth". Any calculations on mean, as well as reset or sync, are based off of the water levels in the 3D cups. 2D cups provide users with feedback on how the different water levels in the 3D set can be leveled out evenly.  -->
 
 ## Pipes
 
-The pipes in the 2D cup representation are what allow users to share water across different cups. The pipes can be opened or closed so that students can "feel" how the mean changes as the data set changes. 
+The pipes in the 2D cup representation are what allow users to share water across different cups. The pipes can be opened or closed so that students can "feel" the mean as the process of leveling out water.  
 
 The pipes only allow water movement across 2D cups. Water will not flow between 3D cups.
 
