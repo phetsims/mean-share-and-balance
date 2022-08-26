@@ -13,7 +13,7 @@ The goal of this simulation is to provide users an understanding of mean as it r
 
 The data set is represented by water levels in cups. There are two sets of cups: 3D cups, and 2D cups. The total amount of water on the screen is always equal between both sets of cups. 
 
-<!-- In this sim, the 3D cups are treated as the "ground truth". Any calculations on mean, as well as reset or sync, are based off of the water levels in the 3D cups. 2D cups provide users with feedback on how the different water levels in the 3D set can be leveled out evenly.  -->
+In this sim, the 3D cups are treated as the "ground truth". Any calculations on mean, as well as reset or sync, are based off of the water levels in the 3D cups. 2D cups provide users with feedback on how the mean can change as changes to the 3D cups happen, as well as an opportunity to level out the water between cups. 
 
 ## Pipes
 
