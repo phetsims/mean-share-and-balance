@@ -79,12 +79,38 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
-    // This also includes the pipes that connect the 2D cups as well as the draggable water level triangle
-    const waterCupLayerNode = new Node( {
-      excludeInvisibleChildrenFromBounds: true
+    // Add all cup nodes to the view
+    const waterCup2DNodes: Array<WaterCup2DNode> = [];
+    model.waterCup2DArray.forEach( ( cupModel, index ) => {
+      const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, tickMarksVisibleProperty,
+        meanVisibleProperty, cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
+      waterCup2DNodes.push( cupNode );
     } );
 
-    const tableNode = new TableNode( { centerX: 6, y: 200 } );
+    const waterCup3DNodes: Array<WaterCup3DNode> = [];
+    model.waterCup3DArray.forEach( cupModel => {
+      const cupNode = new WaterCup3DNode( tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
+        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement}` )
+      } );
+      waterCup3DNodes.push( cupNode );
+    } );
+
+    // Add all pipe nodes to the view
+    const pipeNodes: Array<PipeNode> = [];
+    model.pipeArray.forEach( pipeModel => {
+      const index = model.pipeArray.indexOf( pipeModel );
+      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
+        { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
+      pipeNodes.push( pipeNode );
+    } );
+
+    // This also includes the pipes that connect the 2D cups as well as the draggable water level triangle
+    const waterCupLayerNode = new Node( {
+      excludeInvisibleChildrenFromBounds: true,
+      children: [ ...waterCup2DNodes, ...waterCup3DNodes, ...pipeNodes ]
+    } );
+
+    const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX, y: waterCupLayerNode.centerY - 25 } );
 
     // Instantiate Parent
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, waterCupLayerNode, predictMeanSlider ] }, options );
@@ -109,37 +135,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     this.addChild( controlsAlignBox );
 
-    // Add all cup nodes to the view
-    model.waterCup2DArray.forEach( ( cupModel, index ) => {
-      const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, tickMarksVisibleProperty,
-        meanVisibleProperty, cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
-      waterCupLayerNode.addChild( cupNode );
-    } );
-
-    model.waterCup3DArray.forEach( cupModel => {
-      const cupNode = new WaterCup3DNode( tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
-        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement}` )
-      } );
-      waterCupLayerNode.addChild( cupNode );
-    } );
-
-    // Add all pipe nodes to the view
-    model.pipeArray.map( pipeModel => {
-      const index = model.pipeArray.indexOf( pipeModel );
-      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
-        { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
-      waterCupLayerNode.addChild( pipeNode );
-      return pipeNode;
-    } );
-
     // Center waterCups as they are activated and de-activated
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
+
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
       tableNode.centerX = waterCupLayerNode.centerX;
-      tableNode.y = waterCupLayerNode.y - 28;
+      tableNode.y = waterCupLayerNode.bottom - 25;
     };
 
     model.numberOfCupsProperty.link( () => {
