@@ -84,7 +84,7 @@ export default class WaterCup2DNode extends Node {
       MeanShareAndBalanceConstants.CUP_WIDTH,
       MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
       {
-        stroke: MeanShareAndBalanceColors.waterShadowFillColorProperty,
+        stroke: MeanShareAndBalanceColors.cupWaterLineColorProperty,
         lineWidth: 1,
         visibleProperty: isShowingCupWaterLevelProperty
       } );
