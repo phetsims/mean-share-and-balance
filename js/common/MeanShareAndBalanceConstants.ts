@@ -34,12 +34,12 @@ const MeanShareAndBalanceConstants = {
   PIPE_GRADIENT: new LinearGradient( 0, 0, 0, 4 )
     .addColorStop( 0, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
     .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty ),
-  PIPE_LENGTH: 50,
+  PIPE_LENGTH: 40,
   CONTROLS_VERTICAL_MARGIN: 30,
   CONTROLS_HORIZONTAL_MARGIN: 15,
 
-  CUPS_3D_CENTER_Y: 525,
-  CUPS_2D_CENTER_Y: 275,
+  CUPS_3D_CENTER_Y: 620,
+  CUPS_2D_CENTER_Y: 260,
 
   INITIAL_NUMBER_OF_PEOPLE: 1,
 

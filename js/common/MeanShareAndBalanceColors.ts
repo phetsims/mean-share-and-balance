@@ -38,7 +38,10 @@ const meanShareAndBalanceColors = {
   predictMeanSliderStrokeColorProperty: new ProfileColorProperty( meanShareAndBalance, 'predictMeanSlider', {
     default: '#666666'
   } ),
-  waterShadowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'water3DFrontEdgeFill', {
+  waterShadowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterShadowFill', {
+    default: '#8EC6DD'
+  } ),
+  cupWaterLineColorProperty: new ProfileColorProperty( meanShareAndBalance, 'cupWaterLine', {
     default: '#8EC6DD'
   } ),
   emptyWaterCup3DColorProperty: new ProfileColorProperty( meanShareAndBalance, 'emptyWaterCup3D', {

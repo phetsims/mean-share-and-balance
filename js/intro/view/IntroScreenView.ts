@@ -26,12 +26,13 @@ import ABSwitch from '../../../../sun/js/ABSwitch.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ValveNode from './ValveNode.js';
 import TableNode from './TableNode.js';
+import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
 
 
 type LevelingOutScreenViewOptions = MeanShareAndBalanceScreenViewOptions;
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
-  private readonly pipeNodes: PipeNode[];
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly meanVisibleProperty: Property<boolean>;
   public readonly tickMarksVisibleProperty: Property<boolean>;
@@ -40,35 +41,32 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = providedOptions;
-    super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, options );
 
-    this.predictMeanVisibleProperty = new BooleanProperty( false, {
+    const predictMeanVisibleProperty = new BooleanProperty( false, {
       // phet-io
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
-    this.meanVisibleProperty = new BooleanProperty( false, {
+    const meanVisibleProperty = new BooleanProperty( false, {
       // phet-io
       tandem: options.tandem.createTandem( 'meanVisibleProperty' )
     } );
-    this.tickMarksVisibleProperty = new BooleanProperty( false, {
+    const tickMarksVisibleProperty = new BooleanProperty( false, {
       // phet-io
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
-    this.cupLevelVisibleProperty = new BooleanProperty( false, {
+    const cupLevelVisibleProperty = new BooleanProperty( false, {
       // phet-io
       tandem: options.tandem.createTandem( 'cupLevelVisibleProperty' )
     } );
     const modelViewTransform2DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransform3DCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    model.numberOfCupsProperty.lazyLink( () => this.interruptSubtreeInput );
-
     //Predict Mean Line that acts as a slider for alternative input.
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
       model.numberOfCupsProperty, () => model.getActive2DCups(),
       modelViewTransform2DCups, {
-        visibleProperty: this.predictMeanVisibleProperty,
+        visibleProperty: predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
 
         // Constant range
@@ -85,44 +83,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    // 2D/3D water cup nodes addition and removal
-    // Center 2D & 3D cups
-    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
-    const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
-    const centerWaterCupLayerNode = () => {
-      waterCupLayerNode.centerX = cupsAreaCenterX;
-      predictMeanSlider.x = waterCupLayerNode.x - 12.5;
-    };
-
-    // add all cup nodes to the view
-    model.waterCup2DArray.forEach( ( cupModel, index ) => {
-      const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, this.tickMarksVisibleProperty,
-        this.meanVisibleProperty, this.cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
-      waterCupLayerNode.addChild( cupNode );
-      centerWaterCupLayerNode();
-    } );
-
-    model.waterCup3DArray.forEach( cupModel => {
-      const cupNode = new WaterCup3DNode( this.tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
-        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement}` )
-      } );
-      waterCupLayerNode.addChild( cupNode );
-      centerWaterCupLayerNode();
-    } );
-
-    this.pipeNodes = model.pipeArray.map( pipeModel => {
-      const index = model.pipeArray.indexOf( pipeModel );
-      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
-        { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
-      waterCupLayerNode.addChild( pipeNode );
-      return pipeNode;
-    } );
-
-    model.numberOfCupsProperty.link( centerWaterCupLayerNode );
-
     // Configure layout
-    const controlPanel = new IntroControlPanel( this.tickMarksVisibleProperty, this.meanVisibleProperty, this.predictMeanVisibleProperty, this.cupLevelVisibleProperty, options.tandem );
-    this.controlsVBox.addChild( controlPanel );
 
     // Pipe toggle
     const pipeSwitch = new ABSwitch( model.arePipesOpenProperty,
@@ -135,11 +96,52 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         // phet-io
         tandem: options.tandem.createTandem( 'pipeSwitch' )
       } );
-    this.dataStateVBox.addChild( pipeSwitch );
 
-    this.addChild( new TableNode( { centerX: waterCupLayerNode.centerX - 6, y: waterCupLayerNode.bottom - 28 } ) );
-    this.addChild( waterCupLayerNode );
-    this.addChild( predictMeanSlider );
+    const tableNode = new TableNode( { centerX: 6, y: 200 } );
+
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, waterCupLayerNode, predictMeanSlider ] }, options );
+
+    super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, combinedOptions );
+
+    // add all cup nodes to the view
+    model.waterCup2DArray.forEach( ( cupModel, index ) => {
+      const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, tickMarksVisibleProperty,
+        meanVisibleProperty, cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
+      waterCupLayerNode.addChild( cupNode );
+    } );
+
+    model.waterCup3DArray.forEach( cupModel => {
+      const cupNode = new WaterCup3DNode( tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
+        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement}` )
+      } );
+      waterCupLayerNode.addChild( cupNode );
+    } );
+
+    model.pipeArray.map( pipeModel => {
+      const index = model.pipeArray.indexOf( pipeModel );
+      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
+        { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
+      waterCupLayerNode.addChild( pipeNode );
+      return pipeNode;
+    } );
+
+    // Center waterCups as they are activated and de-activated
+    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
+    const centerWaterCupLayerNode = () => {
+      waterCupLayerNode.centerX = cupsAreaCenterX;
+      predictMeanSlider.x = waterCupLayerNode.x - 12.5;
+      tableNode.centerX = waterCupLayerNode.centerX;
+      tableNode.y = waterCupLayerNode.y - 28;
+    };
+
+    model.numberOfCupsProperty.link( centerWaterCupLayerNode );
+    model.numberOfCupsProperty.lazyLink( () => this.interruptSubtreeInput );
+
+    // Configure layout
+    const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty, cupLevelVisibleProperty, options.tandem );
+    this.controlsVBox.addChild( controlPanel );
+    this.dataStateVBox.addChild( pipeSwitch );
 
     this.pdomPlayAreaNode.pdomOrder = [
       waterCupLayerNode,
@@ -150,6 +152,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.pdomControlAreaNode.pdomOrder = [
       this.resetAllButton
     ];
+
+    this.predictMeanVisibleProperty = predictMeanVisibleProperty;
+    this.meanVisibleProperty = meanVisibleProperty;
+    this.tickMarksVisibleProperty = tickMarksVisibleProperty;
+    this.cupLevelVisibleProperty = cupLevelVisibleProperty;
   }
 
   public override reset(): void {
