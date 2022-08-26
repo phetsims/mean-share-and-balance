@@ -132,6 +132,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
+    // refactoring this to use children is inefficient. Too many of the elements rely on the layoutBounds of the class instance
     this.addChild( this.questionBar );
     this.addChild( this.resetAllButton );
     this.addChild( this.controlsAlignBox );
