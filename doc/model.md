@@ -7,7 +7,7 @@ This document is a high-level description of the model used in PhET's Mean: Shar
 This description currently pertains to the Intro Screen.
 
 ## Overview
-The goal of this simulation is to provide users an understanding of mean as it relates to a data set. More specifically, how mean can be calculated, and how individual data values impact the mean. The Intro screen provides an experience of embodied math, allowing users to feel what the mean/average is in a qualitative sense as water levels out among cups.
+The goal of this simulation is to provide users an understanding of mean as it relates to a data set. More specifically, how mean can be calculated, and how individual data values impact the mean. The Intro screen provides an experience of embodied math, allowing users to feel what the mean/average is in a qualitative sense, as water levels out among cups.
 
 ## Water Cup Data Set
 
@@ -27,7 +27,7 @@ Several restrictions were placed on how users can interact with the water levels
  
   - **Pipe State**
     - The pipes have two states: open and closed. They are synchronized to all be open or all be closed in order to reduce over complication of water distribution.
-    - When pipes are closed the 2D cup set will sync to match their 3D representations.
+    - When pipes are closed, the 2D cup set will sync to match their 3D representations.
 
   - **Adding and Removing Cups**
     - The first cup's water level is 3/4 full. By default, the rest of the cups are added at 1/2 capacity.
