@@ -12,7 +12,7 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import { Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { GridBox, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -55,13 +55,24 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         tandem: options.tandem.createTandem( 'numberOfPeopleNumberSpinner' )
       } );
 
-    const plateLayerNode = new Node( { x: 50, y: 100, children: [ new ChocolateBarsContainerNode( new Chocolate( { x: 50, y: 100, tandem: Tandem.OPT_OUT } ) ) ] } );
+    const controlsGridBox = new GridBox( {
+      children: [
+        meanAccordionBox,
+        numberOfPeopleText,
+        numberOfPeopleNumberSpinner
+      ],
+      minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
+      spacing: 20
+    } );
 
+    const plateLayerNode = new Node( {
+      x: 50,
+      y: 100,
+      children: [ new ChocolateBarsContainerNode( new Chocolate( { x: 50, y: 100, tandem: Tandem.OPT_OUT } ) ) ]
+    } );
 
-    this.controlsVBox.addChild( meanAccordionBox );
-    this.numberSpinnerVBox.addChild( numberOfPeopleText );
-    this.numberSpinnerVBox.addChild( numberOfPeopleNumberSpinner );
     this.addChild( plateLayerNode );
+    this.addChild( controlsGridBox );
   }
 
 }

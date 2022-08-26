@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -28,6 +28,8 @@ import ValveNode from './ValveNode.js';
 import TableNode from './TableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 
 type LevelingOutScreenViewOptions = MeanShareAndBalanceScreenViewOptions;
@@ -83,9 +85,43 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    // Configure layout
+    const tableNode = new TableNode( { centerX: 6, y: 200 } );
 
-    // Pipe toggle
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, waterCupLayerNode, predictMeanSlider ] }, options );
+
+    super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, combinedOptions );
+
+    // Controls on Right side of screen
+    //Number Spinner
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCupsProperty, {
+      fontSize: 15,
+      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+    } );
+
+    const numberSpinner = new NumberSpinner(
+      model.numberOfCupsProperty,
+      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ),
+      {
+        arrowsPosition: 'leftRight',
+        layoutOptions: {
+          align: 'left'
+        },
+        accessibleName: meanShareAndBalanceStrings.numberOfCupsProperty,
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'numberSpinner' )
+      }
+    );
+
+    const numberSpinnerVBox = new VBox( {
+      align: 'left',
+      justify: 'bottom',
+      spacing: 10,
+      layoutOptions: { column: 0, row: 2 },
+      children: [ numberOfCupsText, numberSpinner ]
+    } );
+
+    // Pipe Switch
     const pipeSwitch = new ABSwitch( model.arePipesOpenProperty,
       false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem.createTandem( 'closedValveIcon' ) ),
       true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem.createTandem( 'openValveIcon' ) ), {
@@ -97,13 +133,40 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         tandem: options.tandem.createTandem( 'pipeSwitch' )
       } );
 
-    const tableNode = new TableNode( { centerX: 6, y: 200 } );
+    const dataStateVBox = new VBox( {
+      align: 'left',
+      children: [ pipeSwitch ],
+      layoutOptions: { column: 0, row: 1, minContentHeight: 140, yAlign: 'top' }
+    } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, waterCupLayerNode, predictMeanSlider ] }, options );
+    const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty, cupLevelVisibleProperty, options.tandem,
+      { align: 'left', layoutOptions: { column: 0, row: 0, align: 'left' } } );
 
-    super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, model.numberOfCupsProperty, combinedOptions );
 
-    // add all cup nodes to the view
+    const controlsGridBox = new GridBox( {
+      children: [
+        controlPanel,
+        dataStateVBox,
+        numberSpinnerVBox
+      ],
+      minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
+      spacing: 20
+    } );
+
+    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
+      this.layoutBounds.maxX, this.layoutBounds.maxY );
+
+    const controlsAlignBox = new AlignBox( controlsGridBox, {
+      alignBounds: playAreaBounds,
+      xAlign: 'right',
+      yAlign: 'top',
+      rightMargin: MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
+  } );
+
+    this.addChild( controlsAlignBox );
+
+    // Add all cup nodes to the view
     model.waterCup2DArray.forEach( ( cupModel, index ) => {
       const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, tickMarksVisibleProperty,
         meanVisibleProperty, cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
@@ -117,6 +180,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.addChild( cupNode );
     } );
 
+    // Add all pipe nodes to the view
     model.pipeArray.map( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
@@ -137,11 +201,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     model.numberOfCupsProperty.link( centerWaterCupLayerNode );
     model.numberOfCupsProperty.lazyLink( () => this.interruptSubtreeInput );
-
-    // Configure layout
-    const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty, cupLevelVisibleProperty, options.tandem );
-    this.controlsVBox.addChild( controlPanel );
-    this.dataStateVBox.addChild( pipeSwitch );
 
     this.pdomPlayAreaNode.pdomOrder = [
       waterCupLayerNode,

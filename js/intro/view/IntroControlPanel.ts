@@ -6,25 +6,35 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
-import { Node, Text } from '../../../../scenery/js/imports.js';
+import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import Property from '../../../../axon/js/Property.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
-export default class IntroControlPanel extends Node {
+type IntroControlPanelOptions = StrictOmit<VBoxOptions, 'children'>;
+
+export default class IntroControlPanel extends VBox {
   public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
-                      predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>, tandem: Tandem ) {
+                      predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>, tandem: Tandem, providedOptions?: IntroControlPanelOptions ) {
 
     const predictMeanText = new Text( meanShareAndBalanceStrings.predictMeanProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
     const meanText = new Text( meanShareAndBalanceStrings.meanProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarksProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
-    const cupWaterLevel = new Text( meanShareAndBalanceStrings.cupWaterLevelProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarksProperty, {
+      fontSize: 15,
+      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+    } );
+    const cupWaterLevel = new Text( meanShareAndBalanceStrings.cupWaterLevelProperty, {
+      fontSize: 15,
+      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+    } );
 
     // Checkbox Group
     const introOptionsCheckboxGroupTandem = tandem.createTandem( 'introOptionsCheckboxGroup' );
@@ -33,7 +43,7 @@ export default class IntroControlPanel extends Node {
         property: predictMeanVisibleProperty,
         options: { accessibleName: meanShareAndBalanceStrings.predictMeanProperty },
 
-      // phet-io
+        // phet-io
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
       }, {
         node: meanText,
@@ -61,7 +71,9 @@ export default class IntroControlPanel extends Node {
       }
     );
 
-    super( { children: [ introOptionsCheckboxGroup ] } );
+    const combinedOptions = combineOptions<VBoxOptions>( { children: [ introOptionsCheckboxGroup ] }, providedOptions );
+
+    super( combinedOptions );
   }
 }
 
