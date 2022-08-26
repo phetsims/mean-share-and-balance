@@ -16,7 +16,6 @@ import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { TColor } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import Property from '../../../../axon/js/Property.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 // import SyncButton from './SyncButton.js';
 
@@ -26,9 +25,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
   public readonly questionBar: QuestionBar;
 
-  // public readonly syncButton: SyncButton;
-
-  protected constructor( model: MeanShareAndBalanceModel, questionBarText: TReadOnlyProperty<string>, questionBarColor: TColor, numberSpinnerProperty: Property<number>, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  protected constructor( model: MeanShareAndBalanceModel, questionBarText: TReadOnlyProperty<string>, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
 
     super( options );
@@ -40,17 +37,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       // phet-io
       tandem: options.tandem.createTandem( 'questionBar' )
     } );
-
-
-    //TODO: Do we need sync button for future screens?
-
-    // this.syncButton = new SyncButton( this.layoutBounds, {
-    //   listener: () => {
-    //     this.interruptSubtreeInput(); // cancel interactions that may be in progress
-    //     model.syncData();
-    //   },
-    //   tandem: options.tandem.createTandem( 'syncRepresentationsButton' )
-    // } );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
@@ -65,7 +51,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
-    // refactoring this to use children is inefficient. Too many of the elements rely on the layoutBounds of the class instance
     this.addChild( this.questionBar );
     this.addChild( this.resetAllButton );
   }
