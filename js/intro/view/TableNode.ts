@@ -23,10 +23,10 @@ export default class TableNode extends Node {
     const tableTopShape = new Shape().polygon( tableCorners );
 
     const tableTop = new Path( tableTopShape, { fill: 'saddleBrown', stroke: 'black' } );
-    const tableLegBL = new Rectangle( -30, 40, 15, 120, { fill: 'saddleBrown', stroke: 'black' } );
-    const tableLegBR = new Rectangle( 740, 40, 15, 120, { fill: 'saddleBrown', stroke: 'black' } );
-    const tableLegTL = new Rectangle( 5, 5, 15, 120, { fill: 'saddleBrown', stroke: 'black' } );
-    const tableLegTR = new Rectangle( 705, 5, 15, 120, { fill: 'saddleBrown', stroke: 'black' } );
+    const tableLegBL = new Rectangle( -30, 40, 15, 110, { fill: 'saddleBrown', stroke: 'black' } );
+    const tableLegBR = new Rectangle( 740, 40, 15, 110, { fill: 'saddleBrown', stroke: 'black' } );
+    const tableLegTL = new Rectangle( 5, 5, 15, 110, { fill: 'saddleBrown', stroke: 'black' } );
+    const tableLegTR = new Rectangle( 705, 5, 15, 110, { fill: 'saddleBrown', stroke: 'black' } );
 
     const options = combineOptions<NodeOptions>( { children: [ tableLegBL, tableLegBR, tableLegTL, tableLegTR, tableTop ] }, providedOptions );
     super( options );
