@@ -119,7 +119,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     // Controls on Right side of screen
     const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty,
       cupLevelVisibleProperty, model.numberOfCupsProperty, model.arePipesOpenProperty,
-      { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem } );
+      { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
 
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
