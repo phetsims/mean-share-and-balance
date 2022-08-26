@@ -66,7 +66,7 @@ export default class WaterCup3DNode extends Node {
       top: waterCupNode.top + waterCupNode.yRadiusOfEnds + beakerLineWidth / 2,
 
       // phet-io
-      tandem: options.tandem.createTandem( 'waterLevelTriangle' )
+      tandem: options.tandem.createTandem( 'waterLevelSlider' )
     } );
 
     const combinedOptions = combineOptions<WaterCup3DNodeOptions>( { children: [ waterCupNode, waterLevelTriangle ] }, options );
