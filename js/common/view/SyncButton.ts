@@ -13,14 +13,13 @@ import SyncIcon from './SyncIcon.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = EmptySelfOptions;
 type SyncButtonOptions = SelfOptions & RectangularPushButtonOptions;
 
 export default class SyncButton extends RectangularPushButton {
-  public constructor( layoutBounds: Bounds2, providedOptions: SyncButtonOptions ) {
+  public constructor( providedOptions: SyncButtonOptions ) {
     const syncIcon = new SyncIcon();
     const syncContent = new Node( {
       children: [
@@ -36,9 +35,7 @@ export default class SyncButton extends RectangularPushButton {
 
     const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {
       content: syncContent,
-      right: layoutBounds.maxX - MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       baseColor: 'white',
-      layoutOptions: { column: 1, row: 1, xAlign: 'left', minContentHeight: 140, yAlign: 'top' },
       accessibleName: meanShareAndBalanceStrings.syncProperty
     }, providedOptions );
 

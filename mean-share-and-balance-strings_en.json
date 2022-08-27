@@ -31,5 +31,8 @@
   },
   "levelingOutQuestion": {
     "value": "What is the average number of chocolate bars per person?"
+  },
+  "numberOfPeople": {
+    "value": "Number of People"
   }
 }

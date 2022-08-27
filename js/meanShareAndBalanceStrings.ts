@@ -35,6 +35,8 @@ type StringsType = {
   'introQuestionProperty': TReadOnlyProperty<string>;
   'levelingOutQuestion': string;
   'levelingOutQuestionProperty': TReadOnlyProperty<string>;
+  'numberOfPeople': string;
+  'numberOfPeopleProperty': TReadOnlyProperty<string>;
 };
 
 const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
