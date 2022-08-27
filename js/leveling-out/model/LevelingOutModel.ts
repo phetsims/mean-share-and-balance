@@ -16,6 +16,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Chocolate from './Chocolate.js';
+import Person from './Person.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -27,6 +28,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly isMeanAccordionExpandedProperty: BooleanProperty;
 
   public readonly plateChocolateArray: Array<Chocolate>;
+  public readonly peopleArray: Array<Person>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -47,11 +49,15 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     this.plateChocolateArray = [];
+    this.peopleArray = [];
 
     for ( let i = 0; i < 7; i++ ) {
       const x = i * 50;
       const chocolate = new Chocolate( { x: x, y: 150, tandem: options.tandem.createTandem( `plateChocolate${i}` ) } );
       this.plateChocolateArray.push( chocolate );
+
+      const person = new Person();
+      this.peopleArray.push( person );
     }
   }
 

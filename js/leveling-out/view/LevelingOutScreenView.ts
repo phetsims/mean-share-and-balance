@@ -21,6 +21,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import LevelingOutControlPanel from './LevelingOutControlPanel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
+import PersonNode from './PersonNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -35,13 +36,15 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const controlPanel = new LevelingOutControlPanel( model.isMeanAccordionExpandedProperty, model.numberOfPeopleProperty,
       { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
 
+    const peopleNodes = model.peopleArray.map( person => new PersonNode() );
+
     const plateLayerNode = new Node( {
       x: 50,
       y: 100,
       children: [ new ChocolateBarsContainerNode( new Chocolate( { x: 50, y: 100, tandem: Tandem.OPT_OUT } ) ) ]
     } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ plateLayerNode ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ plateLayerNode, ...peopleNodes ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
