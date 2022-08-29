@@ -22,10 +22,12 @@ import LevelingOutControlPanel from './LevelingOutControlPanel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import PersonNode from './PersonNode.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = EmptySelfOptions;
 
-type LevelingOutScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
+type LevelingOutScreenViewOptions = SelfOptions & PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 

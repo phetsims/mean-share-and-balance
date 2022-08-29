@@ -22,7 +22,7 @@ import IntroModel from '../model/IntroModel.js';
 
 type SelfOptions = EmptySelfOptions;
 
-type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions>;
+type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions | 'children'>;
 
 export default class WaterCup3DNode extends Node {
 
@@ -69,7 +69,7 @@ export default class WaterCup3DNode extends Node {
       tandem: options.tandem.createTandem( 'waterLevelSlider' )
     } );
 
-    const combinedOptions = combineOptions<WaterCup3DNodeOptions>( { children: [ waterCupNode, waterLevelTriangle ] }, options );
+    const combinedOptions = combineOptions<NodeOptions>( { children: [ waterCupNode, waterLevelTriangle ] }, options );
     super( combinedOptions );
   }
 }

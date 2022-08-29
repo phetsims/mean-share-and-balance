@@ -14,9 +14,10 @@ import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 type SelfOptions = EmptySelfOptions;
-type SyncButtonOptions = SelfOptions & RectangularPushButtonOptions;
+type SyncButtonOptions = SelfOptions & StrictOmit<RectangularPushButtonOptions, 'content' | 'baseColor' | 'accessibleName'>;
 
 export default class SyncButton extends RectangularPushButton {
   public constructor( providedOptions: SyncButtonOptions ) {

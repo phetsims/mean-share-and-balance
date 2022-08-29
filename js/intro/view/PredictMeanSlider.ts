@@ -30,7 +30,7 @@ type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type PredictMeanNodeOptions =
   SelfOptions
-  & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor'>
+  & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'children'>
   & PickRequired<ParentOptions, 'tandem'>;
 
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
@@ -63,7 +63,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
 
-    const combinedOptions = combineOptions<PredictMeanNodeOptions>( { children: [ predictMeanLine, predictMeanHandle ] }, options );
+    const combinedOptions = combineOptions<ParentOptions>( { children: [ predictMeanLine, predictMeanHandle ] }, options );
     super( combinedOptions );
 
 

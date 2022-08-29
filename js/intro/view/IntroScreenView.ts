@@ -26,9 +26,11 @@ import TableNode from './TableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 
-type LevelingOutScreenViewOptions = MeanShareAndBalanceScreenViewOptions;
+type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   public readonly predictMeanVisibleProperty: Property<boolean>;

@@ -22,7 +22,7 @@ import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
-type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions>;
+type cup2DModel2DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions | 'children'>;
 
 export default class WaterCup2DNode extends Node {
 
@@ -103,7 +103,7 @@ export default class WaterCup2DNode extends Node {
 
     meanProperty.link( meanListener );
 
-    const combinedOptions = combineOptions<cup2DModel2DNodeOptions>( {
+    const combinedOptions = combineOptions<NodeOptions>( {
       children: [ waterCupBackgroundRectangle, waterLevelRectangle,
         waterCupRectangle, meanLine, originalWaterLevelLine, tickMarks ]
     }, options );

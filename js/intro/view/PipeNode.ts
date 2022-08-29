@@ -23,7 +23,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = EmptySelfOptions;
 
-type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement'> & PickRequired<NodeOptions, 'tandem'>;
+type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement' | 'children' | 'visibleProperty'> & PickRequired<NodeOptions, 'tandem'>;
 
 
 const LINE_WIDTH = 1;
@@ -67,7 +67,7 @@ export default class PipeNode extends Node {
     } );
     valveNode.addInputListener( valveRotationFireListener );
 
-    const combinedOptions = combineOptions<PipeNodeOptions>( { visibleProperty: pipe.isActiveProperty, children: [ pipeRectangle, valveNode ] }, options );
+    const combinedOptions = combineOptions<NodeOptions>( { visibleProperty: pipe.isActiveProperty, children: [ pipeRectangle, valveNode ] }, options );
     super( combinedOptions );
 
     // Set position related to associated cup

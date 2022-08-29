@@ -19,7 +19,7 @@ import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import SyncButton from '../../common/view/SyncButton.js';
 
-type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children'> & PickRequired<GridBoxOptions, 'tandem'>;
+type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
 export default class LevelingOutControlPanel extends GridBox {
   public constructor( isMeanAccordionExpandedProperty: Property<boolean>, numberOfPeopleProperty: Property<number>, providedOptions: IntroControlPanelOptions ) {
