@@ -11,32 +11,32 @@ import meanShareAndBalance from './meanShareAndBalance.js';
 type StringsType = {
   'mean-share-and-balance': {
     'title': string;
-    'titleProperty': TReadOnlyProperty<string>;
+    'titleStringProperty': TReadOnlyProperty<string>;
   };
   'screen': {
     'intro': string;
-    'introProperty': TReadOnlyProperty<string>;
+    'introStringProperty': TReadOnlyProperty<string>;
     'levelingOut': string;
-    'levelingOutProperty': TReadOnlyProperty<string>;
+    'levelingOutStringProperty': TReadOnlyProperty<string>;
   };
   'predictMean': string;
-  'predictMeanProperty': TReadOnlyProperty<string>;
+  'predictMeanStringProperty': TReadOnlyProperty<string>;
   'mean': string;
-  'meanProperty': TReadOnlyProperty<string>;
+  'meanStringProperty': TReadOnlyProperty<string>;
   'tickMarks': string;
-  'tickMarksProperty': TReadOnlyProperty<string>;
+  'tickMarksStringProperty': TReadOnlyProperty<string>;
   'cupWaterLevel': string;
-  'cupWaterLevelProperty': TReadOnlyProperty<string>;
+  'cupWaterLevelStringProperty': TReadOnlyProperty<string>;
   'sync': string;
-  'syncProperty': TReadOnlyProperty<string>;
+  'syncStringProperty': TReadOnlyProperty<string>;
   'numberOfCups': string;
-  'numberOfCupsProperty': TReadOnlyProperty<string>;
+  'numberOfCupsStringProperty': TReadOnlyProperty<string>;
   'introQuestion': string;
-  'introQuestionProperty': TReadOnlyProperty<string>;
+  'introQuestionStringProperty': TReadOnlyProperty<string>;
   'levelingOutQuestion': string;
-  'levelingOutQuestionProperty': TReadOnlyProperty<string>;
+  'levelingOutQuestionStringProperty': TReadOnlyProperty<string>;
   'numberOfPeople': string;
-  'numberOfPeopleProperty': TReadOnlyProperty<string>;
+  'numberOfPeopleStringProperty': TReadOnlyProperty<string>;
 };
 
 const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

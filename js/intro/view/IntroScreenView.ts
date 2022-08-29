@@ -114,7 +114,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     // Instantiate Parent
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, waterCupLayerNode, predictMeanSlider ] }, options );
-    super( model, meanShareAndBalanceStrings.introQuestionProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, combinedOptions );
+    super( model, meanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, combinedOptions );
 
     // Controls on Right side of screen
     const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty,

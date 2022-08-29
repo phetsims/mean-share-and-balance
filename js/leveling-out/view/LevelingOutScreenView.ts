@@ -46,7 +46,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ plateLayerNode, ...peopleNodes ] }, options );
 
-    super( model, meanShareAndBalanceStrings.levelingOutQuestionProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
+    super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );

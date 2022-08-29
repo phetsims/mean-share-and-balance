@@ -24,7 +24,7 @@ export default class SyncButton extends RectangularPushButton {
     const syncContent = new Node( {
       children: [
         syncIcon,
-        new Text( meanShareAndBalanceStrings.syncProperty, {
+        new Text( meanShareAndBalanceStrings.syncStringProperty, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
           fontSize: 15,
@@ -36,7 +36,7 @@ export default class SyncButton extends RectangularPushButton {
     const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {
       content: syncContent,
       baseColor: 'white',
-      accessibleName: meanShareAndBalanceStrings.syncProperty
+      accessibleName: meanShareAndBalanceStrings.syncStringProperty
     }, providedOptions );
 
     super( options );

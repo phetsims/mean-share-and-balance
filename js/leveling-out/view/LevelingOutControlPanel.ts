@@ -44,7 +44,7 @@ export default class LevelingOutControlPanel extends GridBox {
     );
 
     // Number Spinner
-    const numberOfPeopleText = new Text( meanShareAndBalanceStrings.numberOfPeopleProperty, {
+    const numberOfPeopleText = new Text( meanShareAndBalanceStrings.numberOfPeopleStringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
@@ -57,7 +57,7 @@ export default class LevelingOutControlPanel extends GridBox {
         layoutOptions: {
           align: 'left'
         },
-        accessibleName: meanShareAndBalanceStrings.numberOfCupsProperty,
+        accessibleName: meanShareAndBalanceStrings.numberOfCupsStringProperty,
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberSpinner' )

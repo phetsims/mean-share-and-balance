@@ -31,16 +31,16 @@ export default class IntroControlPanel extends GridBox {
     const options = providedOptions;
 
     // Checkbox Group
-    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMeanProperty, {
+    const predictMeanText = new Text( meanShareAndBalanceStrings.predictMeanStringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
-    const meanText = new Text( meanShareAndBalanceStrings.meanProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
-    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarksProperty, {
+    const meanText = new Text( meanShareAndBalanceStrings.meanStringProperty, { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } );
+    const tickMarksText = new Text( meanShareAndBalanceStrings.tickMarksStringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
-    const cupWaterLevel = new Text( meanShareAndBalanceStrings.cupWaterLevelProperty, {
+    const cupWaterLevel = new Text( meanShareAndBalanceStrings.cupWaterLevelStringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
@@ -49,28 +49,28 @@ export default class IntroControlPanel extends GridBox {
     const introOptionsCheckboxGroup = new VerticalCheckboxGroup( [ {
         node: predictMeanText,
         property: predictMeanVisibleProperty,
-        options: { accessibleName: meanShareAndBalanceStrings.predictMeanProperty },
+        options: { accessibleName: meanShareAndBalanceStrings.predictMeanStringProperty },
 
         // phet-io
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'predictMeanCheckbox' )
       }, {
         node: meanText,
         property: meanVisibleProperty,
-        options: { accessibleName: meanShareAndBalanceStrings.meanProperty },
+        options: { accessibleName: meanShareAndBalanceStrings.meanStringProperty },
 
         // phet-io
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'meanCheckbox' )
       }, {
         node: tickMarksText,
         property: tickMarksVisibleProperty,
-        options: { accessibleName: meanShareAndBalanceStrings.tickMarksProperty },
+        options: { accessibleName: meanShareAndBalanceStrings.tickMarksStringProperty },
 
         // phet-io
         tandem: introOptionsCheckboxGroupTandem.createTandem( 'tickMarksCheckbox' )
       }, {
         node: cupWaterLevel,
         property: cupWaterLevelVisibleProperty,
-        options: { accessibleName: meanShareAndBalanceStrings.cupWaterLevelProperty }
+        options: { accessibleName: meanShareAndBalanceStrings.cupWaterLevelStringProperty }
       } ], {
 
         checkboxOptions: {
@@ -104,7 +104,7 @@ export default class IntroControlPanel extends GridBox {
     } );
 
     // Number Spinner
-    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCupsProperty, {
+    const numberOfCupsText = new Text( meanShareAndBalanceStrings.numberOfCupsStringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
@@ -117,7 +117,7 @@ export default class IntroControlPanel extends GridBox {
         layoutOptions: {
           align: 'left'
         },
-        accessibleName: meanShareAndBalanceStrings.numberOfCupsProperty,
+        accessibleName: meanShareAndBalanceStrings.numberOfCupsStringProperty,
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberSpinner' )

@@ -31,7 +31,7 @@ const simOptions: SimOptions = {
 // launch the sim - beware that scenery Image nodes created outside of simLauncher.launch() will have zero bounds
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
-  const sim = new Sim( meanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleProperty, [
+  const sim = new Sim( meanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleStringProperty, [
     new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } ),
     new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } )
   ], simOptions );
