@@ -22,7 +22,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import IntroControlPanel from './IntroControlPanel.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import TableNode from './TableNode.js';
+import TableNode from '../../common/view/TableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
