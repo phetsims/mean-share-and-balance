@@ -22,6 +22,7 @@ import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import PersonNode from './PersonNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import TableNode from '../../common/view/TableNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -40,7 +41,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const plateLayerNodes = model.plateChocolateArray.map( plateChocolate => new ChocolateBarsContainerNode( plateChocolate ) );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ ...plateLayerNodes, ...peopleNodes ] }, options );
+    const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
+
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, ...plateLayerNodes, ...peopleNodes ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
