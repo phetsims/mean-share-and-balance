@@ -27,22 +27,22 @@ export default class PersonNode extends GridBox {
       }
     } );
 
-    const plate = new Circle( 20, {
+    const plateHeight = 25;
+
+    const plate = new Circle( plateHeight, {
       fill: 'white',
-      layoutOptions: {
-        column: 0,
-        row: 1
-      }
+      stroke: 'black'
     } );
 
     const numberSpinnerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES );
     const numberSpinner = new NumberPicker( person.chocolateNumberProperty, new Property( numberSpinnerRange ) );
     const numberSpinnerAlignBox = new AlignBox( numberSpinner, { layoutOptions: { column: 0, row: 2 } } );
 
+    const chocolateScale = 0.05;
     // create chocolate person brought
     const chocolatesArray: Array<Image> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-      const chocolate = new Image( chocolateBar_png, { scale: 0.05 } );
+      const chocolate = new Image( chocolateBar_png, { scale: chocolateScale } );
       chocolatesArray.push( chocolate );
     }
 
@@ -61,9 +61,9 @@ export default class PersonNode extends GridBox {
       children: [ plate, chocolatesVBox ],
       layoutOptions: {
         column: 0,
-        row: 0,
-        height: 2,
-        align: 'bottom'
+        row: 1,
+        align: 'bottom',
+        minContentHeight: ( 265 * chocolateScale ) * 10 + plateHeight
       }
     } );
 
