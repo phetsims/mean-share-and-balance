@@ -70,7 +70,8 @@ export default class PersonNode extends GridBox {
     super( {
       children: [ personImage, chocolatesNode, numberSpinnerAlignBox ],
       x: person.position.x,
-      centerY: person.position.y
+      centerY: person.position.y,
+      visibleProperty: person.isActiveProperty
     } );
   }
 }

@@ -57,6 +57,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     for ( let i = 0; i < MAX_PEOPLE; i++ ) {
       const x = i * MeanShareAndBalanceConstants.PERSON_WIDTH;
       const chocolate = new Chocolate( {
+        isActive: i < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
         tandem: options.tandem.createTandem( `plateChocolate${i}` )
       } );
@@ -69,6 +70,15 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
     }
+
+    this.numberOfPeopleProperty.link( numberOfPeople => {
+      this.plateChocolateArray.forEach( ( plateChocolate, i ) => {
+        plateChocolate.isActiveProperty.value = i < numberOfPeople;
+      } );
+      this.peopleArray.forEach( ( person, i ) => {
+        person.isActiveProperty.value = i < numberOfPeople;
+      } );
+    } );
   }
 
   public override reset(): void {

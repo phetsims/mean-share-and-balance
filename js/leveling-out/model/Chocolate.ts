@@ -16,9 +16,12 @@ import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = {
   position: Vector2;
+  isActive: boolean;
 };
 
 type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
@@ -26,11 +29,20 @@ type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioO
 export default class Chocolate {
 
   public readonly position: Vector2;
-  public readonly chocolateBarsNumberProperty: NumberProperty;
+  public readonly chocolateBarsNumberProperty: Property<number>;
+  public readonly isActiveProperty: Property<boolean>;
 
 
   public constructor( providedOptions: ChocolateOptions ) {
     const options = optionize<ChocolateOptions, EmptySelfOptions, PhetioObjectOptions>()( {}, providedOptions );
+
+    this.isActiveProperty = new BooleanProperty( options.isActive, {
+      // phet-io
+      tandem: options.tandem.createTandem( 'isActiveProperty' ),
+
+      // Takes its value from LevelingOutModel.numberOfPeopleProperty
+      phetioReadOnly: true
+    } );
 
     this.position = options.position;
 

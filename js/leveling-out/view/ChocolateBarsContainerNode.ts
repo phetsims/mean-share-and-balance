@@ -20,15 +20,16 @@ import chocolateBar_png from '../../../images/chocolateBar_png.js';
 type ChocolateBarsContainerNodeOptions = StrictOmit<NodeOptions, keyof NodeTranslationOptions>;
 
 export default class ChocolateBarsContainerNode extends Node {
-  public constructor( chocolateModel: Chocolate, providedOptions?: ChocolateBarsContainerNodeOptions ) {
+  public constructor( chocolate: Chocolate, providedOptions?: ChocolateBarsContainerNodeOptions ) {
     const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
-      x: chocolateModel.position.x,
-      y: chocolateModel.position.y,
-      scale: 0.2
+      x: chocolate.position.x,
+      y: chocolate.position.y,
+      scale: 0.1,
+      visibleProperty: chocolate.isActiveProperty
     }, providedOptions );
 
     const chocolateBars = [];
-    for ( let i = 0; i < chocolateModel.chocolateBarsNumberProperty.value; i++ ) {
+    for ( let i = 0; i < chocolate.chocolateBarsNumberProperty.value; i++ ) {
       const chocolateBar = new Image( chocolateBar_png );
       chocolateBar.y = ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 5 ) * i;
       chocolateBars.push( chocolateBar );
