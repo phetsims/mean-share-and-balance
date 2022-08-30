@@ -8,6 +8,7 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
@@ -28,6 +29,8 @@ export default class Person {
   public readonly isActiveProperty: Property<boolean>;
   // The x and y positions for the person in the view.
   public readonly position: Vector2;
+  // The amount of chocolate bars the person brought
+  public readonly chocolateNumberProperty: Property<number>;
 
   public constructor( providedOptions?: PersonOptions ) {
 
@@ -40,8 +43,9 @@ export default class Person {
       // Takes its value from LevelingOutModel.numberOfPeopleProperty
       phetioReadOnly: true
     } );
-
     this.position = options.position;
+
+    this.chocolateNumberProperty = new NumberProperty( 1 );
   }
 }
 
