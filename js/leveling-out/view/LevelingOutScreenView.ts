@@ -11,13 +11,11 @@ import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optio
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
-import { AlignBox, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import ChocolateBarsContainerNode from './ChocolateBarsContainerNode.js';
-import Chocolate from '../model/Chocolate.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import LevelingOutControlPanel from './LevelingOutControlPanel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
@@ -38,15 +36,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const controlPanel = new LevelingOutControlPanel( model.isMeanAccordionExpandedProperty, model.numberOfPeopleProperty,
       { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
 
-    const peopleNodes = model.peopleArray.map( person => new PersonNode() );
+    const peopleNodes = model.peopleArray.map( person => new PersonNode( person ) );
 
-    const plateLayerNode = new Node( {
-      x: 50,
-      y: 100,
-      children: [ new ChocolateBarsContainerNode( new Chocolate( { x: 50, y: 100, tandem: Tandem.OPT_OUT } ) ) ]
-    } );
+    const plateLayerNodes = model.plateChocolateArray.map( plateChocolate => new ChocolateBarsContainerNode( plateChocolate ) );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ plateLayerNode, ...peopleNodes ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ ...plateLayerNodes, ...peopleNodes ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 

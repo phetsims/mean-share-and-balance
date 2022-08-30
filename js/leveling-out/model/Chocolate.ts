@@ -11,60 +11,34 @@
 
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = {
-  x: number;
-  y: number;
-};
-
-type StateObject = {
-  x: number;
-  y: number;
+  position: Vector2;
 };
 
 type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class Chocolate extends PhetioObject {
+export default class Chocolate {
 
-  public readonly x: number;
-  public readonly y: number;
+  public readonly position: Vector2;
   public readonly chocolateBarsNumberProperty: NumberProperty;
 
-  public static ChocolateIO: IOType<Chocolate>;
 
   public constructor( providedOptions: ChocolateOptions ) {
-    const options = optionize<ChocolateOptions, EmptySelfOptions, PhetioObjectOptions>()( {
-      // phet-io
-      phetioType: Chocolate.ChocolateIO
-    }, providedOptions );
-    super( options );
+    const options = optionize<ChocolateOptions, EmptySelfOptions, PhetioObjectOptions>()( {}, providedOptions );
 
-    this.x = providedOptions.x;
-    this.y = providedOptions.y;
+    this.position = options.position;
+
     this.chocolateBarsNumberProperty = new NumberProperty( 1, {
       range: new Range( 0, 10 ),
       tandem: options.tandem.createTandem( 'chocolateBarsNumberProperty' )
     } );
   }
 }
-
-Chocolate.ChocolateIO = new IOType<Chocolate>( 'ChocolateIO', {
-  valueType: Chocolate,
-  toStateObject: ( chocolate: Chocolate ) => ( {
-    x: chocolate.x
-  } ),
-  stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.x ];
-  },
-  stateSchema: {
-    x: NumberIO
-  }
-} );
 
 meanShareAndBalance.register( 'Chocolate', Chocolate );

@@ -19,14 +19,13 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
-  isActive?: boolean;
+  isActive: boolean;
   waterHeightRange?: Range;
   waterLevel?: number;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
@@ -51,13 +50,10 @@ export default class WaterCup {
 
   public readonly linePlacement: number;
 
-  public static WaterCupModelIO: IOType<WaterCup>;
-
   public constructor( tandem: Tandem, providedOptions: WaterCupModelOptions ) {
 
     const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
-      isActive: false,
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT
     }, providedOptions );
 

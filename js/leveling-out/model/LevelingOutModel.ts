@@ -17,13 +17,16 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Chocolate from './Chocolate.js';
 import Person from './Person.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
 
+const MAX_PEOPLE = 7;
+
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
-  public readonly numberOfPeopleRange = new Range( 1, 7 );
+  public readonly numberOfPeopleRange = new Range( 1, MAX_PEOPLE );
   public readonly numberOfPeopleProperty: NumberProperty;
   public readonly isMeanAccordionExpandedProperty: BooleanProperty;
 
@@ -51,12 +54,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.plateChocolateArray = [];
     this.peopleArray = [];
 
-    for ( let i = 0; i < 7; i++ ) {
-      const x = i * 50;
-      const chocolate = new Chocolate( { x: x, y: 150, tandem: options.tandem.createTandem( `plateChocolate${i}` ) } );
+    for ( let i = 0; i < MAX_PEOPLE; i++ ) {
+      const x = i * MeanShareAndBalanceConstants.PERSON_WIDTH;
+      const chocolate = new Chocolate( {
+        position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
+        tandem: options.tandem.createTandem( `plateChocolate${i}` )
+      } );
       this.plateChocolateArray.push( chocolate );
 
-      const person = new Person();
+      const person = new Person( {
+        position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
+        isActive: i < this.numberOfPeopleProperty.value,
+        tandem: options.tandem.createTandem( `person${i}` )
+      } );
       this.peopleArray.push( person );
     }
   }

@@ -33,7 +33,7 @@ function testApproximatelyEquals( actual: number[], expected: number[], toleranc
 QUnit.test( 'distribute ripple', assert => {
   function testDistribution( waterLevels: number[], waterDelta: number, expectedLevels: number[], message: string ): void {
     const connectedCups = waterLevels.map( ( waterLevel, index ) => {
-      return new WaterCup( Tandem.OPT_OUT, { waterLevel: waterLevel, linePlacement: index, position: position } );
+      return new WaterCup( Tandem.OPT_OUT, { isActive: true, waterLevel: waterLevel, linePlacement: index, position: position } );
     } );
     introModel[ 'distributeWaterRipple' ]( connectedCups, connectedCups[ 2 ], waterDelta );
 
