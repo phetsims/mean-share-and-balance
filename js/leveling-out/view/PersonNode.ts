@@ -16,6 +16,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 export default class PersonNode extends GridBox {
 
@@ -46,15 +47,15 @@ export default class PersonNode extends GridBox {
       chocolatesArray.push( chocolate );
     }
 
+    const chocolatesVBox = new VBox( {
+      children: chocolatesArray
+    } );
+
     person.chocolateNumberProperty.link( chocolateNumber => {
       chocolatesArray.forEach( ( chocolate, i ) => {
         chocolate.visibleProperty.value = i < chocolateNumber;
+        chocolatesVBox.centerBottom = new Vector2( plate.centerX, plate.centerY + 10 );
       } );
-    } );
-
-    const chocolatesVBox = new VBox( {
-      children: chocolatesArray,
-      centerBottom: plate.center
     } );
 
     const chocolatesNode = new Node( {
