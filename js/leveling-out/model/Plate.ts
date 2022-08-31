@@ -24,17 +24,19 @@ type SelfOptions = {
   isActive: boolean;
 };
 
-type ChocolateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+type PlateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class Chocolate {
+export default class Plate {
 
   public readonly position: Vector2;
+
+  // The number of chocolate bars on the plate
   public readonly chocolateBarsNumberProperty: Property<number>;
   public readonly isActiveProperty: Property<boolean>;
 
 
-  public constructor( providedOptions: ChocolateOptions ) {
-    const options = optionize<ChocolateOptions, EmptySelfOptions, PhetioObjectOptions>()( {}, providedOptions );
+  public constructor( providedOptions: PlateOptions ) {
+    const options = optionize<PlateOptions, EmptySelfOptions, PhetioObjectOptions>()( {}, providedOptions );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
       // phet-io
@@ -58,4 +60,4 @@ export default class Chocolate {
   }
 }
 
-meanShareAndBalance.register( 'Chocolate', Chocolate );
+meanShareAndBalance.register( 'Plate', Plate );

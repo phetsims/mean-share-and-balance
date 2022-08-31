@@ -38,7 +38,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const peopleNodes = model.peopleArray.map( person => new PersonNode( person ) );
 
-    const plateLayerNodes = model.plateChocolateArray.map( plateChocolate => new ChocolateBarsContainerNode( plateChocolate ) );
+    const plateLayerNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 

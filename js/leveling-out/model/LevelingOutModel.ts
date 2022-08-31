@@ -15,7 +15,7 @@ import Range from '../../../../dot/js/Range.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import Chocolate from './Chocolate.js';
+import Plate from './Plate.js';
 import Person from './Person.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
@@ -32,7 +32,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly numberOfPeopleProperty: NumberProperty;
   public readonly isMeanAccordionExpandedProperty: BooleanProperty;
 
-  public readonly plateChocolateArray: Array<Chocolate>;
+  public readonly platesArray: Array<Plate>;
   public readonly peopleArray: Array<Person>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
@@ -54,19 +54,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
 
-    this.plateChocolateArray = [];
+    this.platesArray = [];
     this.peopleArray = [];
 
     const meanPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
 
     for ( let i = 0; i < MAX_PEOPLE; i++ ) {
       const x = i * MeanShareAndBalanceConstants.PERSON_WIDTH;
-      const chocolate = new Chocolate( {
+      const chocolate = new Plate( {
         isActive: i < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
         tandem: options.tandem.createTandem( `plateChocolate${i}` )
       } );
-      this.plateChocolateArray.push( chocolate );
+      this.platesArray.push( chocolate );
 
       const person = new Person( {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
@@ -89,8 +89,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     this.numberOfPeopleProperty.link( numberOfPeople => {
-      this.plateChocolateArray.forEach( ( plateChocolate, i ) => {
-        plateChocolate.isActiveProperty.value = i < numberOfPeople;
+      this.platesArray.forEach( ( plate, i ) => {
+        plate.isActiveProperty.value = i < numberOfPeople;
       } );
       this.peopleArray.forEach( ( person, i ) => {
         person.isActiveProperty.value = i < numberOfPeople;
@@ -106,7 +106,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPeopleProperty.reset();
     this.peopleArray.forEach( person => person.reset() );
-    this.plateChocolateArray.forEach( chocolate => chocolate.reset() );
+    this.platesArray.forEach( plate => plate.reset() );
   }
 
   public syncData(): void {
