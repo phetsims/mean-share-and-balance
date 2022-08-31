@@ -6,7 +6,7 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
-import { GridBox, GridBoxOptions, Rectangle, Text, VBox } from '../../../../scenery/js/imports.js';
+import { GridBox, GridBoxOptions, Text, VBox, Image } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -16,22 +16,41 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import SyncButton from '../../common/view/SyncButton.js';
+import LevelingOutModel from '../model/LevelingOutModel.js';
+import chocolateBar_png from '../../../images/chocolateBar_png.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
 export default class LevelingOutControlPanel extends GridBox {
-  public constructor( isMeanAccordionExpandedProperty: Property<boolean>, numberOfPeopleProperty: Property<number>, providedOptions: IntroControlPanelOptions ) {
+  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty'>, providedOptions: IntroControlPanelOptions ) {
 
     const options = providedOptions;
 
-    const meanNode = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT,
-      { fill: MeanShareAndBalanceColors.chocolateColorProperty } );
+    const meanNode = new VBox( {
+      scale: 0.05,
+      align: 'left',
+      spacing: 1.5 / 0.05
+    } );
+
+    // Just for the dimensions
+    const chocolateBarImage = new Image( chocolateBar_png );
+
+    model.meanProperty.link( mean => {
+      const wholePart = Math.floor( mean );
+      const remainder = mean - wholePart;
+
+      const children = _.times( wholePart, () => new Image( chocolateBar_png ) );
+      children.unshift( new Image( chocolateBar_png, {
+        clipArea: Shape.rect( 0, 0, remainder * chocolateBarImage.width, chocolateBarImage.height )
+      } ) );
+      meanNode.children = children;
+    } );
 
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
-      expandedProperty: isMeanAccordionExpandedProperty,
+      expandedProperty: model.isMeanAccordionExpandedProperty,
 
       // phet-io
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
@@ -39,8 +58,10 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const syncButton = new SyncButton( { tandem: options.tandem.createTandem( 'syncButton' ) } );
 
-    const syncVBox = new VBox( { align: 'left', children: [ syncButton ],
-      layoutOptions: { column: 0, row: 1, minContentHeight: 140, yAlign: 'top' } }
+    const syncVBox = new VBox( {
+        align: 'left', children: [ syncButton ],
+        layoutOptions: { column: 0, row: 1, minContentHeight: 140, yAlign: 'top' }
+      }
     );
 
     // Number Spinner
@@ -50,7 +71,7 @@ export default class LevelingOutControlPanel extends GridBox {
     } );
 
     const numberSpinner = new NumberSpinner(
-      numberOfPeopleProperty,
+      model.numberOfPeopleProperty,
       new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ),
       {
         arrowsPosition: 'leftRight',

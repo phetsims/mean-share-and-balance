@@ -48,7 +48,8 @@ export default class PersonNode extends GridBox {
     }
 
     const chocolatesVBox = new VBox( {
-      children: chocolatesArray
+      children: chocolatesArray,
+      spacing: 1.5
     } );
 
     person.chocolateNumberProperty.link( chocolateNumber => {

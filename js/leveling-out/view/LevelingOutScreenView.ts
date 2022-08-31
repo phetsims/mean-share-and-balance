@@ -34,8 +34,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const options = providedOptions;
 
-    const controlPanel = new LevelingOutControlPanel( model.isMeanAccordionExpandedProperty, model.numberOfPeopleProperty,
-      { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
+    const controlPanel = new LevelingOutControlPanel( model, { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
 
     const peopleNodes = model.peopleArray.map( person => new PersonNode( person ) );
 
