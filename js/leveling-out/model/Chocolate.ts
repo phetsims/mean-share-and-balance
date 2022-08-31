@@ -51,6 +51,11 @@ export default class Chocolate {
       tandem: options.tandem.createTandem( 'chocolateBarsNumberProperty' )
     } );
   }
+
+  public reset(): void {
+    this.isActiveProperty.reset();
+    this.chocolateBarsNumberProperty.reset();
+  }
 }
 
 meanShareAndBalance.register( 'Chocolate', Chocolate );

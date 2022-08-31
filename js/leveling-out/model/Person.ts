@@ -46,6 +46,13 @@ export default class Person {
     this.position = options.position;
 
     this.chocolateNumberProperty = new NumberProperty( 1 );
+
+    this.isActiveProperty.lazyLink( isActive => this.chocolateNumberProperty.reset() );
+  }
+
+  public reset(): void {
+    this.isActiveProperty.reset();
+    this.chocolateNumberProperty.reset();
   }
 }
 

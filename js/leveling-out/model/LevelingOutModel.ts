@@ -105,6 +105,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public override reset(): void {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPeopleProperty.reset();
+    this.peopleArray.forEach( person => person.reset() );
+    this.plateChocolateArray.forEach( chocolate => chocolate.reset() );
   }
 
   public syncData(): void {
