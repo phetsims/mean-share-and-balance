@@ -70,7 +70,8 @@ export default class IntroControlPanel extends GridBox {
       }, {
         node: cupWaterLevel,
         property: cupWaterLevelVisibleProperty,
-        options: { accessibleName: meanShareAndBalanceStrings.cupWaterLevelStringProperty }
+        options: { accessibleName: meanShareAndBalanceStrings.cupWaterLevelStringProperty },
+        tandem: introOptionsCheckboxGroupTandem.createTandem( 'waterCupLevelCheckbox' )
       } ], {
 
         checkboxOptions: {
