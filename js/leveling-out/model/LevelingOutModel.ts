@@ -75,6 +75,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
 
+      person.chocolateNumberProperty.lazyLink( chocolateNumber => chocolate.chocolateBarsNumberProperty.set( chocolateNumber ) );
+
       meanPropertyDependencies.push( person.chocolateNumberProperty );
       meanPropertyDependencies.push( person.isActiveProperty );
     }

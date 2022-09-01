@@ -28,12 +28,18 @@ export default class ChocolateBarsContainerNode extends Node {
       visibleProperty: plate.isActiveProperty
     }, providedOptions );
 
-    const chocolateBars = [];
-    for ( let i = 0; i < plate.chocolateBarsNumberProperty.value; i++ ) {
+    const chocolateBars: Array<Image> = [];
+    for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
       const chocolateBar = new Image( chocolateBar_png );
       chocolateBar.y = ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 5 ) * i;
       chocolateBars.push( chocolateBar );
     }
+
+    plate.chocolateBarsNumberProperty.link( chocolateBarsNumber => {
+      chocolateBars.forEach( ( chocolateBar, i ) => {
+        chocolateBar.visibleProperty.set( i < chocolateBarsNumber );
+      } );
+    } );
 
     options.children = chocolateBars;
     super( options );
