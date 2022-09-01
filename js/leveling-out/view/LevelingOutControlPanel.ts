@@ -51,6 +51,7 @@ export default class LevelingOutControlPanel extends GridBox {
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
       expandedProperty: model.isMeanAccordionExpandedProperty,
+      layoutOptions: { minContentHeight: 200, yAlign: 'top' },
 
       // phet-io
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
