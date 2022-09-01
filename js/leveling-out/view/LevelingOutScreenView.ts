@@ -11,7 +11,7 @@ import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optio
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
-import { AlignBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
@@ -34,17 +34,40 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const options = providedOptions;
 
-    const controlPanel = new LevelingOutControlPanel( model, { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
+    const controlPanel = new LevelingOutControlPanel( model, {
+      minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
+      spacing: 20,
+      tandem: options.tandem.createTandem( 'controlPanel' )
+    } );
 
     const peopleNodes = model.peopleArray.map( person => new PersonNode( person ) );
 
-    const plateLayerNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate ) );
+    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, ...plateLayerNodes, ...peopleNodes ] }, options );
+    const chocolateLayerNode = new Node( {
+      excludeInvisibleChildrenFromBounds: true,
+      children: [ ...peopleNodes, ...plateNodes ]
+    } );
+
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, chocolateLayerNode ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
+
+    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
+
+    const centerWaterCupLayerNode = () => {
+      chocolateLayerNode.centerX = cupsAreaCenterX;
+      tableNode.centerX = chocolateLayerNode.centerX;
+      tableNode.y = chocolateLayerNode.bottom - 25;
+    };
+
+    model.numberOfPeopleProperty.link( () => {
+      centerWaterCupLayerNode();
+      this.interruptSubtreeInput();
+    } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );

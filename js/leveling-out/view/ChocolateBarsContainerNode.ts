@@ -11,20 +11,20 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import { Image, Node, NodeOptions, NodeTranslationOptions } from '../../../../scenery/js/imports.js';
+import { Image, NodeOptions, NodeTranslationOptions, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../model/Plate.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 
-type ChocolateBarsContainerNodeOptions = StrictOmit<NodeOptions, keyof NodeTranslationOptions>;
+type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions>;
 
-export default class ChocolateBarsContainerNode extends Node {
+export default class ChocolateBarsContainerNode extends VBox {
   public constructor( plate: Plate, providedOptions?: ChocolateBarsContainerNodeOptions ) {
     const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.position.x,
       y: plate.position.y,
-      scale: 0.1,
+      scale: 0.08,
       visibleProperty: plate.isActiveProperty
     }, providedOptions );
 
@@ -42,6 +42,7 @@ export default class ChocolateBarsContainerNode extends Node {
     } );
 
     options.children = chocolateBars;
+    options.spacing = 20;
     super( options );
   }
 }
