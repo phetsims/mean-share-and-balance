@@ -76,15 +76,11 @@ export default class IntroControlPanel extends GridBox {
 
         checkboxOptions: {
           boxWidth: 16
-        }
+        },
+        align: 'left',
+        layoutOptions: { column: 0, row: 0, align: 'left' }
       }
     );
-
-    const checkboxVBox = new VBox( {
-      children: [ introOptionsCheckboxGroup ],
-      align: 'left',
-      layoutOptions: { column: 0, row: 0, align: 'left' }
-    } );
 
     // Pipe Switch
     const pipeSwitch = new ABSwitch( arePipesOpenProperty,
@@ -134,7 +130,7 @@ export default class IntroControlPanel extends GridBox {
     } );
 
 
-    const combinedOptions = combineOptions<GridBoxOptions>( { children: [ checkboxVBox, switchVBox, numberSpinnerVBox ] }, providedOptions );
+    const combinedOptions = combineOptions<GridBoxOptions>( { children: [ introOptionsCheckboxGroup, switchVBox, numberSpinnerVBox ] }, providedOptions );
     super( combinedOptions );
   }
 }
