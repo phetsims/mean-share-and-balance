@@ -78,7 +78,8 @@ export default class IntroControlPanel extends GridBox {
           boxWidth: 16
         },
         align: 'left',
-        layoutOptions: { column: 0, row: 0, align: 'left' }
+        layoutOptions: { column: 0, row: 0, align: 'left' },
+        tandem: introOptionsCheckboxGroupTandem
       }
     );
 

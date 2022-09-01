@@ -22,6 +22,7 @@ import Property from '../../../../axon/js/Property.js';
 type SelfOptions = {
   position: Vector2;
   isActive: boolean;
+  linePlacement: number;
 };
 
 type PlateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
@@ -34,6 +35,8 @@ export default class Plate {
   public readonly chocolateBarsNumberProperty: Property<number>;
   public readonly isActiveProperty: Property<boolean>;
 
+  // the plate's index
+  public readonly linePlacement: number;
 
   public constructor( providedOptions: PlateOptions ) {
     const options = optionize<PlateOptions, EmptySelfOptions, PhetioObjectOptions>()( {}, providedOptions );
@@ -52,6 +55,8 @@ export default class Plate {
       range: new Range( 0, 10 ),
       tandem: options.tandem.createTandem( 'chocolateBarsNumberProperty' )
     } );
+
+    this.linePlacement = options.linePlacement;
   }
 
   public reset(): void {

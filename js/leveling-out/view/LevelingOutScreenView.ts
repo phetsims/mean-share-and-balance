@@ -40,9 +40,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( 'controlPanel' )
     } );
 
-    const peopleNodes = model.peopleArray.map( person => new PersonNode( person ) );
+    const peopleNodes = model.peopleArray.map( person => new PersonNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
 
-    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate ) );
+    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 

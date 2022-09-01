@@ -19,6 +19,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 type SelfOptions = {
   isActive: boolean;
   position: Vector2;
+  linePlacement: number;
 };
 
 type PersonOptions = SelfOptions & PickRequired<PhetioObject, 'tandem'>;
@@ -31,6 +32,8 @@ export default class Person {
   public readonly position: Vector2;
   // The amount of chocolate bars the person brought
   public readonly chocolateNumberProperty: Property<number>;
+  // the persons index
+  public readonly linePlacement: number;
 
   public constructor( providedOptions?: PersonOptions ) {
 
@@ -46,6 +49,8 @@ export default class Person {
     this.position = options.position;
 
     this.chocolateNumberProperty = new NumberProperty( 1 );
+
+    this.linePlacement = options.linePlacement;
 
     this.isActiveProperty.lazyLink( isActive => this.chocolateNumberProperty.reset() );
   }

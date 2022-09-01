@@ -85,14 +85,14 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const waterCup2DNodes: Array<WaterCup2DNode> = [];
     model.waterCup2DArray.forEach( ( cupModel, index ) => {
       const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, tickMarksVisibleProperty,
-        meanVisibleProperty, cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement}` ) } );
+        meanVisibleProperty, cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement + 1}` ) } );
       waterCup2DNodes.push( cupNode );
     } );
 
     const waterCup3DNodes: Array<WaterCup3DNode> = [];
     model.waterCup3DArray.forEach( cupModel => {
       const cupNode = new WaterCup3DNode( tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
-        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement}` )
+        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement + 1}` )
       } );
       waterCup3DNodes.push( cupNode );
     } );
@@ -102,7 +102,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
-        { tandem: options.tandem.createTandem( `pipeNode${index}` ) } );
+        { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ) } );
       pipeNodes.push( pipeNode );
     } );
 

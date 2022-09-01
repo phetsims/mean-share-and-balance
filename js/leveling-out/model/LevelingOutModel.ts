@@ -20,6 +20,7 @@ import Person from './Person.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -64,14 +65,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       const chocolate = new Plate( {
         isActive: i < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
-        tandem: options.tandem.createTandem( `plateChocolate${i}` )
+        linePlacement: i,
+        tandem: options.tandem.createTandem( `plateChocolate${i + 1}` )
       } );
       this.platesArray.push( chocolate );
 
       const person = new Person( {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
         isActive: i < this.numberOfPeopleProperty.value,
-        tandem: options.tandem.createTandem( `person${i}` )
+        linePlacement: i,
+        tandem: options.tandem.createTandem( `person${i + 1}` )
       } );
       this.peopleArray.push( person );
 
@@ -84,10 +87,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.meanProperty = DerivedProperty.deriveAny( meanPropertyDependencies, () => {
       const chocolateAmounts = this.getActivePeople().map( person => person.chocolateNumberProperty.value );
       const totalChocolate = _.sum( chocolateAmounts );
-      const meanChocolate = totalChocolate / chocolateAmounts.length;
-      return meanChocolate;
+      return totalChocolate / chocolateAmounts.length;
     }, {
-      tandem: options.tandem.createTandem( 'meanProperty' )
+      tandem: options.tandem.createTandem( 'meanProperty' ),
+      phetioValueType: NumberIO
     } );
 
     this.numberOfPeopleProperty.link( numberOfPeople => {
