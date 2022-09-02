@@ -17,18 +17,11 @@ import Property from '../../../../axon/js/Property.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import person1_png from '../../../images/person1_png.js';
-import person2_png from '../../../images/person2_png.js';
-import person3_png from '../../../images/person3_png.js';
-import person4_png from '../../../images/person4_png.js';
-import person5_png from '../../../images/person5_png.js';
-import person6_png from '../../../images/person6_png.js';
-import person7_png from '../../../images/person7_png.js';
 import plate_png from '../../../images/plate_png.js';
 
 type PersonNodeOptions = PickRequired<NodeOptions, 'tandem'>;
 
-export default class PersonNode extends Node {
+export default class TablePlateNode extends Node {
 
   public constructor( person: Person, providedOptions: PersonNodeOptions ) {
 
@@ -37,14 +30,6 @@ export default class PersonNode extends Node {
     const plate = new Image( plate_png, {
       scale: 0.15,
       centerY: person.position.y
-    } );
-
-    const peopleImages = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
-
-    const personImage = new Image( peopleImages[ person.linePlacement ], {
-      scale: 0.35,
-      right: plate.left + 15,
-      bottom: plate.bottom + 60
     } );
 
 
@@ -80,11 +65,11 @@ export default class PersonNode extends Node {
     } );
 
     super( {
-      children: [ personImage, chocolatesNode, numberPicker ],
+      children: [ chocolatesNode, numberPicker ],
       x: person.position.x,
       visibleProperty: person.isActiveProperty
     } );
   }
 }
 
-meanShareAndBalance.register( 'PersonNode', PersonNode );
+meanShareAndBalance.register( 'TablePlateNode', TablePlateNode );

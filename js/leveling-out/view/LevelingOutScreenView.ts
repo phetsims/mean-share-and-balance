@@ -15,17 +15,25 @@ import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
-import ChocolateBarsContainerNode from './ChocolateBarsContainerNode.js';
+import PaperPlateNode from './PaperPlateNode.js';
 import LevelingOutControlPanel from './LevelingOutControlPanel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
-import PersonNode from './PersonNode.js';
+import TablePlateNode from './TablePlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TableNode from '../../common/view/TableNode.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
-import DraggableChocolateNode from './DraggableChocolateNode.js';
+import DraggableChocolate from './DraggableChocolate.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import PersonImage from './PersonImage.js';
+import person1_png from '../../../images/person1_png.js';
+import person2_png from '../../../images/person2_png.js';
+import person3_png from '../../../images/person3_png.js';
+import person4_png from '../../../images/person4_png.js';
+import person5_png from '../../../images/person5_png.js';
+import person6_png from '../../../images/person6_png.js';
+import person7_png from '../../../images/person7_png.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -43,7 +51,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( 'controlPanel' )
     } );
 
-    const chocolateBarDropped = ( chocolateBar: DraggableChocolateNode ) => {
+    const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
 
       let closestPlate = model.platesArray[ 0 ];
       let closestDistance = Math.abs( model.platesArray[ 0 ].position.x - chocolateBar.positionProperty.value.x );
@@ -57,9 +65,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     };
 
-    const peopleNodes = model.peopleArray.map( person => new PersonNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
+    const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
 
-    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
+    const peopleImages = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
+    const people = tablePlatesNodes.map( ( plate, i ) => new PersonImage( peopleImages[ i ], plate,
+      { visibleProperty: plate.visibleProperty, tandem: options.tandem.createTandem( `person${i + 1}` ) } ) );
+
+    const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
@@ -67,17 +79,17 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const chocolateLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
-      children: [ ...peopleNodes, ...plateNodes ]
+      children: [ ...tablePlatesNodes, ...paperPlatesNodes ]
     } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, tableNode, chocolateLayerNode ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, ...people, tableNode, chocolateLayerNode ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
-    const centerWaterCupLayerNode = () => {
+    const centerChocolateLayerNode = () => {
       chocolateLayerNode.centerX = cupsAreaCenterX;
       tableNode.centerX = chocolateLayerNode.centerX;
       tableNode.y = chocolateLayerNode.bottom - 100;
@@ -86,7 +98,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     };
 
     model.numberOfPeopleProperty.link( () => {
-      centerWaterCupLayerNode();
+      centerChocolateLayerNode();
       this.interruptSubtreeInput();
     } );
 
@@ -102,10 +114,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     this.addChild( controlsAlignBox );
-  }
-
-  public chocolateBarDropped( chocolateBar: DraggableChocolateNode ): void {
-    console.log( 'I was dropped' );
   }
 
 }

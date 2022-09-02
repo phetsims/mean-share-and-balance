@@ -18,11 +18,11 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 
 type DraggableChocolateNodeOptions = NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
-export default class DraggableChocolateNode extends Node {
+export default class DraggableChocolate extends Node {
 
   public readonly positionProperty: Property<Vector2>;
 
-  public constructor( chocolateBarDropped: ( chocolateBar: DraggableChocolateNode ) => void, providedOptions: DraggableChocolateNodeOptions ) {
+  public constructor( chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
@@ -56,4 +56,4 @@ export default class DraggableChocolateNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'DraggableChocolateNode', DraggableChocolateNode );
+meanShareAndBalance.register( 'DraggableChocolate', DraggableChocolate );

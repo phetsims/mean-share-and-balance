@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Contains all the chocolate bars on a plate. Each plate has one ChocolateBarsContainerNode,
+ * Contains all the chocolate bars on a plate. Each plate has one PaperPlateNode,
  * and each container has a maximum of 10 chocolates bars.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -15,14 +15,14 @@ import { Node, NodeOptions, NodeTranslationOptions, VBoxOptions } from '../../..
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../model/Plate.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import DraggableChocolateNode from './DraggableChocolateNode.js';
+import DraggableChocolate from './DraggableChocolate.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 
 type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions> & PickRequired<NodeOptions, 'tandem'>;
 
-export default class ChocolateBarsContainerNode extends Node {
-  public constructor( plate: Plate, chocolateBarDropped: ( chocolateBar: DraggableChocolateNode ) => void, providedOptions: ChocolateBarsContainerNodeOptions ) {
+export default class PaperPlateNode extends Node {
+  public constructor( plate: Plate, chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: ChocolateBarsContainerNodeOptions ) {
     const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.position.x,
       y: plate.position.y,
@@ -31,7 +31,7 @@ export default class ChocolateBarsContainerNode extends Node {
 
     const chocolateBars: Array<Node> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-      const chocolateBar = new DraggableChocolateNode( chocolateBarDropped, { tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ) } );
+      const chocolateBar = new DraggableChocolate( chocolateBarDropped, { tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ) } );
 
       const y = ( chocolateBar.height + 1.5 ) * -i;
       const x = chocolateBar.positionProperty.value.x;
@@ -52,4 +52,4 @@ export default class ChocolateBarsContainerNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'ChocolateBarsContainerNode', ChocolateBarsContainerNode );
+meanShareAndBalance.register( 'PaperPlateNode', PaperPlateNode );
