@@ -20,9 +20,9 @@ export default class PersonImage extends Image {
 
   public constructor( image: HTMLImageElement, plate: TablePlateNode, providedOptions: PersonImageOptions ) {
     const options = optionize<PersonImageOptions, SelfOptions, ImageOptions>()( {
-      scale: 0.35,
-      right: plate.left + 15,
-      bottom: plate.bottom + 60
+      scale: 0.3,
+      centerX: plate.centerX,
+      bottom: plate.bottom - 55
     }, providedOptions );
 
     super( image, options );

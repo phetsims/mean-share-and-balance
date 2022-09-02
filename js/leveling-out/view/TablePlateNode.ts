@@ -28,16 +28,16 @@ export default class TablePlateNode extends Node {
     const options = providedOptions;
 
     const plate = new Image( plate_png, {
-      scale: 0.15,
+      scale: 0.1,
       centerY: person.position.y
     } );
 
 
     const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES );
     const numberPicker = new NumberPicker( person.chocolateNumberProperty, new Property( numberPickerRange ),
-      { centerTop: new Vector2( plate.centerBottom.x, plate.centerBottom.y + 20 ), tandem: options.tandem.createTandem( 'numberPicker' ) } );
+      { centerTop: new Vector2( plate.centerBottom.x, plate.centerBottom.y + 55 ), tandem: options.tandem.createTandem( 'numberPicker' ) } );
 
-    const chocolateScale = 0.05;
+    const chocolateScale = 0.04;
     // create chocolate person brought
     const chocolatesArray: Array<Image> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
@@ -53,7 +53,7 @@ export default class TablePlateNode extends Node {
     person.chocolateNumberProperty.link( chocolateNumber => {
       chocolatesArray.forEach( ( chocolate, i ) => {
         chocolate.visibleProperty.value = i < chocolateNumber;
-        chocolatesVBox.centerBottom = new Vector2( plate.centerX, plate.centerY + 10 );
+        chocolatesVBox.centerBottom = new Vector2( plate.centerX, plate.centerY );
       } );
     } );
 

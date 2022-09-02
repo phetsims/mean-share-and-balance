@@ -71,6 +71,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const people = tablePlatesNodes.map( ( plate, i ) => new PersonImage( peopleImages[ i ], plate,
       { visibleProperty: plate.visibleProperty, tandem: options.tandem.createTandem( `person${i + 1}` ) } ) );
 
+    const peopleLayerNode = new Node( {
+      children: people,
+      excludeInvisibleChildrenFromBounds: true
+    } );
+
     const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
@@ -82,23 +87,24 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       children: [ ...tablePlatesNodes, ...paperPlatesNodes ]
     } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, ...people, tableNode, chocolateLayerNode ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
-    const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
+    const playAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
-    const centerChocolateLayerNode = () => {
-      chocolateLayerNode.centerX = cupsAreaCenterX;
-      tableNode.centerX = chocolateLayerNode.centerX;
-      tableNode.y = chocolateLayerNode.bottom - 100;
+    const centerPlayAreaNodes = () => {
+      chocolateLayerNode.centerX = playAreaCenterX;
+      peopleLayerNode.centerX = playAreaCenterX - 45;
+      tableNode.centerX = chocolateLayerNode.centerX - 10;
+      tableNode.y = chocolateLayerNode.bottom - 130;
       noteBookPaper.centerX = chocolateLayerNode.centerX - 10;
       noteBookPaper.y = chocolateLayerNode.top - 30;
     };
 
     model.numberOfPeopleProperty.link( () => {
-      centerChocolateLayerNode();
+      centerPlayAreaNodes();
       this.interruptSubtreeInput();
     } );
 
