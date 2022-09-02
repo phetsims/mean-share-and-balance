@@ -7,7 +7,7 @@
  *
  */
 
-import { AlignBox, Circle, GridBox, GridBoxOptions, Image, Node, Path, VBox } from '../../../../scenery/js/imports.js';
+import { Circle, Image, Node, NodeOptions, Path, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import smileSolidShape from '../../../../sherpa/js/fontawesome-5/smileSolidShape.js';
 import Person from '../model/Person.js';
@@ -19,22 +19,21 @@ import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
-type PersonNodeOptions = PickRequired<GridBoxOptions, 'tandem'>;
+type PersonNodeOptions = PickRequired<NodeOptions, 'tandem'>;
 
-export default class PersonNode extends GridBox {
+export default class PersonNode extends Node {
 
   public constructor( person: Person, providedOptions: PersonNodeOptions ) {
 
     const options = providedOptions;
 
-    const personImage = new Path( smileSolidShape, {
-      fill: 'black', scale: 0.1, layoutOptions: {
-        column: 1,
-        row: 0
-      }
-    } );
-
     const plateHeight = 25;
+
+    const personImage = new Path( smileSolidShape, {
+      fill: 'black', scale: 0.1,
+      x: plateHeight + 2,
+      y: -plateHeight - 40
+    } );
 
     const plate = new Circle( plateHeight, {
       fill: 'white',
@@ -42,8 +41,8 @@ export default class PersonNode extends GridBox {
     } );
 
     const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES );
-    const numberPicker = new NumberPicker( person.chocolateNumberProperty, new Property( numberPickerRange ), { tandem: options.tandem.createTandem( 'numberPicker' ) } );
-    const numberPickerAlignBox = new AlignBox( numberPicker, { layoutOptions: { column: 0, row: 2 } } );
+    const numberPicker = new NumberPicker( person.chocolateNumberProperty, new Property( numberPickerRange ),
+      { centerTop: new Vector2( plate.centerBottom.x, plate.centerBottom.y + 20 ), tandem: options.tandem.createTandem( 'numberPicker' ) } );
 
     const chocolateScale = 0.05;
     // create chocolate person brought
@@ -68,15 +67,12 @@ export default class PersonNode extends GridBox {
     const chocolatesNode = new Node( {
       children: [ plate, chocolatesVBox ],
       layoutOptions: {
-        column: 0,
-        row: 1,
-        align: 'bottom',
         minContentHeight: ( 265 * chocolateScale ) * 10 + plateHeight
       }
     } );
 
     super( {
-      children: [ personImage, chocolatesNode, numberPickerAlignBox ],
+      children: [ personImage, chocolatesNode, numberPicker ],
       x: person.position.x,
       centerY: person.position.y,
       visibleProperty: person.isActiveProperty

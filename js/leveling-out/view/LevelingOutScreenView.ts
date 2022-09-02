@@ -64,7 +64,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const centerWaterCupLayerNode = () => {
       chocolateLayerNode.centerX = cupsAreaCenterX;
       tableNode.centerX = chocolateLayerNode.centerX;
-      tableNode.y = chocolateLayerNode.bottom - 120;
+      tableNode.y = chocolateLayerNode.bottom - 110;
       noteBookPaper.centerX = chocolateLayerNode.centerX - 10;
       noteBookPaper.y = chocolateLayerNode.top - 30;
     };
