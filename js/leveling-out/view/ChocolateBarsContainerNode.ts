@@ -17,6 +17,7 @@ import Plate from '../model/Plate.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import DraggableChocolateNode from './DraggableChocolateNode.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -31,7 +32,10 @@ export default class ChocolateBarsContainerNode extends Node {
     const chocolateBars: Array<Node> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
       const chocolateBar = new DraggableChocolateNode( chocolateBarDropped, { tandem: options.tandem.createTandem( 'chocolateBar' ) } );
-      chocolateBar.y = ( chocolateBar.height + 1.5 ) * -i;
+
+      const y = ( chocolateBar.height + 1.5 ) * -i;
+      const x = chocolateBar.positionProperty.value.x;
+      chocolateBar.positionProperty.set( new Vector2( x, y ) );
 
       chocolateBars.push( chocolateBar );
     }

@@ -107,6 +107,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     return this.peopleArray.filter( person => person.isActiveProperty.value );
   }
 
+  public getActivePlates(): Array<Plate> {
+    return this.platesArray.filter( plate => plate.isActiveProperty.value );
+  }
+
   public override reset(): void {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPeopleProperty.reset();

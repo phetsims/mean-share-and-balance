@@ -25,6 +25,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TableNode from '../../common/view/TableNode.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
 import DraggableChocolateNode from './DraggableChocolateNode.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -43,15 +44,17 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     const chocolateBarDropped = ( chocolateBar: DraggableChocolateNode ) => {
+
       let closestPlate = model.platesArray[ 0 ];
-      let closestDistance = Math.abs( model.platesArray[ 0 ].position.x - chocolateBar.x );
-      model.platesArray.forEach( plate => {
-        if ( Math.abs( plate.position.x - chocolateBar.x ) < closestDistance ) {
+      let closestDistance = Math.abs( model.platesArray[ 0 ].position.x - chocolateBar.positionProperty.value.x );
+      model.getActivePlates().forEach( plate => {
+        if ( Math.abs( plate.position.x - chocolateBar.positionProperty.value.x ) < closestDistance ) {
           closestPlate = plate;
-          closestDistance = Math.abs( plate.position.x - chocolateBar.x );
+          closestDistance = Math.abs( plate.position.x - chocolateBar.positionProperty.value.x );
         }
       } );
-      chocolateBar.x = closestPlate.position.x;
+      chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, -( closestPlate.chocolateBarsNumberProperty.value - 1 ) * ( chocolateBar.height + 1.5 ) ) );
+
     };
 
     const peopleNodes = model.peopleArray.map( person => new PersonNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
