@@ -31,7 +31,7 @@ export default class ChocolateBarsContainerNode extends Node {
 
     const chocolateBars: Array<Node> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-      const chocolateBar = new DraggableChocolateNode( chocolateBarDropped, { tandem: options.tandem.createTandem( 'chocolateBar' ) } );
+      const chocolateBar = new DraggableChocolateNode( chocolateBarDropped, { tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ) } );
 
       const y = ( chocolateBar.height + 1.5 ) * -i;
       const x = chocolateBar.positionProperty.value.x;
