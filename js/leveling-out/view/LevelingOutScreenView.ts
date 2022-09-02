@@ -42,9 +42,21 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( 'controlPanel' )
     } );
 
+    const chocolateBarDropped = ( chocolateBar: DraggableChocolateNode ) => {
+      let closestPlate = model.platesArray[ 0 ];
+      let closestDistance = Math.abs( model.platesArray[ 0 ].position.x - chocolateBar.x );
+      model.platesArray.forEach( plate => {
+        if ( Math.abs( plate.position.x - chocolateBar.x ) < closestDistance ) {
+          closestPlate = plate;
+          closestDistance = Math.abs( plate.position.x - chocolateBar.x );
+        }
+      } );
+      chocolateBar.x = closestPlate.position.x;
+    };
+
     const peopleNodes = model.peopleArray.map( person => new PersonNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
 
-    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate, this, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
+    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
@@ -90,7 +102,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   }
 
   public chocolateBarDropped( chocolateBar: DraggableChocolateNode ): void {
-    //drop a chocolate bar
+    console.log( 'I was dropped' );
   }
 
 }

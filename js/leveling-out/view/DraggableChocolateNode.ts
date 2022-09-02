@@ -15,38 +15,41 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import LevelingOutScreenView from './LevelingOutScreenView.js';
 
 type DraggableChocolateNodeOptions = NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
 export default class DraggableChocolateNode extends Node {
 
-  public constructor( screenView: Pick<LevelingOutScreenView, 'chocolateBarDropped'>, providedOptions: DraggableChocolateNodeOptions ) {
+  public readonly positionProperty: Property<Vector2>;
+
+  public constructor( chocolateBarDropped: ( chocolateBar: DraggableChocolateNode ) => void, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
-    const positionProperty = new Property( new Vector2( 0, 0 ) );
     const chocolateBar = new Image( chocolateBar_png, { scale: 0.05 } );
+
+    const combinedOptions = combineOptions<NodeOptions>( {
+      children: [ chocolateBar ],
+      cursor: 'pointer'
+    }, options );
+    super( combinedOptions );
+
+    this.positionProperty = new Property( new Vector2( 0, 0 ) );
 
     // TODO: snap into nearest chocolate spot on plate.
     // Will decrease it's plate's chocolate count by 1
     // Will increase the chocolate count of the plate it's dropped onto.
     const chocolateBarDragListener = new DragListener( {
-      positionProperty: positionProperty,
+      positionProperty: this.positionProperty,
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' ),
       end: () => {
-        screenView.chocolateBarDropped( this );
+        chocolateBarDropped( this );
       }
     } );
 
-    const combinedOptions = combineOptions<NodeOptions>( {
-      children: [ chocolateBar ],
-      inputListeners: [ chocolateBarDragListener ],
-      cursor: 'pointer'
-    }, options );
-    super( combinedOptions );
+    this.addInputListener( chocolateBarDragListener );
 
-    positionProperty.link( position => {
+    this.positionProperty.link( position => {
       this.x = position.x;
       this.y = position.y;
     } );
