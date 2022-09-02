@@ -7,9 +7,8 @@
  *
  */
 
-import { Circle, Image, Node, NodeOptions, Path, VBox } from '../../../../scenery/js/imports.js';
+import { Image, Node, NodeOptions, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import smileSolidShape from '../../../../sherpa/js/fontawesome-5/smileSolidShape.js';
 import Person from '../model/Person.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -18,6 +17,14 @@ import Property from '../../../../axon/js/Property.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import person1_png from '../../../images/person1_png.js';
+import person2_png from '../../../images/person2_png.js';
+import person3_png from '../../../images/person3_png.js';
+import person4_png from '../../../images/person4_png.js';
+import person5_png from '../../../images/person5_png.js';
+import person6_png from '../../../images/person6_png.js';
+import person7_png from '../../../images/person7_png.js';
+import plate_png from '../../../images/plate_png.js';
 
 type PersonNodeOptions = PickRequired<NodeOptions, 'tandem'>;
 
@@ -27,18 +34,19 @@ export default class PersonNode extends Node {
 
     const options = providedOptions;
 
-    const plateHeight = 25;
-
-    const personImage = new Path( smileSolidShape, {
-      fill: 'black', scale: 0.1,
-      x: plateHeight + 2,
-      y: -plateHeight - 40
+    const plate = new Image( plate_png, {
+      scale: 0.15,
+      centerY: person.position.y
     } );
 
-    const plate = new Circle( plateHeight, {
-      fill: 'white',
-      stroke: 'black'
+    const peopleImages = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
+
+    const personImage = new Image( peopleImages[ person.linePlacement ], {
+      scale: 0.35,
+      right: plate.left + 15,
+      bottom: plate.bottom + 60
     } );
+
 
     const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES );
     const numberPicker = new NumberPicker( person.chocolateNumberProperty, new Property( numberPickerRange ),
@@ -67,14 +75,13 @@ export default class PersonNode extends Node {
     const chocolatesNode = new Node( {
       children: [ plate, chocolatesVBox ],
       layoutOptions: {
-        minContentHeight: ( 265 * chocolateScale ) * 10 + plateHeight
+        minContentHeight: ( 265 * chocolateScale ) * 10
       }
     } );
 
     super( {
       children: [ personImage, chocolatesNode, numberPicker ],
       x: person.position.x,
-      centerY: person.position.y,
       visibleProperty: person.isActiveProperty
     } );
   }
