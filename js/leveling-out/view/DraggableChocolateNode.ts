@@ -32,8 +32,9 @@ export default class DraggableChocolateNode extends Node {
     } );
 
     const combinedOptions = combineOptions<NodeOptions>( {
-        children: [ chocolateBar ],
-        inputListeners: [ chocolateBarDragListener ]
+      children: [ chocolateBar ],
+      inputListeners: [ chocolateBarDragListener ],
+      cursor: 'pointer'
     }, options );
     super( combinedOptions );
 
