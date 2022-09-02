@@ -17,11 +17,12 @@ import Plate from '../model/Plate.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import DraggableChocolateNode from './DraggableChocolateNode.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import LevelingOutScreenView from './LevelingOutScreenView.js';
 
 type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions> & PickRequired<NodeOptions, 'tandem'>;
 
 export default class ChocolateBarsContainerNode extends Node {
-  public constructor( plate: Plate, providedOptions: ChocolateBarsContainerNodeOptions ) {
+  public constructor( plate: Plate, screenView: Pick<LevelingOutScreenView, 'chocolateBarDropped'>, providedOptions: ChocolateBarsContainerNodeOptions ) {
     const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.position.x,
       y: plate.position.y,
@@ -30,7 +31,7 @@ export default class ChocolateBarsContainerNode extends Node {
 
     const chocolateBars: Array<Node> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-      const chocolateBar = new DraggableChocolateNode( { tandem: options.tandem.createTandem( 'chocolateBar' ) } );
+      const chocolateBar = new DraggableChocolateNode( screenView, { tandem: options.tandem.createTandem( 'chocolateBar' ) } );
       chocolateBar.y = ( chocolateBar.height + 1.5 ) * -i;
 
       chocolateBars.push( chocolateBar );

@@ -24,6 +24,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TableNode from '../../common/view/TableNode.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
+import DraggableChocolateNode from './DraggableChocolateNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -43,7 +44,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const peopleNodes = model.peopleArray.map( person => new PersonNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
 
-    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
+    const plateNodes = model.platesArray.map( plate => new ChocolateBarsContainerNode( plate, this, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
@@ -86,6 +87,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     this.addChild( controlsAlignBox );
+  }
+
+  public chocolateBarDropped( chocolateBar: DraggableChocolateNode ): void {
+    //drop a chocolate bar
   }
 
 }

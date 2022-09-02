@@ -15,12 +15,13 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import LevelingOutScreenView from './LevelingOutScreenView.js';
 
 type DraggableChocolateNodeOptions = NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
 export default class DraggableChocolateNode extends Node {
 
-  public constructor( providedOptions: DraggableChocolateNodeOptions ) {
+  public constructor( screenView: Pick<LevelingOutScreenView, 'chocolateBarDropped'>, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
@@ -32,7 +33,10 @@ export default class DraggableChocolateNode extends Node {
     // Will increase the chocolate count of the plate it's dropped onto.
     const chocolateBarDragListener = new DragListener( {
       positionProperty: positionProperty,
-      tandem: options.tandem.createTandem( 'chocolateBarDragListener' )
+      tandem: options.tandem.createTandem( 'chocolateBarDragListener' ),
+      end: () => {
+        screenView.chocolateBarDropped( this );
+      }
     } );
 
     const combinedOptions = combineOptions<NodeOptions>( {
