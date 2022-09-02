@@ -26,6 +26,10 @@ export default class DraggableChocolateNode extends Node {
 
     const positionProperty = new Property( new Vector2( 0, 0 ) );
     const chocolateBar = new Image( chocolateBar_png, { scale: 0.05 } );
+
+    // TODO: snap into nearest chocolate spot on plate.
+    // Will decrease it's plate's chocolate count by 1
+    // Will increase the chocolate count of the plate it's dropped onto.
     const chocolateBarDragListener = new DragListener( {
       positionProperty: positionProperty,
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' )

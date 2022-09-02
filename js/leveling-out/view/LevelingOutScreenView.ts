@@ -23,6 +23,7 @@ import PersonNode from './PersonNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TableNode from '../../common/view/TableNode.js';
+import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -46,12 +47,14 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
+    const noteBookPaper = new NoteBookPaperNode();
+
     const chocolateLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...peopleNodes, ...plateNodes ]
     } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, chocolateLayerNode ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, tableNode, chocolateLayerNode ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
@@ -61,7 +64,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const centerWaterCupLayerNode = () => {
       chocolateLayerNode.centerX = cupsAreaCenterX;
       tableNode.centerX = chocolateLayerNode.centerX;
-      tableNode.y = chocolateLayerNode.bottom - 25;
+      tableNode.y = chocolateLayerNode.bottom - 120;
+      noteBookPaper.centerX = chocolateLayerNode.centerX - 10;
+      noteBookPaper.y = chocolateLayerNode.top - 30;
     };
 
     model.numberOfPeopleProperty.link( () => {
