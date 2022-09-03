@@ -52,9 +52,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
-
       let closestPlate = model.platesArray[ 0 ];
-      let closestDistance = Math.abs( model.platesArray[ 0 ].position.x - chocolateBar.positionProperty.value.x );
+      let closestDistance = Math.abs( model.getActivePlates()[ 0 ].position.x - chocolateBar.positionProperty.value.x );
+
       model.getActivePlates().forEach( plate => {
         if ( Math.abs( plate.position.x - chocolateBar.positionProperty.value.x ) < closestDistance ) {
           closestPlate = plate;
@@ -62,7 +62,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         }
       } );
       chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, -( closestPlate.chocolateBarsNumberProperty.value - 1 ) * ( chocolateBar.height + 1.5 ) ) );
-
+      return closestPlate;
     };
 
     const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );

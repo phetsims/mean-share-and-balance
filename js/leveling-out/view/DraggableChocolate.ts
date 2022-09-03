@@ -9,24 +9,35 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
-import chocolateBar_png from '../../../images/chocolateBar_png.js';
+import { DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Plate from '../model/Plate.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
-type DraggableChocolateNodeOptions = NodeOptions & PickRequired<NodeOptions, 'tandem'>;
+type SelfOptions = {
+  position: Vector2;
+};
+
+type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
 export default class DraggableChocolate extends Node {
 
   public readonly positionProperty: Property<Vector2>;
+  public readonly chocolateBarDragListener: DragListener;
 
-  public constructor( chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: DraggableChocolateNodeOptions ) {
+  public constructor( chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
-    const chocolateBar = new Image( chocolateBar_png, { scale: 0.05 } );
+    const chocolateBar = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
+      fill: 'saddleBrown',
+      stroke: 'black',
+      visibleProperty: new BooleanProperty( false )
+    } );
 
     const combinedOptions = combineOptions<NodeOptions>( {
       children: [ chocolateBar ],
@@ -34,25 +45,37 @@ export default class DraggableChocolate extends Node {
     }, options );
     super( combinedOptions );
 
-    this.positionProperty = new Property( new Vector2( 0, 0 ) );
+    this.positionProperty = new Property( options.position );
 
-    // TODO: snap into nearest chocolate spot on plate.
-    // Will decrease it's plate's chocolate count by 1
-    // Will increase the chocolate count of the plate it's dropped onto.
-    const chocolateBarDragListener = new DragListener( {
+    this.chocolateBarDragListener = new DragListener( {
       positionProperty: this.positionProperty,
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' ),
+      targetNode: this,
+      start: () => {
+        console.log( 'I started' );
+        this.visibleProperty.set( true );
+        this.moveToFront();
+      },
       end: () => {
-        chocolateBarDropped( this );
+        const plateDroppedOn = chocolateBarDropped( this );
+        plateDroppedOn.chocolateBarsNumberProperty.value += 1;
+        this.visibleProperty.set( false );
+        this.reset();
       }
     } );
 
-    this.addInputListener( chocolateBarDragListener );
+    this.addInputListener( this.chocolateBarDragListener );
 
     this.positionProperty.link( position => {
       this.x = position.x;
       this.y = position.y;
     } );
+
+    this.visibleProperty.link( visible => console.log( 'I changed' ) );
+  }
+
+  public reset(): void {
+    this.positionProperty.reset();
   }
 }
 
