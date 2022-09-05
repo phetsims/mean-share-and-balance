@@ -138,6 +138,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate );
   }
 
+  public getPlateStateChocolates( chocolates: Array<ChocolateBar> ): Array<ChocolateBar> {
+    return chocolates.filter( chocolate => chocolate.stateProperty.value === 'plate' );
+  }
+
   public override reset(): void {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPeopleProperty.reset();

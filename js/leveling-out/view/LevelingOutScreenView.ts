@@ -53,19 +53,18 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
       let closestPlate = model.platesArray[ 0 ];
-      let closestDistance = Math.abs( model.getActivePlates()[ 0 ].position.x - chocolateBar.positionProperty.value.x );
+      let closestDistance = Math.abs( model.getActivePlates()[ 0 ].position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
 
       model.getActivePlates().forEach( plate => {
-        if ( Math.abs( plate.position.x - chocolateBar.positionProperty.value.x ) < closestDistance ) {
+        if ( Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x ) < closestDistance ) {
           closestPlate = plate;
-          closestDistance = Math.abs( plate.position.x - chocolateBar.positionProperty.value.x );
+          closestDistance = Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
         }
       } );
 
       const chocolatesOnPlate = model.getChocolatesOnPlate( closestPlate );
-
-      const y = closestPlate.position.y + ( -chocolatesOnPlate.length * ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) );
-      chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
+      const y = closestPlate.position.y + ( -( chocolatesOnPlate.length - 1 ) * ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) );
+      chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
       return closestPlate;
     };
 
@@ -81,7 +80,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
-    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( chocolate, chocolateBarDropped, {
+
+    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( model, chocolate, chocolateBarDropped, {
       tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ),
       visibleProperty: chocolate.isActiveProperty
     } ) );
