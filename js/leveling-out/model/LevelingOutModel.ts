@@ -85,7 +85,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       );
 
       for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-        const y = plate.position.y + ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * -i;
+        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) );
         const x = plate.position.x;
         const isActive = plate.isActiveProperty.value && i < plate.chocolateBarsNumberProperty.value;
         const chocolateBar = new ChocolateBar( { isActive: isActive, plate: plate, position: new Vector2( x, y ) } );
@@ -139,7 +139,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   public getPlateStateChocolates( chocolates: Array<ChocolateBar> ): Array<ChocolateBar> {
-    return chocolates.filter( chocolate => chocolate.stateProperty.value === 'plate' );
+    return chocolates.filter( chocolate => chocolate.stateProperty.value === 'plate' && chocolate.isActiveProperty.value );
   }
 
   public override reset(): void {

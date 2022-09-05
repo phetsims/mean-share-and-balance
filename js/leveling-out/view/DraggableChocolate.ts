@@ -50,12 +50,13 @@ export default class DraggableChocolate extends Node {
         chocolateBarModel.stateProperty.set( 'dragging' );
         const plateStateChocolates = model.getPlateStateChocolates( model.getChocolatesOnPlate( chocolateBarModel.parentPlateProperty.value ) );
         plateStateChocolates.forEach( ( chocolate, i ) => {
-          const newPosition = new Vector2( chocolateBarModel.parentPlateProperty.value.position.x, chocolateBarModel.parentPlateProperty.value.position.y + ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * -i );
+          const newPosition = new Vector2( chocolateBarModel.parentPlateProperty.value.position.x, chocolateBarModel.parentPlateProperty.value.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
           chocolate.positionProperty.set( newPosition );
         } );
       },
       end: () => {
         chocolateBarModel.parentPlateProperty.set( chocolateBarDropped( this ) );
+        chocolateBarModel.stateProperty.set( 'plate' );
       }
     } );
 

@@ -16,6 +16,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../model/Plate.js';
 import DraggableChocolate from './DraggableChocolate.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -27,7 +28,7 @@ export default class PaperPlateNode extends Node {
       visibleProperty: plate.isActiveProperty
     }, providedOptions );
 
-    const plateLine = new Line( 0, 0, 20, 0, { stroke: 'black' } );
+    const plateLine = new Line( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, 0, { stroke: 'black' } );
 
 
     options.children = [ plateLine ];
