@@ -22,6 +22,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import ChocolateBar from './ChocolateBar.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -73,10 +74,21 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.platesArray.push( plate );
 
+      Multilink.multilink(
+        [ plate.isActiveProperty, plate.chocolateBarsNumberProperty ],
+        ( isActive, chocolateBarsNumber ) => {
+          const chocolates = this.getChocolatesOnPlate( plate );
+          chocolates.forEach( ( chocolate, i ) => {
+            chocolate.isActiveProperty.value = isActive && i < chocolateBarsNumber;
+          } );
+        }
+      );
+
       for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
         const y = plate.position.y + ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * -i;
         const x = plate.position.x;
-        const chocolateBar = new ChocolateBar( { isActive: i < plate.chocolateBarsNumberProperty.value, plate: plate, position: new Vector2( x, y ) } );
+        const isActive = plate.isActiveProperty.value && i < plate.chocolateBarsNumberProperty.value;
+        const chocolateBar = new ChocolateBar( { isActive: isActive, plate: plate, position: new Vector2( x, y ) } );
 
         this.chocolatesArray.push( chocolateBar );
       }
