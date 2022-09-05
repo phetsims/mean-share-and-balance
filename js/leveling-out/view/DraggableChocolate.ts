@@ -17,6 +17,8 @@ import Plate from '../model/Plate.js';
 import ChocolateBar from '../model/ChocolateBar.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
@@ -26,7 +28,9 @@ export default class DraggableChocolate extends Node {
   public readonly chocolateBarDragListener: DragListener;
   public readonly chocolateBarModel: ChocolateBar;
 
-  public constructor( model: Pick<LevelingOutModel, 'getPlateStateChocolates' | 'getChocolatesOnPlate'>, chocolateBarModel: ChocolateBar, chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
+  public constructor( model: Pick<LevelingOutModel, 'getPlateStateChocolates' | 'getChocolatesOnPlate'>,
+                      chocolateBarModel: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
+                      chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
@@ -45,7 +49,7 @@ export default class DraggableChocolate extends Node {
 
     this.chocolateBarDragListener = new DragListener( {
       positionProperty: this.chocolateBarModel.positionProperty,
-      tandem: options.tandem.createTandem( 'chocolateBarDragListener' ),
+      dragBoundsProperty: notebookPaperBoundsProperty,
       start: () => {
         chocolateBarModel.stateProperty.set( 'dragging' );
         const plateStateChocolates = model.getPlateStateChocolates( model.getChocolatesOnPlate( chocolateBarModel.parentPlateProperty.value ) );
@@ -57,7 +61,8 @@ export default class DraggableChocolate extends Node {
       end: () => {
         chocolateBarModel.parentPlateProperty.set( chocolateBarDropped( this ) );
         chocolateBarModel.stateProperty.set( 'plate' );
-      }
+      },
+      tandem: options.tandem.createTandem( 'chocolateBarDragListener' )
     } );
 
     this.addInputListener( this.chocolateBarDragListener );

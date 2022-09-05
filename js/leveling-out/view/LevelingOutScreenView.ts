@@ -34,6 +34,7 @@ import person4_png from '../../../images/person4_png.js';
 import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -51,6 +52,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( 'controlPanel' )
     } );
 
+    const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
+
+    const notebookPaper = new NoteBookPaperNode();
+    const notebookPaperBoundsProperty = new Property( notebookPaper.bounds );
+
+    // function for what chocolate bars should do at the end of their drag
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
       let closestPlate = model.platesArray[ 0 ];
       let closestDistance = Math.abs( model.getActivePlates()[ 0 ].position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
@@ -68,6 +75,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       return closestPlate;
     };
 
+
+    // Creating the bottom representation of chocolates on the table
     const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
 
     const peopleImages = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
@@ -79,23 +88,20 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       excludeInvisibleChildrenFromBounds: true
     } );
 
+    // Creating the top representation of chocolates on the paper
     const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
-    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( model, chocolate, chocolateBarDropped, {
+    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( model, chocolate, notebookPaperBoundsProperty, chocolateBarDropped, {
       tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ),
       visibleProperty: chocolate.isActiveProperty
     } ) );
-
-    const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
-
-    const noteBookPaper = new NoteBookPaperNode();
 
     const chocolateLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
     } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
 
     super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
@@ -107,8 +113,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       peopleLayerNode.centerX = playAreaCenterX - 45;
       tableNode.centerX = chocolateLayerNode.centerX - 10;
       tableNode.y = chocolateLayerNode.bottom - 130;
-      noteBookPaper.centerX = chocolateLayerNode.centerX - 10;
-      noteBookPaper.y = chocolateLayerNode.top - 100;
+      notebookPaper.centerX = chocolateLayerNode.centerX - 10;
+      notebookPaper.y = chocolateLayerNode.top - 100;
     };
 
     model.numberOfPeopleProperty.link( () => {
