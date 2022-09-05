@@ -114,7 +114,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tableNode.centerX = chocolateLayerNode.centerX - 10;
       tableNode.y = chocolateLayerNode.bottom - 130;
       notebookPaper.centerX = chocolateLayerNode.centerX - 10;
-      notebookPaper.y = chocolateLayerNode.top - 100;
     };
 
     model.numberOfPeopleProperty.link( () => {
