@@ -61,7 +61,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
           closestDistance = Math.abs( plate.position.x - chocolateBar.positionProperty.value.x );
         }
       } );
-      chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, -( closestPlate.chocolateBarsNumberProperty.value - 1 ) * ( chocolateBar.height + 1.5 ) ) );
+
+      const chocolatesOnPlate = model.getChocolatesOnPlate( closestPlate );
+
+      const y = closestPlate.position.y + ( -chocolatesOnPlate.length * ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) );
+      chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
       return closestPlate;
     };
 
@@ -77,6 +81,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
+    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( chocolate, chocolateBarDropped, {
+      tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ),
+      visibleProperty: chocolate.isActiveProperty
+    } ) );
 
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
@@ -84,7 +92,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const chocolateLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
-      children: [ ...tablePlatesNodes, ...paperPlatesNodes ]
+      children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
     } );
 
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ noteBookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
@@ -100,7 +108,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tableNode.centerX = chocolateLayerNode.centerX - 10;
       tableNode.y = chocolateLayerNode.bottom - 130;
       noteBookPaper.centerX = chocolateLayerNode.centerX - 10;
-      noteBookPaper.y = chocolateLayerNode.top - 30;
+      noteBookPaper.y = chocolateLayerNode.top - 100;
     };
 
     model.numberOfPeopleProperty.link( () => {

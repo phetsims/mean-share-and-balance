@@ -13,30 +13,27 @@ import { DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../model/Plate.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import ChocolateBar from '../model/ChocolateBar.js';
 
-type SelfOptions = {
-  position: Vector2;
-};
-
+type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
 export default class DraggableChocolate extends Node {
 
   public readonly positionProperty: Property<Vector2>;
   public readonly chocolateBarDragListener: DragListener;
+  public readonly chocolateBarModel: ChocolateBar;
 
-  public constructor( chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
+  public constructor( chocolateBarModel: ChocolateBar, chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
     const chocolateBar = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
       fill: 'saddleBrown',
-      stroke: 'black',
-      visibleProperty: new BooleanProperty( false )
+      stroke: 'black'
     } );
 
     const combinedOptions = combineOptions<NodeOptions>( {
@@ -45,22 +42,17 @@ export default class DraggableChocolate extends Node {
     }, options );
     super( combinedOptions );
 
-    this.positionProperty = new Property( options.position );
+    this.chocolateBarModel = chocolateBarModel;
+    this.positionProperty = chocolateBarModel.positionProperty;
 
     this.chocolateBarDragListener = new DragListener( {
       positionProperty: this.positionProperty,
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' ),
-      targetNode: this,
       start: () => {
-        console.log( 'I started' );
-        this.visibleProperty.set( true );
-        this.moveToFront();
+         //chocolate will fall
       },
       end: () => {
-        const plateDroppedOn = chocolateBarDropped( this );
-        plateDroppedOn.chocolateBarsNumberProperty.value += 1;
-        this.visibleProperty.set( false );
-        this.reset();
+        chocolateBarModel.parentPlateProperty.set( chocolateBarDropped( this ) );
       }
     } );
 

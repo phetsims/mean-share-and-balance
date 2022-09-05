@@ -21,6 +21,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import ChocolateBar from './ChocolateBar.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -35,6 +36,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public readonly platesArray: Array<Plate>;
   public readonly peopleArray: Array<Person>;
+  public readonly chocolatesArray: Array<ChocolateBar>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
@@ -57,18 +59,27 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     this.platesArray = [];
     this.peopleArray = [];
+    this.chocolatesArray = [];
 
     const meanPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
 
     for ( let i = 0; i < MAX_PEOPLE; i++ ) {
       const x = i * MeanShareAndBalanceConstants.PERSON_WIDTH;
-      const chocolate = new Plate( {
+      const plate = new Plate( {
         isActive: i < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
         linePlacement: i,
         tandem: options.tandem.createTandem( `plateChocolate${i + 1}` )
       } );
-      this.platesArray.push( chocolate );
+      this.platesArray.push( plate );
+
+      for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
+        const y = plate.position.y + ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * -i;
+        const x = plate.position.x;
+        const chocolateBar = new ChocolateBar( { isActive: i < plate.chocolateBarsNumberProperty.value, plate: plate, position: new Vector2( x, y ) } );
+
+        this.chocolatesArray.push( chocolateBar );
+      }
 
       const person = new Person( {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
@@ -78,7 +89,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
 
-      person.chocolateNumberProperty.lazyLink( chocolateNumber => chocolate.chocolateBarsNumberProperty.set( chocolateNumber ) );
+      person.chocolateNumberProperty.lazyLink( chocolateNumber => plate.chocolateBarsNumberProperty.set( chocolateNumber ) );
 
       meanPropertyDependencies.push( person.chocolateNumberProperty );
       meanPropertyDependencies.push( person.isActiveProperty );
@@ -109,6 +120,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public getActivePlates(): Array<Plate> {
     return this.platesArray.filter( plate => plate.isActiveProperty.value );
+  }
+
+  public getChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
+    return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate );
   }
 
   public override reset(): void {
