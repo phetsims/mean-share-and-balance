@@ -216,7 +216,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   public syncData(): void {
-    // future implementation
+    const plates = this.getActivePlates();
+    const people = this.getActivePeople();
+    people.forEach( ( person, i ) => plates[ i ].chocolateBarsNumberProperty.set( person.chocolateNumberProperty.value ) );
   }
 
   public step( dt: number ): void {

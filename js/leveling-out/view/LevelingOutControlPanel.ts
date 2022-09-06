@@ -6,7 +6,7 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
-import { GridBox, GridBoxOptions, Text, VBox, Image } from '../../../../scenery/js/imports.js';
+import { FireListener, GridBox, GridBoxOptions, Image, Text, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -24,7 +24,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
 export default class LevelingOutControlPanel extends GridBox {
-  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty'>, providedOptions: IntroControlPanelOptions ) {
+  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>, providedOptions: IntroControlPanelOptions ) {
 
     const options = providedOptions;
 
@@ -57,7 +57,9 @@ export default class LevelingOutControlPanel extends GridBox {
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
     } );
 
-    const syncButton = new SyncButton( { tandem: options.tandem.createTandem( 'syncButton' ) } );
+    const syncListener = new FireListener( { fire: () => model.syncData() } );
+
+    const syncButton = new SyncButton( { inputListeners: [ syncListener ], tandem: options.tandem.createTandem( 'syncButton' ) } );
 
     const syncVBox = new VBox( {
         align: 'left', children: [ syncButton ],
