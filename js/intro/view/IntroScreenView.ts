@@ -153,9 +153,9 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       this.interruptSubtreeInput();
     } );
 
-    const screenViewRootNode = new Node( {
-      children: [ tableNode, chocolateLayerNode, predictMeanSlider ]
-    } );
+    this.screenViewRootNode.addChild( tableNode );
+    this.screenViewRootNode.addChild( chocolateLayerNode );
+    this.screenViewRootNode.addChild( predictMeanSlider );
 
     // Only travel to the first pipe in pdomOrder
     const chocolateLayerChildren = chocolateLayerNode.children;
@@ -166,8 +166,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     } );
 
-    screenViewRootNode.pdomOrder = [ ...chocolateLayerChildren, controlPanel, predictMeanSlider ];
-    this.addChild( screenViewRootNode );
+    this.screenViewRootNode.pdomOrder = [ ...chocolateLayerChildren, controlPanel, predictMeanSlider ];
 
     const pipeBoundsShapes = pipeNodes.map( pipe => Shape.bounds( pipe.bounds ) );
     pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes );

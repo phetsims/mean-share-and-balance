@@ -24,6 +24,7 @@ export type MeanShareAndBalanceScreenViewOptions = PickRequired<ScreenViewOption
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly resetAllButton: ResetAllButton;
   public readonly questionBar: QuestionBar;
+  public readonly screenViewRootNode: Node;
 
   protected constructor( model: MeanShareAndBalanceModel, questionBarTextProperty: TReadOnlyProperty<string>, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
@@ -51,13 +52,13 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
-    const screenViewRootNode = new Node( {
+    this.screenViewRootNode = new Node( {
       children: [ this.questionBar, this.resetAllButton ]
     } );
 
-    screenViewRootNode.pdomOrder = [ ...this.children, this.questionBar ];
+    this.screenViewRootNode.pdomOrder = [ ...this.children, this.questionBar ];
 
-    this.addChild( screenViewRootNode );
+    this.addChild( this.screenViewRootNode );
   }
 
   /**
