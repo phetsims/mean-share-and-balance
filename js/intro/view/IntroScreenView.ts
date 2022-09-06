@@ -24,7 +24,6 @@ import IntroControlPanel from './IntroControlPanel.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import TableNode from '../../common/view/TableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
@@ -103,20 +102,20 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
         { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ) } );
+
       pipeNodes.push( pipeNode );
     } );
 
     // This also includes the pipes that connect the 2D cups as well as the draggable water level triangle
-    const waterCupLayerNode = new Node( {
+    const chocolateLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...waterCup2DNodes, ...waterCup3DNodes, ...pipeNodes ]
     } );
 
-    const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX, y: waterCupLayerNode.centerY - 25 } );
+    const tableNode = new TableNode( { centerX: chocolateLayerNode.centerX, y: chocolateLayerNode.centerY - 25 } );
 
     // Instantiate Parent
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ tableNode, waterCupLayerNode, predictMeanSlider ] }, options );
-    super( model, meanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, combinedOptions );
+    super( model, meanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
 
     // Controls on Right side of screen
     const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty,
@@ -141,27 +140,39 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
-    const centerWaterCupLayerNode = () => {
-      waterCupLayerNode.centerX = cupsAreaCenterX;
-      predictMeanSlider.x = waterCupLayerNode.x - 12.5;
-      tableNode.centerX = waterCupLayerNode.centerX;
-      tableNode.y = waterCupLayerNode.bottom - 25;
+    const centerChocolateLayerNode = () => {
+      chocolateLayerNode.centerX = cupsAreaCenterX;
+      predictMeanSlider.x = chocolateLayerNode.x - 12.5;
+      tableNode.centerX = chocolateLayerNode.centerX;
+      tableNode.y = chocolateLayerNode.bottom - 25;
     };
 
     model.numberOfCupsProperty.link( () => {
-      centerWaterCupLayerNode();
+      centerChocolateLayerNode();
       this.interruptSubtreeInput();
     } );
 
-    this.pdomPlayAreaNode.pdomOrder = [
-      waterCupLayerNode,
-      controlPanel,
-      predictMeanSlider
-    ];
+    const screenViewRootNode = new Node( {
+      children: [ tableNode, chocolateLayerNode, predictMeanSlider ]
+    } );
 
-    this.pdomControlAreaNode.pdomOrder = [
-      this.resetAllButton
-    ];
+    const chocolateLayerChildren = chocolateLayerNode.children;
+
+
+    pipeNodes.forEach( ( pipe, i ) => {
+      if ( i > 0 ) {
+        console.log( pipe );
+
+        const index = chocolateLayerChildren.indexOf( pipe );
+        // ScreenView pdomOrder set above.
+        chocolateLayerChildren.splice( index, 1 );
+        console.log( chocolateLayerChildren );
+      }
+    } );
+
+    screenViewRootNode.pdomOrder = [ ...chocolateLayerChildren, controlPanel, predictMeanSlider ];
+
+    this.addChild( screenViewRootNode );
 
     this.predictMeanVisibleProperty = predictMeanVisibleProperty;
     this.meanVisibleProperty = meanVisibleProperty;

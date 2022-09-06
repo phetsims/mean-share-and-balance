@@ -14,7 +14,7 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { TColor } from '../../../../scenery/js/imports.js';
+import { Node, TColor } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 // import SyncButton from './SyncButton.js';
@@ -51,8 +51,13 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
-    this.addChild( this.questionBar );
-    this.addChild( this.resetAllButton );
+    const screenViewRootNode = new Node( {
+      children: [ this.questionBar, this.resetAllButton ]
+    } );
+
+    screenViewRootNode.pdomOrder = [ ...this.children, this.questionBar ];
+
+    this.addChild( screenViewRootNode );
   }
 
   /**
