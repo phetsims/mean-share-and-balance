@@ -134,12 +134,27 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     return this.platesArray.filter( plate => plate.isActiveProperty.value );
   }
 
+  public getActiveChocolates(): Array<ChocolateBar> {
+    return this.chocolatesArray.filter( chocolate => chocolate.isActiveProperty.value );
+  }
+
   public getChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
     return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate );
   }
 
+  public getActiveChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
+    return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate && chocolate.isActiveProperty.value );
+  }
+
   public getPlateStateChocolates( chocolates: Array<ChocolateBar> ): Array<ChocolateBar> {
     return chocolates.filter( chocolate => chocolate.stateProperty.value === 'plate' && chocolate.isActiveProperty.value );
+  }
+
+  public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
+    return this.getActivePlates().filter( plate => {
+      const numberOfChocolates = this.getActiveChocolatesOnPlate( plate ).length;
+      return numberOfChocolates < 10;
+    } );
   }
 
   public override reset(): void {

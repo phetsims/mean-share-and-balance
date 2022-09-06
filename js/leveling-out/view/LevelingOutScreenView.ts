@@ -59,16 +59,16 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     // function for what chocolate bars should do at the end of their drag
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
-      let closestPlate = model.platesArray[ 0 ];
-      let closestDistance = Math.abs( model.getActivePlates()[ 0 ].position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
+      let closestPlate = model.getPlatesWithSpace( model.getActivePlates() )[ 0 ];
+      const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
+      let closestDistance = Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
 
-      model.getActivePlates().forEach( plate => {
+      platesWithSpace.forEach( plate => {
         if ( Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x ) < closestDistance ) {
           closestPlate = plate;
           closestDistance = Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
         }
       } );
-
       const numberOfChocolatesOnPlate = model.getPlateStateChocolates( model.getChocolatesOnPlate( closestPlate ) ).length;
       const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
       chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
