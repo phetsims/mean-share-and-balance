@@ -72,6 +72,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const numberOfChocolatesOnPlate = model.getPlateStateChocolates( model.getChocolatesOnPlate( closestPlate ) ).length;
       const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
       chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
+
       return closestPlate;
     };
 

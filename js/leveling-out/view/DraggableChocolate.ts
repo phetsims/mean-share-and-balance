@@ -16,7 +16,6 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import Plate from '../model/Plate.js';
 import ChocolateBar from '../model/ChocolateBar.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
@@ -28,7 +27,7 @@ export default class DraggableChocolate extends Node {
   public readonly chocolateBarDragListener: DragListener;
   public readonly chocolateBarModel: ChocolateBar;
 
-  public constructor( model: Pick<LevelingOutModel, 'getPlateStateChocolates' | 'getChocolatesOnPlate'>,
+  public constructor( model: Pick<LevelingOutModel, 'dropChocolates' | 'syncNumberOfChocolatesOnPlates'>,
                       chocolateBarModel: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
 
@@ -52,15 +51,12 @@ export default class DraggableChocolate extends Node {
       dragBoundsProperty: notebookPaperBoundsProperty,
       start: () => {
         chocolateBarModel.stateProperty.set( 'dragging' );
-        const plateStateChocolates = model.getPlateStateChocolates( model.getChocolatesOnPlate( chocolateBarModel.parentPlateProperty.value ) );
-        plateStateChocolates.forEach( ( chocolate, i ) => {
-          const newPosition = new Vector2( chocolateBarModel.parentPlateProperty.value.position.x, chocolateBarModel.parentPlateProperty.value.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
-          chocolate.positionProperty.set( newPosition );
-        } );
+        model.dropChocolates( chocolateBarModel );
       },
       end: () => {
         chocolateBarModel.parentPlateProperty.set( chocolateBarDropped( this ) );
         chocolateBarModel.stateProperty.set( 'plate' );
+        model.syncNumberOfChocolatesOnPlates();
       },
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' )
     } );
