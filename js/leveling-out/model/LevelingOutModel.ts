@@ -114,9 +114,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           const maxPlate = this.getPlateWithMostChocolate();
           maxPlate.chocolateBarsNumberProperty.value += delta;
         }
+        else if ( delta > 0 && plate.chocolateBarsNumberProperty.value === 10 ) {
+          const minPlate = this.getPlateWithLeastChocolate();
+          minPlate.chocolateBarsNumberProperty.value += delta;
+        }
         else {
           plate.chocolateBarsNumberProperty.value += delta;
-
         }
       } );
 
@@ -196,6 +199,13 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
     return maxPlate!;
+  }
+
+  public getPlateWithLeastChocolate(): Plate {
+    const minPlate = _.minBy( this.getActivePlates(), ( plate => plate.chocolateBarsNumberProperty.value ) );
+
+    // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
+    return minPlate!;
   }
 
   public override reset(): void {
