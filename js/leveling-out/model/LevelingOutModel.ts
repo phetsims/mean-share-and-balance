@@ -107,7 +107,17 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       // set paper plate chocolate number based on table plate delta change.
       person.chocolateNumberProperty.lazyLink( ( chocolateNumber, oldChocolateNumber ) => {
         const delta = chocolateNumber - oldChocolateNumber;
-        plate.chocolateBarsNumberProperty.value += delta;
+
+        // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
+        // a piece of chocolate will be removed off of the paper plate with the most chocolate.
+        if ( delta < 0 && plate.chocolateBarsNumberProperty.value === 0 ) {
+          const maxPlate = this.getPlateWithMostChocolate();
+          maxPlate.chocolateBarsNumberProperty.value += delta;
+        }
+        else {
+          plate.chocolateBarsNumberProperty.value += delta;
+
+        }
       } );
 
       meanPropertyDependencies.push( person.chocolateNumberProperty );
@@ -179,6 +189,13 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       const newPosition = new Vector2( chocolateBarModel.parentPlateProperty.value.position.x, chocolateBarModel.parentPlateProperty.value.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
       chocolate.positionProperty.set( newPosition );
     } );
+  }
+
+  public getPlateWithMostChocolate(): Plate {
+    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => plate.chocolateBarsNumberProperty.value ) );
+
+    // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
+    return maxPlate!;
   }
 
   public override reset(): void {
