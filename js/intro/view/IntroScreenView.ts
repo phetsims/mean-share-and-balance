@@ -27,6 +27,7 @@ import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -156,23 +157,20 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       children: [ tableNode, chocolateLayerNode, predictMeanSlider ]
     } );
 
+    // Only travel to the first pipe in pdomOrder
     const chocolateLayerChildren = chocolateLayerNode.children;
-
-
     pipeNodes.forEach( ( pipe, i ) => {
       if ( i > 0 ) {
-        console.log( pipe );
-
         const index = chocolateLayerChildren.indexOf( pipe );
-        // ScreenView pdomOrder set above.
         chocolateLayerChildren.splice( index, 1 );
-        console.log( chocolateLayerChildren );
       }
     } );
 
     screenViewRootNode.pdomOrder = [ ...chocolateLayerChildren, controlPanel, predictMeanSlider ];
-
     this.addChild( screenViewRootNode );
+
+    const pipeBoundsShapes = pipeNodes.map( pipe => Shape.bounds( pipe.bounds ) );
+    pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes );
 
     this.predictMeanVisibleProperty = predictMeanVisibleProperty;
     this.meanVisibleProperty = meanVisibleProperty;
