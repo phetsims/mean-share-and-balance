@@ -115,6 +115,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tableNode.centerX = chocolateLayerNode.centerX - 10;
       tableNode.y = chocolateLayerNode.bottom - 130;
       notebookPaper.centerX = chocolateLayerNode.centerX - 10;
+
+      // Transform to the bounds of the chocolate, since they are in an intermediate layer
+      notebookPaperBoundsProperty.value = chocolateLayerNode.globalToLocalBounds( notebookPaper.globalBounds );
     };
 
     model.numberOfPeopleProperty.link( () => {

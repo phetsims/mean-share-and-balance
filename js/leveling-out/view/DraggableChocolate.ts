@@ -18,6 +18,7 @@ import ChocolateBar from '../model/ChocolateBar.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
@@ -48,7 +49,12 @@ export default class DraggableChocolate extends Node {
 
     this.chocolateBarDragListener = new DragListener( {
       positionProperty: this.chocolateBarModel.positionProperty,
-      dragBoundsProperty: notebookPaperBoundsProperty,
+
+      // The origin of the chocolate bar is the top left, so we must erode just on the right and bottom edge to keep
+      // the chocolate fully in the paper region
+      dragBoundsProperty: new DerivedProperty( [ notebookPaperBoundsProperty ], bounds =>
+        new Bounds2( bounds.minX, bounds.minY, bounds.maxX - chocolateBar.width, bounds.maxY - chocolateBar.height )
+      ),
       start: () => {
         chocolateBarModel.stateProperty.set( 'dragging' );
         model.dropChocolates( chocolateBarModel );
