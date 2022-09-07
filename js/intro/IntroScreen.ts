@@ -13,7 +13,7 @@ import IntroModel from './model/IntroModel.js';
 import IntroScreenView from './view/IntroScreenView.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
-import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
@@ -24,7 +24,7 @@ type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 export default class IntroScreen extends Screen<IntroModel, IntroScreenView> {
   public constructor( providedOptions: IntroScreenOptions ) {
     const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
-      name: meanShareAndBalanceStrings.screen.introStringProperty,
+      name: MeanShareAndBalanceStrings.screen.introStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
       keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );

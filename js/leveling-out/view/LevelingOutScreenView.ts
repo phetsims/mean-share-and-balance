@@ -14,7 +14,7 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import PaperPlateNode from './PaperPlateNode.js';
 import LevelingOutControlPanel from './LevelingOutControlPanel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -104,7 +104,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
 
-    super( model, meanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
+    super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const playAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;

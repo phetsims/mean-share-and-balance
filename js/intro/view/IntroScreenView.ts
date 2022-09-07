@@ -12,7 +12,7 @@ import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import WaterCup2DNode from './WaterCup2DNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PredictMeanSlider from './PredictMeanSlider.js';
@@ -116,7 +116,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const tableNode = new TableNode( { centerX: chocolateLayerNode.centerX, y: chocolateLayerNode.centerY - 25 } );
 
     // Instantiate Parent
-    super( model, meanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
+    super( model, MeanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
 
     // Controls on Right side of screen
     const controlPanel = new IntroControlPanel( tickMarksVisibleProperty, meanVisibleProperty, predictMeanVisibleProperty,

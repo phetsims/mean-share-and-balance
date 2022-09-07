@@ -39,8 +39,8 @@ type StringsType = {
   'numberOfPeopleStringProperty': TReadOnlyProperty<string>;
 };
 
-const meanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
+const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
 
-meanShareAndBalance.register( 'meanShareAndBalanceStrings', meanShareAndBalanceStrings );
+meanShareAndBalance.register( 'MeanShareAndBalanceStrings', MeanShareAndBalanceStrings );
 
-export default meanShareAndBalanceStrings;
+export default MeanShareAndBalanceStrings;

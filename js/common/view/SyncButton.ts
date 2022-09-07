@@ -10,7 +10,7 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import RectangularPushButton, { RectangularPushButtonOptions } from '../../../../sun/js/buttons/RectangularPushButton.js';
 import SyncIcon from './SyncIcon.js';
-import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -25,7 +25,7 @@ export default class SyncButton extends RectangularPushButton {
     const syncContent = new Node( {
       children: [
         syncIcon,
-        new Text( meanShareAndBalanceStrings.syncStringProperty, {
+        new Text( MeanShareAndBalanceStrings.syncStringProperty, {
           left: syncIcon.right + 5,
           centerY: syncIcon.centerY,
           fontSize: 15,
@@ -37,7 +37,7 @@ export default class SyncButton extends RectangularPushButton {
     const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {
       content: syncContent,
       baseColor: 'white',
-      accessibleName: meanShareAndBalanceStrings.syncStringProperty
+      accessibleName: MeanShareAndBalanceStrings.syncStringProperty
     }, providedOptions );
 
     super( options );

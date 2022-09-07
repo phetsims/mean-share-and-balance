@@ -8,7 +8,7 @@
  */
 import { FireListener, GridBox, GridBoxOptions, Image, Text, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import meanShareAndBalanceStrings from '../../meanShareAndBalanceStrings.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
@@ -68,7 +68,7 @@ export default class LevelingOutControlPanel extends GridBox {
     );
 
     // Number Spinner
-    const numberOfPeopleText = new Text( meanShareAndBalanceStrings.numberOfPeopleStringProperty, {
+    const numberOfPeopleText = new Text( MeanShareAndBalanceStrings.numberOfPeopleStringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
@@ -81,7 +81,7 @@ export default class LevelingOutControlPanel extends GridBox {
         layoutOptions: {
           align: 'left'
         },
-        accessibleName: meanShareAndBalanceStrings.numberOfCupsStringProperty,
+        accessibleName: MeanShareAndBalanceStrings.numberOfCupsStringProperty,
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberSpinner' )

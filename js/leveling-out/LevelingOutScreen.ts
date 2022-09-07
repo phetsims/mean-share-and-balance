@@ -14,7 +14,7 @@ import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import LevelingOutModel from './model/LevelingOutModel.js';
 import LevelingOutScreenView from './view/LevelingOutScreenView.js';
-import meanShareAndBalanceStrings from '../meanShareAndBalanceStrings.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -24,7 +24,7 @@ type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tande
 export default class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
-      name: meanShareAndBalanceStrings.screen.levelingOutStringProperty,
+      name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
       keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
