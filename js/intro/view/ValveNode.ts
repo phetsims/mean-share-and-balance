@@ -10,17 +10,21 @@
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import { Node, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
+import { Node, NodeOptions, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 const LINE_WIDTH = 1;
 
+type ValveNodeOptions = StrictOmit<NodeOptions, 'children' | 'cursor' | 'tagName' | 'x' | 'y'>;
+
 export default class ValveNode extends Node {
 
-  public constructor( parentCenter: Vector2, rotationProperty: Property<number>, tandem: Tandem ) {
+  public constructor( parentCenter: Vector2, rotationProperty: Property<number>, tandem: Tandem, providedOptions: ValveNodeOptions ) {
     // Valve drawing
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, MeanShareAndBalanceConstants.VALVE_RADIUS + 2 )
       .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
@@ -50,16 +54,19 @@ export default class ValveNode extends Node {
       center: innerValve.center
     } );
 
-    super( {
+    const combinedOptions = combineOptions<NodeOptions>( {
       children: [ innerPipe, outerValve, innerValve ],
       cursor: 'pointer',
       tagName: 'button',
       x: parentCenter.x,
       y: parentCenter.y,
+      focusHighlightLayerable: true,
+      focusHighlight: new Node(), // TODO: this is a workaround until we figure out highlight coordinate frames
 
       // phet-io
       tandem: tandem.createTandem( 'valveNode' )
-    } );
+    }, providedOptions );
+    super( combinedOptions );
 
     rotationProperty.link( rotation => {
       this.rotation = rotation;

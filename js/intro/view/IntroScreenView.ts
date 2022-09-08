@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, FocusHighlightPath, Node } from '../../../../scenery/js/imports.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -102,7 +102,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
-        { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ) } );
+        { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ), valveNodeFocusable: index === 0 } );
 
       pipeNodes.push( pipeNode );
     } );
@@ -141,11 +141,18 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
+    const focusHighlight = new FocusHighlightPath( null, { visible: false } );
+
+
     const centerChocolateLayerNode = () => {
       chocolateLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = chocolateLayerNode.x - 12.5;
       tableNode.centerX = chocolateLayerNode.centerX;
       tableNode.y = chocolateLayerNode.bottom - 25;
+
+      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value ).map( pipe => Shape.bounds( pipe.bounds ) );
+      focusHighlight.shape = Shape.union( pipeBoundsShapes );
+      pipeNodes[ 0 ].setValveNodeHighlight( focusHighlight );
     };
 
     model.numberOfCupsProperty.link( () => {
@@ -153,23 +160,13 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       this.interruptSubtreeInput();
     } );
 
+    chocolateLayerNode.addChild( focusHighlight );
     this.screenViewRootNode.addChild( tableNode );
     this.screenViewRootNode.addChild( chocolateLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );
 
-    // Only travel to the first pipe in pdomOrder
-    const chocolateLayerChildren = chocolateLayerNode.children;
-    pipeNodes.forEach( ( pipe, i ) => {
-      if ( i > 0 ) {
-        const index = chocolateLayerChildren.indexOf( pipe );
-        chocolateLayerChildren.splice( index, 1 );
-      }
-    } );
+    this.screenViewRootNode.pdomOrder = [ chocolateLayerNode, controlPanel, predictMeanSlider ];
 
-    this.screenViewRootNode.pdomOrder = [ ...chocolateLayerChildren, controlPanel, predictMeanSlider ];
-
-    const pipeBoundsShapes = pipeNodes.map( pipe => Shape.bounds( pipe.bounds ) );
-    pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes );
 
     this.predictMeanVisibleProperty = predictMeanVisibleProperty;
     this.meanVisibleProperty = meanVisibleProperty;
