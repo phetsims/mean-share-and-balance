@@ -85,8 +85,8 @@ export default class IntroControlPanel extends GridBox {
 
     // Pipe Switch
     const pipeSwitch = new ABSwitch( arePipesOpenProperty,
-      false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem.createTandem( 'closedValveIcon' ), { focusable: false } ),
-      true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem.createTandem( 'openValveIcon' ), { focusable: false } ), {
+      false, new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), options.tandem.createTandem( 'closedValveIcon' ) ),
+      true, new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), options.tandem.createTandem( 'openValveIcon' ) ), {
         toggleSwitchOptions: {
           size: new Dimension2( 40, 20 )
         },

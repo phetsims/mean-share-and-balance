@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, FocusHighlightPath, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -102,7 +102,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
-        { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ), valveNodeFocusable: index === 0 } );
+        { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ), focusable: index === 0 } );
 
       pipeNodes.push( pipeNode );
     } );
@@ -141,18 +141,20 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
-    const focusHighlight = new FocusHighlightPath( null, { visible: false } );
-
-
     const centerChocolateLayerNode = () => {
       chocolateLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = chocolateLayerNode.x - 12.5;
       tableNode.centerX = chocolateLayerNode.centerX;
       tableNode.y = chocolateLayerNode.bottom - 25;
 
-      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value ).map( pipe => Shape.bounds( pipe.bounds ) );
-      focusHighlight.shape = Shape.union( pipeBoundsShapes );
-      pipeNodes[ 0 ].setValveNodeHighlight( focusHighlight );
+      // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
+      // order and they all do the same thing so this highlight indicates that there will only be one stop in the
+      // traversal order.
+      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value ).map( pipe => Shape.bounds( pipe.globalBounds ) );
+      const transformedPipeShapeBounds = Shape.union( pipeBoundsShapes ).transformed( pipeNodes[ 0 ].getGlobalToLocalMatrix() );
+
+      // Focus highlight is set on the valveNode because it is what receives focus (not the PipeNode).
+      pipeNodes[ 0 ].focusHighlight = transformedPipeShapeBounds;
     };
 
     model.numberOfCupsProperty.link( () => {
@@ -160,7 +162,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       this.interruptSubtreeInput();
     } );
 
-    chocolateLayerNode.addChild( focusHighlight );
     this.screenViewRootNode.addChild( tableNode );
     this.screenViewRootNode.addChild( chocolateLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );

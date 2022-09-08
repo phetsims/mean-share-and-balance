@@ -9,8 +9,8 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import { FireListener, Highlight, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import { FireListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -21,18 +21,15 @@ import ValveNode from './ValveNode.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
-type SelfOptions = {
-  valveNodeFocusable: boolean;
-};
-
+type SelfOptions = EmptySelfOptions;
 type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement' | 'children' | 'visibleProperty'> & PickRequired<NodeOptions, 'tandem'>;
-
 
 const LINE_WIDTH = 1;
 
 export default class PipeNode extends Node {
 
-  private readonly valveNode: ValveNode;
+  // Public for traversal order
+  public readonly valveNode: ValveNode;
 
   public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
     const options = providedOptions;
@@ -51,19 +48,23 @@ export default class PipeNode extends Node {
 
     pipeRectangle.clipArea = createPipeClipArea( pipeRectangle.localBounds, MeanShareAndBalanceConstants.VALVE_RADIUS );
 
-    const valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, options.tandem, { focusable: options.valveNodeFocusable } );
+    const valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, options.tandem );
 
     // Set pointer areas for valveNode
     valveNode.mouseArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
     valveNode.touchArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
+    const handleFire = () => {
+      arePipesOpenProperty.set( !pipe.arePipesOpenProperty.value );
+
+      pipe.isCurrentlyClickedProperty.set( true );
+      pipe.isCurrentlyClickedProperty.set( false );
+    };
+
     // Valve rotation event listener
     const valveRotationFireListener = new FireListener( {
       fire: () => {
-        arePipesOpenProperty.set( !pipe.arePipesOpenProperty.value );
-
-        pipe.isCurrentlyClickedProperty.set( true );
-        pipe.isCurrentlyClickedProperty.set( false );
+        handleFire();
       },
 
       // phet-io
@@ -78,10 +79,12 @@ export default class PipeNode extends Node {
     // Set position related to associated cup
     this.x = pipe.position.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH / 2;
     this.y = modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.PIPE_WIDTH;
-  }
 
-  public setValveNodeHighlight( shape: Highlight ): void {
-    this.valveNode.focusHighlight = shape;
+    // pdom - add to traversal order and add a listener so that it responds to clicks from assistive technology.
+    this.tagName = 'button';
+    this.addInputListener( {
+      click: () => handleFire()
+    } );
   }
 }
 
