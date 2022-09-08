@@ -108,12 +108,12 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // This also includes the pipes that connect the 2D cups as well as the draggable water level triangle
-    const chocolateLayerNode = new Node( {
+    const waterCupLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...waterCup2DNodes, ...waterCup3DNodes, ...pipeNodes ]
     } );
 
-    const tableNode = new TableNode( { centerX: chocolateLayerNode.centerX, y: chocolateLayerNode.centerY - 25 } );
+    const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX, y: waterCupLayerNode.centerY - 25 } );
 
     // Instantiate Parent
     super( model, MeanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
@@ -142,10 +142,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
     const centerChocolateLayerNode = () => {
-      chocolateLayerNode.centerX = cupsAreaCenterX;
-      predictMeanSlider.x = chocolateLayerNode.x - 12.5;
-      tableNode.centerX = chocolateLayerNode.centerX;
-      tableNode.y = chocolateLayerNode.bottom - 25;
+      waterCupLayerNode.centerX = cupsAreaCenterX;
+      predictMeanSlider.x = waterCupLayerNode.x - 12.5;
+      tableNode.centerX = waterCupLayerNode.centerX;
+      tableNode.y = waterCupLayerNode.bottom - 25;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
       // order and they all do the same thing so this highlight indicates that there will only be one stop in the
@@ -163,10 +163,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     this.screenViewRootNode.addChild( tableNode );
-    this.screenViewRootNode.addChild( chocolateLayerNode );
+    this.screenViewRootNode.addChild( waterCupLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );
 
-    this.screenViewRootNode.pdomOrder = [ chocolateLayerNode, controlPanel, predictMeanSlider ];
+    this.screenViewRootNode.pdomOrder = [ waterCupLayerNode, controlPanel, predictMeanSlider ];
 
 
     this.predictMeanVisibleProperty = predictMeanVisibleProperty;
