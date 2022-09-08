@@ -57,7 +57,7 @@ export default class LevelingOutControlPanel extends GridBox {
       tandem: options.tandem.createTandem( 'meanAccordionBox' )
     } );
 
-    const syncListener = new FireListener( { fire: () => model.syncData() } );
+    const syncListener = new FireListener( { fire: () => model.syncData(), tandem: options.tandem.createTandem( 'syncListener' ) } );
 
     const syncButton = new SyncButton( { inputListeners: [ syncListener ], tandem: options.tandem.createTandem( 'syncButton' ) } );
 
