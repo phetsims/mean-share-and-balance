@@ -9,16 +9,16 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { Color, DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Plate from '../model/Plate.js';
 import ChocolateBar from '../model/ChocolateBar.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
@@ -30,12 +30,12 @@ export default class DraggableChocolate extends Node {
 
   public constructor( model: Pick<LevelingOutModel, 'dropChocolates' | 'syncNumberOfChocolatesOnPlates'>,
                       chocolateBarModel: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
-                      chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: DraggableChocolateNodeOptions ) {
+                      chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
     const chocolateBar = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
-      fill: 'saddleBrown',
+      fill: new Color( dotRandom.nextInt( 255 ), dotRandom.nextInt( 255 ), dotRandom.nextInt( 255 ) ),
       stroke: 'black'
     } );
 
@@ -58,9 +58,10 @@ export default class DraggableChocolate extends Node {
       start: () => {
         chocolateBarModel.stateProperty.set( 'dragging' );
         model.dropChocolates( chocolateBarModel );
+        this.moveToFront();
       },
       end: () => {
-        chocolateBarModel.parentPlateProperty.set( chocolateBarDropped( this ) );
+        chocolateBarDropped( this );
         chocolateBarModel.stateProperty.set( 'plate' );
         model.syncNumberOfChocolatesOnPlates();
       },

@@ -21,7 +21,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions> & PickRequired<NodeOptions, 'tandem'>;
 
 export default class PaperPlateNode extends Node {
-  public constructor( plate: Plate, chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => Plate, providedOptions: ChocolateBarsContainerNodeOptions ) {
+  public constructor( plate: Plate, chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: ChocolateBarsContainerNodeOptions ) {
     const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.position.x,
       y: plate.position.y,

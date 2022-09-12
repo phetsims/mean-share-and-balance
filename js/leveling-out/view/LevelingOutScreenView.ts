@@ -35,6 +35,7 @@ import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 import Property from '../../../../axon/js/Property.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -71,9 +72,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       } );
       const numberOfChocolatesOnPlate = model.getPlateStateChocolates( model.getChocolatesOnPlate( closestPlate ) ).length;
       const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
-      chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
+      chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x + dotRandom.nextInt( 20 ), y ) );
 
-      return closestPlate;
+      chocolateBar.chocolateBarModel.parentPlateProperty.set( closestPlate );
     };
 
 

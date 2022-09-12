@@ -22,7 +22,6 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import ChocolateBar from './ChocolateBar.js';
-import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -75,18 +74,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.platesArray.push( plate );
 
-      // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber
-      Multilink.multilink(
-        [ plate.isActiveProperty, plate.chocolateBarsNumberProperty ],
-        ( isActive, chocolateBarsNumber ) => {
-          const chocolates = this.getChocolatesOnPlate( plate );
-          chocolates.forEach( ( chocolate, i ) => {
-            chocolate.isActiveProperty.value = isActive && i < chocolateBarsNumber;
-            this.dropChocolates( chocolate );
-          } );
-        }
-      );
-
       for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
         const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) );
         const x = plate.position.x;
@@ -104,23 +91,45 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
 
+      // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
+      // a piece of chocolate will be removed off of the paper plate with the most chocolate.
+      const updateChocolateAmount = ( delta: number ) => {
+        for ( let i = 0; i <= Math.abs( delta ); i++ ) {
+          const numberOfChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate ).length;
+          if ( delta < 0 ) {
+            if ( numberOfChocolatesOnPlate === 0 ) {
+              const maxPlate = this.getPlateWithMostActiveChocolate();
+              this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
+            }
+            else {
+              this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
+            }
+          }
+          else if ( delta > 0 ) {
+            if ( numberOfChocolatesOnPlate === 10 ) {
+              const minPlate = this.getPlateWithLeastChocolate();
+              this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
+            }
+            else {
+              this.getBottomInactiveChocolateOnPlate( plate ).isActiveProperty.set( true );
+            }
+          }
+        }
+      };
+
+      // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber
+      plate.isActiveProperty.lazyLink( isActive => {
+        const chocolates = this.getChocolatesOnPlate( plate );
+        chocolates.forEach( ( chocolate, i ) => {
+          chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
+          this.dropChocolates( chocolate );
+        } );
+      } );
+
       // set paper plate chocolate number based on table plate delta change.
       person.chocolateNumberProperty.lazyLink( ( chocolateNumber, oldChocolateNumber ) => {
         const delta = chocolateNumber - oldChocolateNumber;
-
-        // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
-        // a piece of chocolate will be removed off of the paper plate with the most chocolate.
-        if ( delta < 0 && plate.chocolateBarsNumberProperty.value === 0 ) {
-          const maxPlate = this.getPlateWithMostChocolate();
-          maxPlate.chocolateBarsNumberProperty.value += delta;
-        }
-        else if ( delta > 0 && plate.chocolateBarsNumberProperty.value === 10 ) {
-          const minPlate = this.getPlateWithLeastChocolate();
-          minPlate.chocolateBarsNumberProperty.value += delta;
-        }
-        else {
-          plate.chocolateBarsNumberProperty.value += delta;
-        }
+        updateChocolateAmount( delta );
       } );
 
       meanPropertyDependencies.push( person.chocolateNumberProperty );
@@ -164,8 +173,26 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate );
   }
 
+  public getInactiveChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
+    return this.getChocolatesOnPlate( plate ).filter( chocolate => !chocolate.isActiveProperty.value );
+  }
+
   public getActiveChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
     return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate && chocolate.isActiveProperty.value );
+  }
+
+  public getTopActiveChocolateOnPlate( plate: Plate ): ChocolateBar {
+    const activeChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate );
+    assert && assert( activeChocolatesOnPlate.length > 0, `There is no top chocolate on plate since active chocolates is: ${activeChocolatesOnPlate.length}` );
+    const topChocolate = _.minBy( activeChocolatesOnPlate, chocolate => chocolate.positionProperty.value.y );
+    return topChocolate!;
+  }
+
+  public getBottomInactiveChocolateOnPlate( plate: Plate ): ChocolateBar {
+    const inactiveChocolatesOnPlate = this.getInactiveChocolatesOnPlate( plate );
+    assert && assert( inactiveChocolatesOnPlate.length > 0, `There is no inactive bottom chocolate on plate since inactive chocolates is: ${inactiveChocolatesOnPlate.length}` );
+    const bottomChocolate = _.maxBy( inactiveChocolatesOnPlate, chocolate => chocolate.positionProperty.value.y );
+    return bottomChocolate!;
   }
 
   public getPlateStateChocolates( chocolates: Array<ChocolateBar> ): Array<ChocolateBar> {
@@ -194,7 +221,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  public getPlateWithMostChocolate(): Plate {
+  public getPlateWithMostActiveChocolate(): Plate {
     const maxPlate = _.maxBy( this.getActivePlates(), ( plate => plate.chocolateBarsNumberProperty.value ) );
 
     // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
