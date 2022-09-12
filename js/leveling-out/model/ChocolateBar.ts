@@ -35,10 +35,6 @@ export default class ChocolateBar {
     this.parentPlateProperty = new Property( providedOptions.plate );
     this.positionProperty = new Property( providedOptions.position );
     this.stateProperty = new Property<StateType>( 'plate' );
-
-    this.isActiveProperty.link( isActive => {
-      !isActive && this.reset();
-    } );
   }
 
   public reset(): void {

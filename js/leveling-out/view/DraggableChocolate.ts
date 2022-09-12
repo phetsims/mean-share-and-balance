@@ -28,7 +28,7 @@ export default class DraggableChocolate extends Node {
   public readonly chocolateBarDragListener: DragListener;
   public readonly chocolateBarModel: ChocolateBar;
 
-  public constructor( model: Pick<LevelingOutModel, 'dropChocolates' | 'syncNumberOfChocolatesOnPlates'>,
+  public constructor( model: Pick<LevelingOutModel, 'dropChocolates'>,
                       chocolateBarModel: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: DraggableChocolateNodeOptions ) {
 
@@ -57,13 +57,12 @@ export default class DraggableChocolate extends Node {
       ),
       start: () => {
         chocolateBarModel.stateProperty.set( 'dragging' );
-        model.dropChocolates( chocolateBarModel );
+        model.dropChocolates( chocolateBarModel.parentPlateProperty.value );
         this.moveToFront();
       },
       end: () => {
         chocolateBarDropped( this );
         chocolateBarModel.stateProperty.set( 'plate' );
-        model.syncNumberOfChocolatesOnPlates();
       },
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' )
     } );

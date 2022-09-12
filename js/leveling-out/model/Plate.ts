@@ -9,10 +9,8 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -31,8 +29,6 @@ export default class Plate {
 
   public readonly position: Vector2;
 
-  // The number of chocolate bars on the plate
-  public readonly chocolateBarsNumberProperty: Property<number>;
   public readonly isActiveProperty: Property<boolean>;
 
   // the plate's index
@@ -51,17 +47,11 @@ export default class Plate {
 
     this.position = options.position;
 
-    this.chocolateBarsNumberProperty = new NumberProperty( 1, {
-      range: new Range( 0, 10 ),
-      tandem: options.tandem.createTandem( 'chocolateBarsNumberProperty' )
-    } );
-
     this.linePlacement = options.linePlacement;
   }
 
   public reset(): void {
     this.isActiveProperty.reset();
-    this.chocolateBarsNumberProperty.reset();
   }
 }
 

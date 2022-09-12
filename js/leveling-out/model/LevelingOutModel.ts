@@ -74,15 +74,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.platesArray.push( plate );
 
-      for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) );
-        const x = plate.position.x;
-        const isActive = plate.isActiveProperty.value && i < plate.chocolateBarsNumberProperty.value;
-        const chocolateBar = new ChocolateBar( { isActive: isActive, plate: plate, position: new Vector2( x, y ) } );
-
-        this.chocolatesArray.push( chocolateBar );
-      }
-
       const person = new Person( {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
         isActive: i < this.numberOfPeopleProperty.value,
@@ -91,15 +82,25 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
 
+      for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
+        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) );
+        const x = plate.position.x;
+        const isActive = plate.isActiveProperty.value && i < person.chocolateNumberProperty.value;
+        const chocolateBar = new ChocolateBar( { isActive: isActive, plate: plate, position: new Vector2( x, y ) } );
+
+        this.chocolatesArray.push( chocolateBar );
+      }
+
       // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
       // a piece of chocolate will be removed off of the paper plate with the most chocolate.
       const updateChocolateAmount = ( delta: number ) => {
-        for ( let i = 0; i <= Math.abs( delta ); i++ ) {
+        for ( let i = 0; i < Math.abs( delta ); i++ ) {
           const numberOfChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate ).length;
           if ( delta < 0 ) {
             if ( numberOfChocolatesOnPlate === 0 ) {
               const maxPlate = this.getPlateWithMostActiveChocolate();
               this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
+              this.dropChocolates( maxPlate );
             }
             else {
               this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
@@ -109,11 +110,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
             if ( numberOfChocolatesOnPlate === 10 ) {
               const minPlate = this.getPlateWithLeastChocolate();
               this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
+              this.dropChocolates( minPlate );
             }
             else {
-              this.getBottomInactiveChocolateOnPlate( plate ).isActiveProperty.set( true );
+              const chocolate = this.getBottomInactiveChocolateOnPlate( plate );
+              chocolate.isActiveProperty.set( true );
             }
           }
+          this.dropChocolates( plate );
         }
       };
 
@@ -122,7 +126,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         const chocolates = this.getChocolatesOnPlate( plate );
         chocolates.forEach( ( chocolate, i ) => {
           chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
-          this.dropChocolates( chocolate );
+          this.dropChocolates( plate );
         } );
       } );
 
@@ -206,30 +210,23 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  public syncNumberOfChocolatesOnPlates(): void {
-    this.getActivePlates().forEach( plate => {
-      const length = this.getActiveChocolatesOnPlate( plate ).length;
-      plate.chocolateBarsNumberProperty.set( length );
-    } );
-  }
-
-  public dropChocolates( chocolateBarModel: ChocolateBar ): void {
-    const plateStateChocolates = this.getPlateStateChocolates( this.getChocolatesOnPlate( chocolateBarModel.parentPlateProperty.value ) );
+  public dropChocolates( plate: Plate ): void {
+    const plateStateChocolates = this.getPlateStateChocolates( this.getChocolatesOnPlate( plate ) );
     plateStateChocolates.forEach( ( chocolate, i ) => {
-      const newPosition = new Vector2( chocolateBarModel.parentPlateProperty.value.position.x, chocolateBarModel.parentPlateProperty.value.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
+      const newPosition = new Vector2( plate.position.x, plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
       chocolate.positionProperty.set( newPosition );
     } );
   }
 
   public getPlateWithMostActiveChocolate(): Plate {
-    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => plate.chocolateBarsNumberProperty.value ) );
+    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveChocolatesOnPlate( plate ).length ) );
 
     // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
     return maxPlate!;
   }
 
   public getPlateWithLeastChocolate(): Plate {
-    const minPlate = _.minBy( this.getActivePlates(), ( plate => plate.chocolateBarsNumberProperty.value ) );
+    const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveChocolatesOnPlate( plate ).length ) );
 
     // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
     return minPlate!;
@@ -243,9 +240,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   public syncData(): void {
-    const plates = this.getActivePlates();
-    const people = this.getActivePeople();
-    people.forEach( ( person, i ) => plates[ i ].chocolateBarsNumberProperty.set( person.chocolateNumberProperty.value ) );
+    //TODO
+    // const plates = this.getActivePlates();
+    // const people = this.getActivePeople();
+    // people.forEach( ( person, i ) => plates[ i ].chocolateBarsNumberProperty.set( person.chocolateNumberProperty.value ) );
   }
 
   public step( dt: number ): void {
