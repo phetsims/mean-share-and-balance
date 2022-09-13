@@ -240,10 +240,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   public syncData(): void {
-    //TODO
-    // const plates = this.getActivePlates();
-    // const people = this.getActivePeople();
-    // people.forEach( ( person, i ) => plates[ i ].chocolateBarsNumberProperty.set( person.chocolateNumberProperty.value ) );
+    const plates = this.getActivePlates();
+
+    plates.forEach( plate => {
+      this.getChocolatesOnPlate( plate ).forEach( chocolate => chocolate.parentPlateProperty.reset() );
+    } );
+
+    const people = this.getActivePeople();
+    people.forEach( ( person, index ) => {
+        this.getChocolatesOnPlate( plates[ index ] ).forEach( ( chocolate, i ) => {
+          chocolate.positionProperty.reset();
+          chocolate.isActiveProperty.value = i < person.chocolateNumberProperty.value;
+        } );
+    } );
   }
 
   public step( dt: number ): void {
