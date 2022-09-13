@@ -7,7 +7,6 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 import { FireListener, GridBox, GridBoxOptions, Image, Text, VBox } from '../../../../scenery/js/imports.js';
-import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -18,6 +17,7 @@ import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import SyncButton from '../../common/view/SyncButton.js';
+import BooleanRoundStickyToggleButton from '../../../../sun/js/buttons/BooleanRoundStickyToggleButton.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import { Shape } from '../../../../kite/js/imports.js';
@@ -25,7 +25,8 @@ import { Shape } from '../../../../kite/js/imports.js';
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
 export default class LevelingOutControlPanel extends GridBox {
-  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>, providedOptions: IntroControlPanelOptions ) {
+  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
+                      meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
 
     const options = providedOptions;
 
@@ -49,7 +50,7 @@ export default class LevelingOutControlPanel extends GridBox {
       meanChocolateBarsNode.children = children;
     } );
 
-    const infoButton = new InfoButton( { radius: 15, xMargin: 5, yMargin: 5 } );
+    const infoButton = new BooleanRoundStickyToggleButton( meanCalculationDialogVisibleProperty, { radius: 15 } );
 
     const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', xAlign: 'center', margin: 8 } );
 

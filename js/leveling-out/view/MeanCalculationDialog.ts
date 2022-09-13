@@ -14,10 +14,11 @@ import { GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
 import Person from '../model/Person.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Property from '../../../../axon/js/Property.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
-  public constructor( People: Array<Person> ) {
+  public constructor( People: Array<Person>, visibleProperty: Property<boolean> ) {
 
     const isActiveProperties = People.map( person => person.isActiveProperty );
     const numberOfChocolatesProperties = People.map( person => person.chocolateNumberProperty );
@@ -40,6 +41,7 @@ export default class MeanCalculationDialog extends Dialog {
     super( calculationNode, {
       title: meanTitleText,
       titleAlign: 'left',
+      visibleProperty: visibleProperty,
       resize: false,
       centerY: MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y,
       minWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,

@@ -36,6 +36,7 @@ import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanCalculationDialog from './MeanCalculationDialog.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -43,11 +44,15 @@ type LevelingOutScreenViewOptions = SelfOptions & PickRequired<MeanShareAndBalan
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
+  public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
+
   public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = providedOptions;
 
-    const controlPanel = new LevelingOutControlPanel( model, {
+    const meanCalculationDialogVisibleProperty = new BooleanProperty( false, { tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' ) } );
+
+    const controlPanel = new LevelingOutControlPanel( model, meanCalculationDialogVisibleProperty, {
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20,
       tandem: options.tandem.createTandem( 'controlPanel' )
@@ -111,7 +116,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
     } );
 
-    const meanCalculationDialog = new MeanCalculationDialog( model.peopleArray );
+    const meanCalculationDialog = new MeanCalculationDialog( model.peopleArray, meanCalculationDialogVisibleProperty );
 
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode, meanCalculationDialog ] }, options );
 
@@ -149,6 +154,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     this.addChild( controlsAlignBox );
+
+    this.meanCalculationDialogVisibleProperty = meanCalculationDialogVisibleProperty;
+  }
+
+  public override reset(): void {
+    this.meanCalculationDialogVisibleProperty.reset();
+    super.reset();
   }
 
 }
