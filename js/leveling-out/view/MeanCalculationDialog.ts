@@ -10,7 +10,7 @@
 
 import Dialog from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node } from '../../../../scenery/js/imports.js';
+import { Node, VBox, Text, Line, GridBox } from '../../../../scenery/js/imports.js';
 import Person from '../model/Person.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 
@@ -20,10 +20,19 @@ export default class MeanCalculationDialog extends Dialog {
 
     const isActiveProperties = People.map( person => person.isActiveProperty );
     const numberOfChocolatesProperties = People.map( person => person.chocolateNumberProperty );
+    const meanEqualsText = new Text( 'mean = ' );
     const parentNode = new Node();
+    const calculationNode = new GridBox();
+
 
     Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfChocolatesProperties ], () => {
-      const calculationNode = new Node();
+      const numbers = People.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
+      const additionText = new Text( numbers.join( ' + ' ) );
+      const fractionLine = new Line( 0, 0, additionText.width, 0, { stroke: 'black' } );
+      const denominatorText = new Text( People.filter( person => person.isActiveProperty.value ).length );
+      const additionFraction = new VBox( { children: [ additionText, fractionLine, denominatorText ] } );
+
+      calculationNode.rows = [ [ meanEqualsText, additionFraction ] ];
 
       parentNode.children = [ calculationNode ];
     } );
