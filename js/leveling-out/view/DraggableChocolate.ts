@@ -9,7 +9,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Color, DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -18,7 +18,7 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import dotRandom from '../../../../dot/js/dotRandom.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
@@ -35,7 +35,7 @@ export default class DraggableChocolate extends Node {
     const options = providedOptions;
 
     const chocolateBar = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
-      fill: new Color( dotRandom.nextInt( 255 ), dotRandom.nextInt( 255 ), dotRandom.nextInt( 255 ) ),
+      fill: MeanShareAndBalanceColors.chocolateColorProperty,
       stroke: 'black'
     } );
 

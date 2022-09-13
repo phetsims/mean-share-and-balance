@@ -7,6 +7,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 import { FireListener, GridBox, GridBoxOptions, Image, Text, VBox } from '../../../../scenery/js/imports.js';
+import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -28,7 +29,7 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const options = providedOptions;
 
-    const meanNode = new VBox( {
+    const meanChocolateBarsNode = new VBox( {
       scale: 0.05,
       align: 'left',
       spacing: 1.5 / 0.05
@@ -45,8 +46,12 @@ export default class LevelingOutControlPanel extends GridBox {
       children.unshift( new Image( chocolateBar_png, {
         clipArea: Shape.rect( 0, 0, remainder * chocolateBarImage.width, chocolateBarImage.height )
       } ) );
-      meanNode.children = children;
+      meanChocolateBarsNode.children = children;
     } );
+
+    const infoButton = new InfoButton( { radius: 15, xMargin: 5, yMargin: 5 } );
+
+    const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', xAlign: 'center', margin: 8 } );
 
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
