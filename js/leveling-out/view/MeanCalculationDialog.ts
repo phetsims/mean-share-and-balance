@@ -10,9 +10,10 @@
 
 import Dialog from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, VBox, Text, Line, GridBox } from '../../../../scenery/js/imports.js';
+import { GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
 import Person from '../model/Person.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
@@ -20,8 +21,8 @@ export default class MeanCalculationDialog extends Dialog {
 
     const isActiveProperties = People.map( person => person.isActiveProperty );
     const numberOfChocolatesProperties = People.map( person => person.chocolateNumberProperty );
+    const meanTitleText = new Text( 'Mean' );
     const meanEqualsText = new Text( 'mean = ' );
-    const parentNode = new Node();
     const calculationNode = new GridBox();
 
 
@@ -33,11 +34,18 @@ export default class MeanCalculationDialog extends Dialog {
       const additionFraction = new VBox( { children: [ additionText, fractionLine, denominatorText ] } );
 
       calculationNode.rows = [ [ meanEqualsText, additionFraction ] ];
-
-      parentNode.children = [ calculationNode ];
     } );
 
-   super( parentNode );
+
+    super( calculationNode, {
+      title: meanTitleText,
+      titleAlign: 'left',
+      resize: false,
+      centerY: MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y,
+      minWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,
+      minimumHeight: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_HEIGHT,
+      closeButtonListener: ( ) => { this.visibleProperty.set( false ); }
+    } );
   }
 }
 
