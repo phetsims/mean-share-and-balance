@@ -28,6 +28,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Shape } from '../../../../kite/js/imports.js';
+import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -113,7 +114,9 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       children: [ ...waterCup2DNodes, ...waterCup3DNodes, ...pipeNodes ]
     } );
 
-    const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX, y: waterCupLayerNode.centerY - 25 } );
+    const notebookPaper = new NoteBookPaperNode();
+
+    const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX } );
 
     // Instantiate Parent
     super( model, MeanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
@@ -141,11 +144,12 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
-    const centerChocolateLayerNode = () => {
+    const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
       tableNode.centerX = waterCupLayerNode.centerX;
-      tableNode.y = waterCupLayerNode.bottom - 25;
+      notebookPaper.centerX = waterCupLayerNode.centerX - 10;
+      tableNode.y = waterCupLayerNode.bottom - 30;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
       // order and they all do the same thing so this highlight indicates that there will only be one stop in the
@@ -158,10 +162,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     };
 
     model.numberOfCupsProperty.link( () => {
-      centerChocolateLayerNode();
+      centerWaterCupLayerNode();
       this.interruptSubtreeInput();
     } );
 
+    this.screenViewRootNode.addChild( notebookPaper );
     this.screenViewRootNode.addChild( tableNode );
     this.screenViewRootNode.addChild( waterCupLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );

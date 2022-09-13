@@ -8,14 +8,15 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, Rectangle } from '../../../../scenery/js/imports.js';
+import { Node, Image } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import notebookPaperBackground_png from '../../../images/notebookPaperBackground_png.js';
 
 export default class NoteBookPaperNode extends Node {
 
   public constructor() {
-    const background = new Rectangle( 0, 0, 720, 250, { fill: 'lightBlue' } );
-    super( { children: [ background ], centerY: MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y - 75 } );
+    const background = new Image( notebookPaperBackground_png, { scale: 0.48 } );
+    super( { children: [ background ], centerY: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y - 50 } );
   }
 }
 
