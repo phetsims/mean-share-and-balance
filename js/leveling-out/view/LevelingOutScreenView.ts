@@ -35,6 +35,7 @@ import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 import Property from '../../../../axon/js/Property.js';
+import MeanCalculationDialog from './MeanCalculationDialog.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -110,7 +111,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
     } );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
+    const meanCalculationDialog = new MeanCalculationDialog( model.peopleArray );
+
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode, meanCalculationDialog ] }, options );
 
     super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
