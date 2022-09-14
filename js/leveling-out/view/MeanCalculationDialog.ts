@@ -11,6 +11,7 @@
 import Dialog from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Person from '../model/Person.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -23,18 +24,28 @@ export default class MeanCalculationDialog extends Dialog {
     const isActiveProperties = People.map( person => person.isActiveProperty );
     const numberOfChocolatesProperties = People.map( person => person.chocolateNumberProperty );
     const meanTitleText = new Text( 'Mean' );
-    const meanEqualsText = new Text( 'mean = ' );
-    const calculationNode = new GridBox();
+    const meanEqualsAdditionFractionText = new Text( 'mean = ' );
+    const meanEqualsFractionText = new Text( 'mean = ' );
+    const meanEqualsDecimalText = new Text( 'mean = ' );
+    const calculationNode = new GridBox( { margin: 10 } );
 
 
     Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfChocolatesProperties ], () => {
       const numbers = People.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
+      const numberOfPeople = People.filter( person => person.isActiveProperty.value ).length;
       const additionText = new Text( numbers.join( ' + ' ) );
-      const fractionLine = new Line( 0, 0, additionText.width, 0, { stroke: 'black' } );
-      const denominatorText = new Text( People.filter( person => person.isActiveProperty.value ).length );
-      const additionFraction = new VBox( { children: [ additionText, fractionLine, denominatorText ] } );
+      const additionFractionLine = new Line( 0, 0, additionText.width, 0, { stroke: 'black' } );
+      const additionDenominatorText = new Text( numberOfPeople );
+      const additionFraction = new VBox( { children: [ additionText, additionFractionLine, additionDenominatorText ] } );
 
-      calculationNode.rows = [ [ meanEqualsText, additionFraction ] ];
+      const numeratorText = new Text( _.sum( numbers ) );
+      const fractionLine = new Line( 0, 0, numeratorText.width, 0, { stroke: 'black' } );
+      const denominatorText = new Text( numberOfPeople );
+      const fraction = new VBox( { children: [ numeratorText, fractionLine, denominatorText ] } );
+
+      const decimalText = new Text( Utils.toFixedNumber( _.sum( numbers ) / numberOfPeople, 2 ) );
+
+      calculationNode.rows = [ [ meanEqualsAdditionFractionText, additionFraction ], [ meanEqualsFractionText, fraction ], [ meanEqualsDecimalText, decimalText ] ];
     } );
 
 
