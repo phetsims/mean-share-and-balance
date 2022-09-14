@@ -130,7 +130,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       peopleLayerNode.centerX = playAreaCenterX - 45;
       tableNode.centerX = chocolateLayerNode.centerX - 10;
       tableNode.y = chocolateLayerNode.bottom - 130;
-      notebookPaper.centerX = chocolateLayerNode.centerX - 10;
+      notebookPaper.centerX = chocolateLayerNode.centerX;
       meanCalculationDialog.centerX = chocolateLayerNode.centerX;
 
       // Transform to the bounds of the chocolate, since they are in an intermediate layer

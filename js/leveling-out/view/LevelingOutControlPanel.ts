@@ -33,7 +33,10 @@ export default class LevelingOutControlPanel extends GridBox {
     const meanChocolateBarsNode = new VBox( {
       scale: 0.05,
       align: 'left',
-      spacing: 1.5 / 0.05
+      spacing: 1.5 / 0.05,
+      layoutOptions: {
+        yAlign: 'top'
+      }
     } );
 
     // Just for the dimensions
@@ -44,15 +47,18 @@ export default class LevelingOutControlPanel extends GridBox {
       const remainder = mean - wholePart;
 
       const children = _.times( wholePart, () => new Image( chocolateBar_png ) );
-      children.unshift( new Image( chocolateBar_png, {
-        clipArea: Shape.rect( 0, 0, remainder * chocolateBarImage.width, chocolateBarImage.height )
-      } ) );
+      if ( remainder > 0 ) {
+        children.unshift( new Image( chocolateBar_png, {
+          clipArea: Shape.rect( 0, 0, remainder * chocolateBarImage.width, chocolateBarImage.height )
+        } ) );
+      }
+
       meanChocolateBarsNode.children = children;
     } );
 
-    const infoButton = new BooleanRoundStickyToggleButton( meanCalculationDialogVisibleProperty, { radius: 15 } );
+    const infoButton = new BooleanRoundStickyToggleButton( meanCalculationDialogVisibleProperty, { radius: 15, xAlign: 'right' } );
 
-    const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', xAlign: 'center', margin: 8 } );
+    const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', spacing: 40 } );
 
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
@@ -69,7 +75,7 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const syncVBox = new VBox( {
         align: 'left', children: [ syncButton ],
-        layoutOptions: { column: 0, row: 1, minContentHeight: 140, yAlign: 'top' }
+        layoutOptions: { column: 0, row: 1, minContentHeight: 38, yAlign: 'top' }
       }
     );
 
