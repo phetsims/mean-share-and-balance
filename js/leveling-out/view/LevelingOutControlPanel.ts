@@ -56,7 +56,7 @@ export default class LevelingOutControlPanel extends GridBox {
       meanChocolateBarsNode.children = children;
     } );
 
-    const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty );
+    const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty, options.tandem );
 
     const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', spacing: 40 } );
 
