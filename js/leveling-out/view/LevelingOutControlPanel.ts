@@ -17,10 +17,10 @@ import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import SyncButton from '../../common/view/SyncButton.js';
-import BooleanRoundStickyToggleButton from '../../../../sun/js/buttons/BooleanRoundStickyToggleButton.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import { Shape } from '../../../../kite/js/imports.js';
+import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
@@ -56,7 +56,7 @@ export default class LevelingOutControlPanel extends GridBox {
       meanChocolateBarsNode.children = children;
     } );
 
-    const infoButton = new BooleanRoundStickyToggleButton( meanCalculationDialogVisibleProperty, { radius: 15, xAlign: 'right' } );
+    const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty );
 
     const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', spacing: 40 } );
 
