@@ -16,7 +16,7 @@ export default class NoteBookPaperNode extends Node {
 
   public constructor() {
     const background = new Image( notebookPaperBackground_png, { scale: 0.48 } );
-    super( { children: [ background ], centerY: MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y - 50 } );
+    super( { children: [ background ], centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y } );
   }
 }
 

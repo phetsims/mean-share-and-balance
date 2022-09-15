@@ -17,6 +17,10 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
 import Panel from '../../../../sun/js/Panel.js';
+import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
+
+const NOTEBOOK_PAPER_NODE = new NoteBookPaperNode();
+
 
 export default class MeanCalculationDialog extends Dialog {
 
@@ -31,15 +35,16 @@ export default class MeanCalculationDialog extends Dialog {
 
 
     const calculationNode = new GridBox( {
-      margin: 10,
-      localMinimumWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,
-      preferredHeight: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_HEIGHT
+      margin: 10
     } );
+
+    const notebookPaperWidth = NOTEBOOK_PAPER_NODE.width;
+    const notebookPaperHeight = NOTEBOOK_PAPER_NODE.height;
 
     const panel = new Panel( calculationNode, {
       stroke: null,
-      minWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,
-      minHeight: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_HEIGHT
+      minWidth: notebookPaperWidth - 76.4, // the left and right margin calculated by Dialog.ts
+      minHeight: notebookPaperHeight - 40 // the top/bottom margin, and y spacing implemented by Dialog.ts
     } );
 
     Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfChocolatesProperties ], () => {
@@ -62,13 +67,16 @@ export default class MeanCalculationDialog extends Dialog {
 
 
     super( panel, {
-      title: meanTitleText,
-      titleAlign: 'left',
-      visibleProperty: visibleProperty,
-      resize: false,
-      centerY: MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y,
-      closeButtonListener: () => { this.visibleProperty.set( false ); }
-    } );
+        title: meanTitleText,
+        titleAlign: 'left',
+        visibleProperty: visibleProperty,
+        resize: false,
+        centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y,
+        closeButtonListener: () => { this.visibleProperty.set( false ); },
+        layoutStrategy: _.noop
+      }
+    );
+
   }
 }
 
