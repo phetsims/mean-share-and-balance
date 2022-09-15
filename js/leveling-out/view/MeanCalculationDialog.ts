@@ -16,6 +16,7 @@ import Person from '../model/Person.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
+import Panel from '../../../../sun/js/Panel.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
@@ -27,8 +28,19 @@ export default class MeanCalculationDialog extends Dialog {
     const meanEqualsAdditionFractionText = new Text( 'mean = ' );
     const meanEqualsFractionText = new Text( 'mean = ' );
     const meanEqualsDecimalText = new Text( 'mean = ' );
-    const calculationNode = new GridBox( { margin: 10 } );
 
+
+    const calculationNode = new GridBox( {
+      margin: 10,
+      localMinimumWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,
+      preferredHeight: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_HEIGHT
+    } );
+
+    const panel = new Panel( calculationNode, {
+      stroke: null,
+      minWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,
+      minHeight: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_HEIGHT
+    } );
 
     Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfChocolatesProperties ], () => {
       const numbers = People.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
@@ -49,15 +61,13 @@ export default class MeanCalculationDialog extends Dialog {
     } );
 
 
-    super( calculationNode, {
+    super( panel, {
       title: meanTitleText,
       titleAlign: 'left',
       visibleProperty: visibleProperty,
       resize: false,
       centerY: MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y,
-      minWidth: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_WIDTH,
-      minimumHeight: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_HEIGHT,
-      closeButtonListener: ( ) => { this.visibleProperty.set( false ); }
+      closeButtonListener: () => { this.visibleProperty.set( false ); }
     } );
   }
 }

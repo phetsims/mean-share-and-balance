@@ -118,7 +118,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const meanCalculationDialog = new MeanCalculationDialog( model.peopleArray, meanCalculationDialogVisibleProperty );
 
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode, meanCalculationDialog ] }, options );
+    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
 
     super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
 
@@ -154,6 +154,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     this.addChild( controlsAlignBox );
+    this.addChild( meanCalculationDialog );
 
     this.meanCalculationDialogVisibleProperty = meanCalculationDialogVisibleProperty;
   }
