@@ -91,39 +91,17 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         this.chocolatesArray.push( chocolateBar );
       }
 
-      // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
-      // a piece of chocolate will be removed off of the paper plate with the most chocolate.
-      const updateChocolateAmount = ( delta: number ) => {
-        for ( let i = 0; i < Math.abs( delta ); i++ ) {
-          const numberOfChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate ).length;
-          if ( delta < 0 ) {
-            if ( numberOfChocolatesOnPlate === 0 ) {
-              const maxPlate = this.getPlateWithMostActiveChocolate();
-              this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
-              this.dropChocolates( maxPlate );
-            }
-            else {
-              this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
-            }
-          }
-          else if ( delta > 0 ) {
-            if ( numberOfChocolatesOnPlate === 10 ) {
-              const minPlate = this.getPlateWithLeastChocolate();
-              this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
-              this.dropChocolates( minPlate );
-            }
-            else {
-              const chocolate = this.getBottomInactiveChocolateOnPlate( plate );
-              chocolate.isActiveProperty.set( true );
-            }
-          }
-          this.dropChocolates( plate );
-        }
-      };
-
       // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber
       plate.isActiveProperty.lazyLink( isActive => {
         const chocolates = this.getChocolatesOnPlate( plate );
+
+        if ( !isActive ) {
+          const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
+          if ( personNumberOfChocolates !== this.getActiveChocolatesOnPlate( plate ).length ) {
+            const delta = this.getActiveChocolatesOnPlate( plate ).length - personNumberOfChocolates;
+            this.updateChocolateAmount( this.getActivePlates()[ 0 ], delta );
+          }
+        }
         chocolates.forEach( ( chocolate, i ) => {
           chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
           this.dropChocolates( plate );
@@ -133,7 +111,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       // set paper plate chocolate number based on table plate delta change.
       person.chocolateNumberProperty.lazyLink( ( chocolateNumber, oldChocolateNumber ) => {
         const delta = chocolateNumber - oldChocolateNumber;
-        updateChocolateAmount( delta );
+        this.updateChocolateAmount( plate, delta );
       } );
 
       meanPropertyDependencies.push( person.chocolateNumberProperty );
@@ -218,6 +196,36 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
+  // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
+  // a piece of chocolate will be removed off of the paper plate with the most chocolate.
+  private updateChocolateAmount( plate: Plate, delta: number ): void {
+    for ( let i = 0; i < Math.abs( delta ); i++ ) {
+      const numberOfChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate ).length;
+      if ( delta < 0 ) {
+        if ( numberOfChocolatesOnPlate === 0 ) {
+          const maxPlate = this.getPlateWithMostActiveChocolate();
+          this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
+          this.dropChocolates( maxPlate );
+        }
+        else {
+          this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
+        }
+      }
+      else if ( delta > 0 ) {
+        if ( numberOfChocolatesOnPlate === 10 ) {
+          const minPlate = this.getPlateWithLeastChocolate();
+          this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
+          this.dropChocolates( minPlate );
+        }
+        else {
+          const chocolate = this.getBottomInactiveChocolateOnPlate( plate );
+          chocolate.isActiveProperty.set( true );
+        }
+      }
+      this.dropChocolates( plate );
+    }
+  }
+
   public getPlateWithMostActiveChocolate(): Plate {
     const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveChocolatesOnPlate( plate ).length ) );
 
@@ -248,10 +256,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     const people = this.getActivePeople();
     people.forEach( ( person, index ) => {
-        this.getChocolatesOnPlate( plates[ index ] ).forEach( ( chocolate, i ) => {
-          chocolate.positionProperty.reset();
-          chocolate.isActiveProperty.value = i < person.chocolateNumberProperty.value;
-        } );
+      this.getChocolatesOnPlate( plates[ index ] ).forEach( ( chocolate, i ) => {
+        chocolate.positionProperty.reset();
+        chocolate.isActiveProperty.value = i < person.chocolateNumberProperty.value;
+      } );
     } );
   }
 
