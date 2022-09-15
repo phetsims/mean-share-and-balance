@@ -63,7 +63,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
 
-    const combinedOptions = combineOptions<ParentOptions>( { children: [ predictMeanLine, predictMeanHandle ] }, options );
+    const combinedOptions = combineOptions<ParentOptions>( { children: [ predictMeanLine, predictMeanHandle ], cursor: 'ns-resize' }, options );
     super( combinedOptions );
 
 

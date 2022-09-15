@@ -22,9 +22,9 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 export type MeanShareAndBalanceScreenViewOptions = PickRequired<ScreenViewOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
-  public readonly resetAllButton: ResetAllButton;
+  protected readonly resetAllButton: ResetAllButton;
   public readonly questionBar: QuestionBar;
-  public readonly screenViewRootNode: Node;
+  protected readonly screenViewRootNode: Node;
 
   protected constructor( model: MeanShareAndBalanceModel, questionBarTextProperty: TReadOnlyProperty<string>, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
@@ -55,8 +55,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     this.screenViewRootNode = new Node( {
       children: [ this.questionBar, this.resetAllButton ]
     } );
-
-    this.screenViewRootNode.pdomOrder = [ ...this.children, this.questionBar ];
 
     this.addChild( this.screenViewRootNode );
   }

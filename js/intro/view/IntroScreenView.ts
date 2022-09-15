@@ -171,7 +171,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.screenViewRootNode.addChild( waterCupLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );
 
-    this.screenViewRootNode.pdomOrder = [ waterCupLayerNode, controlPanel, predictMeanSlider ];
+    this.screenViewRootNode.pdomOrder = [ ...waterCup3DNodes, pipeNodes[ 0 ], controlPanel, predictMeanSlider, this.resetAllButton ];
 
 
     this.predictMeanVisibleProperty = predictMeanVisibleProperty;
