@@ -99,13 +99,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
           if ( personNumberOfChocolates !== this.getActiveChocolatesOnPlate( plate ).length ) {
             const delta = this.getActiveChocolatesOnPlate( plate ).length - personNumberOfChocolates;
-            this.updateChocolateAmount( this.getActivePlates()[ 0 ], delta );
+            this.distributeChocolate( delta );
           }
         }
-        chocolates.forEach( ( chocolate, i ) => {
-          chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
-          this.dropChocolates( plate );
-        } );
+        else {
+          chocolates.forEach( ( chocolate, i ) => {
+            chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
+            this.dropChocolates( plate );
+          } );
+        }
+
       } );
 
       // set paper plate chocolate number based on table plate delta change.
@@ -194,6 +197,22 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       const newPosition = new Vector2( plate.position.x, plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
       chocolate.positionProperty.set( newPosition );
     } );
+  }
+
+  private distributeChocolate( delta: number ): void {
+    for ( let i = 0; i < Math.abs( delta ); i++ ) {
+      if ( delta < 0 ) {
+        const maxPlate = this.getPlateWithMostActiveChocolate();
+        const topChocolate = this.getTopActiveChocolateOnPlate( maxPlate );
+        topChocolate.isActiveProperty.set( false );
+        this.dropChocolates( maxPlate );
+      }
+      else if ( delta > 0 ) {
+        const minPlate = this.getPlateWithLeastChocolate();
+        this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
+        this.dropChocolates( minPlate );
+      }
+    }
   }
 
   // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
