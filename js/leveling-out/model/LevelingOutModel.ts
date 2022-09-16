@@ -94,7 +94,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber
       plate.isActiveProperty.lazyLink( isActive => {
         const chocolates = this.getChocolatesOnPlate( plate );
-
         if ( !isActive ) {
           const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
           if ( personNumberOfChocolates !== this.getActiveChocolatesOnPlate( plate ).length ) {
@@ -102,19 +101,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
             this.distributeChocolate( delta );
           }
         }
-        else {
-          chocolates.forEach( ( chocolate, i ) => {
-            chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
-            this.dropChocolates( plate );
-          } );
-        }
+        chocolates.forEach( ( chocolate, i ) => {
+          chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
+          this.dropChocolates( plate );
+        } );
 
       } );
 
       // set paper plate chocolate number based on table plate delta change.
       person.chocolateNumberProperty.lazyLink( ( chocolateNumber, oldChocolateNumber ) => {
-        const delta = chocolateNumber - oldChocolateNumber;
-        this.updateChocolateAmount( plate, delta );
+        if ( person.isActiveProperty.value ) {
+          const delta = chocolateNumber - oldChocolateNumber;
+          this.updateChocolateAmount( plate, delta );
+        }
       } );
 
       meanPropertyDependencies.push( person.chocolateNumberProperty );
@@ -223,7 +222,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     }
   }
 
-  // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
+  // When an active person removes chocolate from their plate and the paper plate has no chocolate on it,
   // a piece of chocolate will be removed off of the paper plate with the most chocolate.
   // And vice-versa
   private updateChocolateAmount( plate: Plate, delta: number ): void {
