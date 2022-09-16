@@ -69,23 +69,27 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
       let closestDistance = Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
 
+      // find the plate closest to where the chocolate bar was dropped.
       platesWithSpace.forEach( plate => {
         if ( Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x ) < closestDistance ) {
           closestPlate = plate;
           closestDistance = Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
         }
       } );
-      const numberOfChocolatesOnPlate = model.getPlateStateChocolates( model.getChocolatesOnPlate( closestPlate ) ).length;
+
+      // set dropped chocolate bar's position
+      const numberOfChocolatesOnPlate = model.getActivePlateStateChocolates( closestPlate ).length;
       const oldY = chocolateBar.chocolateBarModel.positionProperty.value.y;
       const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
       chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
 
-      //swap chocolates
+      //swap chocolates if parentPlate changes
       const currentParent = chocolateBar.chocolateBarModel.parentPlateProperty.value;
-      const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate );
-      inactiveChocolateForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
-
-      inactiveChocolateForSwap.parentPlateProperty.set( currentParent );
+      if ( currentParent !== closestPlate ) {
+        const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate );
+        inactiveChocolateForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
+        inactiveChocolateForSwap.parentPlateProperty.set( currentParent );
+      }
 
       chocolateBar.chocolateBarModel.parentPlateProperty.set( closestPlate );
     };
