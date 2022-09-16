@@ -9,7 +9,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { DragListener, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -23,24 +23,35 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
+// TODO: Should this be renamed ChocolateBarNode?
 export default class DraggableChocolate extends Node {
 
   public readonly chocolateBarDragListener: DragListener;
   public readonly chocolateBarModel: ChocolateBar;
 
   public constructor( model: Pick<LevelingOutModel, 'dropChocolates'>,
+                      // TODO: Rename chocolateBarModel => chocolateBar
                       chocolateBarModel: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
+    // TODO: Rename chocolateBar => chocolateBarRectangle
     const chocolateBar = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
       fill: MeanShareAndBalanceColors.chocolateColorProperty,
       stroke: 'black'
     } );
 
+
+    const children: Array<Node> = [ chocolateBar ];
+
+    // In ?dev mode, show the index of the chocolate to help understand how things are organized and how they redistribute
+    if ( phet.chipper.queryParameters.dev ) {
+      children.push( new Text( chocolateBarModel.index, { fill: 'white', top: 0, left: 0 } ) );
+    }
+
     const combinedOptions = combineOptions<NodeOptions>( {
-      children: [ chocolateBar ],
+      children: children,
       cursor: 'pointer'
     }, options );
     super( combinedOptions );

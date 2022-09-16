@@ -199,6 +199,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
+  /**
+   * Called only when a Plate is deactivated (when a person is removed) and the number at the person did not match the
+   * amount on the plate.
+   * @param delta - positive if there was more chocolate on the plate.
+   *              - For instance, if the deactivated person had 2 and the plate had 4, the delta is +2
+   *              - For a positive delta, we must share to neighbors
+   *              - For a negative delta, we must borrow from neighbors
+   */
   private distributeChocolate( delta: number ): void {
     for ( let i = 0; i < Math.abs( delta ); i++ ) {
       if ( delta < 0 ) {
@@ -217,6 +225,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   // When a person removes chocolate from their plate and the paper plate has no chocolate on it,
   // a piece of chocolate will be removed off of the paper plate with the most chocolate.
+  // And vice-versa
   private updateChocolateAmount( plate: Plate, delta: number ): void {
     for ( let i = 0; i < Math.abs( delta ); i++ ) {
       const numberOfChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate ).length;

@@ -22,12 +22,18 @@ type ChocolateBarOptions = {
 
 type StateType = 'plate' | 'dragging' | 'animating';
 
+// Total number of chocolate bars allocated, for debugging
+let count = 0;
+
 export default class ChocolateBar {
 
   public readonly isActiveProperty: Property<boolean>;
   public parentPlateProperty: Property<Plate>;
   public readonly positionProperty: Property<Vector2>;
   public readonly stateProperty: Property<StateType>;
+
+  // For debugging
+  public readonly index = count++;
 
   public constructor( providedOptions: ChocolateBarOptions ) {
 
