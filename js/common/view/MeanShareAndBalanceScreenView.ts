@@ -26,13 +26,13 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly questionBar: QuestionBar;
   protected readonly screenViewRootNode: Node;
 
-  protected constructor( model: MeanShareAndBalanceModel, questionBarTextProperty: TReadOnlyProperty<string>, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  protected constructor( model: MeanShareAndBalanceModel, questionBarStringProperty: TReadOnlyProperty<string>, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
 
     super( options );
 
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
-      labelText: questionBarTextProperty.value,
+      labelText: questionBarStringProperty.value,
       barFill: questionBarColor,
 
       // phet-io
