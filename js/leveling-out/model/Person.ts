@@ -48,11 +48,11 @@ export default class Person {
     } );
     this.position = options.position;
 
-    this.chocolateNumberProperty = new NumberProperty( 1 );
+    this.chocolateNumberProperty = new NumberProperty( options.isActive ? 1 : 0 );
 
     this.linePlacement = options.linePlacement;
 
-    this.isActiveProperty.lazyLink( isActive => this.chocolateNumberProperty.reset() );
+    this.isActiveProperty.lazyLink( isActive => this.chocolateNumberProperty.set( isActive ? 1 : 0 ) );
   }
 
   public reset(): void {
