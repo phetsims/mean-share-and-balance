@@ -41,7 +41,7 @@ const meanShareAndBalanceColors = {
   waterShadowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterShadowFill', {
     default: '#8EC6DD'
   } ),
-  cupWaterLineColorProperty: new ProfileColorProperty( meanShareAndBalance, 'cupWaterLine', {
+  cupWaterLevelLineColorProperty: new ProfileColorProperty( meanShareAndBalance, 'cupWaterLevelLine', {
     default: '#85BBCC'
   } ),
   emptyWaterCup3DColorProperty: new ProfileColorProperty( meanShareAndBalance, 'emptyWaterCup3D', {
