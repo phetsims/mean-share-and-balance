@@ -43,10 +43,35 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly pipeArray: Pipe[];
   public readonly arePipesOpenProperty: Property<boolean>;
 
+  // visible properties
+  public readonly predictMeanVisibleProperty: Property<boolean>;
+  public readonly meanVisibleProperty: Property<boolean>;
+  public readonly tickMarksVisibleProperty: Property<boolean>;
+  public readonly cupLevelVisibleProperty: Property<boolean>;
+
   public constructor( providedOptions: IntroModelOptions ) {
 
     const options = providedOptions;
     super( options );
+
+    // Visibility properties
+    this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      // phet-io
+      tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
+    } );
+    this.meanVisibleProperty = new BooleanProperty( false, {
+      // phet-io
+      tandem: options.tandem.createTandem( 'meanVisibleProperty' )
+    } );
+    this.tickMarksVisibleProperty = new BooleanProperty( false, {
+      // phet-io
+      tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
+    } );
+    this.cupLevelVisibleProperty = new BooleanProperty( false, {
+      // phet-io
+      tandem: options.tandem.createTandem( 'cupLevelVisibleProperty' )
+    } );
+
 
     this.meanPredictionProperty = new NumberProperty( 0, {
       range: MeanShareAndBalanceConstants.WATER_LEVEL_RANGE,
@@ -273,10 +298,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   public reset(): void {
-
     this.numberOfCupsProperty.reset();
     this.meanPredictionProperty.reset();
     this.arePipesOpenProperty.reset();
+
+    this.predictMeanVisibleProperty.reset();
+    this.meanVisibleProperty.reset();
+    this.tickMarksVisibleProperty.reset();
+    this.cupLevelVisibleProperty.reset();
 
     this.pipeArray.forEach( pipe => pipe.reset() );
     this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );

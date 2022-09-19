@@ -22,6 +22,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import ChocolateBar from './ChocolateBar.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
@@ -39,10 +40,15 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly chocolatesArray: Array<ChocolateBar>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
+  public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
+
+
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
     super( options );
+
+    this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, { tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' ) } );
 
     this.numberOfPeopleProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
@@ -282,6 +288,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public override reset(): void {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPeopleProperty.reset();
+    this.meanCalculationDialogVisibleProperty.reset();
     this.peopleArray.forEach( person => person.reset() );
     this.platesArray.forEach( plate => plate.reset() );
   }
