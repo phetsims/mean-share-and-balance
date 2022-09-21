@@ -18,7 +18,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import IntroOptionsVerticalCheckboxGroup from './IntroOptionsVerticalCheckboxGroup.js';
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
-import SwitchVBox from '../../common/view/SwitchVBox.js';
+import SwitchVBox from './SwitchVBox.js';
 
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children'> & PickRequired<GridBoxOptions, 'tandem'>;
 
