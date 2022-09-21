@@ -35,7 +35,7 @@ export default class IntroControlPanel extends GridBox {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.predictMeanStringProperty, {
           fontSize: 15,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem
+          tandem: tandem.createTandem( 'predictMeanText' )
         } ),
         property: predictMeanVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.predictMeanStringProperty },
@@ -46,7 +46,7 @@ export default class IntroControlPanel extends GridBox {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.meanStringProperty, {
           fontSize: 15,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem
+          tandem: tandem.createTandem( 'meanText' )
         } ),
         property: meanVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.meanStringProperty },
@@ -57,7 +57,7 @@ export default class IntroControlPanel extends GridBox {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
           fontSize: 15,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem
+          tandem: tandem.createTandem( 'tickMarksText' )
         } ),
         property: tickMarksVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.tickMarksStringProperty },
@@ -68,7 +68,7 @@ export default class IntroControlPanel extends GridBox {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.cupWaterLevelStringProperty, {
           fontSize: 15,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem
+          tandem: tandem.createTandem( 'cupWaterLevelText' )
         } ),
         property: cupWaterLevelVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.cupWaterLevelStringProperty },
