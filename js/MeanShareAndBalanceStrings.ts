@@ -5,38 +5,38 @@
  */
 /* eslint-disable */
 import getStringModule from '../../chipper/js/getStringModule.js';
-import TReadOnlyProperty from '../../axon/js/TReadOnlyProperty.js';
+import LinkableProperty from '../../axon/js/LinkableProperty.js';
 import meanShareAndBalance from './meanShareAndBalance.js';
 
 type StringsType = {
   'mean-share-and-balance': {
     'title': string;
-    'titleStringProperty': TReadOnlyProperty<string>;
+    'titleStringProperty': LinkableProperty<string>;
   };
   'screen': {
     'intro': string;
-    'introStringProperty': TReadOnlyProperty<string>;
+    'introStringProperty': LinkableProperty<string>;
     'levelingOut': string;
-    'levelingOutStringProperty': TReadOnlyProperty<string>;
+    'levelingOutStringProperty': LinkableProperty<string>;
   };
   'predictMean': string;
-  'predictMeanStringProperty': TReadOnlyProperty<string>;
+  'predictMeanStringProperty': LinkableProperty<string>;
   'mean': string;
-  'meanStringProperty': TReadOnlyProperty<string>;
+  'meanStringProperty': LinkableProperty<string>;
   'tickMarks': string;
-  'tickMarksStringProperty': TReadOnlyProperty<string>;
+  'tickMarksStringProperty': LinkableProperty<string>;
   'cupWaterLevel': string;
-  'cupWaterLevelStringProperty': TReadOnlyProperty<string>;
+  'cupWaterLevelStringProperty': LinkableProperty<string>;
   'sync': string;
-  'syncStringProperty': TReadOnlyProperty<string>;
+  'syncStringProperty': LinkableProperty<string>;
   'numberOfCups': string;
-  'numberOfCupsStringProperty': TReadOnlyProperty<string>;
+  'numberOfCupsStringProperty': LinkableProperty<string>;
   'introQuestion': string;
-  'introQuestionStringProperty': TReadOnlyProperty<string>;
+  'introQuestionStringProperty': LinkableProperty<string>;
   'levelingOutQuestion': string;
-  'levelingOutQuestionStringProperty': TReadOnlyProperty<string>;
+  'levelingOutQuestionStringProperty': LinkableProperty<string>;
   'numberOfPeople': string;
-  'numberOfPeopleStringProperty': TReadOnlyProperty<string>;
+  'numberOfPeopleStringProperty': LinkableProperty<string>;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
