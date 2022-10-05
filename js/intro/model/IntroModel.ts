@@ -92,7 +92,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.arePipesOpenProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'arePipesOpenProperty' )
     } );
-    this.arePipesOpenProperty.lazyLink( arePipesOpen => this.matchCupWaterLevels() );
 
     // The 3D cups are the "ground truth" and the 2D cups mirror them
     this.waterCup3DArray = [];
@@ -226,10 +225,10 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param dt - time elapsed since last frame in seconds
    */
   private stepWaterLevels( dt: number ): void {
-
-    if ( this.arePipesOpenProperty.value ) {
-      this.getActive2DCups().forEach( cup => {
-        const currentWaterLevel = cup.waterLevelProperty.value;
+    this.iterateCups( ( cup2D, cup3D ) => {
+      const currentWaterLevel = cup2D.waterLevelProperty.value;
+      let newWaterLevel;
+      if ( this.arePipesOpenProperty.value ) {
         const delta = this.meanProperty.value - currentWaterLevel;
 
         let discrepancy = 4;
@@ -244,7 +243,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
         // Animate water non-linearly. Higher discrepancy means the water will flow faster.
         // When the water levels are closer, it will slow down.
-        let newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+        newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
 
         // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
         if ( this.meanProperty.value > currentWaterLevel ) {
@@ -253,10 +252,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         else {
           newWaterLevel = Utils.clamp( newWaterLevel, this.meanProperty.value, currentWaterLevel );
         }
-
-        cup.waterLevelProperty.set( newWaterLevel );
-      } );
-    }
+      }
+      else {
+        const delta = cup3D.waterLevelProperty.value - currentWaterLevel;
+        newWaterLevel = currentWaterLevel + delta * dt * 4;
+      }
+      cup2D.waterLevelProperty.set( newWaterLevel );
+    } );
   }
 
   /**
