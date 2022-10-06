@@ -255,7 +255,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       }
       else {
         const delta = cup3D.waterLevelProperty.value - currentWaterLevel;
-        newWaterLevel = currentWaterLevel + delta * dt * 4;
+        newWaterLevel = Utils.clamp( currentWaterLevel + delta * dt * 4, 0, 1 );
       }
       cup2D.waterLevelProperty.set( newWaterLevel );
     } );
