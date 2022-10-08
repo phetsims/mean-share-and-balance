@@ -39,6 +39,11 @@ export default class IntroControlPanel extends GridBox {
     // Number Spinner
     const numberSpinnerVBox = new NumberSpinnerVBox( numberOfCupsProperty, { tandem: options.tandem.createTandem( 'numberSpinnerVBox' ) } );
 
+    numberOfCupsProperty.link( () => {
+      switchVBox.interruptSubtreeInput();
+      introOptionsCheckboxGroup.interruptSubtreeInput();
+    } );
+
     const combinedOptions = combineOptions<GridBoxOptions>( { children: [ introOptionsCheckboxGroup, switchVBox, numberSpinnerVBox ] }, providedOptions );
     super( combinedOptions );
   }

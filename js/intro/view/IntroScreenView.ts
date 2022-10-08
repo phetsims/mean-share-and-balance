@@ -141,7 +141,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     model.numberOfCupsProperty.link( () => {
       centerWaterCupLayerNode();
-      this.interruptSubtreeInput();
+      waterCupLayerNode.interruptSubtreeInput();
     } );
 
     this.screenViewRootNode.addChild( notebookPaper );
