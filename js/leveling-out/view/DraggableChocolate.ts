@@ -9,7 +9,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { DragListener, InteractiveHighlighting, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -23,8 +23,8 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
-// TODO: Should this be renamed ChocolateBarNode? See also https://github.com/phetsims/mean-share-and-balance/issues/119
-export default class DraggableChocolate extends Node {
+// TODO: Should this be renamed ChocolateBarNode?
+export default class DraggableChocolate extends InteractiveHighlighting( Node ) {
 
   public readonly chocolateBarDragListener: DragListener;
   public readonly chocolateBarModel: ChocolateBar;

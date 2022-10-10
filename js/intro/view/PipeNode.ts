@@ -10,7 +10,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { FireListener, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, FocusHighlightFromNode, InteractiveHighlighting, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -26,7 +26,7 @@ type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicEleme
 
 const LINE_WIDTH = 1;
 
-export default class PipeNode extends Node {
+export default class PipeNode extends InteractiveHighlighting( Node ) {
 
   // Public for traversal order
   public readonly valveNode: ValveNode;
@@ -85,6 +85,10 @@ export default class PipeNode extends Node {
     this.addInputListener( {
       click: () => handleFire()
     } );
+
+    // interactive highlighting - set a custom highlight because the pipe nodes have a unique combined highlight
+    // collectively in the ScreenView
+    this.interactiveHighlight = new FocusHighlightFromNode( this );
   }
 }
 
