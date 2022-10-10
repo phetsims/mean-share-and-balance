@@ -31,6 +31,8 @@ const MAX_PEOPLE = 7;
 
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
+  // REVIEW: Maybe phet-io instrument this if it is the way a client would limit number of people?
+  // REVIEW: Or maybe that would be in the number spinner range itself?
   public readonly numberOfPeopleRange = new Range( 1, MAX_PEOPLE );
   public readonly numberOfPeopleProperty: NumberProperty;
   public readonly isMeanAccordionExpandedProperty: BooleanProperty;
@@ -42,13 +44,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
 
-
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
     super( options );
 
-    this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, { tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' ) } );
+    this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, {
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
+    } );
 
     this.numberOfPeopleProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
@@ -59,6 +64,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
 
     this.isMeanAccordionExpandedProperty = new BooleanProperty( false, {
+
       // phet-io
       tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
@@ -69,13 +75,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     const meanPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
 
-    // Statically allocate plates, people, and chocolates
+    // Statically allocate plates, people, and chocolates. Whether they particpate in the model is controlled by
+    // the isActiveProperty on each one
     for ( let i = 0; i < MAX_PEOPLE; i++ ) {
       const x = i * MeanShareAndBalanceConstants.PERSON_WIDTH;
       const plate = new Plate( {
         isActive: i < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
         linePlacement: i,
+
+        // phet-io
         tandem: options.tandem.createTandem( `plateChocolate${i + 1}` )
       } );
       this.platesArray.push( plate );
@@ -84,6 +93,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
         isActive: i < this.numberOfPeopleProperty.value,
         linePlacement: i,
+
+        // phet-io
         tandem: options.tandem.createTandem( `person${i + 1}` )
       } );
       this.peopleArray.push( person );

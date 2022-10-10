@@ -24,15 +24,22 @@ type SelfOptions = {
 
 type PersonOptions = SelfOptions & PickRequired<PhetioObject, 'tandem'>;
 
+// REVIEW: Perhaps rename this to TablePlate?  Since it is more about the stack itself?  This relates to the
+// questions about how to https://github.com/phetsims/mean-share-and-balance/issues/119
 export default class Person {
 
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
-  // The x and y positions for the person in the view.
+
+  // The x and y positions for the person in the view. This specifies relative spacing between the people, and
+  // another container centers the group.
+  // REVIEW: Use ImmutableVector2?, here and elsewhere?
   public readonly position: Vector2;
+
   // The amount of chocolate bars the person brought
   public readonly chocolateNumberProperty: Property<number>;
-  // the persons index
+
+  // the person's index - 0-indexed
   public readonly linePlacement: number;
 
   public constructor( providedOptions?: PersonOptions ) {
@@ -40,6 +47,7 @@ export default class Person {
     const options = optionize<PersonOptions, SelfOptions, PhetioObjectOptions>()( {}, providedOptions );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
+
       // phet-io
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
 
@@ -48,16 +56,21 @@ export default class Person {
     } );
     this.position = options.position;
 
+    // REVIEW: This should probably be phet-io instrumented and stateful
     this.chocolateNumberProperty = new NumberProperty( options.isActive ? 1 : 0 );
 
     this.linePlacement = options.linePlacement;
 
+    // When the person becomes inactive, delete their chocolates. When a person becomes active, they arrive with 1 chocolate
     this.isActiveProperty.lazyLink( isActive => this.chocolateNumberProperty.set( isActive ? 1 : 0 ) );
   }
 
   public reset(): void {
     this.isActiveProperty.reset();
     this.chocolateNumberProperty.reset();
+
+    // linePlacement never changes and hence doesn't need to be reset
+    // position never changes
   }
 }
 

@@ -23,7 +23,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & NodeOptions & PickRequired<NodeOptions, 'tandem'>;
 
-// TODO: Should this be renamed ChocolateBarNode?
+// TODO: Should this be renamed ChocolateBarNode? See also https://github.com/phetsims/mean-share-and-balance/issues/119
 export default class DraggableChocolate extends Node {
 
   public readonly chocolateBarDragListener: DragListener;

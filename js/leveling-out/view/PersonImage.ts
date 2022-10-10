@@ -21,6 +21,10 @@ export default class PersonImage extends Image {
   public constructor( image: HTMLImageElement, plate: TablePlateNode, providedOptions: PersonImageOptions ) {
     const options = optionize<PersonImageOptions, SelfOptions, ImageOptions>()( {
       scale: 0.3,
+
+      // REVIEW: It seems somewhat circular that the Person coordinates determine where to draw the TablePlateNode,
+      // then the TablePlateNode determines where to draw the PersonImage
+      // MS:
       centerX: plate.centerX,
       bottom: plate.bottom - 55
     }, providedOptions );

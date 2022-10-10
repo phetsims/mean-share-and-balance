@@ -24,10 +24,12 @@ const NOTEBOOK_PAPER_NODE = new NoteBookPaperNode();
 
 export default class MeanCalculationDialog extends Dialog {
 
-  public constructor( People: Array<Person>, visibleProperty: Property<boolean> ) {
+  public constructor( people: Array<Person>, visibleProperty: Property<boolean> ) {
 
-    const isActiveProperties = People.map( person => person.isActiveProperty );
-    const numberOfChocolatesProperties = People.map( person => person.chocolateNumberProperty );
+    const isActiveProperties = people.map( person => person.isActiveProperty );
+    const numberOfChocolatesProperties = people.map( person => person.chocolateNumberProperty );
+
+    // REVIEW: i18n
     const meanTitleText = new Text( 'Mean' );
     const meanEqualsAdditionFractionText = new Text( 'mean = ' );
     const meanEqualsFractionText = new Text( 'mean = ' );
@@ -48,8 +50,8 @@ export default class MeanCalculationDialog extends Dialog {
     } );
 
     Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfChocolatesProperties ], () => {
-      const numbers = People.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
-      const numberOfPeople = People.filter( person => person.isActiveProperty.value ).length;
+      const numbers = people.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
+      const numberOfPeople = people.filter( person => person.isActiveProperty.value ).length;
       const additionText = new Text( numbers.join( ' + ' ) );
       const additionFractionLine = new Line( 0, 0, additionText.width, 0, { stroke: 'black' } );
       const additionDenominatorText = new Text( numberOfPeople );
@@ -73,6 +75,9 @@ export default class MeanCalculationDialog extends Dialog {
         resize: false,
         centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y,
         closeButtonListener: () => { this.visibleProperty.set( false ); },
+
+        // We specify the position manually
+        // REVIEW: Where is x specified?
         layoutStrategy: _.noop
       }
     );

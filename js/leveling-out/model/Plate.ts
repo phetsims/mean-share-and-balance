@@ -2,7 +2,7 @@
 
 
 /**
- * The model for the chocolate each person or plate has.
+ * REVIEW: Update docs
  * The amount of chocolate bars is tracked through chocolateBarsNumberProperty
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -17,6 +17,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 
+// REVIEW: These options look identical to PersonOptions, and seem overlapped with options in ChocolateBar
 type SelfOptions = {
   position: Vector2;
   isActive: boolean;
@@ -27,6 +28,7 @@ type PlateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjec
 
 export default class Plate {
 
+  // REVIEW: Add a base class that factors out position, isActiveProperty and linePlacement
   public readonly position: Vector2;
 
   public readonly isActiveProperty: Property<boolean>;
