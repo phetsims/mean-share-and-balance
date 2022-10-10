@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO: describe file
+ * Contains the image and scaling for the notebook paper background for the upper data representations
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *

@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO: describe file
+ * Creates a sticky toggle button with the info icon on it.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *

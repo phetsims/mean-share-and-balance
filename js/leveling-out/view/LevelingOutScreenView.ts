@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO
+ * Representation for the Leveling Out Screen. Contains people and their chocolates on a plate, as well as a sketch representation
+ * of chocolates that can be dragged and 'leveled out'.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

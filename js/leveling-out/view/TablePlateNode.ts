@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO: describe file
+ * The container plate (in the bottom representation) that holds all of the chocolate a person has brought.
+ * Each table plate is associated with a person.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -38,6 +39,7 @@ export default class TablePlateNode extends Node {
       { centerTop: new Vector2( plate.centerBottom.x, plate.centerBottom.y + 55 ), tandem: options.tandem.createTandem( 'numberPicker' ) } );
 
     const chocolateScale = 0.04;
+
     // create chocolate person brought
     const chocolatesArray: Array<Image> = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {

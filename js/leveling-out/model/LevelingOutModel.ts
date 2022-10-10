@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO
+ * Model for the Leveling Out Screen which includes people, chocolate bars, visual mean representation,
+ * and a numerical mean representation.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

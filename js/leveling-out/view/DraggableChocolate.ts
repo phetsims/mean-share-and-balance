@@ -2,7 +2,8 @@
 
 
 /**
- * TODO: describe file
+ * An individual chocolate bar node. These chocolate bars are draggable, and must stay within the notebook paper bounds.
+ * Each chocolate bar snaps to the closest plate when dropped, which updates the parentPlate in the model.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -30,24 +31,22 @@ export default class DraggableChocolate extends InteractiveHighlighting( Node ) 
   public readonly chocolateBarModel: ChocolateBar;
 
   public constructor( model: Pick<LevelingOutModel, 'reorganizeChocolates'>,
-                      // TODO: Rename chocolateBarModel => chocolateBar
-                      chocolateBarModel: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
+                      chocolateBar: ChocolateBar, notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: DraggableChocolateNodeOptions ) {
 
     const options = providedOptions;
 
-    // TODO: Rename chocolateBar => chocolateBarRectangle
-    const chocolateBar = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
+    const chocolateBarRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT, {
       fill: MeanShareAndBalanceColors.chocolateColorProperty,
       stroke: 'black'
     } );
 
 
-    const children: Array<Node> = [ chocolateBar ];
+    const children: Array<Node> = [ chocolateBarRectangle ];
 
     // In ?dev mode, show the index of the chocolate to help understand how things are organized and how they redistribute
     if ( phet.chipper.queryParameters.dev ) {
-      children.push( new Text( chocolateBarModel.index, { fill: 'white', top: 0, left: 0 } ) );
+      children.push( new Text( chocolateBar.index, { fill: 'white', top: 0, left: 0 } ) );
     }
 
     const combinedOptions = combineOptions<NodeOptions>( {
@@ -56,7 +55,7 @@ export default class DraggableChocolate extends InteractiveHighlighting( Node ) 
     }, options );
     super( combinedOptions );
 
-    this.chocolateBarModel = chocolateBarModel;
+    this.chocolateBarModel = chocolateBar;
 
     this.chocolateBarDragListener = new DragListener( {
       positionProperty: this.chocolateBarModel.positionProperty,
@@ -64,16 +63,16 @@ export default class DraggableChocolate extends InteractiveHighlighting( Node ) 
       // The origin of the chocolate bar is the top left, so we must erode just on the right and bottom edge to keep
       // the chocolate fully in the paper region
       dragBoundsProperty: new DerivedProperty( [ notebookPaperBoundsProperty ], bounds =>
-        new Bounds2( bounds.minX, bounds.minY, bounds.maxX - chocolateBar.width, bounds.maxY - chocolateBar.height )
+        new Bounds2( bounds.minX, bounds.minY, bounds.maxX - chocolateBarRectangle.width, bounds.maxY - chocolateBarRectangle.height )
       ),
       start: () => {
-        chocolateBarModel.stateProperty.set( 'dragging' );
-        model.reorganizeChocolates( chocolateBarModel.parentPlateProperty.value );
+        chocolateBar.stateProperty.set( 'dragging' );
+        model.reorganizeChocolates( chocolateBar.parentPlateProperty.value );
         this.moveToFront();
       },
       end: () => {
         chocolateBarDropped( this );
-        chocolateBarModel.stateProperty.set( 'plate' );
+        chocolateBar.stateProperty.set( 'plate' );
       },
       tandem: options.tandem.createTandem( 'chocolateBarDragListener' )
     } );

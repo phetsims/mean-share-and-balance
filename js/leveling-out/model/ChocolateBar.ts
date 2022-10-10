@@ -2,7 +2,7 @@
 
 /**
  * Individual chocolate bars in the paper (upper) representation.
- * TODO: describe file
+ * These chocolate bars are draggable therefore their position, and parentPlate are important.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

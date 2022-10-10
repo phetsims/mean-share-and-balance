@@ -1,7 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO: describe file
+ * The model representing the container for chocolates in the bottom representation.
+ * Tracks the position of a person and their plate, as well as how many chocolate bars they have brought
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *

@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * TODO: describe file
+ * The node containing the image of each sim person.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
