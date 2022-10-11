@@ -9,14 +9,13 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
 
 // REVIEW: These options look identical to PersonOptions, and seem overlapped with options in ChocolateBar
 type SelfOptions = {
@@ -25,7 +24,7 @@ type SelfOptions = {
   linePlacement: number;
 };
 
-type PlateOptions = SelfOptions & PhetioObjectOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+type PlateOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class Plate extends PhetioObject {
 
@@ -37,15 +36,15 @@ export default class Plate extends PhetioObject {
   // the plate's index
   public readonly linePlacement: number;
 
-  public static PlateIO: IOType;
-
   public constructor( providedOptions: PlateOptions ) {
     const options = optionize<PlateOptions, EmptySelfOptions, PhetioObjectOptions>()( {
-      phetioType: Plate.PlateIO
+      phetioState: false
     }, providedOptions );
+
     super( options );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
+
       // phet-io
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
 
@@ -62,25 +61,5 @@ export default class Plate extends PhetioObject {
     this.isActiveProperty.reset();
   }
 }
-
-type StateObject = {
-  position: Vector2;
-  isActiveProperty: Property<boolean>;
-  linePlacement: number;
-};
-
-Plate.PlateIO = new IOType<Plate>( 'PlateIO', {
-  valueType: Plate,
-  documentation: 'Paper chocolate container representation',
-  toStateObject: ( plate: Plate ) => ( {
-    position: plate.position,
-    isActiveProperty: plate.isActiveProperty,
-    linePlacement: plate.linePlacement
-  } ),
-  stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.position, stateObject.isActiveProperty, stateObject.linePlacement ];
-  },
-  stateSchema: {}
-} );
 
 meanShareAndBalance.register( 'Plate', Plate );
