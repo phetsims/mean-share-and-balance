@@ -12,6 +12,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from './Plate.js';
 
@@ -19,6 +20,7 @@ type ChocolateBarOptions = {
   isActive: boolean;
   plate: Plate;
   position: Vector2;
+  tandem: Tandem;
 };
 
 type StateType = 'plate' | 'dragging' | 'animating';
@@ -39,8 +41,20 @@ export default class ChocolateBar {
   public constructor( providedOptions: ChocolateBarOptions ) {
 
     // REVIEW: Should these be phet-io instrumented?  Perhaps yes, but with phetioState: false and phetioReadonly: false?
-    this.isActiveProperty = new BooleanProperty( providedOptions.isActive );
-    this.parentPlateProperty = new Property( providedOptions.plate );
+    this.isActiveProperty = new BooleanProperty( providedOptions.isActive, {
+
+      // phet-io
+      tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),
+      phetioReadOnly: true
+    } );
+
+    this.parentPlateProperty = new Property( providedOptions.plate, {
+
+      // phet-io
+      tandem: providedOptions.tandem.createTandem( 'parentPlateProperty' ),
+      phetioReadOnly: true,
+      phetioValueType: Plate.PlateIO
+    } );
 
     // REVIEW: These may need phetioState: true
     this.positionProperty = new Property( providedOptions.position );

@@ -57,8 +57,11 @@ export default class Person {
     } );
     this.position = options.position;
 
-    // REVIEW: This should probably be phet-io instrumented and stateful
-    this.chocolateNumberProperty = new NumberProperty( options.isActive ? 1 : 0 );
+    this.chocolateNumberProperty = new NumberProperty( options.isActive ? 1 : 0, {
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'chocolateNumberProperty' )
+    } );
 
     this.linePlacement = options.linePlacement;
 

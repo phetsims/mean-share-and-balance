@@ -104,7 +104,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) );
         const x = plate.position.x;
         const isActive = plate.isActiveProperty.value && i < person.chocolateNumberProperty.value;
-        const chocolateBar = new ChocolateBar( { isActive: isActive, plate: plate, position: new Vector2( x, y ) } );
+        const chocolateBar = new ChocolateBar( {
+          isActive: isActive,
+          plate: plate,
+          position: new Vector2( x, y ),
+
+          // phet-io
+          tandem: options.tandem.createTandem( `ChocolateBar${i + 1 + ( 10 * plate.linePlacement )}` )
+        } );
 
         this.chocolatesArray.push( chocolateBar );
       }
