@@ -151,38 +151,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     this.screenViewRootNode.pdomOrder = [ ...waterCup3DNodes, pipeNodes[ 0 ], controlPanel, predictMeanSlider, this.resetAllButton ];
   }
-
-  /**
-   * Custom layout function for this view so that it floats to the bottom of the window.
-   * TODO: Do we actually want to do this? https://github.com/phetsims/mean-share-and-balance/issues/114
-   * {Bounds2} viewBounds
-   */
-  // public override layout( viewBounds: Bounds2 ): void {
-  //   this.resetTransform();
-  //
-  //   const scale = this.getLayoutScale( viewBounds );
-  //   const width = viewBounds.width;
-  //   const height = viewBounds.height;
-  //   this.setScaleMagnitude( scale );
-  //
-  //   let dx = 0;
-  //   let offsetY = 0;
-  //
-  //   // Move to bottom vertically (custom for this sim)
-  //   if ( scale === width / this.layoutBounds.width ) {
-  //     offsetY = ( height / scale - this.layoutBounds.height );
-  //   }
-  //
-  //   // center horizontally (default behavior for ScreenView)
-  //   else if ( scale === height / this.layoutBounds.height ) {
-  //     dx = ( width - this.layoutBounds.width * scale ) / 2 / scale;
-  //   }
-  //   this.translate( dx + viewBounds.left / scale, offsetY + viewBounds.top / scale );
-  //
-  //   // update the visible bounds of the screen view
-  //   this.visibleBoundsProperty.set( new Bounds2( -dx, -offsetY, width / scale - dx, height / scale - offsetY ) );
-  // }
-
   public override reset(): void {
     super.reset();
   }
