@@ -60,18 +60,21 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       }
     );
 
+    const waterCups2DParentTandem = options.tandem.createTandem( 'waterCups2D' );
+    const waterCups3DParentTandem = options.tandem.createTandem( 'waterCups3D' );
+    const pipesParentTandem = options.tandem.createTandem( 'pipes' );
     // Add all cup nodes to the view
     const waterCup2DNodes: Array<WaterCup2DNode> = [];
     model.waterCup2DArray.forEach( ( cupModel, index ) => {
       const cupNode = new WaterCup2DNode( cupModel, model.waterCup3DArray[ index ], modelViewTransform2DCups, model.meanProperty, model.tickMarksVisibleProperty,
-        model.meanVisibleProperty, model.cupLevelVisibleProperty, { tandem: options.tandem.createTandem( `waterCup2DNode${cupModel.linePlacement + 1}` ) } );
+        model.meanVisibleProperty, model.cupLevelVisibleProperty, { tandem: waterCups2DParentTandem.createTandem( `waterCup2DNode${cupModel.linePlacement + 1}` ) } );
       waterCup2DNodes.push( cupNode );
     } );
 
     const waterCup3DNodes: Array<WaterCup3DNode> = [];
     model.waterCup3DArray.forEach( cupModel => {
       const cupNode = new WaterCup3DNode( model.tickMarksVisibleProperty, model, cupModel, modelViewTransform3DCups, {
-        tandem: options.tandem.createTandem( `waterCup3DNode${cupModel.linePlacement + 1}` )
+        tandem: waterCups3DParentTandem.createTandem( `waterCup3DNode${cupModel.linePlacement + 1}` )
       } );
       waterCup3DNodes.push( cupNode );
     } );
@@ -81,7 +84,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransform2DCups,
-        { tandem: options.tandem.createTandem( `pipeNode${index + 1}` ), focusable: index === 0 } );
+        { tandem: pipesParentTandem.createTandem( `pipeNode${index + 1}` ), focusable: index === 0 } );
 
       pipeNodes.push( pipeNode );
     } );

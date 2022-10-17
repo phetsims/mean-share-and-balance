@@ -76,6 +76,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     const meanPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
 
+    const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
+
     // Statically allocate plates, people, and chocolates. Whether they particpate in the model is controlled by
     // the isActiveProperty on each one
     for ( let i = 0; i < MAX_PEOPLE; i++ ) {
@@ -110,7 +112,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           position: new Vector2( x, y ),
 
           // phet-io
-          tandem: options.tandem.createTandem( `ChocolateBar${i + 1 + ( 10 * plate.linePlacement )}` )
+          tandem: chocolateBarsParentTandem.createTandem( `ChocolateBar${i + 1 + ( 10 * plate.linePlacement )}` )
         } );
 
         this.chocolatesArray.push( chocolateBar );

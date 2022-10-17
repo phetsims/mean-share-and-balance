@@ -98,12 +98,16 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.waterCup2DArray = [];
     this.pipeArray = [];
 
+    const pipesParentTandem = options.tandem.createTandem( 'pipes' );
+    const waterCups2DParentTandem = options.tandem.createTandem( 'waterCups2D' );
+    const waterCups3DParentTandem = options.tandem.createTandem( 'waterCups3D' );
+
     // Statically allocate cups and pipes
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
       const waterLevel = i === 0 ? 0.75 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
-      this.waterCup3DArray.push( new WaterCup( options.tandem.createTandem( `waterCup3D${i + 1}` ), {
+      this.waterCup3DArray.push( new WaterCup( waterCups3DParentTandem.createTandem( `waterCup3D${i + 1}` ), {
         waterLevel: waterLevel,
         position: position3D,
         isActive: i <= 1,
@@ -111,7 +115,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       } ) );
 
       const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );
-      this.waterCup2DArray.push( new WaterCup( options.tandem.createTandem( `waterCup2D${i + 1}` ), {
+      this.waterCup2DArray.push( new WaterCup( waterCups2DParentTandem.createTandem( `waterCup2D${i + 1}` ), {
         waterLevel: waterLevel,
         position: position2D,
         isActive: i <= 1,
@@ -127,7 +131,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
           isActive: i === 0,
 
           // phet-io
-          tandem: options.tandem.createTandem( `pipe${i + 1}` )
+          tandem: pipesParentTandem.createTandem( `pipe${i + 1}` )
         } );
         this.pipeArray.push( pipe );
       }

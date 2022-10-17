@@ -109,8 +109,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // Creating the top representation of chocolates on the paper
     const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
 
+    const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
     const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( model, chocolate, notebookPaperBoundsProperty, chocolateBarDropped, {
-      tandem: options.tandem.createTandem( `chocolateBar${i + 1}` ),
+      tandem: chocolateBarsParentTandem.createTandem( `chocolateBar${i + 1}` ),
       visibleProperty: chocolate.isActiveProperty
     } ) );
 
