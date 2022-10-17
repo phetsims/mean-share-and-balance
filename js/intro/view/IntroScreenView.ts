@@ -128,7 +128,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const centerWaterCupLayerNode = () => {
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
-      tableNode.centerX = waterCupLayerNode.centerX;
+      tableNode.centerX = waterCupLayerNode.centerX - 10;
       notebookPaper.centerX = waterCupLayerNode.centerX - 10;
       tableNode.y = waterCupLayerNode.bottom - 30;
 
@@ -152,7 +152,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     this.screenViewRootNode.addChild( waterCupLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );
 
-    this.screenViewRootNode.pdomOrder = [ ...waterCup3DNodes, pipeNodes[ 0 ], controlPanel, predictMeanSlider, this.resetAllButton ];
+    this.screenViewRootNode.pdomOrder = [ ...waterCup3DNodes, pipeNodes[ 0 ], predictMeanSlider, controlPanel, this.resetAllButton ];
   }
   public override reset(): void {
     super.reset();
