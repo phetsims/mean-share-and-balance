@@ -18,7 +18,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import IntroOptionsVerticalCheckboxGroup from './IntroOptionsVerticalCheckboxGroup.js';
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
-import SwitchVBox from './SwitchVBox.js';
+import PipeSwitch from './PipeSwitch.js';
 
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children'> & PickRequired<GridBoxOptions, 'tandem'>;
 
@@ -34,17 +34,17 @@ export default class IntroControlPanel extends GridBox {
       predictMeanVisibleProperty, cupWaterLevelVisibleProperty, { tandem: options.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
 
     // Pipe Switch
-    const switchVBox = new SwitchVBox( arePipesOpenProperty, { tandem: options.tandem.createTandem( 'switchVBox' ) } );
+    const pipeSwitch = new PipeSwitch( arePipesOpenProperty, options.tandem.createTandem( 'pipeSwitch' ) );
 
     // Number Spinner
     const numberSpinnerVBox = new NumberSpinnerVBox( numberOfCupsProperty, { tandem: options.tandem.createTandem( 'numberSpinnerVBox' ) } );
 
     numberOfCupsProperty.link( () => {
-      switchVBox.interruptSubtreeInput();
+      pipeSwitch.interruptSubtreeInput();
       introOptionsCheckboxGroup.interruptSubtreeInput();
     } );
 
-    const combinedOptions = combineOptions<GridBoxOptions>( { children: [ introOptionsCheckboxGroup, switchVBox, numberSpinnerVBox ] }, providedOptions );
+    const combinedOptions = combineOptions<GridBoxOptions>( { children: [ introOptionsCheckboxGroup, pipeSwitch, numberSpinnerVBox ] }, providedOptions );
     super( combinedOptions );
   }
 }
