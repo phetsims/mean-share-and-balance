@@ -68,7 +68,7 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
           boxWidth: 16
         },
         align: 'left',
-        layoutOptions: { column: 0, row: 0, align: 'left' },
+        layoutOptions: { column: 0, row: 0, xAlign: 'left' },
         tandem: providedOptions.tandem.createTandem( 'introOptionsCheckboxGroup' )
       }
     );
