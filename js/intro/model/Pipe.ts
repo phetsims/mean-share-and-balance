@@ -69,6 +69,7 @@ export default class Pipe extends PhetioObject {
 
   public reset(): void {
     this.isActiveProperty.reset();
+    this.rotationProperty.reset();
   }
 
   // Valve animation
