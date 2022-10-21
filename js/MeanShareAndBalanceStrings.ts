@@ -37,6 +37,8 @@ type StringsType = {
   'levelingOutQuestionStringProperty': LinkableProperty<string>;
   'numberOfPeople': string;
   'numberOfPeopleStringProperty': LinkableProperty<string>;
+  'meanEquals': string;
+  'meanEqualsStringProperty': LinkableProperty<string>;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

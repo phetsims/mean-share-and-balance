@@ -18,6 +18,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import Property from '../../../../axon/js/Property.js';
 import Panel from '../../../../sun/js/Panel.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 const NOTEBOOK_PAPER_NODE = new NoteBookPaperNode();
 
@@ -29,11 +30,10 @@ export default class MeanCalculationDialog extends Dialog {
     const isActiveProperties = people.map( person => person.isActiveProperty );
     const numberOfChocolatesProperties = people.map( person => person.chocolateNumberProperty );
 
-    // REVIEW: i18n
-    const meanTitleText = new Text( 'Mean' );
-    const meanEqualsAdditionFractionText = new Text( 'mean = ' );
-    const meanEqualsFractionText = new Text( 'mean = ' );
-    const meanEqualsDecimalText = new Text( 'mean = ' );
+    const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty );
+    const meanEqualsAdditionFractionText = new Text( MeanShareAndBalanceStrings.meanEqualsStringProperty );
+    const meanEqualsFractionText = new Text( MeanShareAndBalanceStrings.meanEqualsStringProperty );
+    const meanEqualsDecimalText = new Text( MeanShareAndBalanceStrings.meanEqualsStringProperty );
 
 
     const calculationNode = new GridBox( {

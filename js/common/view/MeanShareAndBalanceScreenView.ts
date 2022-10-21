@@ -32,7 +32,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     super( options );
 
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
-      questionString: questionBarStringProperty.value,
+      questionString: questionBarStringProperty,
       barFill: questionBarColor,
 
       // phet-io
