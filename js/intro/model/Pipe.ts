@@ -65,6 +65,17 @@ export default class Pipe extends PhetioObject {
 
     this.position = options.position;
 
+    Pipe.PipeIO = new IOType<Pipe>( 'PipeIO', {
+      valueType: Pipe,
+      toStateObject: ( pipe: Pipe ) => ( {
+        position: pipe.position
+      } ),
+      stateToArgsForConstructor: ( stateObject: StateObject ) => {
+        return [ stateObject.position ];
+      },
+      stateSchema: {}
+    } );
+
   }
 
   public reset(): void {
@@ -83,15 +94,5 @@ export default class Pipe extends PhetioObject {
   }
 }
 
-Pipe.PipeIO = new IOType<Pipe>( 'PipeIO', {
-  valueType: Pipe,
-  toStateObject: ( pipe: Pipe ) => ( {
-    position: pipe.position
-  } ),
-  stateToArgsForConstructor: ( stateObject: StateObject ) => {
-    return [ stateObject.position ];
-  },
-  stateSchema: {}
-} );
 
 meanShareAndBalance.register( 'Pipe', Pipe );
