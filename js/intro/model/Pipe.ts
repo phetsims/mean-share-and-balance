@@ -91,4 +91,5 @@ export default class Pipe extends PhetioObject {
   } );
 }
 
+
 meanShareAndBalance.register( 'Pipe', Pipe );
