@@ -9,7 +9,7 @@
 
 import Utils from '../../../../dot/js/Utils.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { Line, Node, NodeOptions, NodeTransformOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { Line, Node, NodeOptions, NodeTransformOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import WaterCup from '../model/WaterCup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterCup2DTickMarksNode from './WaterCup2DTickMarksNode.js';
@@ -19,6 +19,8 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
+import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
+import Matrix3 from '../../../../dot/js/Matrix3.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -48,9 +50,25 @@ export default class WaterCup2DNode extends Node {
     // 0 is empty, 1 is full
     const y = Utils.linear( 0, 1, MeanShareAndBalanceConstants.CUP_HEIGHT, 0, waterCup.waterLevelProperty.value );
 
-    const waterCupRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT,
-      { stroke: 'black' }
-    );
+    const strokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
+    const verticalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
+      0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
+
+    const waterCupRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT );
+
+    const cupStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.CUP_HEIGHT, { lineWidth: 1.95, stroke: verticalStrokePattern } );
+    const cupStrokeRight = new Line( MeanShareAndBalanceConstants.CUP_WIDTH, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, {
+      lineWidth: 1.95,
+      stroke: verticalStrokePattern
+    } );
+    const cupStrokeTop = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 0, {
+      lineWidth: 1.95,
+      stroke: strokePattern
+    } );
+    const cupStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.CUP_HEIGHT, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, {
+      lineWidth: 1.95,
+      stroke: strokePattern
+    } );
 
     const waterCupBackgroundRectangle = new Rectangle( waterCupRectangle.localBounds, { fill: 'white' } );
     const waterLevelRectangle = new Rectangle( 0, y, MeanShareAndBalanceConstants.CUP_WIDTH,
@@ -105,7 +123,7 @@ export default class WaterCup2DNode extends Node {
 
     const combinedOptions = combineOptions<NodeOptions>( {
       children: [ waterCupBackgroundRectangle, waterLevelRectangle,
-        waterCupRectangle, meanLine, originalWaterLevelLine, tickMarks ]
+        waterCupRectangle, cupStrokeLeft, cupStrokeRight, cupStrokeTop, cupStrokeBottom, meanLine, originalWaterLevelLine, tickMarks ]
     }, options );
     super( combinedOptions );
   }
