@@ -47,8 +47,6 @@ export default class Pipe extends PhetioObject {
   public readonly rotationProperty: Property<number>;
   public readonly arePipesOpenProperty: Property<boolean>;
 
-  public static PipeIO: IOType<Pipe>;
-
   public constructor( arePipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
       isActive: false,
@@ -64,18 +62,6 @@ export default class Pipe extends PhetioObject {
     this.isActiveProperty = new BooleanProperty( options.isActive );
 
     this.position = options.position;
-
-    Pipe.PipeIO = new IOType<Pipe>( 'PipeIO', {
-      valueType: Pipe,
-      toStateObject: ( pipe: Pipe ) => ( {
-        position: pipe.position
-      } ),
-      stateToArgsForConstructor: ( stateObject: StateObject ) => {
-        return [ stateObject.position ];
-      },
-      stateSchema: {}
-    } );
-
   }
 
   public reset(): void {
@@ -92,7 +78,17 @@ export default class Pipe extends PhetioObject {
     const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;
     this.rotationProperty.value = rotationThreshold <= dt ? targetRotation : proposedRotation;
   }
-}
 
+  public static readonly PipeIO = new IOType<Pipe>( 'PipeIO', {
+    valueType: Pipe,
+    toStateObject: ( pipe: Pipe ) => ( {
+      position: pipe.position
+    } ),
+    stateToArgsForConstructor: ( stateObject: StateObject ) => {
+      return [ stateObject.position ];
+    },
+    stateSchema: {}
+  } );
+}
 
 meanShareAndBalance.register( 'Pipe', Pipe );
