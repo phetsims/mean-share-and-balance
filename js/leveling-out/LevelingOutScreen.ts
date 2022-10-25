@@ -26,7 +26,7 @@ export default class LevelingOutScreen extends Screen<LevelingOutModel, Leveling
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
-      keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
+      createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(
       () => new LevelingOutModel( { tandem: options.tandem.createTandem( 'model' ) } ),

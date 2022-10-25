@@ -26,7 +26,7 @@ export default class IntroScreen extends Screen<IntroModel, IntroScreenView> {
     const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.introStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
-      keyboardHelpNode: new SliderControlsAndBasicActionsKeyboardHelpContent()
+      createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(
       () => new IntroModel( { tandem: options.tandem.createTandem( 'model' ) } ),
