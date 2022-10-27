@@ -50,11 +50,10 @@ export default class WaterCup2DNode extends Node {
     // 0 is empty, 1 is full
     const y = Utils.linear( 0, 1, MeanShareAndBalanceConstants.CUP_HEIGHT, 0, waterCup.waterLevelProperty.value );
 
-    const strokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
+    const topStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
+    const bottomStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0 ) );
     const verticalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
       0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
-
-    const waterCupRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT );
 
     const cupStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.CUP_HEIGHT, { lineWidth: 1.95, stroke: verticalStrokePattern } );
     const cupStrokeRight = new Line( MeanShareAndBalanceConstants.CUP_WIDTH, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, {
@@ -63,14 +62,14 @@ export default class WaterCup2DNode extends Node {
     } );
     const cupStrokeTop = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 0, {
       lineWidth: 1.95,
-      stroke: strokePattern
+      stroke: topStrokePattern
     } );
     const cupStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.CUP_HEIGHT, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, {
       lineWidth: 1.95,
-      stroke: strokePattern
+      stroke: bottomStrokePattern
     } );
 
-    const waterCupBackgroundRectangle = new Rectangle( waterCupRectangle.localBounds, { fill: 'white' } );
+    const waterCupBackgroundRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, { fill: 'white' } );
     const waterLevelRectangle = new Rectangle( 0, y, MeanShareAndBalanceConstants.CUP_WIDTH,
       MeanShareAndBalanceConstants.CUP_HEIGHT * waterCup.waterLevelProperty.value,
       { fill: MeanShareAndBalanceColors.waterFillColorProperty }
@@ -123,7 +122,7 @@ export default class WaterCup2DNode extends Node {
 
     const combinedOptions = combineOptions<NodeOptions>( {
       children: [ waterCupBackgroundRectangle, waterLevelRectangle,
-        waterCupRectangle, cupStrokeLeft, cupStrokeRight, cupStrokeTop, cupStrokeBottom, meanLine, originalWaterLevelLine, tickMarks ]
+        cupStrokeLeft, cupStrokeRight, cupStrokeTop, cupStrokeBottom, meanLine, originalWaterLevelLine, tickMarks ]
     }, options );
     super( combinedOptions );
   }
