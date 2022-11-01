@@ -8,15 +8,41 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, Image } from '../../../../scenery/js/imports.js';
+import { Node, Rectangle, Image } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import notebookPaperBackground_png from '../../../images/notebookPaperBackground_png.js';
+import notepadRing_png from '../../../images/notepadRing_png.js';
 
 export default class NoteBookPaperNode extends Node {
 
   public constructor() {
-    const background = new Image( notebookPaperBackground_png, { scale: 0.48 } );
-    super( { children: [ background ], centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y } );
+
+    const paperStackNode = new Node();
+    const paperWidth = 700;
+    const paperHeight = 240;
+    const paperStackHeight = 4;
+    const stackOffset = 3;
+
+    for ( let i = paperStackHeight; i > 0; i-- ) {
+      const xOffset = i * -stackOffset;
+      const yOffset = i * stackOffset;
+      const paper = new Rectangle( xOffset, yOffset, paperWidth, paperHeight, {
+        fill: 'white',
+        stroke: 'black',
+        cornerRadius: 10
+      } );
+      paperStackNode.addChild( paper );
+    }
+
+    const rings = [];
+    const numberOfRings = 6;
+
+    for ( let i = 0; i < numberOfRings; i++ ) {
+      const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
+
+      rings.push( new Image( notepadRing_png, { x: x, y: -21.5, scale: 0.8 } ) );
+    }
+
+    super( { children: [ paperStackNode, ...rings ], centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y } );
   }
 }
 
