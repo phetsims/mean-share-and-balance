@@ -17,7 +17,7 @@ export default class NoteBookPaperNode extends Node {
   public constructor() {
 
     const paperStackNode = new Node();
-    const paperWidth = 700;
+    const paperWidth = 720;
     const paperHeight = 240;
     const paperStackHeight = 4;
     const stackOffset = 3;
