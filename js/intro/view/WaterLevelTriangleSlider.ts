@@ -41,14 +41,7 @@ export default class WaterLevelTriangleSlider extends VSlider {
         cursor: 'pointer',
         thumbNode: thumbNode,
         enabledRangeProperty: enabledRangeProperty,
-        trackSize: new Dimension2( 10, height ),
-        // Precisely align the bounds of the track, independent of the slider width, so the slider thumb will go to the
-        // top and bottom of the cup
-        trackBoundsDilation: false,
-        trackFillEnabled: null,
-        trackFillDisabled: null,
-        trackStroke: null,
-        trackPickable: false
+        trackSize: new Dimension2( 0, height )
       },
       providedOptions );
 
