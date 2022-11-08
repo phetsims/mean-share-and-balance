@@ -10,7 +10,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { FireListener, FocusHighlightFromNode, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -114,7 +114,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     // interactive highlighting - set a custom highlight because the pipe nodes have a unique combined highlight
     // collectively in the ScreenView
-    this.interactiveHighlight = new FocusHighlightFromNode( this );
+    this.interactiveHighlight = Shape.bounds( this.localBounds );
   }
 }
 
