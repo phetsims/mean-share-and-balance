@@ -127,6 +127,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       plate.isActiveProperty.lazyLink( isActive => {
         const chocolates = this.getChocolatesOnPlate( plate );
         const plateNumberOfChocolates = this.getActiveChocolatesOnPlate( plate ).length;
+
+        // If a plate became inactive, we need to account for the extra or missing chocolate
         if ( !isActive ) {
           const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
           if ( personNumberOfChocolates > plateNumberOfChocolates ) {
@@ -140,7 +142,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
           this.reorganizeChocolates( plate );
         } );
-
       } );
 
       // set paper plate chocolate number based on table plate delta change.
@@ -226,14 +227,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
     return plates.filter( plate => {
       const numberOfChocolates = this.getActivePlateStateChocolates( plate ).length;
-      return numberOfChocolates < 10;
+      return numberOfChocolates < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES;
     } );
   }
 
+  /**
+   * When chocolates are added to a plate, they may appear in random positions or be overlapping. Re-stack them.
+   */
   public reorganizeChocolates( plate: Plate ): void {
     const plateStateChocolates = this.getActivePlateStateChocolates( plate );
     plateStateChocolates.forEach( ( chocolate, i ) => {
-      const newPosition = new Vector2( plate.position.x, plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) ) );
+
+      const Y_MARGIN = 2; // Distance between adjacent chocolates.  Also distance between plate and lowest chocolate
+      const newPosition = new Vector2( plate.position.x, plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + Y_MARGIN ) * ( i + 1 ) ) );
       chocolate.positionProperty.set( newPosition );
     } );
   }
@@ -267,14 +273,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   private personChocolateAmountIncrease( plate: Plate, numberOfChocolatesAdded: number ): void {
     for ( let i = 0; i < numberOfChocolatesAdded; i++ ) {
       const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
-      if ( numberOfChocolatesOnPlate === 10 ) {
+      if ( numberOfChocolatesOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES ) {
         const minPlate = this.getPlateWithLeastChocolate();
+        assert && assert( minPlate !== plate, `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}` );
         this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
         this.reorganizeChocolates( minPlate );
       }
       else {
-        const chocolate = this.getBottomInactiveChocolateOnPlate( plate );
-        chocolate.isActiveProperty.set( true );
+        this.getBottomInactiveChocolateOnPlate( plate ).isActiveProperty.set( true );
       }
       this.reorganizeChocolates( plate );
     }
