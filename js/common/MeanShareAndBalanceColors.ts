@@ -73,6 +73,9 @@ const meanShareAndBalanceColors = {
   } ),
   chocolateHighlightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'chocolateHighlight', {
     default: '#7F5039'
+  } ),
+  paperColorProperty: new ProfileColorProperty( meanShareAndBalance, 'paper', {
+    default: '#F0F0F0'
   } )
 };
 

@@ -11,6 +11,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, Rectangle, Image } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import notepadRing_png from '../../../images/notepadRing_png.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
 export default class NoteBookPaperNode extends Node {
 
@@ -26,7 +27,7 @@ export default class NoteBookPaperNode extends Node {
       const xOffset = i * -stackOffset;
       const yOffset = i * stackOffset;
       const paper = new Rectangle( xOffset, yOffset, paperWidth, paperHeight, {
-        fill: 'white',
+        fill: MeanShareAndBalanceColors.paperColorProperty,
         stroke: 'black',
         cornerRadius: 10
       } );
@@ -34,7 +35,7 @@ export default class NoteBookPaperNode extends Node {
     }
 
     const rings = [];
-    const numberOfRings = 6;
+    const numberOfRings = 8;
 
     for ( let i = 0; i < numberOfRings; i++ ) {
       const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
