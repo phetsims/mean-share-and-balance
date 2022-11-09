@@ -79,6 +79,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
 
+    // In Mean Share and Balance, we decided arrays start counting at 1
+    let totalChocolateCount = 1;
+
     // Statically allocate plates, people, and chocolates. Whether they particpate in the model is controlled by
     // the isActiveProperty on each one
     for ( let personIndex = 0; personIndex < MAX_PEOPLE; personIndex++ ) {
@@ -104,16 +107,17 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       this.peopleArray.push( person );
 
       for ( let chocolateIndex = 0; chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; chocolateIndex++ ) {
-        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( chocolateIndex + 1 ) );
         const x = plate.position.x;
+        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( chocolateIndex + 1 ) );
         const isActive = plate.isActiveProperty.value && chocolateIndex < person.chocolateNumberProperty.value;
+
         const chocolateBar = new ChocolateBar( {
           isActive: isActive,
           plate: plate,
           position: new Vector2( x, y ),
 
           // phet-io
-          tandem: chocolateBarsParentTandem.createTandem( `ChocolateBar${chocolateIndex + 1 + ( 10 * plate.linePlacement )}` )
+          tandem: chocolateBarsParentTandem.createTandem( `chocolateBar${totalChocolateCount++}` )
         } );
 
         this.chocolatesArray.push( chocolateBar );

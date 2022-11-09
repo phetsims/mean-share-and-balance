@@ -95,7 +95,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
 
     // Creating the bottom representation of chocolates on the table
-    const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, { tandem: options.tandem.createTandem( `Person${person.linePlacement + 1}` ) } ) );
+    const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, { tandem: options.tandem.createTandem( `person${person.linePlacement + 1}` ) } ) );
 
     const peopleImages = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
     const people = tablePlatesNodes.map( ( plate, i ) => new PersonImage( peopleImages[ i ], plate,
