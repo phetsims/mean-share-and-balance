@@ -84,10 +84,6 @@ export default class DraggableChocolate extends InteractiveHighlighting( Node ) 
       this.y = position.y;
     } );
   }
-
-  public reset(): void {
-    this.chocolateBarModel.reset();
-  }
 }
 
 meanShareAndBalance.register( 'DraggableChocolate', DraggableChocolate );

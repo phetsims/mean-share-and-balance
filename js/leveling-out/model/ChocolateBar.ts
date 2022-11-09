@@ -64,10 +64,10 @@ export default class ChocolateBar {
   }
 
   public reset(): void {
-    // NOTE: Do not reset the isActiveProperty because it is managed by the container
     this.positionProperty.reset();
     this.stateProperty.reset();
     this.parentPlateProperty.reset();
+    this.isActiveProperty.reset();
   }
 }
 

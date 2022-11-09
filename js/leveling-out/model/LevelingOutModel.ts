@@ -314,17 +314,18 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.platesArray.forEach( plate => plate.reset() );
   }
 
+  /**
+   * Propagate the ground truth values (at the bottom of the screen, with the Person objects) to the sketch
+   * plates at the top of the screen.
+   */
   public syncData(): void {
-    const plates = this.getActivePlates();
 
-    plates.forEach( plate => {
-      this.getChocolatesOnPlate( plate ).forEach( chocolate => chocolate.parentPlateProperty.reset() );
+    this.platesArray.forEach( plate => {
+      this.getChocolatesOnPlate( plate ).forEach( chocolate => chocolate.reset() );
     } );
 
-    const people = this.getActivePeople();
-    people.forEach( ( person, index ) => {
-      this.getChocolatesOnPlate( plates[ index ] ).forEach( ( chocolate, i ) => {
-        chocolate.positionProperty.reset();
+    this.peopleArray.forEach( ( person, index ) => {
+      this.getChocolatesOnPlate( this.platesArray[ index ] ).forEach( ( chocolate, i ) => {
         chocolate.isActiveProperty.value = i < person.chocolateNumberProperty.value;
       } );
     } );
