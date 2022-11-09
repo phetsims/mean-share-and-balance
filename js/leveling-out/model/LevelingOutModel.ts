@@ -36,13 +36,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   // REVIEW: Or maybe that would be in the number spinner range itself?
   public readonly numberOfPeopleRange = new Range( 1, MAX_PEOPLE );
   public readonly numberOfPeopleProperty: NumberProperty;
-  public readonly isMeanAccordionExpandedProperty: BooleanProperty;
 
   public readonly platesArray: Array<Plate>;
   public readonly peopleArray: Array<Person>;
   public readonly chocolatesArray: Array<ChocolateBar>;
+
   public readonly meanProperty: TReadOnlyProperty<number>;
 
+  public readonly isMeanAccordionExpandedProperty: BooleanProperty;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
@@ -80,39 +81,39 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     // Statically allocate plates, people, and chocolates. Whether they particpate in the model is controlled by
     // the isActiveProperty on each one
-    for ( let i = 0; i < MAX_PEOPLE; i++ ) {
-      const x = i * MeanShareAndBalanceConstants.PERSON_WIDTH;
+    for ( let personIndex = 0; personIndex < MAX_PEOPLE; personIndex++ ) {
+      const x = personIndex * MeanShareAndBalanceConstants.PERSON_WIDTH;
       const plate = new Plate( {
-        isActive: i < this.numberOfPeopleProperty.value,
+        isActive: personIndex < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
-        linePlacement: i,
+        linePlacement: personIndex,
 
         // phet-io
-        tandem: options.tandem.createTandem( `plateChocolate${i + 1}` )
+        tandem: options.tandem.createTandem( `plateChocolate${personIndex + 1}` )
       } );
       this.platesArray.push( plate );
 
       const person = new Person( {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
-        isActive: i < this.numberOfPeopleProperty.value,
-        linePlacement: i,
+        isActive: personIndex < this.numberOfPeopleProperty.value,
+        linePlacement: personIndex,
 
         // phet-io
-        tandem: options.tandem.createTandem( `person${i + 1}` )
+        tandem: options.tandem.createTandem( `person${personIndex + 1}` )
       } );
       this.peopleArray.push( person );
 
-      for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( i + 1 ) );
+      for ( let chocolateIndex = 0; chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; chocolateIndex++ ) {
+        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( chocolateIndex + 1 ) );
         const x = plate.position.x;
-        const isActive = plate.isActiveProperty.value && i < person.chocolateNumberProperty.value;
+        const isActive = plate.isActiveProperty.value && chocolateIndex < person.chocolateNumberProperty.value;
         const chocolateBar = new ChocolateBar( {
           isActive: isActive,
           plate: plate,
           position: new Vector2( x, y ),
 
           // phet-io
-          tandem: chocolateBarsParentTandem.createTandem( `ChocolateBar${i + 1 + ( 10 * plate.linePlacement )}` )
+          tandem: chocolateBarsParentTandem.createTandem( `ChocolateBar${chocolateIndex + 1 + ( 10 * plate.linePlacement )}` )
         } );
 
         this.chocolatesArray.push( chocolateBar );
