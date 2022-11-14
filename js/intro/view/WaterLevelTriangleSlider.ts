@@ -41,6 +41,10 @@ export default class WaterLevelTriangleSlider extends VSlider {
         cursor: 'pointer',
         thumbNode: thumbNode,
         enabledRangeProperty: enabledRangeProperty,
+        trackFillEnabled: null,
+        trackFillDisabled: null,
+        trackStroke: null,
+        trackPickable: false,
         trackSize: new Dimension2( 0, height )
       },
       providedOptions );
