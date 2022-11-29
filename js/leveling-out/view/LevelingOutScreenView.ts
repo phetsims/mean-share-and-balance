@@ -22,7 +22,6 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import TablePlateNode from './TablePlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TableNode from '../../common/view/TableNode.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
 import DraggableChocolate from './DraggableChocolate.js';
@@ -39,8 +38,7 @@ import Property from '../../../../axon/js/Property.js';
 import MeanCalculationDialog from './MeanCalculationDialog.js';
 
 type SelfOptions = EmptySelfOptions;
-
-type LevelingOutScreenViewOptions = SelfOptions & PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
+type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalanceScreenViewOptions, 'children'>;
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
@@ -48,8 +46,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
   public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
+    // REVIEW: Use optionize probably?
     const options = providedOptions;
-
 
     const controlPanel = new LevelingOutControlPanel( model, model.meanCalculationDialogVisibleProperty, {
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
@@ -60,6 +58,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
 
     const notebookPaper = new NoteBookPaperNode();
+
+    // To constrain the dragging of chocolate nodes in the upper area, we need to track the bounds of the paper
+    // But since the chocolateLayerNode changes its horizontal position to keep things centered for varying
+    // numbers of people, we must coordinate the drag bounds when that changes.
+    // This is in the coordinate frame of the chocolateLayerNode.
+    // This initial value is not in the correct coordinate frame but it is specified correctly before the end of the
+    // constructor
     const notebookPaperBoundsProperty = new Property( notebookPaper.bounds );
 
     // function for what chocolate bars should do at the end of their drag

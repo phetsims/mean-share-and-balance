@@ -13,13 +13,12 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceModel from '../model/MeanShareAndBalanceModel.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Node, TColor } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-// import SyncButton from './SyncButton.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
-export type MeanShareAndBalanceScreenViewOptions = PickRequired<ScreenViewOptions, 'tandem'>;
+export type MeanShareAndBalanceScreenViewOptions = WithRequired<ScreenViewOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
   protected readonly resetAllButton: ResetAllButton;
