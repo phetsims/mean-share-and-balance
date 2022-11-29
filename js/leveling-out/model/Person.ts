@@ -11,6 +11,7 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
@@ -52,12 +53,14 @@ export default class Person {
       // phet-io
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
 
-      // Takes its value from LevelingOutModel.numberOfPeopleProperty
+      // Takes its value from LevelingOutModel.numberOfPeopleProperty, so cannot be independently adjusted
       phetioReadOnly: true
     } );
     this.position = options.position;
 
     this.chocolateNumberProperty = new NumberProperty( options.isActive ? 1 : 0, {
+
+      range: new Range( 0, 10 ),
 
       // phet-io
       tandem: options.tandem.createTandem( 'chocolateNumberProperty' )
