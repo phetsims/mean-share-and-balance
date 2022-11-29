@@ -28,12 +28,16 @@ export default class LevelingOutControlPanel extends GridBox {
   public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
 
+    // REVIEW: Optionize probably?
     const options = providedOptions;
 
+    // Scale down the large chocolate images
+    const SCALE_FACTOR = 0.05;
+
     const meanChocolateBarsNode = new VBox( {
-      scale: 0.05,
+      scale: SCALE_FACTOR,
       align: 'left',
-      spacing: 1.5 / 0.05,
+      spacing: 1.5 / SCALE_FACTOR,
       layoutOptions: {
         yAlign: 'top'
       }
@@ -48,6 +52,8 @@ export default class LevelingOutControlPanel extends GridBox {
 
       const children = _.times( wholePart, () => new Image( chocolateBar_png ) );
       if ( remainder > 0 ) {
+
+        // Partial chocolate bars are shown on top
         children.unshift( new Image( chocolateBar_png, {
           clipArea: Shape.rect( 0, 0, remainder * chocolateBarImage.width, chocolateBarImage.height )
         } ) );
@@ -73,9 +79,10 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const syncButton = new SyncButton( { inputListeners: [ syncListener ], tandem: options.tandem.createTandem( 'syncButton' ) } );
 
+    // REVIEW: How could we do this with putting this metadata on the SyncButton itself? May need to ask @jonathanolson
     const syncVBox = new VBox( {
         align: 'left', children: [ syncButton ],
-        layoutOptions: { column: 0, row: 1, minContentHeight: 38, yAlign: 'top' }
+        layoutOptions: { row: 1, minContentHeight: 38, yAlign: 'top' }
       }
     );
 
@@ -87,8 +94,7 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const numberSpinner = new NumberSpinner(
       model.numberOfPeopleProperty,
-      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ),
-      {
+      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ), {
         arrowsPosition: 'leftRight',
         layoutOptions: {
           align: 'left'
@@ -105,7 +111,7 @@ export default class LevelingOutControlPanel extends GridBox {
       align: 'left',
       justify: 'bottom',
       spacing: 10,
-      layoutOptions: { column: 0, row: 2 }
+      layoutOptions: { row: 2 }
     } );
 
 

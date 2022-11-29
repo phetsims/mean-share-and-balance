@@ -66,31 +66,31 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
       let closestPlate = model.getPlatesWithSpace( model.getActivePlates() )[ 0 ];
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
-      let closestDistance = Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
+      let closestDistance = Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBar.positionProperty.value.x );
 
       // find the plate closest to where the chocolate bar was dropped.
       platesWithSpace.forEach( plate => {
-        if ( Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x ) < closestDistance ) {
+        if ( Math.abs( plate.position.x - chocolateBar.chocolateBar.positionProperty.value.x ) < closestDistance ) {
           closestPlate = plate;
-          closestDistance = Math.abs( plate.position.x - chocolateBar.chocolateBarModel.positionProperty.value.x );
+          closestDistance = Math.abs( plate.position.x - chocolateBar.chocolateBar.positionProperty.value.x );
         }
       } );
 
       // set dropped chocolate bar's position
       const numberOfChocolatesOnPlate = model.getActivePlateStateChocolates( closestPlate ).length;
-      const oldY = chocolateBar.chocolateBarModel.positionProperty.value.y;
+      const oldY = chocolateBar.chocolateBar.positionProperty.value.y;
       const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
-      chocolateBar.chocolateBarModel.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
+      chocolateBar.chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
 
       //swap chocolates if parentPlate changes
-      const currentParent = chocolateBar.chocolateBarModel.parentPlateProperty.value;
+      const currentParent = chocolateBar.chocolateBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate );
         inactiveChocolateForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
         inactiveChocolateForSwap.parentPlateProperty.set( currentParent );
       }
 
-      chocolateBar.chocolateBarModel.parentPlateProperty.set( closestPlate );
+      chocolateBar.chocolateBar.parentPlateProperty.set( closestPlate );
     };
 
 
