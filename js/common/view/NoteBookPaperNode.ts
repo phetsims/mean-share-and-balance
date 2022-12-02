@@ -4,7 +4,6 @@
  * Contains the image and scaling for the notebook paper background for the upper data representations
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';

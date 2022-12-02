@@ -40,6 +40,9 @@ import MeanCalculationDialog from './MeanCalculationDialog.js';
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalanceScreenViewOptions, 'children'>;
 
+// constants
+const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
+
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
@@ -55,8 +58,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( 'controlPanel' )
     } );
 
-    const tableNode = new TableNode( { y: MeanShareAndBalanceConstants.PEOPLE_CENTER_Y } );
+    const tableNode = new TableNode();
 
+    // REVIEW: lowercase b
     const notebookPaper = new NoteBookPaperNode();
 
     // To constrain the dragging of chocolate nodes in the upper area, we need to track the bounds of the paper
@@ -69,8 +73,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     // function for what chocolate bars should do at the end of their drag
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
-      let closestPlate = model.getPlatesWithSpace( model.getActivePlates() )[ 0 ];
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
+
+      // REVIEW: Use _.minBy
+      let closestPlate = platesWithSpace[ 0 ];
       let closestDistance = Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBar.positionProperty.value.x );
 
       // find the plate closest to where the chocolate bar was dropped.
@@ -87,7 +93,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
       chocolateBar.chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
 
-      //swap chocolates if parentPlate changes
+      // swap chocolates if parentPlate changes, so that each person always has the same number of inactive + active chocolates
+      // so that when their spinner is incremented, they can promote their own inactive chocolate to active.
       const currentParent = chocolateBar.chocolateBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate );
@@ -100,33 +107,49 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
 
     // Creating the bottom representation of chocolates on the table
-    const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, { tandem: options.tandem.createTandem( `person${person.linePlacement + 1}` ) } ) );
+    const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, {
+      tandem: options.tandem.createTandem( `person${person.linePlacement + 1}` )
+    } ) );
 
-    const peopleImages = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
-    const people = tablePlatesNodes.map( ( plate, i ) => new PersonImage( peopleImages[ i ], plate,
-      { visibleProperty: plate.visibleProperty, tandem: options.tandem.createTandem( `person${i + 1}` ) } ) );
+    const people = tablePlatesNodes.map( ( plate, i ) => {
+      const selectedImage = PEOPLE_IMAGES[ i ];
+      assert && assert( selectedImage, `No corresponding image for index: ${i}` );
+      return new PersonImage( selectedImage, plate, {
+        visibleProperty: plate.visibleProperty, tandem: options.tandem.createTandem( `person${i + 1}` )
+      } );
+    } );
 
     const peopleLayerNode = new Node( {
       children: people,
+
+      // The entire node containing people is centered.  If the invisible people contribute to the bounds, then when
+      // only one person is showing, they will be way off to the left.
       excludeInvisibleChildrenFromBounds: true
     } );
 
     // Creating the top representation of chocolates on the paper
-    const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, { tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` ) } ) );
-
-    const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
-    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) => new DraggableChocolate( model, chocolate, notebookPaperBoundsProperty, chocolateBarDropped, {
-      tandem: chocolateBarsParentTandem.createTandem( `chocolateBar${i + 1}` ),
-      visibleProperty: chocolate.isActiveProperty
+    const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, {
+      tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` )
     } ) );
 
+    const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
+    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) =>
+      new DraggableChocolate( model, chocolate, notebookPaperBoundsProperty, chocolateBarDropped, {
+        tandem: chocolateBarsParentTandem.createTandem( `chocolateBar${i + 1}` ),
+        visibleProperty: chocolate.isActiveProperty
+      } ) );
+
+    // This contains all the chocolates from the top (paper) representation and the bottom (table) representation.
     const chocolateLayerNode = new Node( {
+
+      // See peopleLayerNode.excludeInvisibleChildrenFromBounds comment
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
     } );
 
     const meanCalculationDialog = new MeanCalculationDialog( model.peopleArray, model.meanCalculationDialogVisibleProperty );
 
+    // REVIEW: optionize?
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
 
     super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
@@ -135,8 +158,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const playAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
     const centerPlayAreaNodes = () => {
+
+      // The chocolateLayerNode and peopleLayerNode bounds change when the number of people change, due to excludeInvisibleChildrenFromBounds
       chocolateLayerNode.centerX = playAreaCenterX;
       peopleLayerNode.centerX = playAreaCenterX - 45;
+
       tableNode.centerX = chocolateLayerNode.centerX - 10;
       tableNode.y = chocolateLayerNode.bottom - 120;
       notebookPaper.centerX = chocolateLayerNode.centerX;
@@ -151,6 +177,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       this.interruptSubtreeInput();
     } );
 
+    // Don't include the questionBar in the usable bounds
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
@@ -167,11 +194,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     this.meanCalculationDialogVisibleProperty = model.meanCalculationDialogVisibleProperty;
   }
-
-  public override reset(): void {
-    super.reset();
-  }
-
 }
 
 meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );
