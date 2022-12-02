@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Contains all the chocolate bars on a plate. Each plate has one PaperPlateNode,
+ * In the upper (paper) representation, contains all the chocolate bars on a plate. Each plate has one PaperPlateNode,
  * and each container has a maximum of 10 chocolates bars.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -18,21 +18,18 @@ import DraggableChocolate from './DraggableChocolate.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
-type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions> & PickRequired<NodeOptions, 'tandem'>;
+type ChocolateBarsContainerNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions | 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
 export default class PaperPlateNode extends Node {
   public constructor( plate: Plate, chocolateBarDropped: ( chocolateBar: DraggableChocolate ) => void, providedOptions: ChocolateBarsContainerNodeOptions ) {
     const options = optionize<ChocolateBarsContainerNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.position.x,
       y: plate.position.y,
-      visibleProperty: plate.isActiveProperty
+      visibleProperty: plate.isActiveProperty,
+      excludeInvisibleChildrenFromBounds: false,
+      children: [ new Line( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, 0, { stroke: 'black' } ) ]
     }, providedOptions );
 
-    const plateLine = new Line( 0, 0, MeanShareAndBalanceConstants.CHOCOLATE_WIDTH, 0, { stroke: 'black' } );
-
-
-    options.children = [ plateLine ];
-    options.excludeInvisibleChildrenFromBounds = false;
     super( options );
   }
 }

@@ -21,9 +21,9 @@ const simOptions: SimOptions = {
     softwareDevelopment: 'Marla Schulz, Sam Reid',
     team: 'Kelly Findley, Marilyn Hartzell, Ariel Paul, Kathy Perkins, David Webb',
     qualityAssurance: 'Clifford Hardin, Emily Miller, Nancy Salpepi, Kathryn Woessner',
-    graphicArts: 'Mariah Hermsmeyer',
-    soundDesign: '',
-    thanks: ''
+    graphicArts: 'Mariah Hermsmeyer'
+    // soundDesign: '',
+    // thanks: ''
   }
 };
 

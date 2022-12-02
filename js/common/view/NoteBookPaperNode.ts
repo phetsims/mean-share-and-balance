@@ -36,10 +36,12 @@ export default class NoteBookPaperNode extends Node {
     const rings = [];
     const numberOfRings = 8;
 
+    // REVIEW: _.times looks like a good match here
     for ( let i = 0; i < numberOfRings; i++ ) {
       const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
 
-      rings.push( new Image( notepadRing_png, { x: x, y: -21.5, scale: 0.8 } ) );
+      const image = new Image( notepadRing_png, { x: x, y: -21.5, scale: 0.8 } );
+      rings.push( image );
     }
 
     super( { children: [ paperStackNode, ...rings ], centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y } );

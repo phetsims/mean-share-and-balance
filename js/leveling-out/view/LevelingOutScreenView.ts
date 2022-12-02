@@ -147,7 +147,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
     } );
 
-    const meanCalculationDialog = new MeanCalculationDialog( model.peopleArray, model.meanCalculationDialogVisibleProperty );
+    const meanCalculationDialog = new MeanCalculationDialog(
+      model.peopleArray,
+      model.meanCalculationDialogVisibleProperty,
+      notebookPaper.bounds
+    );
 
     // REVIEW: optionize?
     const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );

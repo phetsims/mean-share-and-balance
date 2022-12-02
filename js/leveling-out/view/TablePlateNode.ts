@@ -41,11 +41,10 @@ export default class TablePlateNode extends Node {
     const chocolateScale = 0.04;
 
     // create chocolate person brought
-    const chocolatesArray: Array<Image> = [];
-    for ( let i = 0; i < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; i++ ) {
-      const chocolate = new Image( chocolateBar_png, { scale: chocolateScale } );
-      chocolatesArray.push( chocolate );
-    }
+    // REVIEW: See if it would be appropriate to use _.times elsewhere
+    const chocolatesArray = _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES, () => new Image( chocolateBar_png, {
+      scale: chocolateScale
+    } ) );
 
     const chocolatesVBox = new VBox( {
       children: chocolatesArray,
