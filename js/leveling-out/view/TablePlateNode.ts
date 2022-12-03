@@ -34,7 +34,7 @@ export default class TablePlateNode extends Node {
     } );
 
 
-    const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES );
+    const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON );
     const numberPicker = new NumberPicker( person.chocolateNumberProperty, new Property( numberPickerRange ),
       { centerTop: new Vector2( plate.centerBottom.x, plate.centerBottom.y + 55 ), tandem: options.tandem.createTandem( 'numberPicker' ) } );
 
@@ -42,7 +42,7 @@ export default class TablePlateNode extends Node {
 
     // create chocolate person brought
     // REVIEW: See if it would be appropriate to use _.times elsewhere
-    const chocolatesArray = _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES, () => new Image( chocolateBar_png, {
+    const chocolatesArray = _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON, () => new Image( chocolateBar_png, {
       scale: chocolateScale
     } ) );
 

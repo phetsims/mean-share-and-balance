@@ -2,8 +2,8 @@
 
 
 /**
- * REVIEW: Update docs
- * The amount of chocolate bars is tracked through chocolateBarsNumberProperty
+ * Model for the upper representation of chocolate stacks. Tracks whether a stack should be active, it's line placement, and position
+ * relative to other stacks.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

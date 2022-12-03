@@ -32,10 +32,8 @@ const MAX_PEOPLE = 7;
 
 export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
-  // REVIEW: Maybe phet-io instrument this if it is the way a client would limit number of people?
-  // REVIEW: Or maybe that would be in the number spinner range itself?
-  public readonly numberOfPeopleRange = new Range( 1, MAX_PEOPLE );
-  public readonly numberOfPeopleProperty: NumberProperty;
+  public readonly numberOfPeopleRangeProperty: Property<Range>;
+  public readonly numberOfPeopleProperty: Property<number>;
 
   public readonly platesArray: Array<Plate>;
   public readonly peopleArray: Array<Person>;
@@ -43,7 +41,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public readonly meanProperty: TReadOnlyProperty<number>;
 
-  public readonly isMeanAccordionExpandedProperty: BooleanProperty;
+  public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
@@ -56,10 +54,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       // phet-io
       tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
     } );
+    this.numberOfPeopleRangeProperty = new Property<Range>( new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ), {
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'numberOfPeopleRangeProperty' ),
+      phetioValueType: Range.RangeIO
+    } );
 
     this.numberOfPeopleProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
-      range: this.numberOfPeopleRange,
+      range: this.numberOfPeopleRangeProperty,
 
       // phet-io
       tandem: options.tandem.createTandem( 'numberOfPeopleProperty' )
@@ -106,7 +110,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
 
-      for ( let chocolateIndex = 0; chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES; chocolateIndex++ ) {
+      for ( let chocolateIndex = 0; chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON; chocolateIndex++ ) {
         const x = plate.position.x;
         const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( chocolateIndex + 1 ) );
         const isActive = plate.isActiveProperty.value && chocolateIndex < person.chocolateNumberProperty.value;
@@ -227,7 +231,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
     return plates.filter( plate => {
       const numberOfChocolates = this.getActivePlateStateChocolates( plate ).length;
-      return numberOfChocolates < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES;
+      return numberOfChocolates < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON;
     } );
   }
 
@@ -273,7 +277,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   private personChocolateAmountIncrease( plate: Plate, numberOfChocolatesAdded: number ): void {
     for ( let i = 0; i < numberOfChocolatesAdded; i++ ) {
       const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
-      if ( numberOfChocolatesOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES ) {
+      if ( numberOfChocolatesOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON ) {
         const minPlate = this.getPlateWithLeastChocolate();
         assert && assert( minPlate !== plate, `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}` );
         this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );

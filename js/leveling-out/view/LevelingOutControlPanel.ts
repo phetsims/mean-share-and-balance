@@ -25,7 +25,7 @@ import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyTo
 type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
 export default class LevelingOutControlPanel extends GridBox {
-  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
+  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleRangeProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
 
     // REVIEW: Optionize probably?
@@ -94,7 +94,7 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const numberSpinner = new NumberSpinner(
       model.numberOfPeopleProperty,
-      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ), {
+      model.numberOfPeopleRangeProperty, {
         arrowsPosition: 'leftRight',
         layoutOptions: {
           align: 'left'

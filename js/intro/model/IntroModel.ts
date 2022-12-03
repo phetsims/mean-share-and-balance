@@ -30,7 +30,7 @@ type IntroModelOptions = PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>
 export default class IntroModel extends MeanShareAndBalanceModel {
 
   // TODO: Should this be able to go to 0 for PhET-iO? https://github.com/phetsims/mean-share-and-balance/issues/18
-  public readonly numberOfCupsRange = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS );
+  public readonly numberOfCupsRange = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
   public readonly cupRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
 
@@ -103,7 +103,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     const waterCups3DParentTandem = options.tandem.createTandem( 'waterCups3D' );
 
     // Statically allocate cups and pipes
-    for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS; i++ ) {
+    for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
       const waterLevel = i === 0 ? 0.75 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
@@ -125,7 +125,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         }
       } ) );
 
-      if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS - 1 ) {
+      if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS - 1 ) {
         const pipe = new Pipe( this.arePipesOpenProperty, {
           position: position2D,
           isActive: i === 0,
@@ -299,8 +299,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
     assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
     assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
-    assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup3DArray.length} cups` );
-    assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_CUPS}, but there were actually ${this.waterCup2DArray.length} cups` );
+    assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.waterCup3DArray.length} cups` );
+    assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.waterCup2DArray.length} cups` );
   }
 
   public reset(): void {
