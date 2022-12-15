@@ -1,5 +1,5 @@
 {
-  "comment": "# mean-share-and-balance 1.0.2-rc.1 Wed Dec 14 2022 21:14:16 GMT-0700 (Mountain Standard Time)",
+  "comment": "# mean-share-and-balance 1.0.2 Wed Dec 14 2022 21:15:51 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "c13a8c7741d95fbd8e37619c66ebcca8686dffe7",
     "branch": "HEAD"
@@ -29,7 +29,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "93424347e27617de4f817e6234c30a745c8b44fc",
+    "sha": "5ceaf558e530583ecd099f618bd24c2187c69fc6",
     "branch": "1.0"
   },
   "perennial-alias": {
