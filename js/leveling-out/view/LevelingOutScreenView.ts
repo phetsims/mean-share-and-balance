@@ -8,7 +8,6 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
@@ -36,6 +35,7 @@ import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanCalculationDialog from './MeanCalculationDialog.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalanceScreenViewOptions, 'children'>;
@@ -49,7 +49,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
   public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
-    // REVIEW: Use optionize probably?
     const options = providedOptions;
 
     const controlPanel = new LevelingOutControlPanel( model, model.meanCalculationDialogVisibleProperty, {
@@ -75,34 +74,27 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
 
-      // REVIEW: Use _.minBy
-      let closestPlate = platesWithSpace[ 0 ];
-      let closestDistance = Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBar.positionProperty.value.x );
-
       // find the plate closest to where the chocolate bar was dropped.
-      platesWithSpace.forEach( plate => {
-        if ( Math.abs( plate.position.x - chocolateBar.chocolateBar.positionProperty.value.x ) < closestDistance ) {
-          closestPlate = plate;
-          closestDistance = Math.abs( plate.position.x - chocolateBar.chocolateBar.positionProperty.value.x );
-        }
-      } );
+      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBar.positionProperty.value.x ) );
+
+      assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped' );
 
       // set dropped chocolate bar's position
-      const numberOfChocolatesOnPlate = model.getActivePlateStateChocolates( closestPlate ).length;
+      const numberOfChocolatesOnPlate = model.getActivePlateStateChocolates( closestPlate! ).length;
       const oldY = chocolateBar.chocolateBar.positionProperty.value.y;
-      const y = closestPlate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
-      chocolateBar.chocolateBar.positionProperty.set( new Vector2( closestPlate.position.x, y ) );
+      const y = closestPlate!.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
+      chocolateBar.chocolateBar.positionProperty.set( new Vector2( closestPlate!.position.x, y ) );
 
       // swap chocolates if parentPlate changes, so that each person always has the same number of inactive + active chocolates
       // so that when their spinner is incremented, they can promote their own inactive chocolate to active.
       const currentParent = chocolateBar.chocolateBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
-        const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate );
+        const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate! );
         inactiveChocolateForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
         inactiveChocolateForSwap.parentPlateProperty.set( currentParent );
       }
 
-      chocolateBar.chocolateBar.parentPlateProperty.set( closestPlate );
+      chocolateBar.chocolateBar.parentPlateProperty.set( closestPlate! );
     };
 
 
@@ -153,10 +145,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       notebookPaper.bounds
     );
 
-    // REVIEW: optionize?
-    const combinedOptions = combineOptions<ScreenViewOptions>( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
+    const superOptions = optionize<LevelingOutScreenViewOptions, SelfOptions, ScreenViewOptions>()( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
 
-    super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, combinedOptions );
+    super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, superOptions );
 
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     const playAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;

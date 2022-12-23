@@ -7,15 +7,18 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import labDesk_png from '../../../images/labDesk_png.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 
+type SelfOptions = EmptySelfOptions;
+
+type TableNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'children'>;
 export default class TableNode extends Node {
 
-  public constructor( providedOptions?: StrictOmit<NodeOptions, 'children'> ) {
+  public constructor( providedOptions?: TableNodeOptions ) {
 
     const table = new Image( labDesk_png, { scale: 0.5 } );
     const tableBottom = new Rectangle( 28, 25, table.width - 54, 2000, {
@@ -24,8 +27,10 @@ export default class TableNode extends Node {
       lineWidth: 2
     } );
 
-    // REVIEW: optionize?
-    const options = combineOptions<NodeOptions>( { children: [ tableBottom, table ] }, providedOptions );
+    const options = optionize<TableNodeOptions, SelfOptions, NodeOptions>()( {
+      children: [ tableBottom, table ]
+    }, providedOptions );
+
     super( options );
   }
 }

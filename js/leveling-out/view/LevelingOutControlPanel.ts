@@ -6,12 +6,7 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
-import { FireListener, GridBox, GridBoxOptions, Image, Text, VBox } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Property from '../../../../axon/js/Property.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
+
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
@@ -21,14 +16,20 @@ import LevelingOutModel from '../model/LevelingOutModel.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import { GridBox, FireListener, Image, Text, GridBoxOptions, VBox } from '../../../../scenery/js/imports.js';
+import Property from '../../../../axon/js/Property.js';
 
-type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
+type SelfOptions = EmptySelfOptions;
+type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
 export default class LevelingOutControlPanel extends GridBox {
   public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleRangeProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
-                      meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
+                      meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: LevelingOutControlPanelOptions ) {
 
-    // REVIEW: Optionize probably?
     const options = providedOptions;
 
     // Scale down the large chocolate images
@@ -114,9 +115,11 @@ export default class LevelingOutControlPanel extends GridBox {
       layoutOptions: { row: 2 }
     } );
 
+    const superOptions = optionize<LevelingOutControlPanelOptions, SelfOptions, GridBoxOptions>()( {
+      children: [ meanAccordionBox, syncVBox, numberSpinnerVBox ], xAlign: 'left'
+    }, providedOptions );
 
-    const combinedOptions = combineOptions<GridBoxOptions>( { children: [ meanAccordionBox, syncVBox, numberSpinnerVBox ], xAlign: 'left' }, providedOptions );
-    super( combinedOptions );
+    super( superOptions );
   }
 }
 

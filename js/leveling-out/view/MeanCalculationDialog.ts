@@ -44,7 +44,6 @@ export default class MeanCalculationDialog extends Dialog {
       const numbers = people.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
       const numberOfPeople = people.filter( person => person.isActiveProperty.value ).length;
 
-      // REVIEW: Check with JB about whether this should be i18nized?
       // REVIEW: Can we align the numbers with the table spinners?  So correspondence is clear?
       const additionText = new Text( numbers.join( ' + ' ) );
       const additionFractionLine = new Line( 0, 0, additionText.width, 0, { stroke: 'black' } );
