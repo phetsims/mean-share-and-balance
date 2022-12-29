@@ -35,7 +35,6 @@ export default class Person {
 
   // The x and y positions for the person in the view. This specifies relative spacing between the people, and
   // another container centers the group.
-  // REVIEW: Use ImmutableVector2?, here and elsewhere? MS: How...? There are no examples of this...
   public readonly position: Vector2;
 
   // The amount of chocolate bars the person brought
