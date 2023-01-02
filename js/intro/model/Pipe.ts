@@ -84,7 +84,7 @@ export default class Pipe extends PhetioObject {
     toStateObject: ( pipe: Pipe ) => ( {
       position: pipe.position
     } ),
-    stateToArgsForConstructor: ( stateObject: StateObject ) => {
+    stateObjectToCreateElementArguments: ( stateObject: StateObject ) => {
       return [ stateObject.position ];
     },
     stateSchema: {}
