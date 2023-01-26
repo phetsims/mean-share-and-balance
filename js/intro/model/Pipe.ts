@@ -87,7 +87,9 @@ export default class Pipe extends PhetioObject {
     stateObjectToCreateElementArguments: ( stateObject: StateObject ) => {
       return [ stateObject.position ];
     },
-    stateSchema: {}
+    stateSchema: {
+      position: Vector2.Vector2IO
+    }
   } );
 }
 
