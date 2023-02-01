@@ -67,7 +67,7 @@ export default class WaterCup {
 
     // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
     this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ), {
-      useDeepEquality: true
+      valueComparisonStrategy: 'equalsFunction'
     } );
     this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
       range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
