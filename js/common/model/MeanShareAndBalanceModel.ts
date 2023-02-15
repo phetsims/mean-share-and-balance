@@ -11,12 +11,13 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import TModel from '../../../../joist/js/TModel.js';
 
 type SelfOptions = EmptySelfOptions;
 
 export type MeanShareAndBalanceModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default abstract class MeanShareAndBalanceModel {
+export default abstract class MeanShareAndBalanceModel implements TModel {
 
   protected constructor( providedOptions: MeanShareAndBalanceModelOptions ) {
     // Here for potential future use.
