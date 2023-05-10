@@ -22,7 +22,11 @@
     "supportsOutputJS": true,
     "simFeatures": {
       "supportsInteractiveDescription": true
-    }
+    },
+    "screenNameKeys": [
+      "MEAN_SHARE_AND_BALANCE/screen.intro",
+      "MEAN_SHARE_AND_BALANCE/screen.levelingOut"
+    ]
   },
   "eslintConfig": {
     "extends": "../chipper/eslint/sim_eslintrc.js"
