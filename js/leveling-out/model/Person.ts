@@ -15,7 +15,7 @@ import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
@@ -24,7 +24,7 @@ type SelfOptions = {
   linePlacement: number;
 };
 
-type PersonOptions = SelfOptions & PickRequired<PhetioObject, 'tandem'>;
+type PersonOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 // REVIEW: Perhaps rename this to TablePlate?  Since it is more about the stack itself?  This relates to the
 // questions about how to https://github.com/phetsims/mean-share-and-balance/issues/119
