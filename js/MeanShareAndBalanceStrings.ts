@@ -5,40 +5,40 @@
  */
 /* eslint-disable */
 import getStringModule from '../../chipper/js/getStringModule.js';
-import LinkableProperty from '../../axon/js/LinkableProperty.js';
+import type LocalizedStringProperty from '../../chipper/js/LocalizedStringProperty.js';
 import meanShareAndBalance from './meanShareAndBalance.js';
 
 type StringsType = {
   'mean-share-and-balance': {
     'title': string;
-    'titleStringProperty': LinkableProperty<string>;
+    'titleStringProperty': LocalizedStringProperty;
   };
   'screen': {
     'intro': string;
-    'introStringProperty': LinkableProperty<string>;
+    'introStringProperty': LocalizedStringProperty;
     'levelingOut': string;
-    'levelingOutStringProperty': LinkableProperty<string>;
+    'levelingOutStringProperty': LocalizedStringProperty;
   };
   'predictMean': string;
-  'predictMeanStringProperty': LinkableProperty<string>;
+  'predictMeanStringProperty': LocalizedStringProperty;
   'mean': string;
-  'meanStringProperty': LinkableProperty<string>;
+  'meanStringProperty': LocalizedStringProperty;
   'tickMarks': string;
-  'tickMarksStringProperty': LinkableProperty<string>;
+  'tickMarksStringProperty': LocalizedStringProperty;
   'cupWaterLevel': string;
-  'cupWaterLevelStringProperty': LinkableProperty<string>;
+  'cupWaterLevelStringProperty': LocalizedStringProperty;
   'sync': string;
-  'syncStringProperty': LinkableProperty<string>;
+  'syncStringProperty': LocalizedStringProperty;
   'numberOfCups': string;
-  'numberOfCupsStringProperty': LinkableProperty<string>;
+  'numberOfCupsStringProperty': LocalizedStringProperty;
   'introQuestion': string;
-  'introQuestionStringProperty': LinkableProperty<string>;
+  'introQuestionStringProperty': LocalizedStringProperty;
   'levelingOutQuestion': string;
-  'levelingOutQuestionStringProperty': LinkableProperty<string>;
+  'levelingOutQuestionStringProperty': LocalizedStringProperty;
   'numberOfPeople': string;
-  'numberOfPeopleStringProperty': LinkableProperty<string>;
+  'numberOfPeopleStringProperty': LocalizedStringProperty;
   'meanEquals': string;
-  'meanEqualsStringProperty': LinkableProperty<string>;
+  'meanEqualsStringProperty': LocalizedStringProperty;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
