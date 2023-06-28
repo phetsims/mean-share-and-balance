@@ -18,6 +18,7 @@ import Property from '../../../../axon/js/Property.js';
 import Panel from '../../../../sun/js/Panel.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
@@ -74,7 +75,9 @@ export default class MeanCalculationDialog extends Dialog {
 
       // We specify the position manually
       // REVIEW: Where is x specified?
-      layoutStrategy: _.noop
+      layoutStrategy: _.noop,
+
+      tandem: Tandem.OPT_OUT
     } );
   }
 }
