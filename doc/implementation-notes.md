@@ -9,7 +9,7 @@ This document contains notes related to the implementation of Mean: Share and Ba
 
 Before reading this document, please read:
 
-- [model.md](https://github.com/phetsims/mean-share-and-balance/blob/master/doc/model.md), a high-level description of the simulation model.
+- [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md), a high-level description of the simulation model.
 
 ### General Considerations
 
@@ -28,10 +28,10 @@ Currently, this sim is a single screen.
 
 ### Model
 
-See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/master/doc/model.md)
+See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
 As a single screen, the central model is IntroModel. IntroModel tracks water levels across cups, ensures water levels change according to restrictions on space, and calculates mean across the data set.
 
 ### View
-- In [IntroScreenView](https://github.com/phetsims/mean-share-and-balance/blob/master/js/intro/view/IntroScreenView.ts), `waterCupLayerNode` holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also centers cups and pipes as they are activated/ deactivated by the numberSpinner.
-- [WaterCup2DNode](https://github.com/phetsims/mean-share-and-balance/blob/master/js/intro/view/WaterCup2DNode.ts) and [WaterCup3DNode](https://github.com/phetsims/mean-share-and-balance/blob/master/js/intro/view/WaterCup3DNode.ts) implement the model-view transform described [above](#model-view-transform).
+- In [IntroScreenView](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/IntroScreenView.ts), `waterCupLayerNode` holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also centers cups and pipes as they are activated/ deactivated by the numberSpinner.
+- [WaterCup2DNode](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/WaterCup2DNode.ts) and [WaterCup3DNode](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/WaterCup3DNode.ts) implement the model-view transform described [above](#model-view-transform).
