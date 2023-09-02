@@ -61,7 +61,7 @@ export default class WaterCup3DNode extends Node {
       model.changeWaterLevel( waterCup, waterLevel, oldWaterlevel );
     } );
 
-    const waterLevelTriangle = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
+    const waterLevelSlider = new WaterLevelTriangleSlider( waterCup.waterLevelProperty, waterCup.enabledRangeProperty, beakerHeight, {
       left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
       top: waterCupNode.top + beakerLineWidth * 2,
 
@@ -69,7 +69,7 @@ export default class WaterCup3DNode extends Node {
       tandem: options.tandem.createTandem( 'waterLevelSlider' )
     } );
 
-    const combinedOptions = combineOptions<NodeOptions>( { children: [ waterCupNode, waterLevelTriangle ] }, options );
+    const combinedOptions = combineOptions<NodeOptions>( { children: [ waterCupNode, waterLevelSlider ] }, options );
     super( combinedOptions );
   }
 }
