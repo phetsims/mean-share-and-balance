@@ -297,8 +297,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
       if ( numberOfChocolatesOnPlate === 0 ) {
         const maxPlate = this.getPlateWithMostActiveChocolate();
-        this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
-        this.reorganizeChocolates( maxPlate );
+        if ( this.getActiveChocolatesOnPlate( maxPlate ).length > 0 ) {
+          this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
+          this.reorganizeChocolates( maxPlate );
+        }
+        else {
+          console.log( 'We attempted to remove chocolate from a person who brought chocolate to the party but ' +
+                       'doesn\'t have any chocolate at the moment. However, nobody else had chocolate to remove either ' +
+                       'so this in an unexpected buggy situation. This was red in CT for a long time but now is being tracked in ' +
+                       'https://github.com/phetsims/mean-share-and-balance/issues/136' );
+        }
       }
       else {
         this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
