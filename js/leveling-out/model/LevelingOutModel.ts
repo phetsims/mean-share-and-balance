@@ -302,10 +302,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           this.reorganizeChocolates( maxPlate );
         }
         else {
-          console.log( 'We attempted to remove chocolate from a person who brought chocolate to the party but ' +
-                       'doesn\'t have any chocolate at the moment. However, nobody else had chocolate to remove either ' +
-                       'so this in an unexpected buggy situation. This was red in CT for a long time but now is being tracked in ' +
-                       'https://github.com/phetsims/mean-share-and-balance/issues/136' );
+          console.error( 'SILENCED ASSERTION: We attempted to remove chocolate from a person who brought chocolate to the party but ' +
+                         'doesn\'t have any chocolate at the moment. However, nobody else had chocolate to remove either ' +
+                         'so this in an unexpected buggy situation. This was red in CT for a long time but now is being tracked in ' +
+                         'https://github.com/phetsims/mean-share-and-balance/issues/136' );
         }
       }
       else {
