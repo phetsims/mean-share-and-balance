@@ -75,7 +75,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
 
       // find the plate closest to where the chocolate bar was dropped.
-      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( platesWithSpace[ 0 ].position.x - chocolateBar.chocolateBar.positionProperty.value.x ) );
+      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.position.x - chocolateBar.chocolateBar.positionProperty.value.x ) );
 
       assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped' );
 
