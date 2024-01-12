@@ -1,4 +1,4 @@
-// Copyright 2022, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * Representation for the Leveling Out Screen. Contains people and their chocolates on a plate, as well as a sketch representation
