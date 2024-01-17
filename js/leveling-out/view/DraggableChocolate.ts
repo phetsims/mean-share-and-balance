@@ -24,7 +24,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 type SelfOptions = EmptySelfOptions;
 type DraggableChocolateNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
 
-// TODO: Should this be renamed ChocolateBarNode? https://github.com/phetsims/mean-share-and-balance/issues/131
+// TODO: Rename to CandyBarSketch? https://github.com/phetsims/mean-share-and-balance/issues/119
 export default class DraggableChocolate extends InteractiveHighlighting( Node ) {
 
   public readonly dragListener: DragListener;
