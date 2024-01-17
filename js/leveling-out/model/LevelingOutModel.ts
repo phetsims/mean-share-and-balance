@@ -136,7 +136,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         if ( !isActive ) {
           const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
           if ( personNumberOfChocolates > plateNumberOfChocolates ) {
-            this.borrowMisingChocolates( personNumberOfChocolates - plateNumberOfChocolates );
+            this.borrowMissingChocolates( personNumberOfChocolates - plateNumberOfChocolates );
           }
           else if ( personNumberOfChocolates < plateNumberOfChocolates ) {
             this.shareExtraChocolates( plateNumberOfChocolates - personNumberOfChocolates );
@@ -264,7 +264,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    * Called only when a Plate is deactivated (when a person is removed) and the number at the person did not match the
    * amount on the plate.
    */
-  private borrowMisingChocolates( numberOfMissingChocolates: number ): void {
+  private borrowMissingChocolates( numberOfMissingChocolates: number ): void {
     for ( let i = 0; i < numberOfMissingChocolates; i++ ) {
       const maxPlate = this.getPlateWithMostActiveChocolate();
       this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
@@ -290,23 +290,17 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     }
   }
 
-  // When an active person removes chocolate from their plate and the paper plate has no chocolate on it,
-  // a piece of chocolate will be removed off of the paper plate with the most chocolate.
+  /**
+   * When an active person removes chocolate from their plate and the plate sketch has no chocolate on it, a piece of
+   * chocolate will be removed off of the plate sketch with the most chocolate.
+   */
   private personChocolateAmountDecrease( plate: Plate, numberOfChocolatesRemoved: number ): void {
     for ( let i = 0; i < numberOfChocolatesRemoved; i++ ) {
       const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
       if ( numberOfChocolatesOnPlate === 0 ) {
         const maxPlate = this.getPlateWithMostActiveChocolate();
-        if ( this.getActiveChocolatesOnPlate( maxPlate ).length > 0 ) {
-          this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
-          this.reorganizeChocolates( maxPlate );
-        }
-        else {
-          console.error( 'SILENCED ASSERTION: We attempted to remove chocolate from a person who brought chocolate to the party but ' +
-                         'doesn\'t have any chocolate at the moment. However, nobody else had chocolate to remove either ' +
-                         'so this in an unexpected buggy situation. This was red in CT for a long time but now is being tracked in ' +
-                         'https://github.com/phetsims/mean-share-and-balance/issues/136' );
-        }
+        this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
+        this.reorganizeChocolates( maxPlate );
       }
       else {
         this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
