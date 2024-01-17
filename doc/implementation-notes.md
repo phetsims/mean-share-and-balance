@@ -17,6 +17,12 @@ Before reading this document, please read:
 
 ### General Considerations
 
+#### Terminology
+
+In all screens, there is a notepad shown towards the top of the screen that contains "sketches" of things shown towards
+the bottom of the screen. The term "sketch" is used in the comments and in class/variable names to indicate items that
+appear in this notepad.
+
 #### Model-View Transform
 
 This sim uses one model-view transform to map model coordinates (0, 1) to view coordinates.
