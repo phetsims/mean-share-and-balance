@@ -142,7 +142,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const meanCalculationDialog = new MeanCalculationDialog(
       model.peopleArray,
       model.meanCalculationDialogVisibleProperty,
-      notebookPaper.bounds
+      notebookPaper.bounds,
+      options.tandem.createTandem( 'meanCalculationDialog' )
     );
 
     const superOptions = optionize<LevelingOutScreenViewOptions, SelfOptions, ScreenViewOptions>()( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
