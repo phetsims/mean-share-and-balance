@@ -42,12 +42,12 @@ export default class ChocolateBar {
 
   public constructor( providedOptions: ChocolateBarOptions ) {
 
-    // REVIEW: Should these be phet-io instrumented?  Perhaps yes, but with phetioState: false and phetioReadonly: false?
     this.isActiveProperty = new BooleanProperty( providedOptions.isActive, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),
-      phetioReadOnly: true
+      phetioReadOnly: true,
+      phetioState: false
     } );
 
     this.parentPlateProperty = new Property( providedOptions.plate, {
