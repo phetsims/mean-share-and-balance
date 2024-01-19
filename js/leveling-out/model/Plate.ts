@@ -1,9 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
-
 /**
- * Model for the upper representation of chocolate stacks. Tracks whether a stack should be active, it's line placement, and position
- * relative to other stacks.
+ * Model for the upper representation of chocolate stacks. Tracks whether a stack should be active, its line placement,
+ * and position relative to other stacks.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -49,7 +48,8 @@ export default class Plate extends PhetioObject {
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
 
       // Takes its value from LevelingOutModel.numberOfPeopleProperty
-      phetioReadOnly: true
+      phetioReadOnly: true,
+      phetioState: false
     } );
 
     this.position = options.position;

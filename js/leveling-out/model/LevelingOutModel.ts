@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the Leveling Out Screen which includes people, chocolate bars, visual mean representation,
- * and a numerical mean representation.
+ * Model for the Leveling Out Screen which includes people, chocolate bars, visual mean representation, and a numerical
+ * mean representation.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -54,12 +54,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       // phet-io
       tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
     } );
-    this.numberOfPeopleRangeProperty = new Property<Range>( new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ), {
 
-      // phet-io
-      tandem: options.tandem.createTandem( 'numberOfPeopleRangeProperty' ),
-      phetioValueType: Range.RangeIO
-    } );
+    this.numberOfPeopleRangeProperty = new Property<Range>(
+      new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
+      {
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'numberOfPeopleRangeProperty' ),
+        phetioValueType: Range.RangeIO
+      }
+    );
 
     this.numberOfPeopleProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
@@ -86,8 +90,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     // In Mean Share and Balance, we decided arrays start counting at 1
     let totalChocolateCount = 1;
 
-    // Statically allocate plates, people, and chocolates. Whether they particpate in the model is controlled by
-    // the isActiveProperty on each one
+    // Statically allocate plates, people, and chocolates. Whether they participate in the model is controlled by the
+    // isActiveProperty on each one.
     for ( let personIndex = 0; personIndex < MAX_PEOPLE; personIndex++ ) {
       const x = personIndex * MeanShareAndBalanceConstants.PERSON_WIDTH;
       const plate = new Plate( {
@@ -110,7 +114,10 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       } );
       this.peopleArray.push( person );
 
-      for ( let chocolateIndex = 0; chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON; chocolateIndex++ ) {
+      for ( let chocolateIndex = 0;
+            chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON;
+            chocolateIndex++ ) {
+
         const x = plate.position.x;
         const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( chocolateIndex + 1 ) );
         const isActive = plate.isActiveProperty.value && chocolateIndex < person.chocolateNumberProperty.value;
@@ -127,12 +134,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         this.chocolatesArray.push( chocolateBar );
       }
 
-      // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber
+      // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber.
       plate.isActiveProperty.lazyLink( isActive => {
         const chocolates = this.getChocolatesOnPlate( plate );
         const plateNumberOfChocolates = this.getActiveChocolatesOnPlate( plate ).length;
 
-        // If a plate became inactive, we need to account for the extra or missing chocolate
+        // If a plate became inactive, we need to account for the extra or missing chocolate.
         if ( !isActive ) {
           const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
           if ( personNumberOfChocolates > plateNumberOfChocolates ) {
@@ -148,7 +155,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         } );
       } );
 
-      // set paper plate chocolate number based on table plate delta change.
+      // Set paper plate chocolate number based on table plate delta change.
       person.chocolateNumberProperty.lazyLink( ( chocolateNumber, oldChocolateNumber ) => {
         if ( person.isActiveProperty.value ) {
           if ( chocolateNumber > oldChocolateNumber ) {
@@ -164,7 +171,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       meanPropertyDependencies.push( person.isActiveProperty );
     }
 
-    // Calculates the mean based on the "ground-truth" chocolates on the table
+    // Calculates the mean based on the "ground-truth" chocolates on the table.
     // Must be deriveAny because .map() does not preserve .length()
     this.meanProperty = DerivedProperty.deriveAny( meanPropertyDependencies, () => {
       const chocolateAmounts = this.getActivePeople().map( person => person.chocolateNumberProperty.value );
@@ -236,7 +243,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   /**
-   * When chocolates are added to a plate, they may appear in random positions or be overlapping. Re-stack them.
+   * When chocolates are added to a plate they may appear in random positions or be overlapping. Re-stack them.
    */
   public reorganizeChocolates( plate: Plate ): void {
     const plateStateChocolates = this.getActivePlateStateChocolates( plate );
@@ -272,14 +279,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     }
   }
 
-  // When an active person adds chocolate to their plate and the paper plate has no more space on it,
-  // a piece of chocolate will be added onto the paper plate with the least chocolate.
+  /**
+   * When an active person adds chocolate to their plate and the paper plate has no more space on it, a piece of
+   * chocolate will be added onto the paper plate with the least chocolate.
+   */
   private personChocolateAmountIncrease( plate: Plate, numberOfChocolatesAdded: number ): void {
     for ( let i = 0; i < numberOfChocolatesAdded; i++ ) {
       const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
       if ( numberOfChocolatesOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON ) {
         const minPlate = this.getPlateWithLeastChocolate();
-        assert && assert( minPlate !== plate, `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}` );
+        assert && assert(
+          minPlate !== plate,
+          `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}`
+        );
         this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
         this.reorganizeChocolates( minPlate );
       }
@@ -332,8 +344,8 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   /**
-   * Propagate the ground truth values (at the bottom of the screen, with the Person objects) to the sketch
-   * plates at the top of the screen.
+   * Propagate the ground truth values (at the bottom of the screen, with the Person objects) to the sketch plates at
+   * the top of the screen.
    */
   public syncData(): void {
 
