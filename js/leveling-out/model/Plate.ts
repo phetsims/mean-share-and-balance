@@ -1,4 +1,4 @@
-// Copyright 2022, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * Model for the upper representation of chocolate stacks. Tracks whether a stack should be active, its line placement,
