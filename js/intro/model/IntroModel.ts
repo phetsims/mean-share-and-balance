@@ -29,7 +29,6 @@ type IntroModelOptions = PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>
 
 export default class IntroModel extends MeanShareAndBalanceModel {
 
-  // TODO: Should this be able to go to 0 for PhET-iO? https://github.com/phetsims/mean-share-and-balance/issues/18
   public readonly numberOfCupsRange = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
   public readonly cupRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
