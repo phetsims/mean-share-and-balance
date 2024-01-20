@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the Leveling Out Screen which includes people, chocolate bars, visual mean representation, and a numerical
+ * Model for the Leveling Out Screen which includes people, candy bars, visual mean representation, and a numerical
  * mean representation.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -16,13 +16,13 @@ import Range from '../../../../dot/js/Range.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import Plate from './Plate.js';
-import Person from './Person.js';
+import NotepadPlate from './NotepadPlate.js';
+import TablePlate from './TablePlate.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
-import ChocolateBar from './ChocolateBar.js';
+import CandyBar from './CandyBar.js';
 import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -35,9 +35,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly numberOfPeopleRangeProperty: Property<Range>;
   public readonly numberOfPeopleProperty: Property<number>;
 
-  public readonly platesArray: Array<Plate>;
-  public readonly peopleArray: Array<Person>;
-  public readonly chocolatesArray: Array<ChocolateBar>;
+  public readonly notepadPlates: Array<NotepadPlate>;
+  public readonly tablePlates: Array<TablePlate>;
+  public readonly candyBars: Array<CandyBar>;
 
   public readonly meanProperty: TReadOnlyProperty<number>;
 
@@ -79,259 +79,261 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
 
-    this.platesArray = [];
-    this.peopleArray = [];
-    this.chocolatesArray = [];
+    this.notepadPlates = [];
+    this.tablePlates = [];
+    this.candyBars = [];
 
     const meanPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
 
-    const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
+    const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
 
     // In Mean Share and Balance, we decided arrays start counting at 1
-    let totalChocolateCount = 1;
+    let totalCandyBarCount = 1;
 
-    // Statically allocate plates, people, and chocolates. Whether they participate in the model is controlled by the
+    // Statically allocate plates, people, and candyBars. Whether they participate in the model is controlled by the
     // isActiveProperty on each one.
-    for ( let personIndex = 0; personIndex < MAX_PEOPLE; personIndex++ ) {
-      const x = personIndex * MeanShareAndBalanceConstants.PERSON_WIDTH;
-      const plate = new Plate( {
-        isActive: personIndex < this.numberOfPeopleProperty.value,
-        position: new Vector2( x, MeanShareAndBalanceConstants.PLATE_CHOCOLATE_CENTER_Y ),
-        linePlacement: personIndex,
+    for ( let tablePlateIndex = 0; tablePlateIndex < MAX_PEOPLE; tablePlateIndex++ ) {
+      const x = tablePlateIndex * MeanShareAndBalanceConstants.TABLE_PLATE_WIDTH;
+      const notepadPlate = new NotepadPlate( {
+        isActive: tablePlateIndex < this.numberOfPeopleProperty.value,
+        position: new Vector2( x, MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_CENTER_Y ),
+        linePlacement: tablePlateIndex,
 
         // phet-io
-        tandem: options.tandem.createTandem( `plateChocolate${personIndex + 1}` )
+        tandem: options.tandem.createTandem( `notepadPlate${tablePlateIndex + 1}` )
       } );
-      this.platesArray.push( plate );
+      this.notepadPlates.push( notepadPlate );
 
-      const person = new Person( {
+      const tablePlate = new TablePlate( {
         position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
-        isActive: personIndex < this.numberOfPeopleProperty.value,
-        linePlacement: personIndex,
+        isActive: tablePlateIndex < this.numberOfPeopleProperty.value,
+        linePlacement: tablePlateIndex,
 
         // phet-io
-        tandem: options.tandem.createTandem( `person${personIndex + 1}` )
+        tandem: options.tandem.createTandem( `tablePlate${tablePlateIndex + 1}` )
       } );
-      this.peopleArray.push( person );
+      this.tablePlates.push( tablePlate );
 
-      for ( let chocolateIndex = 0;
-            chocolateIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON;
-            chocolateIndex++ ) {
+      for ( let candyBarIndex = 0;
+            candyBarIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON;
+            candyBarIndex++ ) {
 
-        const x = plate.position.x;
-        const y = plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( chocolateIndex + 1 ) );
-        const isActive = plate.isActiveProperty.value && chocolateIndex < person.chocolateNumberProperty.value;
+        const x = notepadPlate.position.x;
+        const y = notepadPlate.position.y - ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( candyBarIndex + 1 ) );
+        const isActive = notepadPlate.isActiveProperty.value && candyBarIndex < tablePlate.candyBarNumberProperty.value;
 
-        const chocolateBar = new ChocolateBar( {
+        const candyBar = new CandyBar( {
           isActive: isActive,
-          plate: plate,
+          notepadPlate: notepadPlate,
           position: new Vector2( x, y ),
 
           // phet-io
-          tandem: chocolateBarsParentTandem.createTandem( `chocolateBar${totalChocolateCount++}` )
+          tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
         } );
 
-        this.chocolatesArray.push( chocolateBar );
+        this.candyBars.push( candyBar );
       }
 
-      // Connect draggable chocolate visibility to plate isActive and chocolateBarsNumber.
-      plate.isActiveProperty.lazyLink( isActive => {
-        const chocolates = this.getChocolatesOnPlate( plate );
-        const plateNumberOfChocolates = this.getActiveChocolatesOnPlate( plate ).length;
+      // Connect draggable candy bar visibility to notepadPlate isActive and candyBarsNumber.
+      notepadPlate.isActiveProperty.lazyLink( isActive => {
+        const candyBars = this.getCandyBarsOnPlate( notepadPlate );
+        const numberOfCandyBarsOnPlate = this.getActiveCandyBarsOnPlate( notepadPlate ).length;
 
-        // If a plate became inactive, we need to account for the extra or missing chocolate.
+        // If a notepadPlate became inactive, we need to account for the extra or missing candy bar.
         if ( !isActive ) {
-          const personNumberOfChocolates = this.peopleArray[ plate.linePlacement ].chocolateNumberProperty.value;
-          if ( personNumberOfChocolates > plateNumberOfChocolates ) {
-            this.borrowMissingChocolates( personNumberOfChocolates - plateNumberOfChocolates );
+          const numberOfTablePlateCandyBars = this.tablePlates[ notepadPlate.linePlacement ].candyBarNumberProperty.value;
+          if ( numberOfTablePlateCandyBars > numberOfCandyBarsOnPlate ) {
+            this.borrowMissingCandyBars( numberOfTablePlateCandyBars - numberOfCandyBarsOnPlate );
           }
-          else if ( personNumberOfChocolates < plateNumberOfChocolates ) {
-            this.shareExtraChocolates( plateNumberOfChocolates - personNumberOfChocolates );
+          else if ( numberOfTablePlateCandyBars < numberOfCandyBarsOnPlate ) {
+            this.shareExtraCandyBars( numberOfCandyBarsOnPlate - numberOfTablePlateCandyBars );
           }
         }
-        chocolates.forEach( ( chocolate, i ) => {
-          chocolate.isActiveProperty.value = isActive && i < person.chocolateNumberProperty.value;
-          this.reorganizeChocolates( plate );
+        candyBars.forEach( ( candyBar, i ) => {
+          candyBar.isActiveProperty.value = isActive && i < tablePlate.candyBarNumberProperty.value;
+          this.reorganizeCandyBars( notepadPlate );
         } );
       } );
 
-      // Set paper plate chocolate number based on table plate delta change.
-      person.chocolateNumberProperty.lazyLink( ( chocolateNumber, oldChocolateNumber ) => {
-        if ( person.isActiveProperty.value ) {
-          if ( chocolateNumber > oldChocolateNumber ) {
-            this.personChocolateAmountIncrease( plate, chocolateNumber - oldChocolateNumber );
+      // Set paper notepadPlate candy bar number based on table notepadPlate delta change.
+      tablePlate.candyBarNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
+        if ( tablePlate.isActiveProperty.value ) {
+          if ( candyBarNumber > oldCandyBarNumber ) {
+            this.tablePlateCandyBarAmountIncrease( notepadPlate, candyBarNumber - oldCandyBarNumber );
           }
-          else if ( chocolateNumber < oldChocolateNumber ) {
-            this.personChocolateAmountDecrease( plate, oldChocolateNumber - chocolateNumber );
+          else if ( candyBarNumber < oldCandyBarNumber ) {
+            this.tablePlateCandyBarAmountDecrease( notepadPlate, oldCandyBarNumber - candyBarNumber );
           }
         }
       } );
 
-      meanPropertyDependencies.push( person.chocolateNumberProperty );
-      meanPropertyDependencies.push( person.isActiveProperty );
+      meanPropertyDependencies.push( tablePlate.candyBarNumberProperty );
+      meanPropertyDependencies.push( tablePlate.isActiveProperty );
     }
 
-    // Calculates the mean based on the "ground-truth" chocolates on the table.
+    // Calculates the mean based on the "ground-truth" candyBars on the table.
     // Must be deriveAny because .map() does not preserve .length()
     this.meanProperty = DerivedProperty.deriveAny( meanPropertyDependencies, () => {
-      const chocolateAmounts = this.getActivePeople().map( person => person.chocolateNumberProperty.value );
-      const totalChocolate = _.sum( chocolateAmounts );
-      return totalChocolate / chocolateAmounts.length;
+      const candyBarAmounts = this.getActivePeople().map( tablePlate => tablePlate.candyBarNumberProperty.value );
+      const totalCandyBars = _.sum( candyBarAmounts );
+      return totalCandyBars / candyBarAmounts.length;
     }, {
       tandem: options.tandem.createTandem( 'meanProperty' ),
       phetioValueType: NumberIO
     } );
 
     this.numberOfPeopleProperty.link( numberOfPeople => {
-      this.platesArray.forEach( ( plate, i ) => {
+      this.notepadPlates.forEach( ( plate, i ) => {
         plate.isActiveProperty.value = i < numberOfPeople;
       } );
-      this.peopleArray.forEach( ( person, i ) => {
-        person.isActiveProperty.value = i < numberOfPeople;
+      this.tablePlates.forEach( ( tablePlate, i ) => {
+        tablePlate.isActiveProperty.value = i < numberOfPeople;
       } );
     } );
   }
 
-  public getActivePeople(): Array<Person> {
-    return this.peopleArray.filter( person => person.isActiveProperty.value );
+  public getActivePeople(): Array<TablePlate> {
+    return this.tablePlates.filter( tablePlate => tablePlate.isActiveProperty.value );
   }
 
-  public getActivePlates(): Array<Plate> {
-    return this.platesArray.filter( plate => plate.isActiveProperty.value );
+  public getActivePlates(): Array<NotepadPlate> {
+    return this.notepadPlates.filter( plate => plate.isActiveProperty.value );
   }
 
-  public getActiveChocolates(): Array<ChocolateBar> {
-    return this.chocolatesArray.filter( chocolate => chocolate.isActiveProperty.value );
+  public getActiveCandyBars(): Array<CandyBar> {
+    return this.candyBars.filter( candyBar => candyBar.isActiveProperty.value );
   }
 
-  public getChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
-    return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate );
+  public getCandyBarsOnPlate( plate: NotepadPlate ): Array<CandyBar> {
+    return this.candyBars.filter( candyBar => candyBar.parentPlateProperty.value === plate );
   }
 
-  public getInactiveChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
-    return this.getChocolatesOnPlate( plate ).filter( chocolate => !chocolate.isActiveProperty.value );
+  public getInactiveCandyBarsOnPlate( plate: NotepadPlate ): Array<CandyBar> {
+    return this.getCandyBarsOnPlate( plate ).filter( candyBar => !candyBar.isActiveProperty.value );
   }
 
-  public getActiveChocolatesOnPlate( plate: Plate ): Array<ChocolateBar> {
-    return this.chocolatesArray.filter( chocolate => chocolate.parentPlateProperty.value === plate && chocolate.isActiveProperty.value );
+  public getActiveCandyBarsOnPlate( plate: NotepadPlate ): Array<CandyBar> {
+    return this.candyBars.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
   }
 
-  public getTopActiveChocolateOnPlate( plate: Plate ): ChocolateBar {
-    const activeChocolatesOnPlate = this.getActiveChocolatesOnPlate( plate );
-    assert && assert( activeChocolatesOnPlate.length > 0, `There is no top chocolate on plate since active chocolates is: ${activeChocolatesOnPlate.length}` );
-    const topChocolate = _.minBy( activeChocolatesOnPlate, chocolate => chocolate.positionProperty.value.y );
-    return topChocolate!;
+  public getTopActiveCandyBarOnPlate( plate: NotepadPlate ): CandyBar {
+    const activeCandyBarsOnPlate = this.getActiveCandyBarsOnPlate( plate );
+    assert && assert( activeCandyBarsOnPlate.length > 0, `There is no top candy bar on plate since active candyBars is: ${activeCandyBarsOnPlate.length}` );
+    const topCandyBar = _.minBy( activeCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
+    return topCandyBar!;
   }
 
-  public getBottomInactiveChocolateOnPlate( plate: Plate ): ChocolateBar {
-    const inactiveChocolatesOnPlate = this.getInactiveChocolatesOnPlate( plate );
-    assert && assert( inactiveChocolatesOnPlate.length > 0, `There is no inactive bottom chocolate on plate since inactive chocolates is: ${inactiveChocolatesOnPlate.length}` );
-    const bottomChocolate = _.maxBy( inactiveChocolatesOnPlate, chocolate => chocolate.positionProperty.value.y );
-    return bottomChocolate!;
+  public getBottomInactiveCandyBarOnPlate( plate: NotepadPlate ): CandyBar {
+    const inactiveCandyBarsOnPlate = this.getInactiveCandyBarsOnPlate( plate );
+    assert && assert( inactiveCandyBarsOnPlate.length > 0, `There is no inactive bottom candy bar on plate since inactive candyBars is: ${inactiveCandyBarsOnPlate.length}` );
+    const bottomCandyBar = _.maxBy( inactiveCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
+    return bottomCandyBar!;
   }
 
-  public getActivePlateStateChocolates( plate: Plate ): Array<ChocolateBar> {
-    const chocolates = this.getActiveChocolatesOnPlate( plate );
-    return chocolates.filter( chocolate => chocolate.stateProperty.value === 'plate' );
+  public getActivePlateStateCandyBars( plate: NotepadPlate ): Array<CandyBar> {
+    const candyBars = this.getActiveCandyBarsOnPlate( plate );
+    return candyBars.filter( candyBar => candyBar.stateProperty.value === 'plate' );
   }
 
-  public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
+  public getPlatesWithSpace( plates: Array<NotepadPlate> ): Array<NotepadPlate> {
     return plates.filter( plate => {
-      const numberOfChocolates = this.getActivePlateStateChocolates( plate ).length;
-      return numberOfChocolates < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON;
+      const numberOfCandyBars = this.getActivePlateStateCandyBars( plate ).length;
+      return numberOfCandyBars < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON;
     } );
   }
 
   /**
-   * When chocolates are added to a plate they may appear in random positions or be overlapping. Re-stack them.
+   * When candyBars are added to a notepadPlate they may appear in random positions or be overlapping. Re-stack them.
    */
-  public reorganizeChocolates( plate: Plate ): void {
-    const plateStateChocolates = this.getActivePlateStateChocolates( plate );
-    plateStateChocolates.forEach( ( chocolate, i ) => {
+  public reorganizeCandyBars( plate: NotepadPlate ): void {
+    const plateStateCandyBars = this.getActivePlateStateCandyBars( plate );
+    plateStateCandyBars.forEach( ( candyBar, i ) => {
 
-      const Y_MARGIN = 2; // Distance between adjacent chocolates.  Also distance between plate and lowest chocolate
-      const newPosition = new Vector2( plate.position.x, plate.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + Y_MARGIN ) * ( i + 1 ) ) );
-      chocolate.positionProperty.set( newPosition );
+      const Y_MARGIN = 2; // Distance between adjacent candyBars, and notepadPlate.
+      const newPosition = new Vector2( plate.position.x, plate.position.y - ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + Y_MARGIN ) * ( i + 1 ) ) );
+      candyBar.positionProperty.set( newPosition );
     } );
   }
 
   /**
-   * Called only when a Plate is deactivated (when a person is removed) and the number at the person did not match the
-   * amount on the plate.
+   * Called only when a NotepadPlate is deactivated (when a tablePlate is removed) and the number at the tablePlate
+   * did not match the amount on the notepadPlate.
    */
-  private shareExtraChocolates( numberOfExtraChocolates: number ): void {
-    for ( let i = 0; i < numberOfExtraChocolates; i++ ) {
-      const minPlate = this.getPlateWithLeastChocolate();
-      this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
-      this.reorganizeChocolates( minPlate );
+  private shareExtraCandyBars( numberOfExtraCandyBars: number ): void {
+    for ( let i = 0; i < numberOfExtraCandyBars; i++ ) {
+      const minPlate = this.getPlateWithLeastCandyBars();
+      this.getBottomInactiveCandyBarOnPlate( minPlate ).isActiveProperty.set( true );
+      this.reorganizeCandyBars( minPlate );
     }
   }
 
   /**
-   * Called only when a Plate is deactivated (when a person is removed) and the number at the person did not match the
-   * amount on the plate.
+   * Called only when a NotepadPlate is deactivated (when a tablePlate is removed) and the number at the tablePlate
+   * did not match the amount on the notepadPlate.
    */
-  private borrowMissingChocolates( numberOfMissingChocolates: number ): void {
-    for ( let i = 0; i < numberOfMissingChocolates; i++ ) {
-      const maxPlate = this.getPlateWithMostActiveChocolate();
-      this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
-      this.reorganizeChocolates( maxPlate );
+  private borrowMissingCandyBars( numberOfMissingCandyBars: number ): void {
+    for ( let i = 0; i < numberOfMissingCandyBars; i++ ) {
+      const maxPlate = this.getPlateWithMostActiveCandyBars();
+      this.getTopActiveCandyBarOnPlate( maxPlate ).isActiveProperty.set( false );
+      this.reorganizeCandyBars( maxPlate );
     }
   }
 
   /**
-   * When an active person adds chocolate to their plate and the paper plate has no more space on it, a piece of
-   * chocolate will be added onto the paper plate with the least chocolate.
+   * When an active tablePlate adds candy bar to their notepadPlate and the paper notepadPlate has no more space on it,
+   * a piece of candy bar will be added onto the paper notepadPlate with the least candy bar.
    */
-  private personChocolateAmountIncrease( plate: Plate, numberOfChocolatesAdded: number ): void {
-    for ( let i = 0; i < numberOfChocolatesAdded; i++ ) {
-      const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
-      if ( numberOfChocolatesOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON ) {
-        const minPlate = this.getPlateWithLeastChocolate();
+  private tablePlateCandyBarAmountIncrease( plate: NotepadPlate, numberOfCandyBarsAdded: number ): void {
+    for ( let i = 0; i < numberOfCandyBarsAdded; i++ ) {
+      const numberOfCandyBarsOnPlate = this.getActivePlateStateCandyBars( plate ).length;
+      if ( numberOfCandyBarsOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON ) {
+        const minPlate = this.getPlateWithLeastCandyBars();
         assert && assert(
           minPlate !== plate,
           `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}`
         );
-        this.getBottomInactiveChocolateOnPlate( minPlate ).isActiveProperty.set( true );
-        this.reorganizeChocolates( minPlate );
+        this.getBottomInactiveCandyBarOnPlate( minPlate ).isActiveProperty.set( true );
+        this.reorganizeCandyBars( minPlate );
       }
       else {
-        this.getBottomInactiveChocolateOnPlate( plate ).isActiveProperty.set( true );
+        this.getBottomInactiveCandyBarOnPlate( plate ).isActiveProperty.set( true );
       }
-      this.reorganizeChocolates( plate );
+      this.reorganizeCandyBars( plate );
     }
   }
 
   /**
-   * When an active person removes chocolate from their plate and the plate sketch has no chocolate on it, a piece of
-   * chocolate will be removed off of the plate sketch with the most chocolate.
+   * When an active tablePlate removes candyBar from their notepadPlate and the notepadPlate has no candyBar on it,
+   * a piece of candyBar will be removed off of the notepadPlate sketch with the most candyBars.
    */
-  private personChocolateAmountDecrease( plate: Plate, numberOfChocolatesRemoved: number ): void {
-    for ( let i = 0; i < numberOfChocolatesRemoved; i++ ) {
-      const numberOfChocolatesOnPlate = this.getActivePlateStateChocolates( plate ).length;
-      if ( numberOfChocolatesOnPlate === 0 ) {
-        const maxPlate = this.getPlateWithMostActiveChocolate();
-        this.getTopActiveChocolateOnPlate( maxPlate ).isActiveProperty.set( false );
-        this.reorganizeChocolates( maxPlate );
+  private tablePlateCandyBarAmountDecrease( plate: NotepadPlate, numberOfCandyBarsRemoved: number ): void {
+    for ( let i = 0; i < numberOfCandyBarsRemoved; i++ ) {
+      const numberOfCandyBarsOnPlate = this.getActivePlateStateCandyBars( plate ).length;
+      if ( numberOfCandyBarsOnPlate === 0 ) {
+        const maxPlate = this.getPlateWithMostActiveCandyBars();
+        this.getTopActiveCandyBarOnPlate( maxPlate ).isActiveProperty.set( false );
+        this.reorganizeCandyBars( maxPlate );
       }
       else {
-        this.getTopActiveChocolateOnPlate( plate ).isActiveProperty.set( false );
+        this.getTopActiveCandyBarOnPlate( plate ).isActiveProperty.set( false );
       }
-      this.reorganizeChocolates( plate );
+      this.reorganizeCandyBars( plate );
     }
   }
 
-  public getPlateWithMostActiveChocolate(): Plate {
-    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveChocolatesOnPlate( plate ).length ) );
+  public getPlateWithMostActiveCandyBars(): NotepadPlate {
+    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsOnPlate( plate ).length ) );
 
-    // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
+    // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN.
+    // candyBarsNumberProperty will always be a number.
     return maxPlate!;
   }
 
-  public getPlateWithLeastChocolate(): Plate {
-    const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveChocolatesOnPlate( plate ).length ) );
+  public getPlateWithLeastCandyBars(): NotepadPlate {
+    const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsOnPlate( plate ).length ) );
 
-    // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN. chocolateBarsNumberProperty will always be a number.
+    // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN.
+    // candyBarsNumberProperty will always be a number.
     return minPlate!;
   }
 
@@ -339,23 +341,23 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPeopleProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
-    this.peopleArray.forEach( person => person.reset() );
-    this.platesArray.forEach( plate => plate.reset() );
+    this.tablePlates.forEach( tablePlate => tablePlate.reset() );
+    this.notepadPlates.forEach( plate => plate.reset() );
   }
 
   /**
-   * Propagate the ground truth values (at the bottom of the screen, with the Person objects) to the sketch plates at
-   * the top of the screen.
+   * Propagate the ground truth values (at the bottom of the screen, with the TablePlate objects) to the notepadPlates
+   * at the top of the screen.
    */
   public syncData(): void {
 
-    this.platesArray.forEach( plate => {
-      this.getChocolatesOnPlate( plate ).forEach( chocolate => chocolate.reset() );
+    this.notepadPlates.forEach( plate => {
+      this.getCandyBarsOnPlate( plate ).forEach( candyBar => candyBar.reset() );
     } );
 
-    this.peopleArray.forEach( ( person, index ) => {
-      this.getChocolatesOnPlate( this.platesArray[ index ] ).forEach( ( chocolate, i ) => {
-        chocolate.isActiveProperty.value = i < person.chocolateNumberProperty.value;
+    this.tablePlates.forEach( ( tablePlate, index ) => {
+      this.getCandyBarsOnPlate( this.notepadPlates[ index ] ).forEach( ( candyBar, i ) => {
+        candyBar.isActiveProperty.value = i < tablePlate.candyBarNumberProperty.value;
       } );
     } );
   }

@@ -18,11 +18,11 @@ type PersonImageOptions = SelfOptions & PickRequired<ImageOptions, 'tandem'> & I
 
 export default class PersonImage extends Image {
 
-  public constructor( image: HTMLImageElement, plate: TablePlateNode, providedOptions: PersonImageOptions ) {
+  public constructor( image: HTMLImageElement, tablePlateNode: TablePlateNode, providedOptions: PersonImageOptions ) {
     const options = optionize<PersonImageOptions, SelfOptions, ImageOptions>()( {
       scale: 0.3,
-      centerX: plate.centerX,
-      bottom: plate.bottom - 55
+      centerX: tablePlateNode.centerX,
+      bottom: tablePlateNode.bottom - 55
     }, providedOptions );
 
     super( image, options );

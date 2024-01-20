@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the upper representation of chocolate stacks. Tracks whether a stack should be active, its line placement,
+ * Model for the upper representation of candy bar stacks. Tracks whether a stack should be active, its line placement,
  * and position relative to other stacks.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -16,7 +16,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 
-// REVIEW: These options look identical to PersonOptions, and seem overlapped with options in ChocolateBar
+// REVIEW: These options look identical to TablePlateOptions, and seem overlapped with options in CandyBar
 type SelfOptions = {
   position: Vector2;
   isActive: boolean;
@@ -25,14 +25,14 @@ type SelfOptions = {
 
 type PlateOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class Plate extends PhetioObject {
+export default class NotepadPlate extends PhetioObject {
 
   // REVIEW: Add a base class that factors out position, isActiveProperty and linePlacement
   public readonly position: Vector2;
 
   public readonly isActiveProperty: Property<boolean>;
 
-  // the plate's index
+  // the notepadPlate's index
   public readonly linePlacement: number;
 
   public constructor( providedOptions: PlateOptions ) {
@@ -62,4 +62,4 @@ export default class Plate extends PhetioObject {
   }
 }
 
-meanShareAndBalance.register( 'Plate', Plate );
+meanShareAndBalance.register( 'NotepadPlate', NotepadPlate );

@@ -68,10 +68,10 @@ const meanShareAndBalanceColors = {
   levelingOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutQuestionBar', {
     default: '#F97A69'
   } ),
-  chocolateColorProperty: new ProfileColorProperty( meanShareAndBalance, 'chocolate', {
+  candyBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'candyBar', {
     default: '#613912'
   } ),
-  chocolateHighlightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'chocolateHighlight', {
+  candyBarHighlightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'candyBarHighlight', {
     default: '#7F5039'
   } ),
   paperColorProperty: new ProfileColorProperty( meanShareAndBalance, 'paper', {

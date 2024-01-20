@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Individual chocolate bars in the paper (upper) representation.
- * These chocolate bars are draggable therefore their position, and parentPlate are important.
+ * Individual candy bars in the notepad representation.
+ * These candy bars are draggable therefore their position, and parentPlate are important.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -15,32 +15,32 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from './Plate.js';
+import NotepadPlate from './NotepadPlate.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
-type ChocolateBarOptions = {
+type CandyBarOptions = {
   isActive: boolean;
-  plate: Plate;
+  notepadPlate: NotepadPlate;
   position: Vector2;
 } & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 type StateType = 'plate' | 'dragging' | 'animating';
 
-// Total number of chocolate bars allocated, for debugging
+// Total number of candy bars allocated, for debugging.
 let count = 0;
 
-export default class ChocolateBar {
+export default class CandyBar {
 
   public readonly isActiveProperty: Property<boolean>;
-  public readonly parentPlateProperty: Property<Plate>;
+  public readonly parentPlateProperty: Property<NotepadPlate>;
   public readonly positionProperty: Property<Vector2>;
   public readonly stateProperty: Property<StateType>;
 
   // For debugging
   public readonly index = count++;
 
-  public constructor( providedOptions: ChocolateBarOptions ) {
+  public constructor( providedOptions: CandyBarOptions ) {
 
     this.isActiveProperty = new BooleanProperty( providedOptions.isActive, {
 
@@ -50,7 +50,7 @@ export default class ChocolateBar {
       phetioState: false
     } );
 
-    this.parentPlateProperty = new Property( providedOptions.plate, {
+    this.parentPlateProperty = new Property( providedOptions.notepadPlate, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'parentPlateProperty' ),
@@ -71,4 +71,4 @@ export default class ChocolateBar {
   }
 }
 
-meanShareAndBalance.register( 'ChocolateBar', ChocolateBar );
+meanShareAndBalance.register( 'CandyBar', CandyBar );

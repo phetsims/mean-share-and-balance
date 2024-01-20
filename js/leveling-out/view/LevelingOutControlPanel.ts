@@ -32,10 +32,10 @@ export default class LevelingOutControlPanel extends GridBox {
 
     const options = providedOptions;
 
-    // Scale down the large chocolate images
+    // Scale down the large candy bar images
     const SCALE_FACTOR = 0.05;
 
-    const meanChocolateBarsNode = new VBox( {
+    const meanCandyBarsVBox = new VBox( {
       scale: SCALE_FACTOR,
       align: 'left',
       spacing: 1.5 / SCALE_FACTOR,
@@ -45,7 +45,7 @@ export default class LevelingOutControlPanel extends GridBox {
     } );
 
     // Just for the dimensions
-    const chocolateBarImage = new Image( chocolateBar_png );
+    const candyBarImage = new Image( chocolateBar_png );
 
     model.meanProperty.link( mean => {
       const wholePart = Math.floor( mean );
@@ -54,18 +54,18 @@ export default class LevelingOutControlPanel extends GridBox {
       const children = _.times( wholePart, () => new Image( chocolateBar_png ) );
       if ( remainder > 0 ) {
 
-        // Partial chocolate bars are shown on top
+        // Partial candy bars are shown on top
         children.unshift( new Image( chocolateBar_png, {
-          clipArea: Shape.rect( 0, 0, remainder * chocolateBarImage.width, chocolateBarImage.height )
+          clipArea: Shape.rect( 0, 0, remainder * candyBarImage.width, candyBarImage.height )
         } ) );
       }
 
-      meanChocolateBarsNode.children = children;
+      meanCandyBarsVBox.children = children;
     } );
 
     const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty, options.tandem );
 
-    const meanNode = new GridBox( { columns: [ [ meanChocolateBarsNode ], [ infoButton ] ], yAlign: 'top', spacing: 40 } );
+    const meanNode = new GridBox( { columns: [ [ meanCandyBarsVBox ], [ infoButton ] ], yAlign: 'top', spacing: 40 } );
 
     const meanAccordionBox = new AccordionBox( meanNode, {
       titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),

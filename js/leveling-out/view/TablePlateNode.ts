@@ -1,8 +1,8 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * The container plate (in the bottom representation) that holds all of the chocolate a person has brought.
- * Each table plate is associated with a person.
+ * The container notepadPlate (in the bottom representation) that holds all of the candy bars a person has brought.
+ * Each notepadPlate is associated with a tablePlate.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -10,7 +10,7 @@
 
 import { Image, Node, NodeOptions, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Person from '../model/Person.js';
+import TablePlate from '../model/TablePlate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
@@ -24,7 +24,7 @@ type PersonNodeOptions = PickRequired<NodeOptions, 'tandem'>;
 
 export default class TablePlateNode extends Node {
 
-  public constructor( person: Person, providedOptions: PersonNodeOptions ) {
+  public constructor( person: TablePlate, providedOptions: PersonNodeOptions ) {
 
     const options = providedOptions;
 
@@ -34,39 +34,39 @@ export default class TablePlateNode extends Node {
     } );
 
 
-    const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CHOCOLATES, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON );
-    const numberPicker = new NumberPicker( person.chocolateNumberProperty, new Property( numberPickerRange ),
+    const numberPickerRange = new Range( MeanShareAndBalanceConstants.MIN_NUMBER_OF_CANDY_BARS, MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON );
+    const numberPicker = new NumberPicker( person.candyBarNumberProperty, new Property( numberPickerRange ),
       { centerTop: new Vector2( plate.centerBottom.x, plate.centerBottom.y + 55 ), tandem: options.tandem.createTandem( 'numberPicker' ) } );
 
-    const chocolateScale = 0.04;
+    const candyBarScale = 0.04;
 
-    // create chocolate person brought
+    // create candy bars each person brought
     // REVIEW: See if it would be appropriate to use _.times elsewhere
-    const chocolatesArray = _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CHOCOLATES_PER_PERSON, () => new Image( chocolateBar_png, {
-      scale: chocolateScale
+    const candyBars = _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON, () => new Image( chocolateBar_png, {
+      scale: candyBarScale
     } ) );
 
-    const chocolatesVBox = new VBox( {
-      children: chocolatesArray,
+    const candyBarsVBox = new VBox( {
+      children: candyBars,
       spacing: 1.5
     } );
 
-    person.chocolateNumberProperty.link( chocolateNumber => {
-      chocolatesArray.forEach( ( chocolate, i ) => {
-        chocolate.visibleProperty.value = i < chocolateNumber;
-        chocolatesVBox.centerBottom = new Vector2( plate.centerX, plate.centerY );
+    person.candyBarNumberProperty.link( candyBarNumber => {
+      candyBars.forEach( ( chocolate, i ) => {
+        chocolate.visibleProperty.value = i < candyBarNumber;
+        candyBarsVBox.centerBottom = new Vector2( plate.centerX, plate.centerY );
       } );
     } );
 
-    const chocolatesNode = new Node( {
-      children: [ plate, chocolatesVBox ],
+    const candyBarsNode = new Node( {
+      children: [ plate, candyBarsVBox ],
       layoutOptions: {
-        minContentHeight: ( 265 * chocolateScale ) * 10
+        minContentHeight: ( 265 * candyBarScale ) * 10
       }
     } );
 
     super( {
-      children: [ chocolatesNode, numberPicker ],
+      children: [ candyBarsNode, numberPicker ],
       x: person.position.x,
       visibleProperty: person.isActiveProperty
     } );

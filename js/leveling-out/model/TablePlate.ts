@@ -1,8 +1,8 @@
 // Copyright 2022-2023, University of Colorado Boulder
 
 /**
- * The model representing the container for chocolates in the bottom representation.
- * Tracks the position of a person and their plate, as well as how many chocolate bars they have brought
+ * The model representing the container for candy bars in the bottom representation.
+ * Tracks the position of a person and their notepadPlate, as well as how many candy bars they have brought
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -24,11 +24,9 @@ type SelfOptions = {
   linePlacement: number;
 };
 
-type PersonOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+type TablePlateOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-// REVIEW: Perhaps rename this to TablePlate?  Since it is more about the stack itself?  This relates to the
-// questions about how to https://github.com/phetsims/mean-share-and-balance/issues/119
-export default class Person {
+export default class TablePlate {
 
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
@@ -37,15 +35,15 @@ export default class Person {
   // another container centers the group.
   public readonly position: Vector2;
 
-  // The amount of chocolate bars the person brought
-  public readonly chocolateNumberProperty: Property<number>;
+  // The amount of candy bar bars the person brought
+  public readonly candyBarNumberProperty: Property<number>;
 
   // the person's index - 0-indexed
   public readonly linePlacement: number;
 
-  public constructor( providedOptions?: PersonOptions ) {
+  public constructor( providedOptions?: TablePlateOptions ) {
 
-    const options = optionize<PersonOptions, SelfOptions, PhetioObjectOptions>()( {}, providedOptions );
+    const options = optionize<TablePlateOptions, SelfOptions, PhetioObjectOptions>()( {}, providedOptions );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
 
@@ -57,27 +55,25 @@ export default class Person {
     } );
     this.position = options.position;
 
-    this.chocolateNumberProperty = new NumberProperty( options.isActive ? 1 : 0, {
+    this.candyBarNumberProperty = new NumberProperty( options.isActive ? 1 : 0, {
 
       range: new Range( 0, 10 ),
 
       // phet-io
-      tandem: options.tandem.createTandem( 'chocolateNumberProperty' )
+      tandem: options.tandem.createTandem( 'candyBarNumberProperty' )
     } );
 
     this.linePlacement = options.linePlacement;
 
-    // When the person becomes inactive, delete their chocolates. When a person becomes active, they arrive with 1 chocolate
-    this.isActiveProperty.lazyLink( isActive => this.chocolateNumberProperty.set( isActive ? 1 : 0 ) );
+    // When the person becomes inactive, delete their candy bars. When a person becomes active, they arrive with 1 candy bar
+    this.isActiveProperty.lazyLink( isActive => this.candyBarNumberProperty.set( isActive ? 1 : 0 ) );
   }
 
+  // LinePlacement and position never changes and hence doesn't need to be reset.
   public reset(): void {
     this.isActiveProperty.reset();
-    this.chocolateNumberProperty.reset();
-
-    // linePlacement never changes and hence doesn't need to be reset
-    // position never changes
+    this.candyBarNumberProperty.reset();
   }
 }
 
-meanShareAndBalance.register( 'Person', Person );
+meanShareAndBalance.register( 'TablePlate', TablePlate );

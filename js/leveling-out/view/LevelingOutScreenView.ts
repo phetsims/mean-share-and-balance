@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Representation for the Leveling Out Screen. Contains people and their chocolates on a plate, as well as a sketch representation
- * of chocolates that can be dragged and 'leveled out'.
+ * Representation for the Leveling Out Screen. Contains people and their candy bars on a notepadPlate, as well as a sketch representation
+ * of candy bars that can be dragged and 'leveled out'.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -15,7 +15,7 @@ import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import PaperPlateNode from './PaperPlateNode.js';
+import NotepadPlateNode from './NotepadPlateNode.js';
 import LevelingOutControlPanel from './LevelingOutControlPanel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
@@ -23,7 +23,7 @@ import TablePlateNode from './TablePlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import TableNode from '../../common/view/TableNode.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
-import DraggableChocolate from './DraggableChocolate.js';
+import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PersonImage from './PersonImage.js';
 import person1_png from '../../../images/person1_png.js';
@@ -62,48 +62,49 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // REVIEW: lowercase b
     const notebookPaper = new NoteBookPaperNode();
 
-    // To constrain the dragging of chocolate nodes in the upper area, we need to track the bounds of the paper
-    // But since the chocolateLayerNode changes its horizontal position to keep things centered for varying
+    // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper
+    // But since the candyBarLayerNode changes its horizontal position to keep things centered for varying
     // numbers of people, we must coordinate the drag bounds when that changes.
-    // This is in the coordinate frame of the chocolateLayerNode.
+    // This is in the coordinate frame of the candyBarLayerNode.
     // This initial value is not in the correct coordinate frame but it is specified correctly before the end of the
     // constructor
     const notebookPaperBoundsProperty = new Property( notebookPaper.bounds );
 
-    // function for what chocolate bars should do at the end of their drag
-    const chocolateBarDropped = ( chocolateBar: DraggableChocolate ) => {
+    // function for what candy bars should do at the end of their drag
+    const candyBarDropped = ( candyBar: NotepadCandyBarNode ) => {
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
 
-      // find the plate closest to where the chocolate bar was dropped.
-      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.position.x - chocolateBar.chocolateBar.positionProperty.value.x ) );
+      // find the notepadPlate closest to where the candy bar was dropped.
+      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.position.x - candyBar.candyBar.positionProperty.value.x ) );
 
-      assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped' );
+      assert && assert( closestPlate !== undefined, 'There should always be a notepadPlate with space when a bar is dropped' );
 
-      // set dropped chocolate bar's position
-      const numberOfChocolatesOnPlate = model.getActivePlateStateChocolates( closestPlate! ).length;
-      const oldY = chocolateBar.chocolateBar.positionProperty.value.y;
-      const y = closestPlate!.position.y - ( ( MeanShareAndBalanceConstants.CHOCOLATE_HEIGHT + 2 ) * ( numberOfChocolatesOnPlate + 1 ) );
-      chocolateBar.chocolateBar.positionProperty.set( new Vector2( closestPlate!.position.x, y ) );
+      // set dropped candy bar's position
+      const numberOfCandyBarsOnPlate = model.getActivePlateStateCandyBars( closestPlate! ).length;
+      const oldY = candyBar.candyBar.positionProperty.value.y;
+      const y = closestPlate!.position.y - ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( numberOfCandyBarsOnPlate + 1 ) );
+      candyBar.candyBar.positionProperty.set( new Vector2( closestPlate!.position.x, y ) );
 
-      // swap chocolates if parentPlate changes, so that each person always has the same number of inactive + active chocolates
-      // so that when their spinner is incremented, they can promote their own inactive chocolate to active.
-      const currentParent = chocolateBar.chocolateBar.parentPlateProperty.value;
+      // swap candy bars if parentPlate changes, so that each person always has the same number of inactive + active candy bars
+      // so that when their spinner is incremented, they can promote their own inactive candy bar to active.
+      const currentParent = candyBar.candyBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
-        const inactiveChocolateForSwap = model.getBottomInactiveChocolateOnPlate( closestPlate! );
-        inactiveChocolateForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
-        inactiveChocolateForSwap.parentPlateProperty.set( currentParent );
+        const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarOnPlate( closestPlate! );
+        inactiveCandyBarForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
+        inactiveCandyBarForSwap.parentPlateProperty.set( currentParent );
       }
 
-      chocolateBar.chocolateBar.parentPlateProperty.set( closestPlate! );
+      candyBar.candyBar.parentPlateProperty.set( closestPlate! );
     };
 
 
-    // Creating the bottom representation of chocolates on the table
-    const tablePlatesNodes = model.peopleArray.map( person => new TablePlateNode( person, {
-      tandem: options.tandem.createTandem( `person${person.linePlacement + 1}` )
+    // Creating the bottom representation of candy bars on the table
+    const tablePlateNodes = model.tablePlates.map( person => new TablePlateNode( person, {
+      tandem: options.tandem.createTandem( `tablePlate${person.linePlacement + 1}` )
     } ) );
 
-    const people = tablePlatesNodes.map( ( plate, i ) => {
+    // TODO: Do the people images need to be instrumented? https://github.com/phetsims/mean-share-and-balance/issues/140
+    const people = tablePlateNodes.map( ( plate, i ) => {
       const selectedImage = PEOPLE_IMAGES[ i ];
       assert && assert( selectedImage, `No corresponding image for index: ${i}` );
       return new PersonImage( selectedImage, plate, {
@@ -119,34 +120,34 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    // Creating the top representation of chocolates on the paper
-    const paperPlatesNodes = model.platesArray.map( plate => new PaperPlateNode( plate, chocolateBarDropped, {
-      tandem: options.tandem.createTandem( `plate${plate.linePlacement + 1}` )
+    // Creating the top representation of candy bars on the paper
+    const notepadPlateNodes = model.notepadPlates.map( plate => new NotepadPlateNode( plate, candyBarDropped, {
+      tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
 
-    const chocolateBarsParentTandem = options.tandem.createTandem( 'chocolateBars' );
-    const draggableChocolateBars = model.chocolatesArray.map( ( chocolate, i ) =>
-      new DraggableChocolate( model, chocolate, notebookPaperBoundsProperty, chocolateBarDropped, {
-        tandem: chocolateBarsParentTandem.createTandem( `chocolateBar${i + 1}` ),
-        visibleProperty: chocolate.isActiveProperty
+    const candyBarsParentTandem = options.tandem.createTandem( 'candyBars' );
+    const notepadCandyBars = model.candyBars.map( ( candyBar, i ) =>
+      new NotepadCandyBarNode( model, candyBar, notebookPaperBoundsProperty, candyBarDropped, {
+        tandem: candyBarsParentTandem.createTandem( `candyBar${i + 1}` ),
+        visibleProperty: candyBar.isActiveProperty
       } ) );
 
-    // This contains all the chocolates from the top (paper) representation and the bottom (table) representation.
-    const chocolateLayerNode = new Node( {
+    // This contains all the candy bars from the top (paper) representation and the bottom (table) representation.
+    const candyBarLayerNode = new Node( {
 
       // See peopleLayerNode.excludeInvisibleChildrenFromBounds comment
       excludeInvisibleChildrenFromBounds: true,
-      children: [ ...tablePlatesNodes, ...paperPlatesNodes, ...draggableChocolateBars ]
+      children: [ ...tablePlateNodes, ...notepadPlateNodes, ...notepadCandyBars ]
     } );
 
     const meanCalculationDialog = new MeanCalculationDialog(
-      model.peopleArray,
+      model.tablePlates,
       model.meanCalculationDialogVisibleProperty,
       notebookPaper.bounds,
       options.tandem.createTandem( 'meanCalculationDialog' )
     );
 
-    const superOptions = optionize<LevelingOutScreenViewOptions, SelfOptions, ScreenViewOptions>()( { children: [ notebookPaper, peopleLayerNode, tableNode, chocolateLayerNode ] }, options );
+    const superOptions = optionize<LevelingOutScreenViewOptions, SelfOptions, ScreenViewOptions>()( { children: [ notebookPaper, peopleLayerNode, tableNode, candyBarLayerNode ] }, options );
 
     super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, superOptions );
 
@@ -155,17 +156,17 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const centerPlayAreaNodes = () => {
 
-      // The chocolateLayerNode and peopleLayerNode bounds change when the number of people change, due to excludeInvisibleChildrenFromBounds
-      chocolateLayerNode.centerX = playAreaCenterX;
+      // The candyBarLayerNode and peopleLayerNode bounds change when the number of people change, due to excludeInvisibleChildrenFromBounds
+      candyBarLayerNode.centerX = playAreaCenterX;
       peopleLayerNode.centerX = playAreaCenterX - 45;
 
-      tableNode.centerX = chocolateLayerNode.centerX - 10;
-      tableNode.y = chocolateLayerNode.bottom - 120;
-      notebookPaper.centerX = chocolateLayerNode.centerX;
-      meanCalculationDialog.centerX = chocolateLayerNode.centerX;
+      tableNode.centerX = candyBarLayerNode.centerX - 10;
+      tableNode.y = candyBarLayerNode.bottom - 120;
+      notebookPaper.centerX = candyBarLayerNode.centerX;
+      meanCalculationDialog.centerX = candyBarLayerNode.centerX;
 
-      // Transform to the bounds of the chocolate, since they are in an intermediate layer
-      notebookPaperBoundsProperty.value = chocolateLayerNode.globalToLocalBounds( notebookPaper.globalBounds );
+      // Transform to the bounds of the candy bar, since they are in an intermediate layer.
+      notebookPaperBoundsProperty.value = candyBarLayerNode.globalToLocalBounds( notebookPaper.globalBounds );
     };
 
     model.numberOfPeopleProperty.link( () => {

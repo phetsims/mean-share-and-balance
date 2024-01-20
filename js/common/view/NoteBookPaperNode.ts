@@ -42,7 +42,7 @@ export default class NoteBookPaperNode extends Node {
       rings.push( image );
     } );
 
-    super( { children: [ paperStackNode, ...rings ], centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y } );
+    super( { children: [ paperStackNode, ...rings ], centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y } );
   }
 }
 

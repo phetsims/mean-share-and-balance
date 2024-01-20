@@ -11,7 +11,7 @@ import Dialog from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
-import Person from '../model/Person.js';
+import TablePlate from '../model/TablePlate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
@@ -22,7 +22,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
-  public constructor( people: Array<Person>, visibleProperty: Property<boolean>, notebookPaperBounds: Bounds2, tandem: Tandem ) {
+  public constructor( people: Array<TablePlate>, visibleProperty: Property<boolean>, notebookPaperBounds: Bounds2, tandem: Tandem ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty );
     const meanEqualsAdditionFractionText = new Text( MeanShareAndBalanceStrings.meanEqualsStringProperty );
@@ -40,9 +40,9 @@ export default class MeanCalculationDialog extends Dialog {
     } );
 
     const isActiveProperties = people.map( person => person.isActiveProperty );
-    const numberOfChocolatesProperties = people.map( person => person.chocolateNumberProperty );
-    Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfChocolatesProperties ], () => {
-      const numbers = people.filter( person => person.isActiveProperty.value ).map( person => person.chocolateNumberProperty.value );
+    const numberOfCandyBarsProperties = people.map( person => person.candyBarNumberProperty );
+    Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfCandyBarsProperties ], () => {
+      const numbers = people.filter( person => person.isActiveProperty.value ).map( person => person.candyBarNumberProperty.value );
       const numberOfPeople = people.filter( person => person.isActiveProperty.value ).length;
 
       // REVIEW: Can we align the numbers with the table spinners?  So correspondence is clear?
@@ -70,7 +70,7 @@ export default class MeanCalculationDialog extends Dialog {
       titleAlign: 'left',
       visibleProperty: visibleProperty,
       resize: false,
-      centerY: MeanShareAndBalanceConstants.NOTEBOOK_PAPER_CENTER_Y,
+      centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
       closeButtonListener: () => this.visibleProperty.set( false ),
 
       // We specify the position manually
