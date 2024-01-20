@@ -1,4 +1,4 @@
-// Copyright 2022, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * In the upper (notepad) representation, contains all the candy bars on a notepadPlate. Each notepadPlate has one NotepadPlateNode,

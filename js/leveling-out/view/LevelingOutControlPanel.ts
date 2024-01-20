@@ -1,4 +1,4 @@
-// Copyright 2022, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * Control panel for the Leveling Out screen that contains an accordion box, sync button, and number spinner.
