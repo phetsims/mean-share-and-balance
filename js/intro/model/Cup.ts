@@ -1,10 +1,10 @@
 // Copyright 2022-2023, University of Colorado Boulder
 
 /**
- * Class for 2D & 3D water cup models.
+ * Class for table and notepad cup models.
  * A water cup holds a certain level of water that can be manipulated by the user.
  * A cup is empty when waterLevelProperty.value = 0, and full when waterLevelProperty.value = 1
- * Water level is controlled in the 3D view representation through a vertical slider.
+ * Water level is controlled in the table view representation through a vertical slider.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -32,9 +32,9 @@ type SelfOptions = {
   linePlacement: number;
 };
 
-export type WaterCupModelOptions = SelfOptions;
+export type CupOptions = SelfOptions;
 
-export default class WaterCup {
+export default class Cup {
 
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
@@ -50,9 +50,9 @@ export default class WaterCup {
 
   public readonly linePlacement: number;
 
-  public constructor( tandem: Tandem, providedOptions: WaterCupModelOptions ) {
+  public constructor( tandem: Tandem, providedOptions: CupOptions ) {
 
-    const options = optionize<WaterCupModelOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
+    const options = optionize<CupOptions, StrictOmit<SelfOptions, 'waterLevelPropertyOptions'>, PhetioObjectOptions>()( {
       waterHeightRange: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT
     }, providedOptions );
@@ -65,7 +65,7 @@ export default class WaterCup {
     this.position = options.position;
     this.linePlacement = options.linePlacement;
 
-    // When a 3D cup's slider is changed enabledRangeProperty is updated accordingly.
+    // When a table cup's slider is changed enabledRangeProperty is updated accordingly.
     this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ), {
       valueComparisonStrategy: 'equalsFunction'
     } );
@@ -91,4 +91,4 @@ export default class WaterCup {
   }
 }
 
-meanShareAndBalance.register( 'WaterCup', WaterCup );
+meanShareAndBalance.register( 'Cup', Cup );

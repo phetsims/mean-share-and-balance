@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Representation for the ticks marks on 2D water cup nodes.
+ * Representation for the ticks marks on notepad water cup nodes.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -13,7 +13,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type TickMarksNodeOptions = PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
 
-export default class WaterCup2DTickMarksNode extends Node {
+export default class NotepadCupTickMarksNode extends Node {
 
   public constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
     super( providedOptions );
@@ -36,4 +36,4 @@ export default class WaterCup2DTickMarksNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'WaterCup2DTickMarksNode', WaterCup2DTickMarksNode );
+meanShareAndBalance.register( 'NotepadCupTickMarksNode', NotepadCupTickMarksNode );

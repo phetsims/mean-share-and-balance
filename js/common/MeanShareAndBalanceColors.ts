@@ -26,10 +26,10 @@ const meanShareAndBalanceColors = {
   introQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introQuestionBar', {
     default: '#2496D6'
   } ),
-  waterFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterSide3DFill', {
+  waterFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'tableCupWaterSideFill', {
     default: '#A5D9F2'
   } ),
-  waterCup2DBackgroundFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterCup2DBackgroundFill', {
+  notepadCupBackgroundFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'notepadCupBackgroundFill', {
     default: 'white'
   } ),
   showMeanLineStrokeColorProperty: new ProfileColorProperty( meanShareAndBalance, 'showMeanLineStroke', {
@@ -44,13 +44,13 @@ const meanShareAndBalanceColors = {
   cupWaterLevelLineColorProperty: new ProfileColorProperty( meanShareAndBalance, 'cupWaterLevelLine', {
     default: '#85BBCC'
   } ),
-  emptyWaterCup3DColorProperty: new ProfileColorProperty( meanShareAndBalance, 'emptyWaterCup3D', {
+  emptyTableCupColorProperty: new ProfileColorProperty( meanShareAndBalance, 'emptyTableCup', {
     default: new Color( 249, 253, 255, 0.4 )
   } ),
-  water3DCrescentFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'water3DCrescentFill', {
+  tableCupCrescentFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'tableCupCrescentFill', {
     default: '#B4E5F9'
   } ),
-  waterCup3DGlareFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterCup3DGlareFill', {
+  tableCupGlareFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'tableCupGlareFill', {
     default: new Color( 255, 255, 255, 0.4 )
   } ),
   pipeGradientLightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'pipeGradientLight', {

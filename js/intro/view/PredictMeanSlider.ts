@@ -19,7 +19,7 @@ import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optio
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import WaterCup from '../model/WaterCup.js';
+import Cup from '../model/Cup.js';
 import Property from '../../../../axon/js/Property.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
@@ -38,7 +38,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanHandle: Node;
 
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: Property<number>,
-                      getActive2DCups: () => Array<WaterCup>, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
+                      getActiveNotepadCups: () => Array<Cup>, modelViewTransform: ModelViewTransform2, providedOptions: PredictMeanNodeOptions ) {
 
     const options = providedOptions;
 
@@ -76,11 +76,11 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanLine = predictMeanLine;
     this.predictMeanHandle = predictMeanHandle;
 
-    // Update line length and dilation based on water cups
+    // Update line length and dilation based on water cups.
     numberOfCupsProperty.link( numberOfCups => {
-      const active2DCups = getActive2DCups();
-      const waterCup2D = active2DCups[ active2DCups.length - 1 ];
-      this.updateLine( waterCup2D.position.x + 80 );
+      const activeNotepadCups = getActiveNotepadCups();
+      const notepadCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
+      this.updateLine( notepadCup.position.x + 80 );
     } );
 
     this.setPointerAreas();

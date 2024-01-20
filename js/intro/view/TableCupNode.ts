@@ -1,7 +1,7 @@
 // Copyright 2022-2023, University of Colorado Boulder
 
 /**
- * Representation for the 3D water cup including draggable water level.
+ * Representation for the table water cup including draggable water level.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -9,7 +9,7 @@
 
 import { Node, NodeOptions, NodeTransformOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import WaterCup from '../model/WaterCup.js';
+import Cup from '../model/Cup.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import WaterLevelTriangleSlider from './WaterLevelTriangleSlider.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -22,23 +22,23 @@ import IntroModel from '../model/IntroModel.js';
 
 type SelfOptions = EmptySelfOptions;
 
-type WaterCup3DNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions | 'children'>;
+type TableCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions | 'children'>;
 
-export default class WaterCup3DNode extends Node {
+export default class TableCupNode extends Node {
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
                       model: Pick<IntroModel, 'changeWaterLevel'>,
-                      waterCup: WaterCup, modelViewTransform: ModelViewTransform2,
-                      providedOptions?: WaterCup3DNodeOptions ) {
+                      waterCup: Cup, modelViewTransform: ModelViewTransform2,
+                      providedOptions?: TableCupNodeOptions ) {
 
-    const options = optionize<WaterCup3DNodeOptions, SelfOptions, NodeOptions>()( {
+    const options = optionize<TableCupNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: waterCup.position.x,
       visibleProperty: waterCup.isActiveProperty
     }, providedOptions );
 
-    // The CUP_HEIGHT is the height of the 2d cups.  The 3D cups have to be adjusted accordingly because of the top and bottom ellipses,
-    // so they don't seem disproportionately tall
+    // The CUP_HEIGHT is the height of the notepad cups.  The table cups have to be adjusted accordingly because of the top and bottom ellipses,
+    // so they don't seem disproportionately tall.
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
 
     const beakerLineWidth = 2;
@@ -47,10 +47,10 @@ export default class WaterCup3DNode extends Node {
       beakerWidth: MeanShareAndBalanceConstants.CUP_WIDTH,
       beakerHeight: beakerHeight,
       solutionFill: MeanShareAndBalanceColors.waterFillColorProperty,
-      solutionGlareFill: MeanShareAndBalanceColors.water3DCrescentFillColorProperty,
+      solutionGlareFill: MeanShareAndBalanceColors.tableCupCrescentFillColorProperty,
       solutionShadowFill: MeanShareAndBalanceColors.waterShadowFillColorProperty,
-      beakerGlareFill: MeanShareAndBalanceColors.waterCup3DGlareFillColorProperty,
-      emptyBeakerFill: MeanShareAndBalanceColors.emptyWaterCup3DColorProperty
+      beakerGlareFill: MeanShareAndBalanceColors.tableCupGlareFillColorProperty,
+      emptyBeakerFill: MeanShareAndBalanceColors.emptyTableCupColorProperty
     } );
 
     const isShowingTickMarksListener = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
@@ -74,4 +74,4 @@ export default class WaterCup3DNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'WaterCup3DNode', WaterCup3DNode );
+meanShareAndBalance.register( 'TableCupNode', TableCupNode );

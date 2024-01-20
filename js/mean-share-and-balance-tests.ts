@@ -8,13 +8,13 @@
 
 import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
 import IntroModel from './intro/model/IntroModel.js';
-import WaterCup from './intro/model/WaterCup.js';
+import Cup from './intro/model/Cup.js';
 import MeanShareAndBalanceConstants from './common/MeanShareAndBalanceConstants.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import Tandem from '../../tandem/js/Tandem.js';
 
 const introModel = new IntroModel( { tandem: Tandem.OPT_OUT } );
-const position = new Vector2( 50, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
+const position = new Vector2( 50, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
 
 function testApproximatelyEquals( actual: number[], expected: number[], tolerance: number, assert: Assert, message: string ): void {
   assert.equal( actual.length, expected.length, message );
@@ -33,7 +33,7 @@ function testApproximatelyEquals( actual: number[], expected: number[], toleranc
 QUnit.test( 'distribute ripple', assert => {
   function testDistribution( waterLevels: number[], waterDelta: number, expectedLevels: number[], message: string ): void {
     const connectedCups = waterLevels.map( ( waterLevel, index ) => {
-      return new WaterCup( Tandem.OPT_OUT, { isActive: true, waterLevel: waterLevel, linePlacement: index, position: position } );
+      return new Cup( Tandem.OPT_OUT, { isActive: true, waterLevel: waterLevel, linePlacement: index, position: position } );
     } );
     introModel[ 'distributeWaterRipple' ]( connectedCups, connectedCups[ 2 ], waterDelta );
 

@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Model for the Intro screen, which includes 2D cups, 3D cups, connecting pipes, and view options.
+ * Model for the Intro screen, which includes tableCups, notepadCups, connecting pipes, and view options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -15,7 +15,7 @@ import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from './Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import WaterCup from './WaterCup.js';
+import Cup from './Cup.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
@@ -37,8 +37,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public readonly meanPredictionProperty: Property<number>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
-  public readonly waterCup3DArray: WaterCup[];
-  public readonly waterCup2DArray: WaterCup[];
+  public readonly tableCups: Cup[];
+  public readonly notepadCups: Cup[];
   public readonly pipeArray: Pipe[];
   public readonly arePipesOpenProperty: Property<boolean>;
 
@@ -92,31 +92,31 @@ export default class IntroModel extends MeanShareAndBalanceModel {
       tandem: options.tandem.createTandem( 'arePipesOpenProperty' )
     } );
 
-    // The 3D cups are the "ground truth" and the 2D cups mirror them
-    this.waterCup3DArray = [];
-    this.waterCup2DArray = [];
+    // The tableCups are the "ground truth" and the notepadCups mirror them.
+    this.tableCups = [];
+    this.notepadCups = [];
     this.pipeArray = [];
 
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
-    const waterCups2DParentTandem = options.tandem.createTandem( 'waterCups2D' );
-    const waterCups3DParentTandem = options.tandem.createTandem( 'waterCups3D' );
+    const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
+    const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
 
     // Statically allocate cups and pipes
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
-      const position3D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_3D_CENTER_Y );
+      const tableCupPosition = new Vector2( x, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
       const waterLevel = i === 0 ? 0.75 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
-      this.waterCup3DArray.push( new WaterCup( waterCups3DParentTandem.createTandem( `waterCup3D${i + 1}` ), {
+      this.tableCups.push( new Cup( tableCupsParentTandem.createTandem( `tableCup${i + 1}` ), {
         waterLevel: waterLevel,
-        position: position3D,
+        position: tableCupPosition,
         isActive: i <= 1,
         linePlacement: i
       } ) );
 
-      const position2D = new Vector2( x, MeanShareAndBalanceConstants.CUPS_2D_CENTER_Y );
-      this.waterCup2DArray.push( new WaterCup( waterCups2DParentTandem.createTandem( `waterCup2D${i + 1}` ), {
+      const notepadCupPosition = new Vector2( x, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y );
+      this.notepadCups.push( new Cup( notepadCupsParentTandem.createTandem( `notepadCup${i + 1}` ), {
         waterLevel: waterLevel,
-        position: position2D,
+        position: notepadCupPosition,
         isActive: i <= 1,
         linePlacement: i,
         waterLevelPropertyOptions: {
@@ -126,7 +126,7 @@ export default class IntroModel extends MeanShareAndBalanceModel {
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS - 1 ) {
         const pipe = new Pipe( this.arePipesOpenProperty, {
-          position: position2D,
+          position: notepadCupPosition,
           isActive: i === 0,
 
           // phet-io
@@ -137,15 +137,15 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     }
 
     const dependencies = [
-      ...this.waterCup3DArray.map( waterCup => waterCup.waterLevelProperty ),
-      ...this.waterCup3DArray.map( waterCup => waterCup.isActiveProperty )
+      ...this.tableCups.map( waterCup => waterCup.waterLevelProperty ),
+      ...this.tableCups.map( waterCup => waterCup.isActiveProperty )
     ];
 
     // The implementation of DerivedProperty requires that any dependencies array passed has 15 or fewer elements.
     // .map() does not preserve a property of .length, requiring the usage of deriveAny.
     this.meanProperty = DerivedProperty.deriveAny( dependencies,
       () => {
-        const mean = calculateMean( this.getActive3DCups().map( waterCup3D => waterCup3D.waterLevelProperty.value ) );
+        const mean = calculateMean( this.getActiveTableCups().map( tableCup => tableCup.waterLevelProperty.value ) );
         assert && assert( mean >= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN && mean <= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX, 'mean out of bounds: ' + mean );
         return mean;
       },
@@ -160,14 +160,14 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.numberOfCupsProperty.lazyLink( ( numberOfCups: number, oldNumberOfCups: number ) => {
 
       // We only care about comparing water levels when a cup is removed, and need to grab the value before the cup is reset
-      const removed3DCupWaterLevel = this.waterCup3DArray[ oldNumberOfCups - 1 ].waterLevelProperty.value;
-      const removed2DCupWaterLevel = this.waterCup2DArray[ oldNumberOfCups - 1 ].waterLevelProperty.value;
+      const removedTableCupWaterLevel = this.tableCups[ oldNumberOfCups - 1 ].waterLevelProperty.value;
+      const removedNotepadCupWaterLevel = this.notepadCups[ oldNumberOfCups - 1 ].waterLevelProperty.value;
 
-      this.waterCup2DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
-      this.waterCup3DArray.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
+      this.notepadCups.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
+      this.tableCups.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
       this.pipeArray.forEach( ( pipe, i ) => pipe.isActiveProperty.set( i < numberOfCups - 1 ) );
 
-      if ( numberOfCups < oldNumberOfCups && removed3DCupWaterLevel !== removed2DCupWaterLevel ) {
+      if ( numberOfCups < oldNumberOfCups && removedTableCupWaterLevel !== removedNotepadCupWaterLevel ) {
         this.matchCupWaterLevels();
       }
       if ( !MeanShareAndBalanceQueryParameters.showAnimation ) {
@@ -179,19 +179,19 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   private getNumberOfActiveCups(): number {
-    const numberOf3DCups = this.getActive3DCups().length;
-    const numberOf2DCups = this.getActive2DCups().length;
+    const numberOfTableCups = this.getActiveTableCups().length;
+    const numberOfNotepadCups = this.getActiveNotepadCups().length;
 
-    assert && assert( numberOf3DCups === numberOf2DCups, `Number of cups should be equal. 2D cups: ${numberOf2DCups} 3D cups: ${numberOf3DCups}` );
-    return numberOf3DCups;
+    assert && assert( numberOfTableCups === numberOfNotepadCups, `Number of cups should be equal. notepad cups: ${numberOfNotepadCups} table cups: ${numberOfTableCups}` );
+    return numberOfTableCups;
   }
 
-  public getActive3DCups(): Array<WaterCup> {
-    return this.waterCup3DArray.filter( waterCup => waterCup.isActiveProperty.value );
+  public getActiveTableCups(): Array<Cup> {
+    return this.tableCups.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
-  public getActive2DCups(): Array<WaterCup> {
-    return this.waterCup2DArray.filter( waterCup => waterCup.isActiveProperty.value );
+  public getActiveNotepadCups(): Array<Cup> {
+    return this.notepadCups.filter( waterCup => waterCup.isActiveProperty.value );
   }
 
   public getActivePipes(): Array<Pipe> {
@@ -199,13 +199,13 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   }
 
   /**
-   * Called as part of dragListener on 3D cups from changeWaterLevel.
+   * Called as part of dragListener on tableCups from changeWaterLevel.
    * Distributes water delta to neighbors at a gradually smaller fraction the further away from the target cup.
    * @param connectedCups - passed in from changeWaterLevel for testing
    * @param targetCup - the cup directly affected by the drag listener
    * @param waterDelta - the amount of water added or removed
    */
-  private distributeWaterRipple( connectedCups: Array<WaterCup>, targetCup: WaterCup, waterDelta: number ): void {
+  private distributeWaterRipple( connectedCups: Array<Cup>, targetCup: Cup, waterDelta: number ): void {
     // Loop through neighbors with target cup at center
     for ( let i = 1; i < 7; i++ ) {
       const neighbors = connectedCups.filter( cup => Math.abs( targetCup.linePlacement - cup.linePlacement ) === i );
@@ -228,8 +228,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
    * @param dt - time elapsed since last frame in seconds
    */
   private stepWaterLevels( dt: number ): void {
-    this.iterateCups( ( cup2D, cup3D ) => {
-      const currentWaterLevel = cup2D.waterLevelProperty.value;
+    this.iterateCups( ( notepadCup, tableCup ) => {
+      const currentWaterLevel = notepadCup.waterLevelProperty.value;
       let newWaterLevel;
       if ( this.arePipesOpenProperty.value ) {
         const delta = this.meanProperty.value - currentWaterLevel;
@@ -257,30 +257,30 @@ export default class IntroModel extends MeanShareAndBalanceModel {
         }
       }
       else {
-        const delta = cup3D.waterLevelProperty.value - currentWaterLevel;
+        const delta = tableCup.waterLevelProperty.value - currentWaterLevel;
         newWaterLevel = Utils.clamp( currentWaterLevel + delta * dt * 4, 0, 1 );
       }
-      cup2D.waterLevelProperty.set( newWaterLevel );
+      notepadCup.waterLevelProperty.set( newWaterLevel );
     } );
   }
 
   /**
-   * Reset 2D waterLevelProperty to 3D waterLevelProperty.
+   * Reset notepadCup waterLevelProperty to tableCup waterLevelProperty.
    */
   private matchCupWaterLevels(): void {
-    this.iterateCups( ( cup2D, cup3D ) => {
-      cup2D.waterLevelProperty.set( cup3D.waterLevelProperty.value );
+    this.iterateCups( ( notepadCup, tableCup ) => {
+      notepadCup.waterLevelProperty.set( tableCup.waterLevelProperty.value );
     } );
   }
 
   /**
-   * Visit pairs of 2D/3D cups
+   * Visit pairs of table/notepad cups
    */
-  private iterateCups( callback: ( cup2D: WaterCup, cup3D: WaterCup ) => void ): void {
+  private iterateCups( callback: ( notepadCup: Cup, tableCup: Cup ) => void ): void {
     this.assertConsistentState();
 
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
-      callback( this.getActive2DCups()[ i ], this.getActive3DCups()[ i ] );
+      callback( this.getActiveNotepadCups()[ i ], this.getActiveTableCups()[ i ] );
     }
   }
 
@@ -298,8 +298,8 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     assert && assert( numberOfCups === this.getNumberOfActiveCups(), `Expected ${numberOfCups} cups, but found: ${this.getNumberOfActiveCups()}.` );
     assert && assert( numberOfCups > 0, 'There should always be at least 1 cup' );
     assert && assert( this.getNumberOfActiveCups() - 1 === this.getActivePipes().length, `The length of pipes is: ${this.getActivePipes().length}, but should be one less the length of water cups or: ${this.getNumberOfActiveCups() - 1}.` );
-    assert && assert( this.waterCup3DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.waterCup3DArray.length} cups` );
-    assert && assert( this.waterCup2DArray.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.waterCup2DArray.length} cups` );
+    assert && assert( this.tableCups.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.tableCups.length} cups` );
+    assert && assert( this.notepadCups.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.notepadCups.length} cups` );
   }
 
   public reset(): void {
@@ -313,25 +313,25 @@ export default class IntroModel extends MeanShareAndBalanceModel {
     this.cupLevelVisibleProperty.reset();
 
     this.pipeArray.forEach( pipe => pipe.reset() );
-    this.waterCup3DArray.forEach( waterCup3D => waterCup3D.reset() );
-    this.waterCup2DArray.forEach( waterCup2D => waterCup2D.reset() );
+    this.tableCups.forEach( tableCup => tableCup.reset() );
+    this.notepadCups.forEach( notepadCup => notepadCup.reset() );
 
     this.assertConsistentState();
   }
 
 
   /**
-   * @param cup3DModel - The model for the affected 3D cup
-   * @param waterLevel - the new water level from the 3D cup's listener
-   * @param oldWaterLevel - the old water level from the 3D cup's listener
+   * @param tableCup - The model for the affected table cup
+   * @param waterLevel - the new water level from the table cup's listener
+   * @param oldWaterLevel - the old water level from the table cup's listener
    */
-  public changeWaterLevel( cup3DModel: WaterCup, waterLevel: number, oldWaterLevel: number ): void {
+  public changeWaterLevel( tableCup: Cup, waterLevel: number, oldWaterLevel: number ): void {
     const delta = waterLevel - oldWaterLevel;
-    const cup2D = this.waterCup2DArray[ cup3DModel.linePlacement ];
-    const cup2DWaterLevel = Utils.clamp( cup2D.waterLevelProperty.value + delta, 0, 1 );
-    cup2D.waterLevelProperty.set( cup2DWaterLevel );
+    const notepadCup = this.notepadCups[ tableCup.linePlacement ];
+    const notepadCupWaterLevel = Utils.clamp( notepadCup.waterLevelProperty.value + delta, 0, 1 );
+    notepadCup.waterLevelProperty.set( notepadCupWaterLevel );
 
-    this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActive2DCups(), cup2D, delta );
+    this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActiveNotepadCups(), notepadCup, delta );
   }
 }
 

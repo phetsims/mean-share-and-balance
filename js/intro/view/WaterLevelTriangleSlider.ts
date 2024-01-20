@@ -1,7 +1,7 @@
 // Copyright 2022, University of Colorado Boulder
 
 /**
- * Representation for the triangle that adjusts the water level in 3D cups.
+ * Representation for the triangle that adjusts the water level in table cups.
  *
  * The triangle code in this Node is duplicated. Transferring to scenery-phet: https://github.com/phetsims/scenery-phet/issues/748
  *

@@ -2,7 +2,7 @@
 
 /**
  * Model for pipes and valves.
- * The pipes visually connect the 2D cup representations and the valves control whether water is shared or not.
+ * The pipes visually connect the notepad cup representations and the valves control whether water is shared or not.
  * When the valves are open the water flows between all connected cups, and when the valves are closed
  * water is not allowed to flow between cups.
  *
