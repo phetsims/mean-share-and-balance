@@ -14,9 +14,9 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import { Line, Node, NodeOptions, NodeTranslationOptions, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NotepadPlate from '../model/NotepadPlate.js';
-import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 
 type NotepadPlateNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions | 'children'> & PickRequired<NodeOptions, 'tandem'>;
 

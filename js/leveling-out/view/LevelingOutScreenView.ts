@@ -23,7 +23,6 @@ import TablePlateNode from './TablePlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import TableNode from '../../common/view/TableNode.js';
 import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
-import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PersonImage from './PersonImage.js';
 import person1_png from '../../../images/person1_png.js';
@@ -36,6 +35,7 @@ import person7_png from '../../../images/person7_png.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanCalculationDialog from './MeanCalculationDialog.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalanceScreenViewOptions, 'children'>;
