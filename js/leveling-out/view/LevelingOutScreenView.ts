@@ -125,10 +125,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
 
-    const candyBarsParentTandem = options.tandem.createTandem( 'candyBars' );
+    const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
     const notepadCandyBars = model.candyBars.map( ( candyBar, i ) =>
       new NotepadCandyBarNode( model, candyBar, notebookPaperBoundsProperty, candyBarDropped, {
-        tandem: candyBarsParentTandem.createTandem( `candyBar${i + 1}` ),
+        tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
         visibleProperty: candyBar.isActiveProperty
       } ) );
 
