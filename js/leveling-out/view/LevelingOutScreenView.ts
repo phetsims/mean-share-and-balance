@@ -21,7 +21,6 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import TablePlateNode from './TablePlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import TableNode from '../../common/view/TableNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PersonImage from './PersonImage.js';
 import person1_png from '../../../images/person1_png.js';
@@ -36,6 +35,7 @@ import MeanCalculationDialog from './MeanCalculationDialog.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import NotepadWithReadoutNode from '../../common/view/NotepadWithReadoutNode.js';
+import PartyTableNode from '../../common/view/PartyTableNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalanceScreenViewOptions, 'children'>;
@@ -57,7 +57,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       tandem: options.tandem.createTandem( 'controlPanel' )
     } );
 
-    const tableNode = new TableNode();
+    const tableNode = new PartyTableNode();
 
     // REVIEW: lowercase b
     const notepad = new NotepadWithReadoutNode(

@@ -21,7 +21,7 @@ import TableCupNode from './TableCupNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import IntroControlPanel from './IntroControlPanel.js';
-import TableNode from '../../common/view/TableNode.js';
+import LabTableNode from '../../common/view/LabTableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -97,7 +97,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     const notepad = new NotepadNode();
 
-    const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX } );
+    const tableNode = new LabTableNode( { centerX: waterCupLayerNode.centerX } );
 
     // Instantiate Parent
     super( model, MeanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );

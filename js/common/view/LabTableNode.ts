@@ -16,7 +16,7 @@ import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/impo
 type SelfOptions = EmptySelfOptions;
 
 type TableNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'children'>;
-export default class TableNode extends Node {
+export default class LabTableNode extends Node {
 
   public constructor( providedOptions?: TableNodeOptions ) {
 
@@ -35,4 +35,4 @@ export default class TableNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'TableNode', TableNode );
+meanShareAndBalance.register( 'LabTableNode', LabTableNode );
