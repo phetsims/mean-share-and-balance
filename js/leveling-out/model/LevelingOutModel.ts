@@ -40,6 +40,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly candyBars: Array<CandyBar>;
 
   public readonly meanProperty: TReadOnlyProperty<number>;
+  public readonly totalCandyBarsProperty: TReadOnlyProperty<number>;
 
   public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
@@ -83,7 +84,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.tablePlates = [];
     this.candyBars = [];
 
-    const meanPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
+    const totalCandyBarsPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
 
@@ -167,20 +168,26 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         }
       } );
 
-      meanPropertyDependencies.push( tablePlate.candyBarNumberProperty );
-      meanPropertyDependencies.push( tablePlate.isActiveProperty );
+      totalCandyBarsPropertyDependencies.push( tablePlate.candyBarNumberProperty );
+      totalCandyBarsPropertyDependencies.push( tablePlate.isActiveProperty );
     }
 
-    // Calculates the mean based on the "ground-truth" candyBars on the table.
+    // Tracks the total number of candyBars based on the "ground truth" tablePlate numbers.
     // Must be deriveAny because .map() does not preserve .length()
-    this.meanProperty = DerivedProperty.deriveAny( meanPropertyDependencies, () => {
+    this.totalCandyBarsProperty = DerivedProperty.deriveAny( totalCandyBarsPropertyDependencies, () => {
       const candyBarAmounts = this.getActivePeople().map( tablePlate => tablePlate.candyBarNumberProperty.value );
-      const totalCandyBars = _.sum( candyBarAmounts );
-      return totalCandyBars / candyBarAmounts.length;
+      return _.sum( candyBarAmounts );
     }, {
-      tandem: options.tandem.createTandem( 'meanProperty' ),
+      tandem: options.tandem.createTandem( 'totalCandyBarsProperty' ),
       phetioValueType: NumberIO
     } );
+
+    // Calculates the mean based on the "ground-truth" candyBars on the table.
+    this.meanProperty = new DerivedProperty( [ this.totalCandyBarsProperty, this.numberOfPeopleProperty ],
+      ( totalCandyBars, numberOfPlates ) => totalCandyBars / numberOfPlates, {
+        tandem: options.tandem.createTandem( 'meanProperty' ),
+        phetioValueType: NumberIO
+      } );
 
     this.numberOfPeopleProperty.link( numberOfPeople => {
       this.notepadPlates.forEach( ( plate, i ) => {

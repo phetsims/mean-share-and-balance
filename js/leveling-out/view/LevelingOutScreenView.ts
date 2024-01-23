@@ -22,7 +22,6 @@ import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import TablePlateNode from './TablePlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import TableNode from '../../common/view/TableNode.js';
-import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PersonImage from './PersonImage.js';
 import person1_png from '../../../images/person1_png.js';
@@ -36,6 +35,7 @@ import Property from '../../../../axon/js/Property.js';
 import MeanCalculationDialog from './MeanCalculationDialog.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import NotepadCandyBarNode from './NotepadCandyBarNode.js';
+import NotepadWithReadoutNode from '../../common/view/NotepadWithReadoutNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalanceScreenViewOptions, 'children'>;
@@ -60,7 +60,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const tableNode = new TableNode();
 
     // REVIEW: lowercase b
-    const notebookPaper = new NoteBookPaperNode();
+    const notepad = new NotepadWithReadoutNode(
+      model.totalCandyBarsProperty,
+      MeanShareAndBalanceStrings.totalCandyBarsPatternStringProperty,
+      MeanShareAndBalanceStrings.barStringProperty,
+      MeanShareAndBalanceStrings.barsStringProperty
+    );
 
     // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper
     // But since the candyBarLayerNode changes its horizontal position to keep things centered for varying
@@ -68,7 +73,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // This is in the coordinate frame of the candyBarLayerNode.
     // This initial value is not in the correct coordinate frame but it is specified correctly before the end of the
     // constructor
-    const notebookPaperBoundsProperty = new Property( notebookPaper.bounds );
+    const notepadBoundsProperty = new Property( notepad.bounds );
 
     // function for what candy bars should do at the end of their drag
     const candyBarDropped = ( candyBar: NotepadCandyBarNode ) => {
@@ -127,7 +132,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
     const notepadCandyBars = model.candyBars.map( ( candyBar, i ) =>
-      new NotepadCandyBarNode( model, candyBar, notebookPaperBoundsProperty, candyBarDropped, {
+      new NotepadCandyBarNode( model, candyBar, notepadBoundsProperty, candyBarDropped, {
         tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
         visibleProperty: candyBar.isActiveProperty
       } ) );
@@ -143,11 +148,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const meanCalculationDialog = new MeanCalculationDialog(
       model.tablePlates,
       model.meanCalculationDialogVisibleProperty,
-      notebookPaper.bounds,
+      notepad.bounds,
       options.tandem.createTandem( 'meanCalculationDialog' )
     );
 
-    const superOptions = optionize<LevelingOutScreenViewOptions, SelfOptions, ScreenViewOptions>()( { children: [ notebookPaper, peopleLayerNode, tableNode, candyBarLayerNode ] }, options );
+    const superOptions = optionize<LevelingOutScreenViewOptions, SelfOptions, ScreenViewOptions>()( { children: [ notepad, peopleLayerNode, tableNode, candyBarLayerNode ] }, options );
 
     super( model, MeanShareAndBalanceStrings.levelingOutQuestionStringProperty, MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty, superOptions );
 
@@ -162,11 +167,11 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
       tableNode.centerX = candyBarLayerNode.centerX - 10;
       tableNode.y = candyBarLayerNode.bottom - 120;
-      notebookPaper.centerX = candyBarLayerNode.centerX;
+      notepad.centerX = candyBarLayerNode.centerX;
       meanCalculationDialog.centerX = candyBarLayerNode.centerX;
 
       // Transform to the bounds of the candy bar, since they are in an intermediate layer.
-      notebookPaperBoundsProperty.value = candyBarLayerNode.globalToLocalBounds( notebookPaper.globalBounds );
+      notepadBoundsProperty.value = candyBarLayerNode.globalToLocalBounds( notepad.globalBounds );
     };
 
     model.numberOfPeopleProperty.link( () => {

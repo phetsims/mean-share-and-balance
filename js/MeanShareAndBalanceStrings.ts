@@ -39,6 +39,18 @@ type StringsType = {
   'numberOfPeopleStringProperty': LocalizedStringProperty;
   'meanEquals': string;
   'meanEqualsStringProperty': LocalizedStringProperty;
+  'totalCandyBarsPattern': string;
+  'totalCandyBarsPatternStringProperty': LocalizedStringProperty;
+  'bar': string;
+  'barStringProperty': LocalizedStringProperty;
+  'bars': string;
+  'barsStringProperty': LocalizedStringProperty;
+  'totalCookiesPattern': string;
+  'totalCookiesPatternStringProperty': LocalizedStringProperty;
+  'cookie': string;
+  'cookieStringProperty': LocalizedStringProperty;
+  'cookies': string;
+  'cookiesStringProperty': LocalizedStringProperty;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
