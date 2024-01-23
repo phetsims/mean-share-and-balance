@@ -27,7 +27,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import NoteBookPaperNode from '../../common/view/NoteBookPaperNode.js';
+import NotepadNode from '../../common/view/NotepadNode.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -95,7 +95,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       children: [ ...notepadCupNodes, ...tableCupNodes, ...pipeNodes ]
     } );
 
-    const notebookPaper = new NoteBookPaperNode();
+    const notepad = new NotepadNode();
 
     const tableNode = new TableNode( { centerX: waterCupLayerNode.centerX } );
 
@@ -129,7 +129,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
       tableNode.centerX = waterCupLayerNode.centerX - 10;
-      notebookPaper.centerX = waterCupLayerNode.centerX - 10;
+      notepad.centerX = waterCupLayerNode.centerX - 10;
       tableNode.y = waterCupLayerNode.bottom - 30;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
@@ -147,7 +147,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.interruptSubtreeInput();
     } );
 
-    this.screenViewRootNode.addChild( notebookPaper );
+    this.screenViewRootNode.addChild( notepad );
     this.screenViewRootNode.addChild( tableNode );
     this.screenViewRootNode.addChild( waterCupLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );

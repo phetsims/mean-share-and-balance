@@ -9,7 +9,7 @@
 
 import { AlignBox, Node, Text } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import NoteBookPaperNode from './NoteBookPaperNode.js';
+import NotepadNode from './NotepadNode.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -24,7 +24,7 @@ export default class NotepadWithReadoutNode extends Node {
     singularStringProperty: LocalizedStringProperty,
     pluralStringProperty: LocalizedStringProperty
   ) {
-    const notepad = new NoteBookPaperNode();
+    const notepad = new NotepadNode();
     const measurementStringProperty = new DerivedProperty( [ totalProperty,
         singularStringProperty,
         pluralStringProperty ],

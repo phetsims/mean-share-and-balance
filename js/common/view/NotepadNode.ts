@@ -12,7 +12,7 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import notepadRing_png from '../../../images/notepadRing_png.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
-export default class NoteBookPaperNode extends Node {
+export default class NotepadNode extends Node {
 
   public constructor() {
 
@@ -46,4 +46,4 @@ export default class NoteBookPaperNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'NoteBookPaperNode', NoteBookPaperNode );
+meanShareAndBalance.register( 'NotepadNode', NotepadNode );
