@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * A Notepad with a text readout of the total number of items to measure by (candy bars, cookies, or meters) at the top.
