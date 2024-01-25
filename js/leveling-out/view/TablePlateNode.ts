@@ -1,11 +1,10 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * The container notepadPlate (in the bottom representation) that holds all of the candy bars a person has brought.
- * Each notepadPlate is associated with a tablePlate.
+ * A representation of a plate with a stack of candy bars on it.  The number of candy bars that are stacked on the
+ * plate can vary.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import { Image, Node, NodeOptions, VBox } from '../../../../scenery/js/imports.js';
@@ -50,9 +49,10 @@ export default class TablePlateNode extends Node {
 
     // create candy bars each person brought
     // REVIEW: See if it would be appropriate to use _.times elsewhere
-    const candyBars = _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON, () => new Image( chocolateBar_png, {
-      scale: candyBarScale
-    } ) );
+    const candyBars = _.times(
+      MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON,
+      () => new Image( chocolateBar_png, { scale: candyBarScale } )
+    );
 
     const candyBarsVBox = new VBox( {
       children: candyBars,

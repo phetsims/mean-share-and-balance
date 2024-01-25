@@ -15,13 +15,13 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import NotepadPlate from './NotepadPlate.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import Plate from './Plate.js';
 
 type CandyBarOptions = {
   isActive: boolean;
-  notepadPlate: NotepadPlate;
+  plate: Plate;
   position: Vector2;
 } & PickRequired<PhetioObjectOptions, 'tandem'>;
 
@@ -33,7 +33,7 @@ let count = 0;
 export default class CandyBar {
 
   public readonly isActiveProperty: Property<boolean>;
-  public readonly parentPlateProperty: Property<NotepadPlate>;
+  public readonly parentPlateProperty: Property<Plate>;
   public readonly positionProperty: Property<Vector2>;
   public readonly stateProperty: Property<StateType>;
 
@@ -50,7 +50,7 @@ export default class CandyBar {
       phetioState: false
     } );
 
-    this.parentPlateProperty = new Property( providedOptions.notepadPlate, {
+    this.parentPlateProperty = new Property( providedOptions.plate, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'parentPlateProperty' ),

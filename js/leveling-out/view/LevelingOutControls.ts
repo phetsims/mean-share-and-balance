@@ -23,8 +23,8 @@ import MeanAccordionBox from './MeanAccordionBox.js';
 type SelfOptions = EmptySelfOptions;
 type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
-export default class LevelingOutControls extends VBox {
-  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleRangeProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
+export default class LevelingOutControlPanel extends GridBox {
+  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPlatesRangeProperty' | 'numberOfPlatesProperty' | 'meanProperty' | 'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: LevelingOutControlPanelOptions ) {
 
     const options = providedOptions;
@@ -55,8 +55,8 @@ export default class LevelingOutControls extends VBox {
     } );
 
     const numberSpinner = new NumberSpinner(
-      model.numberOfPeopleProperty,
-      model.numberOfPeopleRangeProperty, {
+      model.numberOfPlatesProperty,
+      model.numberOfPlatesRangeProperty, {
         arrowsPosition: 'leftRight',
         layoutOptions: {
           align: 'left'

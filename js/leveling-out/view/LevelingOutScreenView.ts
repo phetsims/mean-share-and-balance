@@ -1,11 +1,12 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Representation for the Leveling Out Screen. Contains people and their candy bars on a notepadPlate, as well as a sketch representation
- * of candy bars that can be dragged and 'leveled out'.
+ * Representation for the Leveling Out Screen. Contains a table with people, each of whom have a plate with candy bars
+ * on them.  It also includes a notepad that also show plates and candy bars that can be dragged and 'leveled out'.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
@@ -80,22 +81,23 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
 
       // find the notepadPlate closest to where the candy bar was dropped.
-      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.position.x - candyBar.candyBar.positionProperty.value.x ) );
+      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.xPosition - candyBar.candyBar.positionProperty.value.x ) );
 
-      assert && assert( closestPlate !== undefined, 'There should always be a notepadPlate with space when a bar is dropped' );
+      assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );
 
-      // set dropped candy bar's position
+      // Set dropped candy bar's position.
       const numberOfCandyBarsOnPlate = model.getActivePlateStateCandyBars( closestPlate! ).length;
       const oldY = candyBar.candyBar.positionProperty.value.y;
-      const y = closestPlate!.position.y - ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( numberOfCandyBarsOnPlate + 1 ) );
-      candyBar.candyBar.positionProperty.set( new Vector2( closestPlate!.position.x, y ) );
+      const y = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
+                ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( numberOfCandyBarsOnPlate + 1 ) );
+      candyBar.candyBar.positionProperty.set( new Vector2( closestPlate!.xPosition, y ) );
 
       // swap candy bars if parentPlate changes, so that each person always has the same number of inactive + active candy bars
       // so that when their spinner is incremented, they can promote their own inactive candy bar to active.
       const currentParent = candyBar.candyBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarOnPlate( closestPlate! );
-        inactiveCandyBarForSwap.positionProperty.set( new Vector2( currentParent.position.x, oldY ) );
+        inactiveCandyBarForSwap.positionProperty.set( new Vector2( currentParent.xPosition, oldY ) );
         inactiveCandyBarForSwap.parentPlateProperty.set( currentParent );
       }
 
@@ -104,7 +106,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
 
     // Creating the bottom representation of candy bars on the table
-    const tablePlateNodes = model.tablePlates.map( person => new TablePlateNode( person, {
+    const tablePlateNodes = model.plates.map( person => new TablePlateNode( person, {
       tandem: options.tandem.createTandem( `tablePlate${person.linePlacement + 1}` )
     } ) );
 
@@ -126,7 +128,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     // Creating the top representation of candy bars on the paper
-    const notepadPlateNodes = model.notepadPlates.map( plate => new NotepadPlateNode( plate, candyBarDropped, {
+    const notepadPlateNodes = model.plates.map( plate => new NotepadPlateNode( plate, candyBarDropped, {
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
 
@@ -146,7 +148,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     const meanCalculationDialog = new MeanCalculationDialog(
-      model.tablePlates,
+      model.plates,
       model.meanCalculationDialogVisibleProperty,
       notepad.bounds,
       options.tandem.createTandem( 'meanCalculationDialog' )
@@ -174,7 +176,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       notepadBoundsProperty.value = candyBarLayerNode.globalToLocalBounds( notepad.globalBounds );
     };
 
-    model.numberOfPeopleProperty.link( () => {
+    model.numberOfPlatesProperty.link( () => {
       centerPlayAreaNodes();
       this.interruptSubtreeInput();
     } );

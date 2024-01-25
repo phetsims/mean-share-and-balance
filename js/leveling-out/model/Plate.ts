@@ -1,9 +1,10 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * The model representing the container for candy bars or cookies.
+ * The model element that represents the container for candy bars or cookies.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
@@ -12,7 +13,7 @@ import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
@@ -23,7 +24,7 @@ type SelfOptions = {
 
 type PlateOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class Plate {
+export default class Plate extends PhetioObject {
 
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
@@ -39,7 +40,11 @@ export default class Plate {
 
   public constructor( providedOptions: PlateOptions ) {
 
-    const options = optionize<PlateOptions, SelfOptions, PhetioObjectOptions>()( {}, providedOptions );
+    const options = optionize<PlateOptions, SelfOptions, PhetioObjectOptions>()( {
+      phetioState: false
+    }, providedOptions );
+
+    super( options );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
 
