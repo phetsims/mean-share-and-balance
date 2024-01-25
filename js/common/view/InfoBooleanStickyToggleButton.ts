@@ -32,7 +32,7 @@ export default class InfoBooleanStickyToggleButton extends BooleanRoundStickyTog
       tandem: tandem.createTandem( 'infoStickyToggleButton' )
     };
 
-   super( dialogVisibleProperty, options );
+    super( dialogVisibleProperty, options );
   }
 }
 

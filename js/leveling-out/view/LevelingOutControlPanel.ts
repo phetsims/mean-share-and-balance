@@ -10,82 +10,43 @@
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import SyncButton from '../../common/view/SyncButton.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
-import chocolateBar_png from '../../../images/chocolateBar_png.js';
-import { Shape } from '../../../../kite/js/imports.js';
-import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { GridBox, FireListener, Image, Text, GridBoxOptions, VBox } from '../../../../scenery/js/imports.js';
+import { FireListener, GridBoxOptions, AlignBox, Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
+import MeanAccordionBox from './MeanAccordionBox.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
-export default class LevelingOutControlPanel extends GridBox {
+export default class LevelingOutControlPanel extends VBox {
   public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleRangeProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: LevelingOutControlPanelOptions ) {
 
     const options = providedOptions;
 
-    // Scale down the large candy bar images
-    const SCALE_FACTOR = 0.05;
-
-    const meanCandyBarsVBox = new VBox( {
-      scale: SCALE_FACTOR,
-      align: 'left',
-      spacing: 1.5 / SCALE_FACTOR,
-      layoutOptions: {
-        yAlign: 'top'
-      }
-    } );
-
-    // Just for the dimensions
-    const candyBarImage = new Image( chocolateBar_png );
-
-    model.meanProperty.link( mean => {
-      const wholePart = Math.floor( mean );
-      const remainder = mean - wholePart;
-
-      const children = _.times( wholePart, () => new Image( chocolateBar_png ) );
-      if ( remainder > 0 ) {
-
-        // Partial candy bars are shown on top
-        children.unshift( new Image( chocolateBar_png, {
-          clipArea: Shape.rect( 0, 0, remainder * candyBarImage.width, candyBarImage.height )
-        } ) );
-      }
-
-      meanCandyBarsVBox.children = children;
-    } );
-
-    const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty, options.tandem );
-
-    const meanNode = new GridBox( { columns: [ [ meanCandyBarsVBox ], [ infoButton ] ], yAlign: 'top', spacing: 40 } );
-
-    const meanAccordionBox = new AccordionBox( meanNode, {
-      titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
-      expandedProperty: model.isMeanAccordionExpandedProperty,
-      layoutOptions: { minContentHeight: 200, yAlign: 'top' },
-
-      // phet-io
-      tandem: options.tandem.createTandem( 'meanAccordionBox' )
-    } );
+    const meanAccordionBox = new MeanAccordionBox( model.meanProperty, meanCalculationDialogVisibleProperty,
+      model.isMeanAccordionExpandedProperty, { tandem: options.tandem } );
 
     const syncListener = new FireListener( { fire: () => model.syncData(), tandem: options.tandem.createTandem( 'syncListener' ) } );
 
-    const syncButton = new SyncButton( { inputListeners: [ syncListener ], tandem: options.tandem.createTandem( 'syncButton' ) } );
+    const syncButton = new SyncButton( {
+      inputListeners: [ syncListener ],
+      tandem: options.tandem.createTandem( 'syncButton' )
+    } );
 
-    // REVIEW: How could we do this with putting this metadata on the SyncButton itself? May need to ask @jonathanolson
-    const syncVBox = new VBox( {
-        align: 'left', children: [ syncButton ],
-        layoutOptions: { row: 1, minContentHeight: 38, yAlign: 'top' }
+    // LayoutOptions on the syncButton affect the content of the button, and not the layoutCell the button is in.
+    // This seems like a bug: https://github.com/phetsims/sun/issues/871
+    const buttonAlignBox = new AlignBox( syncButton, {
+      layoutOptions: {
+        minContentHeight: 100,
+        align: 'left'
       }
-    );
+    } );
 
     // Number Spinner
     const numberOfPeopleText = new Text( MeanShareAndBalanceStrings.numberOfPeopleStringProperty, {
@@ -111,12 +72,12 @@ export default class LevelingOutControlPanel extends GridBox {
       children: [ numberOfPeopleText, numberSpinner ],
       align: 'left',
       justify: 'bottom',
-      spacing: 10,
-      layoutOptions: { row: 2 }
+      spacing: 10
     } );
 
-    const superOptions = optionize<LevelingOutControlPanelOptions, SelfOptions, GridBoxOptions>()( {
-      children: [ meanAccordionBox, syncVBox, numberSpinnerVBox ], xAlign: 'left'
+
+    const superOptions = optionize<LevelingOutControlPanelOptions, SelfOptions, VBoxOptions>()( {
+      children: [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ]
     }, providedOptions );
 
     super( superOptions );

@@ -12,7 +12,7 @@ import RectangularPushButton, { RectangularPushButtonOptions } from '../../../..
 import SyncIcon from './SyncIcon.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import { Node, Text } from '../../../../scenery/js/imports.js';
+import { HBox, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
@@ -22,12 +22,10 @@ type SyncButtonOptions = SelfOptions & StrictOmit<RectangularPushButtonOptions, 
 export default class SyncButton extends RectangularPushButton {
   public constructor( providedOptions: SyncButtonOptions ) {
     const syncIcon = new SyncIcon();
-    const syncContent = new Node( {
+    const syncContent = new HBox( {
       children: [
         syncIcon,
         new Text( MeanShareAndBalanceStrings.syncStringProperty, {
-          left: syncIcon.right + 5,
-          centerY: syncIcon.centerY,
           fontSize: 15,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncIcon.width
         } )
