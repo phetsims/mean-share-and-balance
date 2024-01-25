@@ -17,7 +17,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NotepadPlate from './NotepadPlate.js';
-import TablePlate from './TablePlate.js';
+import Plate from './Plate.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -36,7 +36,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public readonly numberOfPeopleProperty: Property<number>;
 
   public readonly notepadPlates: Array<NotepadPlate>;
-  public readonly tablePlates: Array<TablePlate>;
+  public readonly tablePlates: Array<Plate>;
   public readonly candyBars: Array<CandyBar>;
 
   public readonly meanProperty: TReadOnlyProperty<number>;
@@ -93,27 +93,27 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     // Statically allocate plates, people, and candyBars. Whether they participate in the model is controlled by the
     // isActiveProperty on each one.
-    for ( let tablePlateIndex = 0; tablePlateIndex < MAX_PEOPLE; tablePlateIndex++ ) {
-      const x = tablePlateIndex * MeanShareAndBalanceConstants.TABLE_PLATE_WIDTH;
+    for ( let plateIndex = 0; plateIndex < MAX_PEOPLE; plateIndex++ ) {
+      const x = plateIndex * MeanShareAndBalanceConstants.TABLE_PLATE_WIDTH;
       const notepadPlate = new NotepadPlate( {
-        isActive: tablePlateIndex < this.numberOfPeopleProperty.value,
+        isActive: plateIndex < this.numberOfPeopleProperty.value,
         position: new Vector2( x, MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_CENTER_Y ),
-        linePlacement: tablePlateIndex,
+        linePlacement: plateIndex,
 
         // phet-io
-        tandem: options.tandem.createTandem( `notepadPlate${tablePlateIndex + 1}` )
+        tandem: options.tandem.createTandem( `notepadPlate${plateIndex + 1}` )
       } );
       this.notepadPlates.push( notepadPlate );
 
-      const tablePlate = new TablePlate( {
-        position: new Vector2( x, MeanShareAndBalanceConstants.PEOPLE_CENTER_Y ),
-        isActive: tablePlateIndex < this.numberOfPeopleProperty.value,
-        linePlacement: tablePlateIndex,
+      const plate = new Plate( {
+        xPosition: x,
+        isActive: plateIndex < this.numberOfPeopleProperty.value,
+        linePlacement: plateIndex,
 
         // phet-io
-        tandem: options.tandem.createTandem( `tablePlate${tablePlateIndex + 1}` )
+        tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )
       } );
-      this.tablePlates.push( tablePlate );
+      this.tablePlates.push( plate );
 
       for ( let candyBarIndex = 0;
             candyBarIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON;
@@ -121,7 +121,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
         const x = notepadPlate.position.x;
         const y = notepadPlate.position.y - ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( candyBarIndex + 1 ) );
-        const isActive = notepadPlate.isActiveProperty.value && candyBarIndex < tablePlate.candyBarNumberProperty.value;
+        const isActive = notepadPlate.isActiveProperty.value && candyBarIndex < plate.snackNumberProperty.value;
 
         const candyBar = new CandyBar( {
           isActive: isActive,
@@ -142,7 +142,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
         // If a notepadPlate became inactive, we need to account for the extra or missing candy bar.
         if ( !isActive ) {
-          const numberOfTablePlateCandyBars = this.tablePlates[ notepadPlate.linePlacement ].candyBarNumberProperty.value;
+          const numberOfTablePlateCandyBars = this.tablePlates[ notepadPlate.linePlacement ].snackNumberProperty.value;
           if ( numberOfTablePlateCandyBars > numberOfCandyBarsOnPlate ) {
             this.borrowMissingCandyBars( numberOfTablePlateCandyBars - numberOfCandyBarsOnPlate );
           }
@@ -151,14 +151,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
           }
         }
         candyBars.forEach( ( candyBar, i ) => {
-          candyBar.isActiveProperty.value = isActive && i < tablePlate.candyBarNumberProperty.value;
+          candyBar.isActiveProperty.value = isActive && i < plate.snackNumberProperty.value;
           this.reorganizeCandyBars( notepadPlate );
         } );
       } );
 
       // Set paper notepadPlate candy bar number based on table notepadPlate delta change.
-      tablePlate.candyBarNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
-        if ( tablePlate.isActiveProperty.value ) {
+      plate.snackNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
+        if ( plate.isActiveProperty.value ) {
           if ( candyBarNumber > oldCandyBarNumber ) {
             this.tablePlateCandyBarAmountIncrease( notepadPlate, candyBarNumber - oldCandyBarNumber );
           }
@@ -168,14 +168,14 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         }
       } );
 
-      totalCandyBarsPropertyDependencies.push( tablePlate.candyBarNumberProperty );
-      totalCandyBarsPropertyDependencies.push( tablePlate.isActiveProperty );
+      totalCandyBarsPropertyDependencies.push( plate.snackNumberProperty );
+      totalCandyBarsPropertyDependencies.push( plate.isActiveProperty );
     }
 
     // Tracks the total number of candyBars based on the "ground truth" tablePlate numbers.
     // Must be deriveAny because .map() does not preserve .length()
     this.totalCandyBarsProperty = DerivedProperty.deriveAny( totalCandyBarsPropertyDependencies, () => {
-      const candyBarAmounts = this.getActivePeople().map( tablePlate => tablePlate.candyBarNumberProperty.value );
+      const candyBarAmounts = this.getActivePeople().map( tablePlate => tablePlate.snackNumberProperty.value );
       return _.sum( candyBarAmounts );
     }, {
       tandem: options.tandem.createTandem( 'totalCandyBarsProperty' ),
@@ -199,7 +199,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  public getActivePeople(): Array<TablePlate> {
+  public getActivePeople(): Array<Plate> {
     return this.tablePlates.filter( tablePlate => tablePlate.isActiveProperty.value );
   }
 
@@ -364,7 +364,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     this.tablePlates.forEach( ( tablePlate, index ) => {
       this.getCandyBarsOnPlate( this.notepadPlates[ index ] ).forEach( ( candyBar, i ) => {
-        candyBar.isActiveProperty.value = i < tablePlate.candyBarNumberProperty.value;
+        candyBar.isActiveProperty.value = i < tablePlate.snackNumberProperty.value;
       } );
     } );
   }

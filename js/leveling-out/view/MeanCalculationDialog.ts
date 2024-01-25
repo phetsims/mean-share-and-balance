@@ -11,7 +11,7 @@ import Dialog from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
-import TablePlate from '../model/TablePlate.js';
+import Plate from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
@@ -22,7 +22,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
-  public constructor( people: Array<TablePlate>, visibleProperty: Property<boolean>, notebookPaperBounds: Bounds2, tandem: Tandem ) {
+  public constructor( plates: Array<Plate>, visibleProperty: Property<boolean>, notebookPaperBounds: Bounds2, tandem: Tandem ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty );
     const meanEqualsAdditionFractionText = new Text( MeanShareAndBalanceStrings.meanEqualsStringProperty );
@@ -39,24 +39,24 @@ export default class MeanCalculationDialog extends Dialog {
       minHeight: notebookPaperBounds.height - 40 // the top/bottom margin, and y spacing implemented by Dialog.ts
     } );
 
-    const isActiveProperties = people.map( person => person.isActiveProperty );
-    const numberOfCandyBarsProperties = people.map( person => person.candyBarNumberProperty );
+    const isActiveProperties = plates.map( plate => plate.isActiveProperty );
+    const numberOfCandyBarsProperties = plates.map( plate => plate.snackNumberProperty );
     Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfCandyBarsProperties ], () => {
-      const numbers = people.filter( person => person.isActiveProperty.value ).map( person => person.candyBarNumberProperty.value );
-      const numberOfPeople = people.filter( person => person.isActiveProperty.value ).length;
+      const numbers = plates.filter( plate => plate.isActiveProperty.value ).map( plate => plate.snackNumberProperty.value );
+      const numberOfActivePlates = plates.filter( plate => plate.isActiveProperty.value ).length;
 
       // REVIEW: Can we align the numbers with the table spinners?  So correspondence is clear?
       const additionText = new Text( numbers.join( ' + ' ) );
       const additionFractionLine = new Line( 0, 0, additionText.width, 0, { stroke: 'black' } );
-      const additionDenominatorText = new Text( numberOfPeople );
+      const additionDenominatorText = new Text( numberOfActivePlates );
       const additionFraction = new VBox( { children: [ additionText, additionFractionLine, additionDenominatorText ] } );
 
       const numeratorText = new Text( _.sum( numbers ) );
       const fractionLine = new Line( 0, 0, numeratorText.width, 0, { stroke: 'black' } );
-      const denominatorText = new Text( numberOfPeople );
+      const denominatorText = new Text( numberOfActivePlates );
       const fraction = new VBox( { children: [ numeratorText, fractionLine, denominatorText ] } );
 
-      const decimalText = new Text( Utils.toFixedNumber( _.sum( numbers ) / numberOfPeople, 2 ) );
+      const decimalText = new Text( Utils.toFixedNumber( _.sum( numbers ) / numberOfActivePlates, 2 ) );
 
       calculationNode.rows = [
         [ meanEqualsAdditionFractionText, additionFraction ],

@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * In the upper (notepad) representation, contains all the candy bars on a notepadPlate. Each notepadPlate has one NotepadPlateNode,
- * and each container has a maximum number of candy bars.
+ * In the upper (notepad) representation, contains all the candy bars on a notepadPlate. Each notepadPlate has one
+ * NotepadPlateNode, and each container has a maximum number of candy bars.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
