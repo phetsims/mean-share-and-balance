@@ -23,7 +23,7 @@ import MeanAccordionBox from './MeanAccordionBox.js';
 type SelfOptions = EmptySelfOptions;
 type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
-export default class LevelingOutControlPanel extends VBox {
+export default class LevelingOutControls extends VBox {
   public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPeopleRangeProperty' | 'numberOfPeopleProperty' | 'meanProperty' | 'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: LevelingOutControlPanelOptions ) {
 
@@ -84,4 +84,4 @@ export default class LevelingOutControlPanel extends VBox {
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutControlPanel', LevelingOutControlPanel );
+meanShareAndBalance.register( 'LevelingOutControls', LevelingOutControls );

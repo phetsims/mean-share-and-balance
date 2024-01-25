@@ -16,7 +16,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadPlateNode from './NotepadPlateNode.js';
-import LevelingOutControlPanel from './LevelingOutControlPanel.js';
+import LevelingOutControls from './LevelingOutControls.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import TablePlateNode from './TablePlateNode.js';
@@ -51,10 +51,10 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const options = providedOptions;
 
-    const controlPanel = new LevelingOutControlPanel( model, model.meanCalculationDialogVisibleProperty, {
+    const levelingOutControls = new LevelingOutControls( model, model.meanCalculationDialogVisibleProperty, {
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20,
-      tandem: options.tandem.createTandem( 'controlPanel' )
+      tandem: options.tandem.createTandem( 'levelingOutControls' )
     } );
 
     const tableNode = new PartyTableNode();
@@ -183,7 +183,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    const controlsAlignBox = new AlignBox( controlPanel, {
+    const controlsAlignBox = new AlignBox( levelingOutControls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',
       yAlign: 'top',
