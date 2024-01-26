@@ -6,8 +6,8 @@
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
+ * @author John Blanco (PhET Interactive Simulations)
  */
-
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -21,33 +21,54 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 
 type NotepadPlateNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions | 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
+// constants
+const STROKE_WIDTH = 1;
+
 export default class NotepadPlateNode extends Node {
   public constructor( plate: Plate,
                       candyBarDropped: ( candyBar: NotepadCandyBarNode ) => void,
                       providedOptions: NotepadPlateNodeOptions ) {
 
-    const ghostlyCandyBarNode = new Rectangle(
-      0,
-      0,
-      MeanShareAndBalanceConstants.CANDY_BAR_WIDTH,
-      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
-      {
-        stroke: MeanShareAndBalanceColors.candyBarColorProperty,
-        lineDash: [ 10, 5 ]
-      }
-    );
+    const candyBarVerticalSpacing = MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+                                    MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING;
 
-    const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
+    const candyBarOutlineNodes: Node[] = [];
+    _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON, i => {
+      candyBarOutlineNodes.push( new Rectangle(
+        0,
+        0,
+        MeanShareAndBalanceConstants.CANDY_BAR_WIDTH - STROKE_WIDTH,
+        MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT - STROKE_WIDTH,
+        {
+          stroke: MeanShareAndBalanceColors.candyBarColorProperty,
+          lineDash: [ 1, 2 ],
+          centerX: MeanShareAndBalanceConstants.CANDY_BAR_WIDTH / 2,
+          centerY: -( MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
+                      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT / 2 +
+                      candyBarVerticalSpacing * i )
+        }
+      ) );
+    } );
+
+    const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, VBoxOptions>()( {
       x: plate.xPosition,
-      y: MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y,
+      bottom: MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y + STROKE_WIDTH / 2,
       visibleProperty: plate.isActiveProperty,
+      excludeInvisibleChildrenFromBounds: false,
       children: [
-        ghostlyCandyBarNode,
+        ...candyBarOutlineNodes,
         new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, { stroke: 'black' } )
       ]
     }, providedOptions );
 
     super( options );
+
+    // Set the visibility of the outline nodes based on how many candy bars are on the table plate.
+    plate.snackNumberProperty.link( numberOfSnacksOnPlate => {
+      candyBarOutlineNodes.forEach( ( node, index ) => {
+        node.visible = numberOfSnacksOnPlate > index;
+      } );
+    } );
   }
 }
 

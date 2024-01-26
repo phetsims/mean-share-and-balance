@@ -50,6 +50,7 @@ const MeanShareAndBalanceConstants = {
   CANDY_BAR_WIDTH: 45,
   CANDY_BAR_HEIGHT: 12,
   TABLE_PLATE_WIDTH: 100,
+  NOTEPAD_CANDY_BAR_VERTICAL_SPACING: 2,
 
   NOTEPAD_PLATE_CENTER_Y: 330,
   TABLE_PLATE_CENTER_Y: 500,
@@ -57,7 +58,6 @@ const MeanShareAndBalanceConstants = {
   MAX_NUMBER_OF_CANDY_BARS_PER_PERSON: 10,
   MIN_NUMBER_OF_CANDY_BARS: 0,
   NOTEPAD_PAPER_CENTER_Y: 220
-
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

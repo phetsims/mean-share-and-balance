@@ -80,7 +80,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const candyBarDropped = ( candyBar: NotepadCandyBarNode ) => {
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
 
-      // find the notepadPlate closest to where the candy bar was dropped.
+      // Find the notepadPlate closest to where the candy bar was dropped.
       const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.xPosition - candyBar.candyBar.positionProperty.value.x ) );
 
       assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );

@@ -242,13 +242,11 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public reorganizeCandyBars( plate: Plate ): void {
     const plateStateCandyBars = this.getActivePlateStateCandyBars( plate );
     plateStateCandyBars.forEach( ( candyBar, i ) => {
+      const yPosition = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
+                        ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+                            MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) * ( i + 1 ) );
 
-      const Y_MARGIN = 2; // Distance between adjacent candyBars.
-      const newPosition = new Vector2(
-        plate.xPosition,
-        MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y - ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + Y_MARGIN ) * ( i + 1 ) )
-      );
-      candyBar.positionProperty.set( newPosition );
+      candyBar.positionProperty.set( new Vector2( plate.xPosition, yPosition ) );
     } );
   }
 
@@ -344,7 +342,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPlatesProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
-    this.plates.forEach( tablePlate => tablePlate.reset() );
     this.plates.forEach( plate => plate.reset() );
   }
 
@@ -358,6 +355,9 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       this.getCandyBarsOnPlate( this.plates[ index ] ).forEach( ( candyBar, i ) => {
         candyBar.isActiveProperty.value = i < tablePlate.snackNumberProperty.value;
       } );
+      if ( tablePlate.isActiveProperty.value ) {
+        this.reorganizeCandyBars( tablePlate );
+      }
     } );
   }
 
