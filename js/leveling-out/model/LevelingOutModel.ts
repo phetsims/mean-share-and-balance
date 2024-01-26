@@ -129,18 +129,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
       plate.isActiveProperty.lazyLink( isActive => {
         const candyBars = this.getCandyBarsOnPlate( plate );
-        const numberOfCandyBarsOnPlate = this.getActiveCandyBarsOnPlate( plate ).length;
 
         // If a plate became inactive, we need to account for the extra or missing candy bars.
         if ( !isActive ) {
-          const numberOfTablePlateCandyBars = this.plates[ plate.linePlacement ].snackNumberProperty.value;
-          if ( numberOfTablePlateCandyBars > numberOfCandyBarsOnPlate ) {
-            this.borrowMissingCandyBars( numberOfTablePlateCandyBars - numberOfCandyBarsOnPlate );
-          }
-          else if ( numberOfTablePlateCandyBars < numberOfCandyBarsOnPlate ) {
-            this.shareExtraCandyBars( numberOfCandyBarsOnPlate - numberOfTablePlateCandyBars );
-          }
+          this.reconcileSnacks( plate );
+          assert && assert( plate.snackNumberProperty.value === this.getActiveCandyBarsOnPlate( plate ).length,
+            'The number of candy bars on the table plate should match the number of candy bars on the notepad plate.' );
         }
+
+        // After reconciling the snacks set the snackNumberProperty for the removed plate to 0.
+        plate.snackNumberProperty.set( isActive ? 1 : 0 );
         candyBars.forEach( ( candyBar, i ) => {
           candyBar.isActiveProperty.value = isActive && i < plate.snackNumberProperty.value;
           this.reorganizeCandyBars( plate );
@@ -255,27 +253,33 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   /**
-   * Called only when a plate is deactivated and the number on the table plate did not match the number of active candy
-   * bars on the notepad plate.
+   * When a plate becomes inactive, we need to account for the extra or missing candy bars.
    */
-  private shareExtraCandyBars( numberOfExtraCandyBars: number ): void {
-    for ( let i = 0; i < numberOfExtraCandyBars; i++ ) {
-      const minPlate = this.getPlateWithLeastCandyBars();
-      this.getBottomInactiveCandyBarOnPlate( minPlate ).isActiveProperty.set( true );
-      this.reorganizeCandyBars( minPlate );
-    }
-  }
+  private reconcileSnacks( plate: Plate ): void {
+    const numberOfTablePlateSnacks = plate.snackNumberProperty.value;
+    const numberOfNotepadPlateSnacks = this.getActiveCandyBarsOnPlate( plate ).length;
 
-  /**
-   * Called only when a plate is deactivated and the number at the table plate did not match the amount that are active
-   * on the corresponding notepad plate.
-   */
-  private borrowMissingCandyBars( numberOfMissingCandyBars: number ): void {
-    for ( let i = 0; i < numberOfMissingCandyBars; i++ ) {
-      const maxPlate = this.getPlateWithMostActiveCandyBars();
-      this.getTopActiveCandyBarOnPlate( maxPlate ).isActiveProperty.set( false );
-      this.reorganizeCandyBars( maxPlate );
+    if ( numberOfTablePlateSnacks > numberOfNotepadPlateSnacks ) {
+      const delta = numberOfTablePlateSnacks - numberOfNotepadPlateSnacks;
+      for ( let i = 0; i < delta; i++ ) {
+        const maxPlate = this.getPlateWithMostActiveCandyBars();
+        this.getTopActiveCandyBarOnPlate( maxPlate ).isActiveProperty.set( false );
+        this.reorganizeCandyBars( maxPlate );
+      }
     }
+    else if ( numberOfTablePlateSnacks < numberOfNotepadPlateSnacks ) {
+      const delta = numberOfNotepadPlateSnacks - numberOfTablePlateSnacks;
+      for ( let i = 0; i < delta; i++ ) {
+        const minPlate = this.getPlateWithLeastCandyBars();
+        this.getBottomInactiveCandyBarOnPlate( minPlate ).isActiveProperty.set( true );
+        this.reorganizeCandyBars( minPlate );
+      }
+    }
+
+    const snacksOnNotepadPlate = this.getCandyBarsOnPlate( plate );
+    snacksOnNotepadPlate.forEach( ( snack, i ) => {
+      snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
+    } );
   }
 
   /**

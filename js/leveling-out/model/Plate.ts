@@ -65,9 +65,6 @@ export default class Plate extends PhetioObject {
     } );
 
     this.linePlacement = options.linePlacement;
-
-    // When the person becomes inactive, delete their candy bars. When a person becomes active, they arrive with 1 candy bar
-    this.isActiveProperty.lazyLink( isActive => this.snackNumberProperty.set( isActive ? 1 : 0 ) );
   }
 
   // LinePlacement and position never changes and hence doesn't need to be reset.
