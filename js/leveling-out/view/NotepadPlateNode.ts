@@ -11,12 +11,13 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import { Line, Node, NodeOptions, NodeTranslationOptions, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { Line, Node, NodeOptions, NodeTranslationOptions, Rectangle, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import Plate from '../model/Plate.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type NotepadPlateNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions | 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -25,11 +26,25 @@ export default class NotepadPlateNode extends Node {
                       candyBarDropped: ( candyBar: NotepadCandyBarNode ) => void,
                       providedOptions: NotepadPlateNodeOptions ) {
 
+    const ghostlyCandyBarNode = new Rectangle(
+      0,
+      0,
+      MeanShareAndBalanceConstants.CANDY_BAR_WIDTH,
+      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
+      {
+        stroke: MeanShareAndBalanceColors.candyBarColorProperty,
+        lineDash: [ 10, 5 ]
+      }
+    );
+
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.xPosition,
       y: MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y,
       visibleProperty: plate.isActiveProperty,
-      children: [ new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, { stroke: 'black' } ) ]
+      children: [
+        ghostlyCandyBarNode,
+        new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, { stroke: 'black' } )
+      ]
     }, providedOptions );
 
     super( options );

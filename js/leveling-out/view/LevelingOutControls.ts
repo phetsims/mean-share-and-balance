@@ -16,14 +16,14 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { FireListener, GridBoxOptions, AlignBox, Text, VBox, VBoxOptions, GridBox } from '../../../../scenery/js/imports.js';
+import { FireListener, GridBoxOptions, AlignBox, Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanAccordionBox from './MeanAccordionBox.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
 
-export default class LevelingOutControls extends GridBox {
+export default class LevelingOutControls extends VBox {
   public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPlatesRangeProperty' | 'numberOfPlatesProperty' | 'meanProperty' | 'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: LevelingOutControlPanelOptions ) {
 
