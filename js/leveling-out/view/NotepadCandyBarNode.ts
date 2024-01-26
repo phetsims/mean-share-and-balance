@@ -20,6 +20,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import CandyBar from '../model/CandyBar.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -59,6 +60,9 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     this.dragListener = new DragListener( {
       positionProperty: this.candyBar.positionProperty,
+      offsetPosition: ( viewPoint, dragListener ) => {
+        return dragListener.pointer.isTouchLike() ? new Vector2( 6, -30 ) : new Vector2( 6, -2 );
+      },
 
       // The origin of the candy bar is the top left, so we must erode just on the right and bottom edge to keep
       // the candy bar fully in the paper region
