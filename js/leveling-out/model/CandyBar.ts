@@ -28,7 +28,7 @@ type CandyBarOptions = {
 type StateType = 'plate' | 'dragging' | 'animating';
 
 // Total number of candy bars allocated, for debugging.
-let count = 0;
+let instanceCount = 0;
 
 export default class CandyBar {
 
@@ -38,7 +38,7 @@ export default class CandyBar {
   public readonly stateProperty: Property<StateType>;
 
   // For debugging
-  public readonly index = count++;
+  public readonly instanceID = instanceCount++;
 
   public constructor( providedOptions: CandyBarOptions ) {
 

@@ -68,40 +68,41 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       MeanShareAndBalanceStrings.barsStringProperty
     );
 
-    // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper
-    // But since the candyBarLayerNode changes its horizontal position to keep things centered for varying
-    // numbers of people, we must coordinate the drag bounds when that changes.
-    // This is in the coordinate frame of the candyBarLayerNode.
-    // This initial value is not in the correct coordinate frame but it is specified correctly before the end of the
-    // constructor
+    // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper. But
+    // since the candyBarLayerNode changes its horizontal position to keep things centered for varying numbers of
+    // people, we must coordinate the drag bounds when that changes.  This is in the coordinate frame of the
+    // candyBarLayerNode.  This initial value is not in the correct coordinate frame, but it is specified correctly
+    // before the end of the constructor.
     const notepadBoundsProperty = new Property( notepad.bounds );
 
     // function for what candy bars should do at the end of their drag
-    const candyBarDropped = ( candyBar: NotepadCandyBarNode ) => {
+    const candyBarDropped = ( candyBarNode: NotepadCandyBarNode ) => {
       const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
 
       // Find the notepadPlate closest to where the candy bar was dropped.
-      const closestPlate = _.minBy( platesWithSpace, plate => Math.abs( plate.xPosition - candyBar.candyBar.positionProperty.value.x ) );
+      const closestPlate = _.minBy(
+        platesWithSpace, plate => Math.abs( plate.xPosition - candyBarNode.candyBar.positionProperty.value.x )
+      );
 
       assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );
 
-      // Set dropped candy bar's position.
+      // Calculate and set the dropped candy bar's position.
       const numberOfCandyBarsOnPlate = model.getActivePlateStateCandyBars( closestPlate! ).length;
-      const oldY = candyBar.candyBar.positionProperty.value.y;
+      const oldY = candyBarNode.candyBar.positionProperty.value.y;
       const y = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
                 ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( numberOfCandyBarsOnPlate + 1 ) );
-      candyBar.candyBar.positionProperty.set( new Vector2( closestPlate!.xPosition, y ) );
+      candyBarNode.candyBar.positionProperty.set( new Vector2( closestPlate!.xPosition, y ) );
 
-      // swap candy bars if parentPlate changes, so that each person always has the same number of inactive + active candy bars
-      // so that when their spinner is incremented, they can promote their own inactive candy bar to active.
-      const currentParent = candyBar.candyBar.parentPlateProperty.value;
+      // Swap candy bars if parentPlate changes, so that each person always has the same total number of candy bars so
+      // that when their spinner is incremented, they can promote their own inactive candy bar to active.
+      const currentParent = candyBarNode.candyBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarOnPlate( closestPlate! );
         inactiveCandyBarForSwap.positionProperty.set( new Vector2( currentParent.xPosition, oldY ) );
         inactiveCandyBarForSwap.parentPlateProperty.set( currentParent );
       }
 
-      candyBar.candyBar.parentPlateProperty.set( closestPlate! );
+      candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
     };
 
 
@@ -127,8 +128,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    // Creating the top representation of candy bars on the paper
-    const notepadPlateNodes = model.plates.map( plate => new NotepadPlateNode( plate, candyBarDropped, {
+    // Create a node on the node pad to represent each plate in the model.
+    const notepadPlateNodes = model.plates.map( plate => new NotepadPlateNode( plate, {
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
 

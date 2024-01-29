@@ -15,7 +15,6 @@ import { Line, Node, NodeOptions, NodeTranslationOptions, Rectangle, VBoxOptions
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import Plate from '../model/Plate.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
@@ -25,9 +24,7 @@ type NotepadPlateNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOpti
 const STROKE_WIDTH = 1;
 
 export default class NotepadPlateNode extends Node {
-  public constructor( plate: Plate,
-                      candyBarDropped: ( candyBar: NotepadCandyBarNode ) => void,
-                      providedOptions: NotepadPlateNodeOptions ) {
+  public constructor( plate: Plate, providedOptions: NotepadPlateNodeOptions ) {
 
     const candyBarVerticalSpacing = MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
                                     MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING;

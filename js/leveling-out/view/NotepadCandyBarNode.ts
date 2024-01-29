@@ -46,7 +46,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
     // In ?dev mode, show the index of the candy bar to help understand how things are organized and how they
     // redistribute.
     if ( phet.chipper.queryParameters.dev ) {
-      children.push( new Text( candyBar.index, { fill: 'white', top: 0, left: 0 } ) );
+      children.push( new Text( candyBar.instanceID, { fill: 'white', top: 0, left: 0 } ) );
     }
 
     const options = optionize<NotepadCandyBarNodeOptions, SelfOptions, NodeOptions>()( {
