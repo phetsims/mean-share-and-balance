@@ -56,6 +56,11 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     super( options );
 
+    // Prevent this from being pickable while animating.
+    candyBar.stateProperty.link( state => {
+      candyBarRectangle.pickable = state !== 'animating';
+    } );
+
     this.candyBar = candyBar;
 
     this.dragListener = new DragListener( {
@@ -76,7 +81,6 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       },
       end: () => {
         candyBarDropped( this );
-        candyBar.stateProperty.set( 'plate' );
       },
       tandem: options.tandem.createTandem( 'dragListener' )
     } );

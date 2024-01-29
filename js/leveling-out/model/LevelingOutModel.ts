@@ -339,6 +339,11 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   public override reset(): void {
+
+    // Force any in-progress animations of the candy bars to finish.
+    this.candyBars.forEach( candyBar => { candyBar.forceAnimationToFinish(); } );
+
+    // Reset other aspects of the model.
     this.isMeanAccordionExpandedProperty.reset();
     this.numberOfPlatesProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
