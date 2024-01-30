@@ -110,8 +110,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
             candyBarIndex++ ) {
 
         const x = plate.xPosition;
-        const y = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
-                  ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( candyBarIndex + 1 ) );
+        const y = getCandyBarYPosition( candyBarIndex );
         const isActive = plate.isActiveProperty.value && candyBarIndex < plate.snackNumberProperty.value;
 
         const candyBar = new CandyBar( {
@@ -218,14 +217,19 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public getBottomInactiveCandyBarOnPlate( plate: Plate ): CandyBar {
     const inactiveCandyBarsOnPlate = this.getInactiveCandyBarsOnPlate( plate );
-    assert && assert( inactiveCandyBarsOnPlate.length > 0, `There is no inactive bottom candy bar on plate since inactive candyBars is: ${inactiveCandyBarsOnPlate.length}` );
+    assert && assert(
+      inactiveCandyBarsOnPlate.length > 0,
+      `There is no inactive bottom candy bar on plate since inactive candyBars is: ${inactiveCandyBarsOnPlate.length}`
+    );
     const bottomCandyBar = _.maxBy( inactiveCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
     return bottomCandyBar!;
   }
 
   public getActivePlateStateCandyBars( plate: Plate ): Array<CandyBar> {
     const candyBars = this.getActiveCandyBarsOnPlate( plate );
-    return candyBars.filter( candyBar => candyBar.stateProperty.value === 'plate' );
+    return candyBars.filter( candyBar =>
+      candyBar.stateProperty.value === 'plate' || candyBar.stateProperty.value === 'animating'
+    );
   }
 
   public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
@@ -241,12 +245,32 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    */
   public reorganizeCandyBars( plate: Plate ): void {
     const plateStateCandyBars = this.getActivePlateStateCandyBars( plate );
-    plateStateCandyBars.forEach( ( candyBar, i ) => {
-      const yPosition = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
-                        ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
-                            MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) * ( i + 1 ) );
 
-      candyBar.positionProperty.set( new Vector2( plate.xPosition, yPosition ) );
+    // Divide the active candy bars up into those that are animating and those that aren't, since we want to put the
+    // non-animating ones on the bottom of the stack.  This is needed primarily for handling multitouch and race
+    // conditions.
+    const nonAnimatingActiveCandyBars: CandyBar[] = [];
+    const animatingCandyBars: CandyBar[] = [];
+    plateStateCandyBars.forEach( candyBar => {
+      if ( candyBar.stateProperty.value === 'animating' ) {
+        animatingCandyBars.push( candyBar );
+      }
+      else {
+        nonAnimatingActiveCandyBars.push( candyBar );
+      }
+    } );
+
+    // Position the active non-animating candy bars to be in a stack on top of the node plates.
+    nonAnimatingActiveCandyBars.forEach( ( candyBar, i ) => {
+      candyBar.positionProperty.set( new Vector2( plate.xPosition, getCandyBarYPosition( i ) ) );
+    } );
+
+    // Set a potentially new destination any animating candy bars.
+    animatingCandyBars.forEach( ( candyBar, i ) => {
+      candyBar.travelTo( new Vector2(
+        plate.xPosition,
+        getCandyBarYPosition( i + nonAnimatingActiveCandyBars.length )
+      ) );
     } );
   }
 
@@ -369,7 +393,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public step( dt: number ): void {
     // future implementation
   }
-
 }
+
+/**
+ * Helper function to get the Y position of a candy bar stacked on a plate in the notepad based on its position in the
+ * stack.  Zero is the bottom-most position in the stack.  The Y position is for the top of the candy bar.
+ */
+const getCandyBarYPosition = ( stackPosition: number ) => {
+  return MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
+         ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+             MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) * ( stackPosition + 1 ) );
+};
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );

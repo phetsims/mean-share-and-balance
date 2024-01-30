@@ -86,12 +86,12 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
       assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );
 
-      // Calculate and set the dropped candy bar's position.
+      // Calculate and set the dropped candy bar's destination.
       const numberOfCandyBarsOnPlate = model.getActivePlateStateCandyBars( closestPlate! ).length;
       const oldY = candyBarNode.candyBar.positionProperty.value.y;
-      const y = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
+      const newY = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
                 ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( numberOfCandyBarsOnPlate + 1 ) );
-      candyBarNode.candyBar.travelTo( new Vector2( closestPlate!.xPosition, y ) );
+      candyBarNode.candyBar.travelTo( new Vector2( closestPlate!.xPosition, newY ) );
 
       // Swap candy bars if parentPlate changes, so that each person always has the same total number of candy bars so
       // that when their spinner is incremented, they can promote their own inactive candy bar to active.

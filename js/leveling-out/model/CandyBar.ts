@@ -74,17 +74,30 @@ export default class CandyBar {
 
   /**
    * Travel to the specified destination in a continuous manner instead of all at once.  This is used to animate the
-   * motion of a candy bar from one place to another.
+   * motion of a candy bar from one place to another.  It is okay to call this when an animation is in progress - it
+   * will cause a new animation from the current location to the new destination.
    */
   public travelTo( destination: Vector2 ): void {
 
-    // state checking
-    assert && assert( this.travelAnimation === null, 'there shouldn\'t be an in-progress animation' );
+    // If there is already an animation in progress, take steps to redirect it to the (presumably) new destination.
+    if ( this.travelAnimation ) {
+
+      const currentPosition = this.positionProperty.value.copy();
+
+      // Stop the existing animation.
+      this.travelAnimation.stop();
+
+      // Stopping the animation will cause the candy bar to be immediately moved to the originally specified
+      // destination, but we don't want that in this case, so restore the position when this was called.
+      this.positionProperty.set( currentPosition );
+    }
 
     this.stateProperty.set( 'animating' );
 
+    // Calculate the animation time based on the distance and speed.
     const animationTime = this.positionProperty.value.distance( destination ) / TRAVEL_SPEED;
 
+    // Create the animation.
     this.travelAnimation = new Animation( {
       property: this.positionProperty,
       to: destination,
@@ -97,8 +110,8 @@ export default class CandyBar {
       this.stateProperty.set( 'plate' );
     };
 
+    // handlers for when the animation completes
     this.travelAnimation.endedEmitter.addListener( finish );
-
     this.travelAnimation.endedEmitter.addListener( () => {
       this.positionProperty.set( destination );
       finish();
