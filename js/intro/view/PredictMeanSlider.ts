@@ -9,7 +9,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { DragListener, Image, Line, Node, NodeOptions, Pattern } from '../../../../scenery/js/imports.js';
+import { DragListener, Image, Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
@@ -21,8 +21,6 @@ import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/ac
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Cup from '../model/Cup.js';
 import Property from '../../../../axon/js/Property.js';
-import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
-import Matrix3 from '../../../../dot/js/Matrix3.js';
 import pencil_png from '../../../images/pencil_png.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
@@ -42,10 +40,10 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     const options = providedOptions;
 
-    const linePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) );
-
-    const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ),
-      { lineWidth: 1.95, stroke: linePattern, lineDash: [ 5, 3 ] } );
+    const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), {
+      lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_WIDTH,
+      stroke: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN, lineDash: [ 5, 3 ]
+    } );
 
     const predictMeanHandle = new Image( pencil_png, { scale: 0.04, rotation: Math.PI / 4 } );
 

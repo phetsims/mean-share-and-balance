@@ -55,7 +55,8 @@ export default class MeanAccordionBox extends AccordionBox {
       } ) );
 
       const plate = new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
-        stroke: 'black',
+        stroke: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN,
+        lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_WIDTH,
         layoutOptions: {
           margin: 2
         }

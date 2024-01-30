@@ -49,12 +49,15 @@ export default class NotepadPlateNode extends Node {
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, VBoxOptions>()( {
       x: plate.xPosition,
-      bottom: MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y + STROKE_WIDTH / 2,
+      bottom: MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y + MeanShareAndBalanceConstants.NOTEPAD_LINE_WIDTH / 2,
       visibleProperty: plate.isActiveProperty,
       excludeInvisibleChildrenFromBounds: false,
       children: [
         ...candyBarOutlineNodes,
-        new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, { stroke: 'black' } )
+        new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
+          stroke: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN,
+          lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_WIDTH
+        } )
       ]
     }, providedOptions );
 
