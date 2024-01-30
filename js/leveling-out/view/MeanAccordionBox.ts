@@ -8,7 +8,7 @@
 
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { HBox, Image, Rectangle, Text, VBox, Node } from '../../../../scenery/js/imports.js';
+import { HBox, Image, Line, Node, Rectangle, Text, VBox } from '../../../../scenery/js/imports.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
@@ -17,8 +17,12 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import Utils from '../../../../dot/js/Utils.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 
 type MeanAccordionBoxOptions = WithRequired<AccordionBoxOptions, 'tandem'>;
+
+const ACCORDION_BOX_MARGIN = 8;
 
 export default class MeanAccordionBox extends AccordionBox {
 
@@ -32,7 +36,7 @@ export default class MeanAccordionBox extends AccordionBox {
     const SCALE_FACTOR = 0.05;
 
     const meanCandyBarsVBox = new VBox( {
-      align: 'left',
+      align: 'center',
       spacing: 1
     } );
 
@@ -49,6 +53,15 @@ export default class MeanAccordionBox extends AccordionBox {
       const children: Array<Node> = _.times( wholePart, () => new Image( chocolateBar_png, {
         scale: SCALE_FACTOR
       } ) );
+
+      const plate = new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
+        stroke: 'black',
+        layoutOptions: {
+          margin: 2
+        }
+      } );
+      children.push( plate );
+
       if ( remainder > 0 ) {
 
         const partialCandyBar = new Rectangle( scaledCandyBarImageBounds.dilated( -0.75 ), {
@@ -66,20 +79,39 @@ export default class MeanAccordionBox extends AccordionBox {
         children.unshift( partialCandyBar );
       }
 
+      const meanReadout = new Text( Utils.toFixed( mean, 1 ), {
+        font: new PhetFont( 14 )
+      } );
+
+      // The mean readout should be seen on top of all the candy bars.
+      children.unshift( meanReadout );
+
       meanCandyBarsVBox.children = children;
     } );
 
     const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty, providedOptions.tandem );
 
-    const meanNode = new HBox( { children: [ meanCandyBarsVBox, infoButton ], spacing: 40, align: 'bottom' } );
+    const meanNode = new HBox( {
+      children: [ meanCandyBarsVBox, infoButton ],
+      align: 'bottom',
+      justify: 'spaceEvenly',
+      spacing: 25
+    } );
 
     super( meanNode, {
-      titleNode: new Text( 'Mean', { fontSize: 15, maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH } ),
+      titleNode: new Text( 'Mean', {
+        font: new PhetFont( { weight: 'bold', size: 16 } ),
+        maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+      } ),
+      titleAlignX: 'left',
       expandedProperty: isMeanAccordionExpandedProperty,
       contentVerticalAlign: 'bottom',
       layoutOptions: {
-        minContentHeight: 200
+        minContentHeight: 215
       },
+      buttonXMargin: ACCORDION_BOX_MARGIN,
+      buttonYMargin: ACCORDION_BOX_MARGIN,
+      contentYMargin: ACCORDION_BOX_MARGIN,
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'meanAccordionBox' )
