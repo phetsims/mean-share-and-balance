@@ -24,7 +24,8 @@
     "generatedUnitTests": true,
     "supportsOutputJS": true,
     "simFeatures": {
-      "supportsInteractiveDescription": true
+      "supportsInteractiveDescription": true,
+      "supportsDynamicLocale": true
     },
     "screenNameKeys": [
       "MEAN_SHARE_AND_BALANCE/screen.intro",
