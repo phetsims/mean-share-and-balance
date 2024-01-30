@@ -41,7 +41,16 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       stroke: 'black'
     } );
 
-    const children: Array<Node> = [ candyBarRectangle ];
+    //TODO: Do we want this? https://github.com/phetsims/mean-share-and-balance/issues/147
+    const candyBarShadowRectangle = new Rectangle( candyBarRectangle.rectBounds, {
+      fill: 'black',
+      opacity: 0.2,
+      cornerRadius: 1,
+      x: 4,
+      y: 2
+    } );
+
+    const children: Array<Node> = [ candyBarShadowRectangle, candyBarRectangle ];
 
     // In ?dev mode, show the index of the candy bar to help understand how things are organized and how they
     // redistribute.
