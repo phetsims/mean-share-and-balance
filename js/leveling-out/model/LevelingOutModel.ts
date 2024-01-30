@@ -127,12 +127,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
       plate.isActiveProperty.lazyLink( isActive => {
-        const candyBars = this.getCandyBarsOnPlate( plate );
+        const candyBars = this.getCandyBarsAssignedToPlate( plate );
 
         // If a plate became inactive, we need to account for the extra or missing candy bars.
         if ( !isActive ) {
           this.reconcileSnacks( plate );
-          assert && assert( plate.snackNumberProperty.value === this.getActiveCandyBarsOnPlate( plate ).length,
+          assert && assert( plate.snackNumberProperty.value === this.getActiveCandyBarsAssignedToPlate( plate ).length,
             'The number of candy bars on the table plate should match the number of candy bars on the notepad plate.' );
         }
 
@@ -163,7 +163,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     // Tracks the total number of candyBars based on the "ground truth" tablePlate numbers.
     // Must be deriveAny because .map() does not preserve .length()
     this.totalCandyBarsProperty = DerivedProperty.deriveAny( totalCandyBarsPropertyDependencies, () => {
-      const candyBarAmounts = this.getActivePeople().map( tablePlate => tablePlate.snackNumberProperty.value );
+      const candyBarAmounts = this.getActivePlates().map( plate => plate.snackNumberProperty.value );
       return _.sum( candyBarAmounts );
     }, {
       tandem: options.tandem.createTandem( 'totalCandyBarsProperty' ),
@@ -184,10 +184,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     } );
   }
 
-  public getActivePeople(): Array<Plate> {
-    return this.plates.filter( tablePlate => tablePlate.isActiveProperty.value );
-  }
-
   public getActivePlates(): Array<Plate> {
     return this.plates.filter( plate => plate.isActiveProperty.value );
   }
@@ -196,27 +192,27 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     return this.candyBars.filter( candyBar => candyBar.isActiveProperty.value );
   }
 
-  public getCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
+  public getCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
     return this.candyBars.filter( candyBar => candyBar.parentPlateProperty.value === plate );
   }
 
-  public getInactiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
-    return this.getCandyBarsOnPlate( plate ).filter( candyBar => !candyBar.isActiveProperty.value );
+  public getInactiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
+    return this.getCandyBarsAssignedToPlate( plate ).filter( candyBar => !candyBar.isActiveProperty.value );
   }
 
-  public getActiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
+  public getActiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
     return this.candyBars.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
   }
 
-  public getTopActiveCandyBarOnPlate( plate: Plate ): CandyBar {
-    const activeCandyBarsOnPlate = this.getActiveCandyBarsOnPlate( plate );
+  public getTopActiveCandyBarAssignedToPlate( plate: Plate ): CandyBar {
+    const activeCandyBarsOnPlate = this.getActiveCandyBarsAssignedToPlate( plate );
     assert && assert( activeCandyBarsOnPlate.length > 0, `There is no top candy bar on plate since active candyBars is: ${activeCandyBarsOnPlate.length}` );
     const topCandyBar = _.minBy( activeCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
     return topCandyBar!;
   }
 
-  public getBottomInactiveCandyBarOnPlate( plate: Plate ): CandyBar {
-    const inactiveCandyBarsOnPlate = this.getInactiveCandyBarsOnPlate( plate );
+  public getBottomInactiveCandyBarAssignedToPlate( plate: Plate ): CandyBar {
+    const inactiveCandyBarsOnPlate = this.getInactiveCandyBarsAssignedToPlate( plate );
     assert && assert(
       inactiveCandyBarsOnPlate.length > 0,
       `There is no inactive bottom candy bar on plate since inactive candyBars is: ${inactiveCandyBarsOnPlate.length}`
@@ -225,18 +221,33 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
     return bottomCandyBar!;
   }
 
-  public getActivePlateStateCandyBars( plate: Plate ): Array<CandyBar> {
-    const candyBars = this.getActiveCandyBarsOnPlate( plate );
-    return candyBars.filter( candyBar =>
-      candyBar.stateProperty.value === 'plate' || candyBar.stateProperty.value === 'animating'
-    );
+
+  /**
+   * Get all active candy bars associated with a plate that are not dragging or animating.
+   */
+  public getActiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
+    const candyBars = this.getActiveCandyBarsAssignedToPlate( plate );
+    return candyBars.filter( candyBar => candyBar.stateProperty.value === 'plate' );
+  }
+
+  public getActiveCandyBarsAnimatingToPlate( plate: Plate ): Array<CandyBar> {
+    const candyBars = this.getActiveCandyBarsAssignedToPlate( plate );
+    return candyBars.filter( candyBar => candyBar.stateProperty.value === 'animating' );
   }
 
   public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
     return plates.filter( plate => {
-      const numberOfCandyBars = this.getActivePlateStateCandyBars( plate ).length;
+      const numberOfCandyBars = this.getNumberOfCandyBarsStackedOnPlate( plate );
       return numberOfCandyBars < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON;
     } );
+  }
+
+  /**
+   * Get the number of candy bars that are currently stacked on a plate in the notepad.
+   * This includes candy bars that are animating since they need to be factored into stacking logic.
+   */
+  public getNumberOfCandyBarsStackedOnPlate( plate: Plate ): number {
+    return this.getActiveCandyBarsOnPlate( plate ).length + this.getActiveCandyBarsAnimatingToPlate( plate ).length;
   }
 
   /**
@@ -244,28 +255,16 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    * them.
    */
   public reorganizeCandyBars( plate: Plate ): void {
-    const plateStateCandyBars = this.getActivePlateStateCandyBars( plate );
+    const nonAnimatingActiveCandyBars = this.getActiveCandyBarsOnPlate( plate );
+    const animatingCandyBars = this.getActiveCandyBarsAnimatingToPlate( plate );
 
-    // Divide the active candy bars up into those that are animating and those that aren't, since we want to put the
-    // non-animating ones on the bottom of the stack.  This is needed primarily for handling multitouch and race
-    // conditions.
-    const nonAnimatingActiveCandyBars: CandyBar[] = [];
-    const animatingCandyBars: CandyBar[] = [];
-    plateStateCandyBars.forEach( candyBar => {
-      if ( candyBar.stateProperty.value === 'animating' ) {
-        animatingCandyBars.push( candyBar );
-      }
-      else {
-        nonAnimatingActiveCandyBars.push( candyBar );
-      }
-    } );
-
-    // Position the active non-animating candy bars to be in a stack on top of the node plates.
+    // The non-animating candy bars should be at the bottom of the stack. Animating candy bars will go on top.
+    // This is needed primarily for handling multitouch and race conditions.
     nonAnimatingActiveCandyBars.forEach( ( candyBar, i ) => {
       candyBar.positionProperty.set( new Vector2( plate.xPosition, getCandyBarYPosition( i ) ) );
     } );
 
-    // Set a potentially new destination any animating candy bars.
+    // Set a potentially new destination for any animating candy bars.
     animatingCandyBars.forEach( ( candyBar, i ) => {
       candyBar.travelTo( new Vector2(
         plate.xPosition,
@@ -279,13 +278,13 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    */
   private reconcileSnacks( plate: Plate ): void {
     const numberOfTablePlateSnacks = plate.snackNumberProperty.value;
-    const numberOfNotepadPlateSnacks = this.getActiveCandyBarsOnPlate( plate ).length;
+    const numberOfNotepadPlateSnacks = this.getActiveCandyBarsAssignedToPlate( plate ).length;
 
     if ( numberOfTablePlateSnacks > numberOfNotepadPlateSnacks ) {
       const delta = numberOfTablePlateSnacks - numberOfNotepadPlateSnacks;
       for ( let i = 0; i < delta; i++ ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
-        this.getTopActiveCandyBarOnPlate( maxPlate ).isActiveProperty.set( false );
+        this.getTopActiveCandyBarAssignedToPlate( maxPlate ).isActiveProperty.set( false );
         this.reorganizeCandyBars( maxPlate );
       }
     }
@@ -293,12 +292,12 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
       const delta = numberOfNotepadPlateSnacks - numberOfTablePlateSnacks;
       for ( let i = 0; i < delta; i++ ) {
         const minPlate = this.getPlateWithLeastCandyBars();
-        this.getBottomInactiveCandyBarOnPlate( minPlate ).isActiveProperty.set( true );
+        this.getBottomInactiveCandyBarAssignedToPlate( minPlate ).isActiveProperty.set( true );
         this.reorganizeCandyBars( minPlate );
       }
     }
 
-    const snacksOnNotepadPlate = this.getCandyBarsOnPlate( plate );
+    const snacksOnNotepadPlate = this.getCandyBarsAssignedToPlate( plate );
     snacksOnNotepadPlate.forEach( ( snack, i ) => {
       snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
     } );
@@ -310,18 +309,18 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    */
   private tablePlateCandyBarAmountIncrease( plate: Plate, numberOfCandyBarsAdded: number ): void {
     for ( let i = 0; i < numberOfCandyBarsAdded; i++ ) {
-      const numberOfCandyBarsOnPlate = this.getActivePlateStateCandyBars( plate ).length;
+      const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
       if ( numberOfCandyBarsOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON ) {
         const minPlate = this.getPlateWithLeastCandyBars();
         assert && assert(
           minPlate !== plate,
           `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}`
         );
-        this.getBottomInactiveCandyBarOnPlate( minPlate ).isActiveProperty.set( true );
+        this.getBottomInactiveCandyBarAssignedToPlate( minPlate ).isActiveProperty.set( true );
         this.reorganizeCandyBars( minPlate );
       }
       else {
-        this.getBottomInactiveCandyBarOnPlate( plate ).isActiveProperty.set( true );
+        this.getBottomInactiveCandyBarAssignedToPlate( plate ).isActiveProperty.set( true );
       }
       this.reorganizeCandyBars( plate );
     }
@@ -333,21 +332,21 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
    */
   private tablePlateCandyBarAmountDecrease( plate: Plate, numberOfCandyBarsRemoved: number ): void {
     for ( let i = 0; i < numberOfCandyBarsRemoved; i++ ) {
-      const numberOfCandyBarsOnPlate = this.getActivePlateStateCandyBars( plate ).length;
+      const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
       if ( numberOfCandyBarsOnPlate === 0 ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
-        this.getTopActiveCandyBarOnPlate( maxPlate ).isActiveProperty.set( false );
+        this.getTopActiveCandyBarAssignedToPlate( maxPlate ).isActiveProperty.set( false );
         this.reorganizeCandyBars( maxPlate );
       }
       else {
-        this.getTopActiveCandyBarOnPlate( plate ).isActiveProperty.set( false );
+        this.getTopActiveCandyBarAssignedToPlate( plate ).isActiveProperty.set( false );
       }
       this.reorganizeCandyBars( plate );
     }
   }
 
   public getPlateWithMostActiveCandyBars(): Plate {
-    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsOnPlate( plate ).length ) );
+    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length ) );
 
     // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN.
     // candyBarsNumberProperty will always be a number.
@@ -355,7 +354,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   }
 
   public getPlateWithLeastCandyBars(): Plate {
-    const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsOnPlate( plate ).length ) );
+    const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length ) );
 
     // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN.
     // candyBarsNumberProperty will always be a number.
@@ -381,7 +380,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
   public syncData(): void {
 
     this.plates.forEach( ( tablePlate, index ) => {
-      this.getCandyBarsOnPlate( this.plates[ index ] ).forEach( ( candyBar, i ) => {
+      this.getCandyBarsAssignedToPlate( this.plates[ index ] ).forEach( ( candyBar, i ) => {
         candyBar.isActiveProperty.value = i < tablePlate.snackNumberProperty.value;
       } );
       if ( tablePlate.isActiveProperty.value ) {
