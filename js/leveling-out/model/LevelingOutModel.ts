@@ -11,10 +11,7 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import MeanShareAndBalanceModel, { MeanShareAndBalanceModelOptions } from '../../common/model/MeanShareAndBalanceModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Range from '../../../../dot/js/Range.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Plate from './Plate.js';
@@ -24,16 +21,14 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import CandyBar from './CandyBar.js';
 import Property from '../../../../axon/js/Property.js';
+import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 
 type SelfOptions = EmptySelfOptions;
-type LevelingOutModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
+type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
 const MAX_PEOPLE = 7;
 
-export default class LevelingOutModel extends MeanShareAndBalanceModel {
-
-  public readonly numberOfPlatesRangeProperty: Property<Range>;
-  public readonly numberOfPlatesProperty: Property<number>;
+export default class LevelingOutModel extends SharingModel {
 
   public readonly plates: Array<Plate>;
   public readonly candyBars: Array<CandyBar>;
@@ -46,31 +41,13 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
-    const options = optionize<LevelingOutModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
+    const options = optionize<LevelingOutModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
 
     this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, {
 
       // phet-io
       tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
-    } );
-
-    this.numberOfPlatesRangeProperty = new Property<Range>(
-      new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
-      {
-
-        // phet-io
-        tandem: options.tandem.createTandem( 'numberOfPlatesRangeProperty' ),
-        phetioValueType: Range.RangeIO
-      }
-    );
-
-    this.numberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
-      numberType: 'Integer',
-      range: this.numberOfPlatesRangeProperty,
-
-      // phet-io
-      tandem: options.tandem.createTandem( 'numberOfPlatesProperty' )
     } );
 
     this.isMeanAccordionExpandedProperty = new BooleanProperty( false, {
@@ -369,7 +346,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
 
     // Reset other aspects of the model.
     this.isMeanAccordionExpandedProperty.reset();
-    this.numberOfPlatesProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
     this.plates.forEach( plate => plate.reset() );
   }
@@ -388,10 +364,6 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         this.reorganizeCandyBars( tablePlate );
       }
     } );
-  }
-
-  public step( dt: number ): void {
-    // future implementation
   }
 }
 

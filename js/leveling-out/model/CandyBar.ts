@@ -2,7 +2,7 @@
 
 /**
  * Individual candy bars in the notepad representation.
- * These candy bars are draggable therefore their position, and parentPlate are important.
+ * These candy bars are draggable therefore their position and parentPlate are important.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

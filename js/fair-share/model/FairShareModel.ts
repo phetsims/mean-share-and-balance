@@ -10,25 +10,20 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import MeanShareAndBalanceModel, { MeanShareAndBalanceModelOptions } from '../../common/model/MeanShareAndBalanceModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 
 type SelfOptions = EmptySelfOptions;
-type FairShareModelOptions = SelfOptions & PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
+type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
-export default class FairShareModel extends MeanShareAndBalanceModel {
+export default class FairShareModel extends SharingModel {
 
   public constructor( providedOptions?: FairShareModelOptions ) {
-
-    const options = optionize<FairShareModelOptions, SelfOptions, MeanShareAndBalanceModelOptions>()( {}, providedOptions );
+    const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
   }
 
-  public reset(): void {
-    // TBD
-  }
-
-  public step(): void {
+  public override reset(): void {
     // TBD
   }
 }

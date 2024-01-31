@@ -7,7 +7,6 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import MeanShareAndBalanceModel, { MeanShareAndBalanceModelOptions } from '../../common/model/MeanShareAndBalanceModel.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
@@ -23,15 +22,15 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
+import TModel from '../../../../joist/js/TModel.js';
+import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 
+type IntroModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
 
-type IntroModelOptions = PickRequired<MeanShareAndBalanceModelOptions, 'tandem'>;
-
-export default class IntroModel extends MeanShareAndBalanceModel {
+export default class IntroModel implements TModel {
 
   public readonly numberOfCupsRange = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
-  public readonly cupRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
 
   public readonly numberOfCupsProperty: Property<number>;
   public readonly meanPredictionProperty: Property<number>;
@@ -51,7 +50,6 @@ export default class IntroModel extends MeanShareAndBalanceModel {
   public constructor( providedOptions: IntroModelOptions ) {
 
     const options = providedOptions;
-    super( options );
 
     // Visibility properties
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
