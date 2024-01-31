@@ -11,7 +11,7 @@ import Dialog from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
-import Plate from '../model/Plate.js';
+import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';

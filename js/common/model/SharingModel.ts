@@ -16,8 +16,12 @@ import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Plate from '../../leveling-out/model/Plate.js';
+import Plate from './Plate.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import Snack from './Snack.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
@@ -25,13 +29,16 @@ export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions
 // constants
 const MAX_PLATES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
 
-export default class SharingModel implements TModel {
+export default class SharingModel<T extends Snack> implements TModel {
 
   public readonly numberOfPlatesRangeProperty: Property<Range>;
   public readonly numberOfPlatesProperty: Property<number>;
+  public readonly totalSnacksProperty: TReadOnlyProperty<number>;
   public readonly plates: Array<Plate>;
   public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
+  public readonly snacks: T[];
+  public readonly meanProperty: TReadOnlyProperty<number>;
 
   // TODO: Do we need options here, or can we just pass in a tandem?  See https://github.com/phetsims/mean-share-and-balance/issues/138.
   public constructor( options: SharingModelOptions ) {
@@ -66,6 +73,10 @@ export default class SharingModel implements TModel {
       tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
     } );
 
+    this.snacks = [];
+
+    const totalSnacksPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
+
     // Create the set of plates that will hold the snacks.
     this.plates = [];
     _.times( MAX_PLATES, plateIndex => {
@@ -80,7 +91,43 @@ export default class SharingModel implements TModel {
         tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )
       } );
       this.plates.push( plate );
+
+      totalSnacksPropertyDependencies.push( plate.snackNumberProperty );
+      totalSnacksPropertyDependencies.push( plate.isActiveProperty );
     } );
+
+    // Tracks the total number of snacks based on the "ground truth" numbers for each plate. Must be deriveAny because
+    // .map() does not preserve .length().
+    this.totalSnacksProperty = DerivedProperty.deriveAny(
+      totalSnacksPropertyDependencies,
+      () => {
+        const candyBarAmounts = this.getActivePlates().map( plate => plate.snackNumberProperty.value );
+        return _.sum( candyBarAmounts );
+      },
+      {
+        tandem: options.tandem.createTandem( 'totalSnacksProperty' ),
+        phetioValueType: NumberIO
+      }
+    );
+
+    // Calculates the mean based on the "ground-truth" candyBars on the table.
+    this.meanProperty = new DerivedProperty(
+      [ this.totalSnacksProperty, this.numberOfPlatesProperty ],
+      ( totalSnacks, numberOfPlates ) => totalSnacks / numberOfPlates, {
+        tandem: options.tandem.createTandem( 'meanProperty' ),
+        phetioValueType: NumberIO
+      }
+    );
+
+    this.numberOfPlatesProperty.link( numberOfPlates => {
+      this.plates.forEach( ( tablePlate, i ) => {
+        tablePlate.isActiveProperty.value = i < numberOfPlates;
+      } );
+    } );
+  }
+
+  public getActivePlates(): Array<Plate> {
+    return this.plates.filter( plate => plate.isActiveProperty.value );
   }
 
   /**

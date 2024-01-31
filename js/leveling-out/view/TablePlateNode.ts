@@ -9,7 +9,7 @@
 
 import { Image, Node, NodeOptions, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../model/Plate.js';
+import Plate from '../../common/model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';

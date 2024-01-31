@@ -13,36 +13,24 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Plate from './Plate.js';
+import Plate from '../../common/model/Plate.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import CandyBar from './CandyBar.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
-export default class LevelingOutModel extends SharingModel {
-
-  // TODO: Move these up to parent class and generalize, see https://github.com/phetsims/mean-share-and-balance/issues/138.
-  public readonly candyBars: Array<CandyBar>;
-  public readonly totalCandyBarsProperty: TReadOnlyProperty<number>;
-  public readonly meanProperty: TReadOnlyProperty<number>;
+export default class LevelingOutModel extends SharingModel<CandyBar> {
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
 
-    this.candyBars = [];
-
-    const totalCandyBarsPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
-
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
 
-    // In Mean Share and Balance, we decided arrays start counting at 1
+    // In Mean Share and Balance, we decided arrays start counting at 1 for phet-io.
     let totalCandyBarCount = 1;
 
     this.plates.forEach( plate => {
@@ -65,7 +53,7 @@ export default class LevelingOutModel extends SharingModel {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
         } );
 
-        this.candyBars.push( candyBar );
+        this.snacks.push( candyBar );
       }
 
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
@@ -98,45 +86,15 @@ export default class LevelingOutModel extends SharingModel {
           }
         }
       } );
-
-      totalCandyBarsPropertyDependencies.push( plate.snackNumberProperty );
-      totalCandyBarsPropertyDependencies.push( plate.isActiveProperty );
     } );
-
-    // Tracks the total number of candyBars based on the "ground truth" tablePlate numbers.
-    // Must be deriveAny because .map() does not preserve .length()
-    this.totalCandyBarsProperty = DerivedProperty.deriveAny( totalCandyBarsPropertyDependencies, () => {
-      const candyBarAmounts = this.getActivePlates().map( plate => plate.snackNumberProperty.value );
-      return _.sum( candyBarAmounts );
-    }, {
-      tandem: options.tandem.createTandem( 'totalCandyBarsProperty' ),
-      phetioValueType: NumberIO
-    } );
-
-    // Calculates the mean based on the "ground-truth" candyBars on the table.
-    this.meanProperty = new DerivedProperty( [ this.totalCandyBarsProperty, this.numberOfPlatesProperty ],
-      ( totalCandyBars, numberOfPlates ) => totalCandyBars / numberOfPlates, {
-        tandem: options.tandem.createTandem( 'meanProperty' ),
-        phetioValueType: NumberIO
-      } );
-
-    this.numberOfPlatesProperty.link( numberOfPlates => {
-      this.plates.forEach( ( tablePlate, i ) => {
-        tablePlate.isActiveProperty.value = i < numberOfPlates;
-      } );
-    } );
-  }
-
-  public getActivePlates(): Array<Plate> {
-    return this.plates.filter( plate => plate.isActiveProperty.value );
   }
 
   public getActiveCandyBars(): Array<CandyBar> {
-    return this.candyBars.filter( candyBar => candyBar.isActiveProperty.value );
+    return this.snacks.filter( candyBar => candyBar.isActiveProperty.value );
   }
 
   public getCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
-    return this.candyBars.filter( candyBar => candyBar.parentPlateProperty.value === plate );
+    return this.snacks.filter( candyBar => candyBar.parentPlateProperty.value === plate );
   }
 
   public getInactiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
@@ -144,7 +102,7 @@ export default class LevelingOutModel extends SharingModel {
   }
 
   public getActiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
-    return this.candyBars.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
+    return this.snacks.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
   }
 
   public getTopActiveCandyBarAssignedToPlate( plate: Plate ): CandyBar {
@@ -308,8 +266,7 @@ export default class LevelingOutModel extends SharingModel {
 
     super.reset();
 
-    // Force any in-progress animations of the candy bars to finish.
-    this.candyBars.forEach( candyBar => { candyBar.reset(); } );
+    this.snacks.forEach( candyBar => { candyBar.reset(); } );
   }
 
   /**

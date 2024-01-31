@@ -63,7 +63,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     // REVIEW: lowercase b
     const notepad = new NotepadWithReadoutNode(
-      model.totalCandyBarsProperty,
+      model.totalSnacksProperty,
       MeanShareAndBalanceStrings.totalCandyBarsPatternStringProperty,
       MeanShareAndBalanceStrings.barStringProperty,
       MeanShareAndBalanceStrings.barsStringProperty
@@ -135,7 +135,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } ) );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
-    const notepadCandyBars = model.candyBars.map( ( candyBar, i ) =>
+    const notepadCandyBars = model.snacks.map( ( candyBar, i ) =>
       new NotepadCandyBarNode( model, candyBar, notepadBoundsProperty, candyBarDropped, {
         tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
         visibleProperty: candyBar.isActiveProperty

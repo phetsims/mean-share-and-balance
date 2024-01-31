@@ -15,7 +15,7 @@ import { Line, Node, NodeOptions, NodeTranslationOptions, Rectangle, VBoxOptions
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Plate from '../model/Plate.js';
+import Plate from '../../common/model/Plate.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type NotepadPlateNodeOptions = StrictOmit<VBoxOptions, keyof NodeTranslationOptions | 'children'> & PickRequired<NodeOptions, 'tandem'>;

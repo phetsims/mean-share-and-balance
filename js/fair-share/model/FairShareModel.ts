@@ -12,11 +12,12 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
+import Apple from './Apple.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
-export default class FairShareModel extends SharingModel {
+export default class FairShareModel extends SharingModel<Apple> {
 
   public constructor( providedOptions?: FairShareModelOptions ) {
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
