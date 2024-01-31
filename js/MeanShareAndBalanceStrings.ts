@@ -15,6 +15,7 @@ type StringsType = {
   'screen': {
     'introStringProperty': LocalizedStringProperty;
     'levelingOutStringProperty': LocalizedStringProperty;
+    'fairShareStringProperty': LocalizedStringProperty;
   };
   'predictMeanStringProperty': LocalizedStringProperty;
   'meanStringProperty': LocalizedStringProperty;
@@ -24,6 +25,7 @@ type StringsType = {
   'numberOfCupsStringProperty': LocalizedStringProperty;
   'introQuestionStringProperty': LocalizedStringProperty;
   'levelingOutQuestionStringProperty': LocalizedStringProperty;
+  'fairShareQuestionStringProperty': LocalizedStringProperty;
   'numberOfPeopleStringProperty': LocalizedStringProperty;
   'meanEqualsStringProperty': LocalizedStringProperty;
   'totalCandyBarsPatternStringProperty': LocalizedStringProperty;
