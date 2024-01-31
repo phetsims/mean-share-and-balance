@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * Model for the "Fair Share" Screen which includes people, cookies, visual mean representation, and a numerical

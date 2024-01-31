@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * Representation for the "Fair Share" Screen. Contains a table with people, each of whom have a plate with cookies
