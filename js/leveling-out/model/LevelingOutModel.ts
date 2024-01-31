@@ -98,6 +98,7 @@ export default class LevelingOutModel extends MeanShareAndBalanceModel {
         xPosition: x,
         isActive: plateIndex < this.numberOfPlatesProperty.value,
         linePlacement: plateIndex,
+        startingNumberOfSnacks: plateIndex === 0 ? MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SNACKS_ON_FIRST_PLATE : 1,
 
         // phet-io
         tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )

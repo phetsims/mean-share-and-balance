@@ -20,6 +20,7 @@ type SelfOptions = {
   isActive: boolean;
   xPosition: number;
   linePlacement: number;
+  startingNumberOfSnacks?: number;
 };
 
 type PlateOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
@@ -41,7 +42,8 @@ export default class Plate extends PhetioObject {
   public constructor( providedOptions: PlateOptions ) {
 
     const options = optionize<PlateOptions, SelfOptions, PhetioObjectOptions>()( {
-      phetioState: false
+      phetioState: false,
+      startingNumberOfSnacks: 1
     }, providedOptions );
 
     super( options );
@@ -56,7 +58,7 @@ export default class Plate extends PhetioObject {
     } );
     this.xPosition = options.xPosition;
 
-    this.snackNumberProperty = new NumberProperty( options.isActive ? 1 : 0, {
+    this.snackNumberProperty = new NumberProperty( options.isActive ? options.startingNumberOfSnacks : 0, {
 
       range: new Range( 0, 10 ),
 
