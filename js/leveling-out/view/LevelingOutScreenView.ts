@@ -141,7 +141,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
         visibleProperty: candyBar.isActiveProperty
       } ) );
 
-    // This contains all the candy bars from the top (paper) representation and the bottom (table) representation.
+    // This contains all the candy bars from the top (notepad) representation and the bottom (table) representation.
     const candyBarLayerNode = new Node( {
 
       // See peopleLayerNode.excludeInvisibleChildrenFromBounds comment

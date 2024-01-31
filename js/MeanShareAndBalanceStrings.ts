@@ -31,9 +31,9 @@ type StringsType = {
   'totalCandyBarsPatternStringProperty': LocalizedStringProperty;
   'barStringProperty': LocalizedStringProperty;
   'barsStringProperty': LocalizedStringProperty;
-  'totalCookiesPatternStringProperty': LocalizedStringProperty;
-  'cookieStringProperty': LocalizedStringProperty;
-  'cookiesStringProperty': LocalizedStringProperty;
+  'totalApplesPatternStringProperty': LocalizedStringProperty;
+  'appleStringProperty': LocalizedStringProperty;
+  'applesStringProperty': LocalizedStringProperty;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

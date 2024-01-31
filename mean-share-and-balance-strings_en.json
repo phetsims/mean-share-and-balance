@@ -53,13 +53,13 @@
   "bars": {
     "value": "bars"
   },
-  "totalCookiesPattern": {
+  "totalApplesPattern": {
     "value": "Total = {{total}} {{measurement}}"
   },
-  "cookie": {
-    "value": "cookie"
+  "apple": {
+    "value": "apple"
   },
-  "cookies": {
-    "value": "cookies"
+  "apples": {
+    "value": "apples"
   }
 }
