@@ -43,6 +43,7 @@ type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<MeanShareAndBalance
 
 // constants
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
+const CANDY_BAR_OFFSET = 10;
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
@@ -165,12 +166,13 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     const centerPlayAreaNodes = () => {
 
       // The candyBarLayerNode and peopleLayerNode bounds change when the number of people change, due to excludeInvisibleChildrenFromBounds
-      candyBarLayerNode.centerX = playAreaCenterX;
-      peopleLayerNode.centerX = playAreaCenterX - 45;
+      candyBarLayerNode.centerX = playAreaCenterX + CANDY_BAR_OFFSET;
 
-      tableNode.centerX = candyBarLayerNode.centerX - 10;
-      tableNode.y = candyBarLayerNode.bottom - 120;
-      notepad.centerX = candyBarLayerNode.centerX;
+      // We want the people to be slightly to the left of their candy bars.
+      peopleLayerNode.centerX = playAreaCenterX - 30;
+      tableNode.centerX = candyBarLayerNode.centerX - CANDY_BAR_OFFSET;
+
+      notepad.centerX = candyBarLayerNode.centerX - CANDY_BAR_OFFSET;
       meanCalculationDialog.centerX = candyBarLayerNode.centerX;
 
       // Transform to the bounds of the candy bar, since they are in an intermediate layer.

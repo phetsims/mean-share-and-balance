@@ -10,13 +10,15 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, Image, NodeOptions } from '../../../../scenery/js/imports.js';
 import partyTable_png from '../../../images/partyTable_png.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
 export default class PartyTableNode extends Node {
 
   public constructor( providedOptions?: NodeOptions ) {
     const partyTableImage = new Image( partyTable_png, { scale: 0.32 } );
     super( {
-      children: [ partyTableImage ]
+      children: [ partyTableImage ],
+      y: MeanShareAndBalanceConstants.PARTY_TABLE_Y
     } );
   }
 }

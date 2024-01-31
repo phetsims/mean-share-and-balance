@@ -40,7 +40,7 @@ export default class TablePlateNode extends Node {
       plate.snackNumberProperty,
       new Property( numberPickerRange ),
       {
-        centerTop: new Vector2( plateImage.centerBottom.x, plateImage.centerBottom.y + 55 ),
+        centerTop: new Vector2( plateImage.centerBottom.x, MeanShareAndBalanceConstants.TABLE_PLATE_CENTER_Y + 20 ),
         tandem: options.tandem.createTandem( 'numberPicker' )
       }
     );
@@ -48,7 +48,6 @@ export default class TablePlateNode extends Node {
     const candyBarScale = 0.04;
 
     // create candy bars each person brought
-    // REVIEW: See if it would be appropriate to use _.times elsewhere
     const candyBars = _.times(
       MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON,
       () => new Image( chocolateBar_png, { scale: candyBarScale } )
