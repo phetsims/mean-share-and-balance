@@ -134,6 +134,7 @@ export default class CandyBar {
   }
 
   public reset(): void {
+    this.forceAnimationToFinish();
     this.positionProperty.reset();
     this.stateProperty.reset();
     this.parentPlateProperty.reset();

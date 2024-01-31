@@ -13,50 +13,29 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Plate from './Plate.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import CandyBar from './CandyBar.js';
-import Property from '../../../../axon/js/Property.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
-const MAX_PEOPLE = 7;
-
 export default class LevelingOutModel extends SharingModel {
 
-  public readonly plates: Array<Plate>;
+  // TODO: Move these up to parent class and generalize, see https://github.com/phetsims/mean-share-and-balance/issues/138.
   public readonly candyBars: Array<CandyBar>;
-
-  public readonly meanProperty: TReadOnlyProperty<number>;
   public readonly totalCandyBarsProperty: TReadOnlyProperty<number>;
-
-  public readonly isMeanAccordionExpandedProperty: Property<boolean>;
-  public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
+  public readonly meanProperty: TReadOnlyProperty<number>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
 
-    this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, {
-
-      // phet-io
-      tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
-    } );
-
-    this.isMeanAccordionExpandedProperty = new BooleanProperty( false, {
-
-      // phet-io
-      tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
-    } );
-
-    this.plates = [];
     this.candyBars = [];
 
     const totalCandyBarsPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
@@ -66,21 +45,7 @@ export default class LevelingOutModel extends SharingModel {
     // In Mean Share and Balance, we decided arrays start counting at 1
     let totalCandyBarCount = 1;
 
-    // Statically allocate plates, people, and candyBars. Whether they participate in the model is controlled by the
-    // isActiveProperty on each one.
-    for ( let plateIndex = 0; plateIndex < MAX_PEOPLE; plateIndex++ ) {
-      const x = plateIndex * MeanShareAndBalanceConstants.TABLE_PLATE_WIDTH;
-
-      const plate = new Plate( {
-        xPosition: x,
-        isActive: plateIndex < this.numberOfPlatesProperty.value,
-        linePlacement: plateIndex,
-        startingNumberOfSnacks: plateIndex === 0 ? MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SNACKS_ON_FIRST_PLATE : 1,
-
-        // phet-io
-        tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )
-      } );
-      this.plates.push( plate );
+    this.plates.forEach( plate => {
 
       // Create and initialize all the candy bars.
       for ( let candyBarIndex = 0;
@@ -136,7 +101,7 @@ export default class LevelingOutModel extends SharingModel {
 
       totalCandyBarsPropertyDependencies.push( plate.snackNumberProperty );
       totalCandyBarsPropertyDependencies.push( plate.isActiveProperty );
-    }
+    } );
 
     // Tracks the total number of candyBars based on the "ground truth" tablePlate numbers.
     // Must be deriveAny because .map() does not preserve .length()
@@ -341,13 +306,10 @@ export default class LevelingOutModel extends SharingModel {
 
   public override reset(): void {
 
-    // Force any in-progress animations of the candy bars to finish.
-    this.candyBars.forEach( candyBar => { candyBar.forceAnimationToFinish(); } );
+    super.reset();
 
-    // Reset other aspects of the model.
-    this.isMeanAccordionExpandedProperty.reset();
-    this.meanCalculationDialogVisibleProperty.reset();
-    this.plates.forEach( plate => plate.reset() );
+    // Force any in-progress animations of the candy bars to finish.
+    this.candyBars.forEach( candyBar => { candyBar.reset(); } );
   }
 
   /**
