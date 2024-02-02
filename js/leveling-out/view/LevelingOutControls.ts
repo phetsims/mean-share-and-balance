@@ -30,7 +30,7 @@ export default class LevelingOutControls extends VBox {
     const options = providedOptions;
 
     const meanAccordionBox = new MeanAccordionBox( model.meanProperty, meanCalculationDialogVisibleProperty,
-      model.isMeanAccordionExpandedProperty, { tandem: options.tandem } );
+      model.isMeanAccordionExpandedProperty, { tandem: options.tandem, representation: 'candyBars' } );
 
     const syncListener = new FireListener( { fire: () => model.syncData(), tandem: options.tandem.createTandem( 'syncListener' ) } );
 

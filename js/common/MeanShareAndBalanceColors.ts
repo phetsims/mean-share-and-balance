@@ -79,6 +79,9 @@ const meanShareAndBalanceColors = {
   } ),
   paperColorProperty: new ProfileColorProperty( meanShareAndBalance, 'paper', {
     default: '#F0F0F0'
+  } ),
+  appleColorProperty: new ProfileColorProperty( meanShareAndBalance, 'apple', {
+    default: '#00A048'
   } )
 };
 

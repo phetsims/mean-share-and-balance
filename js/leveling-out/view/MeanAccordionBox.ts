@@ -1,6 +1,6 @@
 // Copyright 2024, University of Colorado Boulder
 /**
- * Accordion box that shows the amount of candy bars that make up the mean.
+ * Accordion box that shows the amount of candy bars or apples that make up the mean.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -8,9 +8,7 @@
 
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { HBox, Image, Line, Node, Rectangle, Text, VBox } from '../../../../scenery/js/imports.js';
-import chocolateBar_png from '../../../images/chocolateBar_png.js';
-import { Shape } from '../../../../kite/js/imports.js';
+import { Circle, HBox, Line, Node, Rectangle, Text, VBox } from '../../../../scenery/js/imports.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -19,10 +17,23 @@ import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Utils from '../../../../dot/js/Utils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
-type MeanAccordionBoxOptions = WithRequired<AccordionBoxOptions, 'tandem'>;
+type SelfOptions = {
+  representation: 'candyBars' | 'apples';
+};
+
+type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOptions, 'tandem'>;
 
 const ACCORDION_BOX_MARGIN = 8;
+
+// Just for the dimensions
+const CANDY_BAR_BOUNDS = new Bounds2( 0, 0,
+  MeanShareAndBalanceConstants.CANDY_BAR_WIDTH,
+  MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT );
+
+const APPLE_DIAMETER = 20;
 
 export default class MeanAccordionBox extends AccordionBox {
 
@@ -32,27 +43,29 @@ export default class MeanAccordionBox extends AccordionBox {
     isMeanAccordionExpandedProperty: Property<boolean>,
     providedOptions: MeanAccordionBoxOptions ) {
 
-    // Scale down the large candy bar images
-    const SCALE_FACTOR = 0.05;
-
     const meanCandyBarsVBox = new VBox( {
       align: 'center',
       spacing: 1
     } );
 
-    // Just for the dimensions
-    const scaledCandyBarImageBounds = new Image( chocolateBar_png, {
-      scale: SCALE_FACTOR
-    } ).bounds;
-    const candyBarImageBounds = new Image( chocolateBar_png ).bounds;
-
     meanProperty.link( mean => {
       const wholePart = Math.floor( mean );
       const remainder = mean - wholePart;
 
-      const children: Array<Node> = _.times( wholePart, () => new Image( chocolateBar_png, {
-        scale: SCALE_FACTOR
-      } ) );
+      let children: Array<Node> = [];
+      if ( providedOptions.representation === 'candyBars' ) {
+        children = _.times( wholePart, () => new Rectangle( CANDY_BAR_BOUNDS, {
+          fill: MeanShareAndBalanceColors.candyBarColorProperty,
+          stroke: 'black'
+        } ) );
+      }
+      else {
+        children = _.times( wholePart, () => new Circle( APPLE_DIAMETER, {
+          fill: MeanShareAndBalanceColors.appleColorProperty,
+          stroke: 'black'
+        } ) );
+      }
+
 
       const plate = new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
         stroke: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN,
@@ -64,20 +77,29 @@ export default class MeanAccordionBox extends AccordionBox {
       children.push( plate );
 
       if ( remainder > 0 ) {
+        if ( providedOptions.representation === 'candyBars' ) {
+          const partialCandyBar = new Rectangle( CANDY_BAR_BOUNDS.dilated( -0.75 ), {
+            cornerRadius: 1,
+            stroke: MeanShareAndBalanceColors.candyBarColorProperty,
+            lineDash: [ 1, 2 ]
+          } );
+          const clippedCandyBar = new Rectangle( 0, 0, remainder * CANDY_BAR_BOUNDS.width, CANDY_BAR_BOUNDS.height, {
+            fill: MeanShareAndBalanceColors.candyBarColorProperty,
+            stroke: 'black'
+          } );
+          partialCandyBar.addChild( clippedCandyBar );
 
-        const partialCandyBar = new Rectangle( scaledCandyBarImageBounds.dilated( -0.75 ), {
-          cornerRadius: 1,
-          stroke: MeanShareAndBalanceColors.candyBarColorProperty,
-          lineDash: [ 1, 2 ]
-        } );
-        const clippedCandyBarImage = new Image( chocolateBar_png, {
-          clipArea: Shape.rect( 0, 0, remainder * candyBarImageBounds.width, candyBarImageBounds.height ),
-          scale: SCALE_FACTOR
-        } );
-        partialCandyBar.addChild( clippedCandyBarImage );
+          // Partial candy bars are shown on top
+          children.unshift( partialCandyBar );
+        }
+        else {
+          // TODO: draw circle with pie cut out, see: https://github.com/phetsims/mean-share-and-balance/issues/149
+          const partialApple = new Circle( APPLE_DIAMETER, {
+            stroke: 'black'
+          } );
+          children.unshift( partialApple );
+        }
 
-        // Partial candy bars are shown on top
-        children.unshift( partialCandyBar );
       }
 
       const meanReadout = new Text( Utils.toFixed( mean, 1 ), {
@@ -100,7 +122,7 @@ export default class MeanAccordionBox extends AccordionBox {
     } );
 
     super( meanNode, {
-      titleNode: new Text( 'Mean', {
+      titleNode: new Text( MeanShareAndBalanceStrings.meanStringProperty, {
         font: new PhetFont( { weight: 'bold', size: 16 } ),
         maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
       } ),
