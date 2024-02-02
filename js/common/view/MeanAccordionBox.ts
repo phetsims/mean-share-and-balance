@@ -9,12 +9,12 @@
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Circle, HBox, Line, Node, Rectangle, Text, VBox } from '../../../../scenery/js/imports.js';
-import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Property from '../../../../axon/js/Property.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import Utils from '../../../../dot/js/Utils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -24,7 +24,7 @@ type SelfOptions = {
   representation: 'candyBars' | 'apples';
 };
 
-type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOptions, 'tandem'>;
+export type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOptions, 'tandem'>;
 
 const ACCORDION_BOX_MARGIN = 8;
 

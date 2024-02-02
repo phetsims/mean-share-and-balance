@@ -10,29 +10,44 @@
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import SyncButton from '../../common/view/SyncButton.js';
-import LevelingOutModel from '../model/LevelingOutModel.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import SyncButton from './SyncButton.js';
+import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { FireListener, GridBoxOptions, AlignBox, Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { AlignBox, FireListener, Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
-import MeanAccordionBox from './MeanAccordionBox.js';
+import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
 
-type SelfOptions = EmptySelfOptions;
-type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<GridBoxOptions, 'children' | 'xAlign'> & PickRequired<GridBoxOptions, 'tandem'>;
+type SelfOptions = {
+  meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
+};
+type LevelingOutControlPanelOptions = SelfOptions &
+  StrictOmit<VBoxOptions, 'children' | 'align'> &
+  PickRequired<VBoxOptions, 'tandem'>;
 
 export default class LevelingOutControls extends VBox {
-  public constructor( model: Pick<LevelingOutModel, 'isMeanAccordionExpandedProperty' | 'numberOfPlatesRangeProperty' | 'numberOfPlatesProperty' | 'meanProperty' | 'syncData'>,
-                      meanCalculationDialogVisibleProperty: Property<boolean>, providedOptions: LevelingOutControlPanelOptions ) {
+  public constructor( model: Pick<LevelingOutModel,
+                        'isMeanAccordionExpandedProperty' |
+                        'numberOfPlatesRangeProperty' |
+                        'numberOfPlatesProperty' |
+                        'meanProperty' |
+                        'syncData'>,
+                      meanCalculationDialogVisibleProperty: Property<boolean>,
+                      providedOptions: LevelingOutControlPanelOptions ) {
 
     const options = providedOptions;
 
+    const meanAccordionBoxOptions = combineOptions<MeanAccordionBoxOptions>( providedOptions.meanAccordionBoxOptions,
+      { tandem: options.tandem } );
     const meanAccordionBox = new MeanAccordionBox( model.meanProperty, meanCalculationDialogVisibleProperty,
-      model.isMeanAccordionExpandedProperty, { tandem: options.tandem, representation: 'candyBars' } );
+      model.isMeanAccordionExpandedProperty, meanAccordionBoxOptions );
 
-    const syncListener = new FireListener( { fire: () => model.syncData(), tandem: options.tandem.createTandem( 'syncListener' ) } );
+    const syncListener = new FireListener( {
+      fire: () => model.syncData(),
+      tandem: options.tandem.createTandem( 'syncListener' )
+    } );
 
     const syncButton = new SyncButton( {
       inputListeners: [ syncListener ],
