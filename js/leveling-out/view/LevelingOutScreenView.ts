@@ -17,7 +17,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadPlateNode from './NotepadPlateNode.js';
-import LevelingOutControls from '../../common/view/LevelingOutControls.js';
+import SharingControls from '../../common/view/SharingControls.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import TablePlateNode from './TablePlateNode.js';
@@ -53,7 +53,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
 
     const options = providedOptions;
 
-    const levelingOutControls = new LevelingOutControls( model, model.meanCalculationDialogVisibleProperty, {
+    const levelingOutControls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20,
       tandem: options.tandem.createTandem( 'levelingOutControls' ),

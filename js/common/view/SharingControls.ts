@@ -27,7 +27,7 @@ type LevelingOutControlPanelOptions = SelfOptions &
   StrictOmit<VBoxOptions, 'children' | 'align'> &
   PickRequired<VBoxOptions, 'tandem'>;
 
-export default class LevelingOutControls extends VBox {
+export default class SharingControls extends VBox {
   public constructor( model: Pick<LevelingOutModel,
                         'isMeanAccordionExpandedProperty' |
                         'numberOfPlatesRangeProperty' |
@@ -99,4 +99,4 @@ export default class LevelingOutControls extends VBox {
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutControls', LevelingOutControls );
+meanShareAndBalance.register( 'SharingControls', SharingControls );
