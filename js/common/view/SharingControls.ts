@@ -11,7 +11,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import SyncButton from './SyncButton.js';
-import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
@@ -19,6 +18,8 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { AlignBox, FireListener, Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
+import SharingModel from '../model/SharingModel.js';
+import Snack from '../model/Snack.js';
 
 type SelfOptions = {
   meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
@@ -28,7 +29,7 @@ type LevelingOutControlPanelOptions = SelfOptions &
   PickRequired<VBoxOptions, 'tandem'>;
 
 export default class SharingControls extends VBox {
-  public constructor( model: Pick<LevelingOutModel,
+  public constructor( model: Pick<SharingModel<Snack>,
                         'isMeanAccordionExpandedProperty' |
                         'numberOfPlatesRangeProperty' |
                         'numberOfPlatesProperty' |
@@ -49,6 +50,7 @@ export default class SharingControls extends VBox {
       tandem: options.tandem.createTandem( 'syncListener' )
     } );
 
+    // TODO: Fair Share does not have this button, https://github.com/phetsims/mean-share-and-balance/issues/138
     const syncButton = new SyncButton( {
       inputListeners: [ syncListener ],
       tandem: options.tandem.createTandem( 'syncButton' )

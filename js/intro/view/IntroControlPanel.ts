@@ -4,7 +4,7 @@
  * Control panel for the intro screen that contains:
  *   - a checkbox group with visibility toggling for: predictMean, mean, and tickMarks
  *   - an AB switch to toggle between the pipe open/closed states
- *   - a number spinner connected to the numberOfCups per representation on the screen
+ *   - a number spinner connected to the numberOfCups per snackType on the screen
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

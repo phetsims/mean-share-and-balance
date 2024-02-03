@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the Leveling Out Screen which includes people, candy bars, visual mean representation, and a numerical
- * mean representation.
+ * Model for the Leveling Out Screen which includes people, candy bars, visual mean snackType, and a numerical
+ * mean snackType.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -58,7 +58,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
       plate.isActiveProperty.lazyLink( isActive => {
-        const candyBars = this.getCandyBarsAssignedToPlate( plate );
+        const candyBars = this.getSnacksAssignedToPlate( plate );
 
         // If a plate became inactive, we need to account for the extra or missing candy bars.
         if ( !isActive ) {
@@ -71,7 +71,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         plate.snackNumberProperty.set( isActive ? 1 : 0 );
         candyBars.forEach( ( candyBar, i ) => {
           candyBar.isActiveProperty.value = isActive && i < plate.snackNumberProperty.value;
-          this.reorganizeCandyBars( plate );
+          this.reorganizeSnacks( plate );
         } );
       } );
 
@@ -93,14 +93,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     return this.snacks.filter( candyBar => candyBar.isActiveProperty.value );
   }
 
-  public getCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
-    return this.snacks.filter( candyBar => candyBar.parentPlateProperty.value === plate );
-  }
-
-  public getInactiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
-    return this.getCandyBarsAssignedToPlate( plate ).filter( candyBar => !candyBar.isActiveProperty.value );
-  }
-
   public getActiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
     return this.snacks.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
   }
@@ -113,7 +105,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   }
 
   public getBottomInactiveCandyBarAssignedToPlate( plate: Plate ): CandyBar {
-    const inactiveCandyBarsOnPlate = this.getInactiveCandyBarsAssignedToPlate( plate );
+    const inactiveCandyBarsOnPlate = this.getInactiveSnacksAssignedToPlate( plate );
     assert && assert(
       inactiveCandyBarsOnPlate.length > 0,
       `There is no inactive bottom candy bar on plate since inactive candyBars is: ${inactiveCandyBarsOnPlate.length}`
@@ -121,7 +113,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const bottomCandyBar = _.maxBy( inactiveCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
     return bottomCandyBar!;
   }
-
 
   /**
    * Get all active candy bars associated with a plate that are not dragging or animating.
@@ -155,7 +146,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
    * When candyBars are added to a plate in the notepad they may appear in random positions or be overlapping. Re-stack
    * them.
    */
-  public reorganizeCandyBars( plate: Plate ): void {
+  public override reorganizeSnacks( plate: Plate ): void {
+    super.reorganizeSnacks( plate );
     const nonAnimatingActiveCandyBars = this.getActiveCandyBarsOnPlate( plate );
     const animatingCandyBars = this.getActiveCandyBarsAnimatingToPlate( plate );
 
@@ -186,7 +178,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       for ( let i = 0; i < delta; i++ ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
         this.getTopActiveCandyBarAssignedToPlate( maxPlate ).isActiveProperty.set( false );
-        this.reorganizeCandyBars( maxPlate );
+        this.reorganizeSnacks( maxPlate );
       }
     }
     else if ( numberOfTablePlateSnacks < numberOfNotepadPlateSnacks ) {
@@ -194,11 +186,11 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       for ( let i = 0; i < delta; i++ ) {
         const minPlate = this.getPlateWithLeastCandyBars();
         this.getBottomInactiveCandyBarAssignedToPlate( minPlate ).isActiveProperty.set( true );
-        this.reorganizeCandyBars( minPlate );
+        this.reorganizeSnacks( minPlate );
       }
     }
 
-    const snacksOnNotepadPlate = this.getCandyBarsAssignedToPlate( plate );
+    const snacksOnNotepadPlate = this.getSnacksAssignedToPlate( plate );
     snacksOnNotepadPlate.forEach( ( snack, i ) => {
       snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
     } );
@@ -218,18 +210,18 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
           `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}`
         );
         this.getBottomInactiveCandyBarAssignedToPlate( minPlate ).isActiveProperty.set( true );
-        this.reorganizeCandyBars( minPlate );
+        this.reorganizeSnacks( minPlate );
       }
       else {
         this.getBottomInactiveCandyBarAssignedToPlate( plate ).isActiveProperty.set( true );
       }
-      this.reorganizeCandyBars( plate );
+      this.reorganizeSnacks( plate );
     }
   }
 
   /**
    * When an active tablePlate removes a candyBar and there is no corresponding candyBar available on the notepad
-   * representation, a candyBar will be removed off of the plate on the notepad with the most candyBars.
+   * snackType, a candyBar will be removed off of the plate on the notepad with the most candyBars.
    */
   private tablePlateCandyBarAmountDecrease( plate: Plate, numberOfCandyBarsRemoved: number ): void {
     for ( let i = 0; i < numberOfCandyBarsRemoved; i++ ) {
@@ -237,12 +229,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       if ( numberOfCandyBarsOnPlate === 0 ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
         this.getTopActiveCandyBarAssignedToPlate( maxPlate ).isActiveProperty.set( false );
-        this.reorganizeCandyBars( maxPlate );
+        this.reorganizeSnacks( maxPlate );
       }
       else {
         this.getTopActiveCandyBarAssignedToPlate( plate ).isActiveProperty.set( false );
       }
-      this.reorganizeCandyBars( plate );
+      this.reorganizeSnacks( plate );
     }
   }
 
@@ -267,22 +259,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     super.reset();
 
     this.snacks.forEach( candyBar => { candyBar.reset(); } );
-  }
-
-  /**
-   * Propagate the ground truth values (at the bottom of the screen, on the table) to the candy bars that are being
-   * shown on the plates in the notepad.
-   */
-  public syncData(): void {
-
-    this.plates.forEach( ( tablePlate, index ) => {
-      this.getCandyBarsAssignedToPlate( this.plates[ index ] ).forEach( ( candyBar, i ) => {
-        candyBar.isActiveProperty.value = i < tablePlate.snackNumberProperty.value;
-      } );
-      if ( tablePlate.isActiveProperty.value ) {
-        this.reorganizeCandyBars( tablePlate );
-      }
-    } );
   }
 }
 

@@ -4,7 +4,7 @@
  * Class for table and notepad cup models.
  * A water cup holds a certain level of water that can be manipulated by the user.
  * A cup is empty when waterLevelProperty.value = 0, and full when waterLevelProperty.value = 1
- * Water level is controlled in the table view representation through a vertical slider.
+ * Water level is controlled in the table view snackType through a vertical slider.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

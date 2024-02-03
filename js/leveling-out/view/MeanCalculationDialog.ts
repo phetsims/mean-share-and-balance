@@ -22,7 +22,11 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 
 export default class MeanCalculationDialog extends Dialog {
 
-  public constructor( plates: Array<Plate>, visibleProperty: Property<boolean>, notebookPaperBounds: Bounds2, tandem: Tandem ) {
+  public constructor(
+    plates: Array<Plate>,
+    visibleProperty: Property<boolean>,
+    notebookPaperBounds: Bounds2,
+    tandem: Tandem ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty );
     const meanEqualsAdditionFractionText = new Text( MeanShareAndBalanceStrings.meanEqualsStringProperty );

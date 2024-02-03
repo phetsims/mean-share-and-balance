@@ -1,8 +1,8 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * Model for the "Fair Share" Screen which includes people, cookies, visual mean representation, and a numerical
- * mean representation.
+ * Model for the "Fair Share" Screen which includes people, cookies, visual mean snackType, and a numerical
+ * mean snackType.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)

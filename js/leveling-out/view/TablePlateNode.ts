@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A representation of a plate with a stack of candy bars on it.  The number of candy bars that are stacked on the
+ * A snackType of a plate with a stack of candy bars on it.  The number of candy bars that are stacked on the
  * plate can vary.
  *
  * @author Marla Schulz (PhET Interactive Simulations)

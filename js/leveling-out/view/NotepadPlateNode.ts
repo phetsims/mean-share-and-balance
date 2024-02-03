@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * In the upper (notepad) representation, contains all the candy bars on a plate. Each plate in the model has one
+ * In the upper (notepad) snackType, contains all the candy bars on a plate. Each plate in the model has one
  * NotepadPlateNode.
  *
  * @author Marla Schulz (PhET Interactive Simulations)

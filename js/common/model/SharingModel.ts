@@ -130,6 +130,21 @@ export default class SharingModel<T extends Snack> implements TModel {
     return this.plates.filter( plate => plate.isActiveProperty.value );
   }
 
+  public getSnacksAssignedToPlate( plate: Plate ): Array<T> {
+    return this.snacks.filter( snack => snack.parentPlateProperty.value === plate );
+  }
+
+  public getInactiveSnacksAssignedToPlate( plate: Plate ): Array<T> {
+    return this.getSnacksAssignedToPlate( plate ).filter( snack => !snack.isActiveProperty.value );
+  }
+
+  /**
+   * Re-stack snacks on the plate.
+   */
+  public reorganizeSnacks( plate: Plate ): void {
+    //TODO: FairShare implementation still needed: https://github.com/phetsims/mean-share-and-balance/issues/149
+  }
+
   /**
    * Restore initial state.
    */
@@ -138,6 +153,22 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.isMeanAccordionExpandedProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
     this.plates.forEach( plate => plate.reset() );
+  }
+
+  /**
+   * Propagate the ground truth values (at the bottom of the screen, on the table) to the candy bars that are being
+   * shown on the plates in the notepad.
+   */
+  public syncData(): void {
+
+    this.plates.forEach( ( tablePlate, index ) => {
+      this.getSnacksAssignedToPlate( this.plates[ index ] ).forEach( ( candyBar, i ) => {
+        candyBar.isActiveProperty.value = i < tablePlate.snackNumberProperty.value;
+      } );
+      if ( tablePlate.isActiveProperty.value ) {
+        this.reorganizeSnacks( tablePlate );
+      }
+    } );
   }
 }
 

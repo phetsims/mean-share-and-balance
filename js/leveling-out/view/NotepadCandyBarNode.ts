@@ -30,7 +30,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   public readonly dragListener: DragListener;
   public readonly candyBar: CandyBar;
 
-  public constructor( model: Pick<LevelingOutModel, 'reorganizeCandyBars'>,
+  public constructor( model: Pick<LevelingOutModel, 'reorganizeSnacks'>,
                       candyBar: CandyBar,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,
@@ -85,7 +85,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       ),
       start: () => {
         candyBar.stateProperty.set( 'dragging' );
-        model.reorganizeCandyBars( candyBar.parentPlateProperty.value );
+        model.reorganizeSnacks( candyBar.parentPlateProperty.value );
         this.moveToFront();
       },
       end: () => {

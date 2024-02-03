@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Individual candy bars in the notepad representation.
+ * Individual candy bars in the notepad snackType.
  * These candy bars are draggable therefore their position and parentPlate are important.
  *
  * @author Marla Schulz (PhET Interactive Simulations)

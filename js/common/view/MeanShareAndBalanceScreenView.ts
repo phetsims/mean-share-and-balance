@@ -25,7 +25,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
   public readonly questionBar: QuestionBar;
   protected readonly screenViewRootNode: Node;
 
-  protected constructor( model: TModel, questionBarStringProperty: TReadOnlyProperty<string>, questionBarColor: TColor, providedOptions: MeanShareAndBalanceScreenViewOptions ) {
+  protected constructor(
+    model: TModel,
+    questionBarStringProperty: TReadOnlyProperty<string>,
+    questionBarColor: TColor,
+    providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
 
     super( options );

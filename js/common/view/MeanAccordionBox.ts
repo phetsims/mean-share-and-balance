@@ -21,7 +21,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = {
-  representation: 'candyBars' | 'apples';
+  snackType: 'candyBars' | 'apples';
 };
 
 export type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOptions, 'tandem'>;
@@ -53,7 +53,7 @@ export default class MeanAccordionBox extends AccordionBox {
       const remainder = mean - wholePart;
 
       let children: Array<Node> = [];
-      if ( providedOptions.representation === 'candyBars' ) {
+      if ( providedOptions.snackType === 'candyBars' ) {
         children = _.times( wholePart, () => new Rectangle( CANDY_BAR_BOUNDS, {
           fill: MeanShareAndBalanceColors.candyBarColorProperty,
           stroke: 'black'
@@ -77,7 +77,7 @@ export default class MeanAccordionBox extends AccordionBox {
       children.push( plate );
 
       if ( remainder > 0 ) {
-        if ( providedOptions.representation === 'candyBars' ) {
+        if ( providedOptions.snackType === 'candyBars' ) {
           const partialCandyBar = new Rectangle( CANDY_BAR_BOUNDS.dilated( -0.75 ), {
             cornerRadius: 1,
             stroke: MeanShareAndBalanceColors.candyBarColorProperty,
