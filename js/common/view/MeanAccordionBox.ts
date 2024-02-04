@@ -19,9 +19,10 @@ import Utils from '../../../../dot/js/Utils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import { SnackType } from './SharingScreenView.js';
 
 type SelfOptions = {
-  snackType: 'candyBars' | 'apples';
+  snackType: SnackType;
 };
 
 export type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOptions, 'tandem'>;
@@ -33,7 +34,7 @@ const CANDY_BAR_BOUNDS = new Bounds2( 0, 0,
   MeanShareAndBalanceConstants.CANDY_BAR_WIDTH,
   MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT );
 
-const APPLE_DIAMETER = 20;
+const APPLE_DIAMETER = 8; // TODO: This may want to move into constants to match notepad apples, https://github.com/phetsims/mean-share-and-balance/issues/149
 
 export default class MeanAccordionBox extends AccordionBox {
 

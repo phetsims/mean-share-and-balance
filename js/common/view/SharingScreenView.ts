@@ -36,8 +36,10 @@ import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 
+export type SnackType = 'candyBars' | 'apples';
+
 type SelfOptions = {
-  snackType: 'candyBars' | 'apples';
+  snackType: SnackType;
 };
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
@@ -90,6 +92,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     // TODO: currently TablePlateNode is only rendering candyBars: https://github.com/phetsims/mean-share-and-balance/issues/138
     // Creating the bottom snackType on the table
     const tablePlateNodes = model.plates.map( person => new TablePlateNode( person, {
+      snackType: providedOptions.snackType,
       tandem: providedOptions.tandem.createTandem( `tablePlate${person.linePlacement + 1}` )
     } ) );
 
