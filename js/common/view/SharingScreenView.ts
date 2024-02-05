@@ -61,7 +61,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     questionBarColor: TColor,
     providedOptions: SharingScreenViewOptions ) {
 
-    // Create the controls
+    // Create the controls.
     const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20,
@@ -71,7 +71,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       }
     } );
 
-    // Create notepad
+    // Create notepad.
     const notepad = new NotepadWithReadoutNode(
       model.totalSnacksProperty,
       MeanShareAndBalanceStrings.totalCandyBarsPatternStringProperty,
@@ -86,14 +86,13 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       providedOptions.tandem.createTandem( 'meanCalculationDialog' )
     );
 
-    // Create table nodes and layers
+    // Create table nodes and layers.
     const tableNode = new PartyTableNode();
 
-    // TODO: currently TablePlateNode is only rendering candyBars: https://github.com/phetsims/mean-share-and-balance/issues/138
-    // Creating the bottom snackType on the table
-    const tablePlateNodes = model.plates.map( person => new TablePlateNode( person, {
+    // Create the visual representation of the plates that sit on the table.
+    const tablePlateNodes = model.plates.map( plate => new TablePlateNode( plate, {
       snackType: providedOptions.snackType,
-      tandem: providedOptions.tandem.createTandem( `tablePlate${person.linePlacement + 1}` )
+      tandem: providedOptions.tandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
 
     // TODO: Do the people images need to be instrumented? https://github.com/phetsims/mean-share-and-balance/issues/140
@@ -131,7 +130,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
                                        MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     this.playAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
-    // Don't include the questionBar in the usable bounds
+    // Don't include the questionBar in the usable bounds.
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
@@ -143,7 +142,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
-    model.numberOfPlatesProperty.link( numberOfPlates => {
+    model.numberOfPlatesProperty.link( () => {
       this.interruptSubtreeInput();
     } );
 
