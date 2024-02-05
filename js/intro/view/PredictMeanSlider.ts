@@ -41,8 +41,8 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     const options = providedOptions;
 
     const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), {
-      lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_WIDTH,
-      stroke: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN, lineDash: [ 5, 3 ]
+      lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH,
+      stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN, lineDash: [ 5, 3 ]
     } );
 
     const predictMeanHandle = new Image( pencil_png, { scale: 0.04, rotation: Math.PI / 4 } );

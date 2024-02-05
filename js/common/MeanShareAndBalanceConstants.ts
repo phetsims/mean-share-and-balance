@@ -64,8 +64,8 @@ const MeanShareAndBalanceConstants = {
   MIN_NUMBER_OF_SNACKS_PER_PLATE: 0,
   NOTEPAD_PAPER_CENTER_Y: 220,
 
-  NOTEPAD_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
-  NOTEPAD_LINE_WIDTH: 1.95
+  NOTEPAD_PLATE_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
+  NOTEPAD_PLATE_LINE_WIDTH: 1.95
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );
