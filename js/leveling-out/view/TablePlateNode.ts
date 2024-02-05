@@ -7,7 +7,7 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import { Circle, Image, Node, NodeOptions, VBox } from '../../../../scenery/js/imports.js';
+import { Circle, Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../../common/model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
@@ -39,8 +39,8 @@ export default class TablePlateNode extends Node {
     } );
 
     const numberPickerRange = new Range(
-      MeanShareAndBalanceConstants.MIN_NUMBER_OF_CANDY_BARS,
-      MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON
+      MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE,
+      MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
     );
     const numberPicker = new NumberPicker(
       plate.snackNumberProperty,
@@ -53,47 +53,58 @@ export default class TablePlateNode extends Node {
 
     const candyBarScale = 0.04;
 
-    // create the snacks each person brought
+    // Create the Nodes representing the individual snacks each person brought.
     const snacks = _.times(
-      MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON,
-      () => {
+      MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
+      index => {
         if ( options.snackType === 'candyBars' ) {
-          return new Image( chocolateBar_png, { scale: candyBarScale } );
+
+          // Create the candy bar Node and position it to be stacked on the plate.
+          const candyBarNode = new Image( chocolateBar_png, {
+            scale: candyBarScale,
+            x: 0
+          } );
+          candyBarNode.bottom = index *
+                                -( candyBarNode.height + MeanShareAndBalanceConstants.TABLE_CANDY_BAR_VERTICAL_SPACING );
+          return candyBarNode;
         }
         else {
-          return new Circle( 10, {
-            fill: MeanShareAndBalanceColors.appleColorProperty
+
+          // Create an apple Node and position it to be stacked on the plate.
+          const appleRadius = 10;
+          return new Circle( appleRadius, {
+            fill: MeanShareAndBalanceColors.appleColorProperty,
+            stroke: MeanShareAndBalanceColors.appleColorProperty.value.darkerColor( 0.5 ),
+            x: ( index % 2 ) * ( appleRadius * 1.8 ),
+            y: -Math.floor( index / 2 ) * ( appleRadius * 1.8 )
           } );
         }
       }
     );
 
+    // Control the visibility of the snack Nodes based on the snack number value.
     plate.snackNumberProperty.link( snackNumber => {
+      assert && assert( snackNumber <= snacks.length, 'snack number exceeded number of snacks' );
       snacks.forEach( ( snack, i ) => {
         snack.visibleProperty.value = i < snackNumber;
       } );
     } );
 
-    // TODO: We want the apples to stack side by side and currently they stack 5 and then another 5. https://github.com/phetsims/mean-share-and-balance/issues/149
-    const snacksVbox = new VBox( {
-      children: snacks.slice().reverse(), // reverse the order so that the snacks are stacked from the bottom up
-      spacing: 1.5,
-      wrap: true,
-      preferredHeight: 120,
-      justify: 'bottom',
-      excludeInvisibleChildrenFromBounds: false,
+    // Create a parent Node to contain the individual snack Nodes.
+    const snacksNode = new Node( {
+      children: snacks,
       centerBottom: new Vector2( plateImage.centerX, plateImage.centerY )
     } );
 
-    const candyBarsNode = new Node( {
-      children: [ plateImage, snacksVbox ],
+    const plateAndSnacksNode = new Node( {
+      children: [ plateImage, snacksNode ],
       layoutOptions: {
         minContentHeight: ( 265 * candyBarScale ) * 10
       }
     } );
 
     super( {
-      children: [ candyBarsNode, numberPicker ],
+      children: [ plateAndSnacksNode, numberPicker ],
       x: plate.xPosition,
       visibleProperty: plate.isActiveProperty
     } );

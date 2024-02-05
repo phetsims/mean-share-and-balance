@@ -30,7 +30,7 @@ export default class NotepadPlateNode extends Node {
                                     MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING;
 
     const candyBarOutlineNodes: Node[] = [];
-    _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON, i => {
+    _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, i => {
       candyBarOutlineNodes.push( new Rectangle(
         0,
         0,

@@ -37,7 +37,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
       // Create and initialize all the candy bars.
       for ( let candyBarIndex = 0;
-            candyBarIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON;
+            candyBarIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
             candyBarIndex++ ) {
 
         const x = plate.xPosition;
@@ -130,7 +130,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
     return plates.filter( plate => {
       const numberOfCandyBars = this.getNumberOfCandyBarsStackedOnPlate( plate );
-      return numberOfCandyBars < MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON;
+      return numberOfCandyBars < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
     } );
   }
 
@@ -203,7 +203,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   private tablePlateCandyBarAmountIncrease( plate: Plate, numberOfCandyBarsAdded: number ): void {
     for ( let i = 0; i < numberOfCandyBarsAdded; i++ ) {
       const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
-      if ( numberOfCandyBarsOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_CANDY_BARS_PER_PERSON ) {
+      if ( numberOfCandyBarsOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ) {
         const minPlate = this.getPlateWithLeastCandyBars();
         assert && assert(
           minPlate !== plate,
