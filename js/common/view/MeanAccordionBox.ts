@@ -8,7 +8,7 @@
 
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Circle, HBox, Line, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { Circle, HBox, Line, Node, Path, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -20,6 +20,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import { SnackType } from './SharingScreenView.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -108,11 +109,10 @@ export default class MeanAccordionBox extends AccordionBox {
           children.push( partialCandyBar );
         }
         else {
-          // TODO: draw circle with pie cut out, see: https://github.com/phetsims/mean-share-and-balance/issues/149
+
+          // Create a node that represents a fraction of an apple.
           const partialApple = new Circle( APPLE_RADIUS, {
             stroke: 'black',
-            fill: MeanShareAndBalanceColors.appleColorProperty,
-            opacity: 0.5,
             lineDash: [ 1, 2 ],
             x: wholePart % 2 === 0 ?
                plateNode.x + APPLE_RADIUS + APPLE_X_MARGIN :
@@ -120,6 +120,11 @@ export default class MeanAccordionBox extends AccordionBox {
             bottom: -Math.floor( wholePart / 2 ) * ( APPLE_RADIUS * 2 + VERTICAL_SPACE_BETWEEN_APPLES ) -
                     VERTICAL_SPACE_BETWEEN_APPLES
           } );
+          const partialAppleFractionalPiece = new Path( createFractionalCircleShape( APPLE_RADIUS, remainder ), {
+            stroke: 'black',
+            fill: MeanShareAndBalanceColors.appleColorProperty
+          } );
+          partialApple.addChild( partialAppleFractionalPiece );
           children.push( partialApple );
         }
       }
@@ -163,5 +168,18 @@ export default class MeanAccordionBox extends AccordionBox {
     } );
   }
 }
+
+/**
+ * Helper function to produce a pie-chart-ish shape representing a fractional amount.
+ */
+const createFractionalCircleShape = ( radius: number, fractionalAmount: number ): Shape => {
+  assert && assert( radius > 0, 'radius must be greater than zero' );
+  assert && assert( fractionalAmount > 0 && fractionalAmount < 1, 'fractionalAmount must be between 0 and 1' );
+  return new Shape()
+    .moveTo( 0, 0 )
+    .lineTo( radius, 0 )
+    .arc( 0, 0, radius, 0, fractionalAmount * 2 * Math.PI )
+    .lineTo( 0, 0 );
+};
 
 meanShareAndBalance.register( 'MeanAccordionBox', MeanAccordionBox );
