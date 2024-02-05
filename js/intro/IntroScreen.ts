@@ -25,7 +25,7 @@ export default class IntroScreen extends Screen<IntroModel, IntroScreenView> {
   public constructor( providedOptions: IntroScreenOptions ) {
     const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.introStringProperty,
-      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
+      backgroundColorProperty: MeanShareAndBalanceColors.introScreenBackgroundColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(

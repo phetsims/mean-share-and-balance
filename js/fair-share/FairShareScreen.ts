@@ -24,7 +24,7 @@ export default class FairShareScreen extends Screen<FairShareModel, FairShareScr
   public constructor( providedOptions: FairShareScreenOptions ) {
     const options = optionize<FairShareScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.fairShareStringProperty,
-      backgroundColorProperty: MeanShareAndBalanceColors.screenBackgroundColorProperty,
+      backgroundColorProperty: MeanShareAndBalanceColors.fairShareScreenColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(

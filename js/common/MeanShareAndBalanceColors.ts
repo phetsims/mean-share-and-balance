@@ -19,9 +19,14 @@ import { Color, ProfileColorProperty } from '../../../scenery/js/imports.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 
 const meanShareAndBalanceColors = {
-  // Background color for screens in this sim
-  screenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'background', {
+  introScreenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introScreenBackground', {
     default: '#FFF9F0'
+  } ),
+  levelingOutScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutScreenBackground', {
+    default: '#DEEDFC'
+  } ),
+  fairShareScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'fairShareScreenBackground', {
+    default: '#F8E3E2'
   } ),
   introQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introQuestionBar', {
     default: '#2496D6'
@@ -66,10 +71,10 @@ const meanShareAndBalanceColors = {
     default: 'firebrick'
   } ),
   levelingOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutQuestionBar', {
-    default: '#F97A69'
+    default: '#78C4F7'
   } ),
   fairShareQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'fairShareQuestionBar', {
-    default: '#CD9548'
+    default: '#FD9698'
   } ),
   candyBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'candyBar', {
     default: '#613912'
