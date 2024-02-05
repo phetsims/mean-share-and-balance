@@ -23,10 +23,6 @@ export default class FairShareModel extends SharingModel<Apple> {
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
   }
-
-  public override reset(): void {
-    // TBD
-  }
 }
 
 meanShareAndBalance.register( 'FairShareModel', FairShareModel );
