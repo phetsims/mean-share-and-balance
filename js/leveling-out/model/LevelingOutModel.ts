@@ -41,7 +41,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             candyBarIndex++ ) {
 
         const x = plate.xPosition;
-        const y = getCandyBarYPosition( candyBarIndex );
+        const y = LevelingOutModel.getCandyBarYPosition( candyBarIndex );
         const isActive = plate.isActiveProperty.value && candyBarIndex < plate.snackNumberProperty.value;
 
         const candyBar = new CandyBar( {
@@ -154,14 +154,14 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     // The non-animating candy bars should be at the bottom of the stack. Animating candy bars will go on top.
     // This is needed primarily for handling multitouch and race conditions.
     nonAnimatingActiveCandyBars.forEach( ( candyBar, i ) => {
-      candyBar.positionProperty.set( new Vector2( plate.xPosition, getCandyBarYPosition( i ) ) );
+      candyBar.positionProperty.set( new Vector2( plate.xPosition, LevelingOutModel.getCandyBarYPosition( i ) ) );
     } );
 
     // Set a potentially new destination for any animating candy bars.
     animatingCandyBars.forEach( ( candyBar, i ) => {
       candyBar.travelTo( new Vector2(
         plate.xPosition,
-        getCandyBarYPosition( i + nonAnimatingActiveCandyBars.length )
+        LevelingOutModel.getCandyBarYPosition( i + nonAnimatingActiveCandyBars.length )
       ) );
     } );
   }
@@ -255,21 +255,20 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   }
 
   public override reset(): void {
-
     super.reset();
-
     this.snacks.forEach( candyBar => { candyBar.reset(); } );
   }
-}
 
-/**
- * Helper function to get the Y position of a candy bar stacked on a plate in the notepad based on its position in the
- * stack.  Zero is the bottom-most position in the stack.  The Y position is for the top of the candy bar.
- */
-const getCandyBarYPosition = ( stackPosition: number ) => {
-  return MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
-         ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
-             MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) * ( stackPosition + 1 ) );
-};
+  /**
+   * Static function to get the Y position of a candy bar stacked on a plate in the notepad based on its position (i.e.
+   * index) in the stack.  Zero is the bottom-most position.  The Y position is for the top of the candy bar.
+   */
+  public static getCandyBarYPosition( stackPosition: number ): number {
+    return MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
+           MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
+           ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+               MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) * ( stackPosition + 1 ) );
+  }
+}
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );

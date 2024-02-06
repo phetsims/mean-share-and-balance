@@ -12,7 +12,6 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import { Node } from '../../../../scenery/js/imports.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadPlateNode from './NotepadPlateNode.js';
@@ -64,8 +63,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
       // Calculate and set the dropped candy bar's destination.
       const numberOfCandyBarsOnPlate = model.getNumberOfCandyBarsStackedOnPlate( closestPlate! );
       const oldY = candyBarNode.candyBar.positionProperty.value.y;
-      const newY = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
-                   ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2 ) * ( numberOfCandyBarsOnPlate + 1 ) );
+      const newY = LevelingOutModel.getCandyBarYPosition( numberOfCandyBarsOnPlate );
       candyBarNode.candyBar.travelTo( new Vector2( closestPlate!.xPosition, newY ) );
 
       // Swap candy bars if parentPlate changes, so that each person always has the same total number of candy bars so
@@ -88,10 +86,10 @@ export default class LevelingOutScreenView extends SharingScreenView {
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
     const notepadCandyBars = model.snacks.map( ( candyBar, i ) =>
       new NotepadCandyBarNode( model, candyBar, this.notepadBoundsProperty, candyBarDropped, {
-        tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
-        visibleProperty: candyBar.isActiveProperty
-      } ) );
-
+          tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
+          visibleProperty: candyBar.isActiveProperty
+        }
+      ) );
 
     // This contains all the candy bars from the top (notepad) snackType and the bottom (table) snackType.
     this.candyBarLayerNode = new Node( {
