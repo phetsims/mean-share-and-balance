@@ -7,18 +7,18 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import { Circle, Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../../common/model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
+import greenApple_png from '../../../images/greenApple_png.js';
 import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import plate_png from '../../../images/plate_png.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import { SnackType } from '../../common/view/SharingScreenView.js';
 
 type SelfOptions = {
@@ -26,6 +26,9 @@ type SelfOptions = {
 };
 
 type PersonNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem'>;
+
+// constants
+const APPLE_IMAGE_WIDTH = 25; // in screen coords
 
 export default class TablePlateNode extends Node {
 
@@ -57,6 +60,7 @@ export default class TablePlateNode extends Node {
     const snacks = _.times(
       MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
       index => {
+        let node;
         if ( options.snackType === 'candyBars' ) {
 
           // Create the candy bar Node and position it to be stacked on the plate.
@@ -66,19 +70,18 @@ export default class TablePlateNode extends Node {
           } );
           candyBarNode.bottom = index *
                                 -( candyBarNode.height + MeanShareAndBalanceConstants.TABLE_CANDY_BAR_VERTICAL_SPACING );
-          return candyBarNode;
+          node = candyBarNode;
         }
         else {
+          const appleNode = new Image( greenApple_png, {
+            maxWidth: APPLE_IMAGE_WIDTH,
+            x: ( index % 2 ) * APPLE_IMAGE_WIDTH * 0.8
 
-          // Create an apple Node and position it to be stacked on the plate.
-          const appleRadius = 10;
-          return new Circle( appleRadius, {
-            fill: MeanShareAndBalanceColors.appleColorProperty,
-            stroke: MeanShareAndBalanceColors.appleColorProperty.value.darkerColor( 0.5 ),
-            x: ( index % 2 ) * ( appleRadius * 1.8 ),
-            y: -Math.floor( index / 2 ) * ( appleRadius * 1.8 )
           } );
+          appleNode.bottom = -Math.floor( index / 2 ) * appleNode.height * 0.8;
+          node = appleNode;
         }
+        return node;
       }
     );
 
