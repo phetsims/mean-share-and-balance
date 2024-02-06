@@ -27,7 +27,8 @@ export default class FairShareScreenView extends SharingScreenView {
   public constructor( model: FairShareModel, providedOptions: FairShareScreenViewOptions ) {
 
     const options = optionize<FairShareScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
-      snackType: 'apples'
+      snackType: 'apples',
+      showSyncButton: false
     }, providedOptions );
 
     super(

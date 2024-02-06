@@ -23,8 +23,9 @@ import Snack from '../model/Snack.js';
 
 type SelfOptions = {
   meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
+  showSyncButton?: boolean;
 };
-type LevelingOutControlPanelOptions = SelfOptions &
+type SharingControlsOptions = SelfOptions &
   StrictOmit<VBoxOptions, 'children' | 'align'> &
   PickRequired<VBoxOptions, 'tandem'>;
 
@@ -36,9 +37,12 @@ export default class SharingControls extends VBox {
                         'meanProperty' |
                         'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>,
-                      providedOptions: LevelingOutControlPanelOptions ) {
+                      providedOptions: SharingControlsOptions ) {
 
-    const options = providedOptions;
+    const options = optionize<SharingControlsOptions, SelfOptions, VBoxOptions>()( {
+      showSyncButton: true,
+      excludeInvisibleChildrenFromBounds: false
+    }, providedOptions );
 
     const meanAccordionBoxOptions = combineOptions<MeanAccordionBoxOptions>( providedOptions.meanAccordionBoxOptions,
       { tandem: options.tandem } );
@@ -50,7 +54,6 @@ export default class SharingControls extends VBox {
       tandem: options.tandem.createTandem( 'syncListener' )
     } );
 
-    // TODO: Fair Share does not have this button, https://github.com/phetsims/mean-share-and-balance/issues/138
     const syncButton = new SyncButton( {
       inputListeners: [ syncListener ],
       tandem: options.tandem.createTandem( 'syncButton' )
@@ -62,7 +65,8 @@ export default class SharingControls extends VBox {
       layoutOptions: {
         minContentHeight: 100,
         align: 'left'
-      }
+      },
+      visible: options.showSyncButton  // Fair Share Screen does not have a SyncButton
     } );
 
     // Number Spinner
@@ -93,11 +97,9 @@ export default class SharingControls extends VBox {
     } );
 
 
-    const superOptions = optionize<LevelingOutControlPanelOptions, SelfOptions, VBoxOptions>()( {
-      children: [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ]
-    }, providedOptions );
+    options.children = [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ];
 
-    super( superOptions );
+    super( options );
   }
 }
 

@@ -40,6 +40,7 @@ export type SnackType = 'candyBars' | 'apples';
 
 type SelfOptions = {
   snackType: SnackType;
+  showSyncButton?: boolean;
 };
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
@@ -61,11 +62,19 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     questionBarColor: TColor,
     providedOptions: SharingScreenViewOptions ) {
 
+    const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()(
+      {
+        showSyncButton: true
+      },
+      providedOptions
+    );
+
     // Create the controls.
     const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20,
       tandem: providedOptions.tandem.createTandem( 'controls' ),
+      showSyncButton: options.showSyncButton,
       meanAccordionBoxOptions: {
         snackType: providedOptions.snackType
       }
@@ -112,12 +121,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()(
-      {
-        children: [ peopleLayerNode, tableNode, notepad, meanCalculationDialog ]
-      },
-      providedOptions
-    );
+    options.children = [ peopleLayerNode, tableNode, notepad, meanCalculationDialog ];
 
     super( model, questionBarStringProperty, questionBarColor, options );
 
