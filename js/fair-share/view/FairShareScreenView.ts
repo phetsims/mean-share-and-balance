@@ -16,6 +16,8 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import FairShareModel from '../model/FairShareModel.js';
 import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
 import { Node } from '../../../../scenery/js/imports.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -31,10 +33,21 @@ export default class FairShareScreenView extends SharingScreenView {
       showSyncButton: false
     }, providedOptions );
 
+    const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
+        MeanShareAndBalanceStrings.appleStringProperty,
+        MeanShareAndBalanceStrings.applesStringProperty ],
+      ( total, singular, plural ) => total === 1 ? singular : plural );
+
+    const totalApplesPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalApplesPatternStringProperty, {
+      total: model.totalSnacksProperty,
+      measurement: measurementStringProperty
+    } );
+
     super(
       model,
       MeanShareAndBalanceStrings.fairShareQuestionStringProperty,
       MeanShareAndBalanceColors.fairShareQuestionBarColorProperty,
+      totalApplesPatternStringProperty,
       options
     );
 

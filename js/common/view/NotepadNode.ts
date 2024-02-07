@@ -7,14 +7,35 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, Rectangle, Image } from '../../../../scenery/js/imports.js';
+import { AlignBox, Image, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import notepadRing_png from '../../../images/notepadRing_png.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+
+type SelfOptions = {
+  readoutPatternStringProperty?: PatternStringProperty<{
+    total: TReadOnlyProperty<number>;
+    measurement: UnknownDerivedProperty<string>;
+  }> | null;
+};
+
+type NotepadNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'children'>;
+
+const NOTEPAD_RING_BOTTOM = 33.5;
 
 export default class NotepadNode extends Node {
 
-  public constructor() {
+  public constructor( providedOptions?: NotepadNodeOptions ) {
+
+    const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
+      readoutPatternStringProperty: null
+    }, providedOptions );
 
     const paperStackNode = new Node();
     const paperWidth = 720;
@@ -38,11 +59,28 @@ export default class NotepadNode extends Node {
 
     _.times( numberOfRings, ( i: number ) => {
       const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
-      const image = new Image( notepadRing_png, { x: x, y: -21.5, scale: 0.8 } );
+      const image = new Image( notepadRing_png, { x: x, bottom: NOTEPAD_RING_BOTTOM, scale: 0.8 } );
       rings.push( image );
     } );
 
     super( { children: [ paperStackNode, ...rings ], centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y } );
+
+    if ( options.readoutPatternStringProperty ) {
+      const readoutText = new Text( options.readoutPatternStringProperty, {
+        font: new PhetFont( 16 ),
+        maxWidth: 200,
+        fill: 'black'
+      } );
+
+      const readoutAlignBox = new AlignBox( readoutText, {
+        alignBounds: paperStackNode.bounds,
+        xAlign: 'center',
+        yAlign: 'top',
+        yMargin: NOTEPAD_RING_BOTTOM + 5
+      } );
+
+      this.addChild( readoutAlignBox );
+    }
   }
 }
 

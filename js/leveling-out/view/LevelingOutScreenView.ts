@@ -22,6 +22,8 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import NotepadCandyBarNode from './NotepadCandyBarNode.js';
 import SharingScreenView, { SharingScreenViewOptions, SNACK_OFFSET } from '../../common/view/SharingScreenView.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -36,10 +38,21 @@ export default class LevelingOutScreenView extends SharingScreenView {
       snackType: 'candyBars'
     }, providedOptions );
 
+    const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
+        MeanShareAndBalanceStrings.barStringProperty,
+        MeanShareAndBalanceStrings.barsStringProperty ],
+      ( total, singular, plural ) => total === 1 ? singular : plural );
+
+    const totalCandyBarsPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalCandyBarsPatternStringProperty, {
+      total: model.totalSnacksProperty,
+      measurement: measurementStringProperty
+    } );
+
     super(
       model,
       MeanShareAndBalanceStrings.levelingOutQuestionStringProperty,
       MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty,
+      totalCandyBarsPatternStringProperty,
       options );
 
     // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper. But

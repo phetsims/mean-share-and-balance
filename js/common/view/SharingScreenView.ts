@@ -17,8 +17,6 @@ import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import NotepadWithReadoutNode from './NotepadWithReadoutNode.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import PartyTableNode from './PartyTableNode.js';
 import Dialog from '../../../../sun/js/Dialog.js';
 import { AlignBox, Node, TColor } from '../../../../scenery/js/imports.js';
@@ -35,6 +33,9 @@ import person4_png from '../../../images/person4_png.js';
 import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
+import NotepadNode from './NotepadNode.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -60,6 +61,10 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     model: SharingModel<Snack>,
     questionBarStringProperty: TReadOnlyProperty<string>,
     questionBarColor: TColor,
+    readoutPatternStringProperty: PatternStringProperty<{
+      total: TReadOnlyProperty<number>;
+      measurement: UnknownDerivedProperty<string>;
+    }>,
     providedOptions: SharingScreenViewOptions ) {
 
     const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()(
@@ -81,12 +86,9 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // Create notepad.
-    const notepad = new NotepadWithReadoutNode(
-      model.totalSnacksProperty,
-      MeanShareAndBalanceStrings.totalCandyBarsPatternStringProperty,
-      MeanShareAndBalanceStrings.barStringProperty,
-      MeanShareAndBalanceStrings.barsStringProperty
-    );
+    const notepad = new NotepadNode( {
+      readoutPatternStringProperty: readoutPatternStringProperty
+    } );
 
     const meanCalculationDialog = new MeanCalculationDialog(
       model.plates,
