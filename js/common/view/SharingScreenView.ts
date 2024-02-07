@@ -47,7 +47,6 @@ type SelfOptions = {
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
-export const SNACK_OFFSET = 10;
 
 export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   protected readonly notepad: Node;
@@ -161,7 +160,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     this.tableNode.centerX = this.playAreaCenterX;
 
     // We want the people to be slightly to the left of their snacks.
-    this.peopleLayerNode.centerX = this.playAreaCenterX - 30;
+    this.peopleLayerNode.centerX = this.playAreaCenterX - 40;
 
     this.meanCalculationDialog.centerX = this.playAreaCenterX;
   }

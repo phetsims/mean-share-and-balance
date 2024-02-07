@@ -20,7 +20,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import NotepadCandyBarNode from './NotepadCandyBarNode.js';
-import SharingScreenView, { SharingScreenViewOptions, SNACK_OFFSET } from '../../common/view/SharingScreenView.js';
+import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
@@ -122,7 +122,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
     super.centerPlayAreaNodes();
 
     // The candyBarLayerNode and peopleLayerNode bounds change when the number of people change, due to excludeInvisibleChildrenFromBounds
-    this.candyBarLayerNode.centerX = this.playAreaCenterX + SNACK_OFFSET;
+    this.candyBarLayerNode.centerX = this.playAreaCenterX;
 
     // Transform to the bounds of the candy bar, since they are in an intermediate layer.
     this.notepadBoundsProperty.value = this.candyBarLayerNode.globalToLocalBounds( this.notepad.globalBounds );
