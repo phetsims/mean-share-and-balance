@@ -25,7 +25,7 @@ type SelfOptions = {
   }> | null;
 };
 
-type NotepadNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'children'>;
+export type NotepadNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'children'>;
 
 const NOTEPAD_RING_BOTTOM = 33.5;
 

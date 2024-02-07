@@ -33,8 +33,6 @@ import person4_png from '../../../images/person4_png.js';
 import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
-import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
-import { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
 import NotepadNode from './NotepadNode.js';
 
 export type SnackType = 'candyBars' | 'apples';
@@ -60,10 +58,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     model: SharingModel<Snack>,
     questionBarStringProperty: TReadOnlyProperty<string>,
     questionBarColor: TColor,
-    readoutPatternStringProperty: PatternStringProperty<{
-      total: TReadOnlyProperty<number>;
-      measurement: UnknownDerivedProperty<string>;
-    }>,
+    notepadNode: NotepadNode,
     providedOptions: SharingScreenViewOptions ) {
 
     const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()(
@@ -84,15 +79,10 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       }
     } );
 
-    // Create notepad.
-    const notepad = new NotepadNode( {
-      readoutPatternStringProperty: readoutPatternStringProperty
-    } );
-
     const meanCalculationDialog = new MeanCalculationDialog(
       model.plates,
       model.meanCalculationDialogVisibleProperty,
-      notepad.bounds,
+      notepadNode.bounds,
       providedOptions.tandem.createTandem( 'meanCalculationDialog' )
     );
 
@@ -122,12 +112,12 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    options.children = [ peopleLayerNode, tableNode, notepad, meanCalculationDialog ];
+    options.children = [ peopleLayerNode, tableNode, notepadNode, meanCalculationDialog ];
 
     super( model, questionBarStringProperty, questionBarColor, options );
 
     this.tableNode = tableNode;
-    this.notepad = notepad;
+    this.notepad = notepadNode;
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
 

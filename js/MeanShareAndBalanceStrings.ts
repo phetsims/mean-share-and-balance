@@ -22,6 +22,8 @@ type StringsType = {
   'tickMarksStringProperty': LocalizedStringProperty;
   'cupWaterLevelStringProperty': LocalizedStringProperty;
   'syncStringProperty': LocalizedStringProperty;
+  'collectStringProperty': LocalizedStringProperty;
+  'shareStringProperty': LocalizedStringProperty;
   'numberOfCupsStringProperty': LocalizedStringProperty;
   'introQuestionStringProperty': LocalizedStringProperty;
   'levelingOutQuestionStringProperty': LocalizedStringProperty;

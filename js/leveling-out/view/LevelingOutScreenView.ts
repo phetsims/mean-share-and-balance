@@ -24,6 +24,7 @@ import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/S
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import NotepadNode from '../../common/view/NotepadNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -48,11 +49,15 @@ export default class LevelingOutScreenView extends SharingScreenView {
       measurement: measurementStringProperty
     } );
 
+    const notepadNode = new NotepadNode( {
+      readoutPatternStringProperty: totalCandyBarsPatternStringProperty
+    } );
+
     super(
       model,
       MeanShareAndBalanceStrings.levelingOutQuestionStringProperty,
       MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty,
-      totalCandyBarsPatternStringProperty,
+      notepadNode,
       options );
 
     // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper. But

@@ -18,6 +18,7 @@ import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/S
 import { Node } from '../../../../scenery/js/imports.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import FairShareNotepadNode from './FairShareNotepadNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -43,11 +44,15 @@ export default class FairShareScreenView extends SharingScreenView {
       measurement: measurementStringProperty
     } );
 
+    const notepadNode = new FairShareNotepadNode( model.notepadModeEnumerationProperty, {
+      readoutPatternStringProperty: totalApplesPatternStringProperty
+    } );
+
     super(
       model,
       MeanShareAndBalanceStrings.fairShareQuestionStringProperty,
       MeanShareAndBalanceColors.fairShareQuestionBarColorProperty,
-      totalApplesPatternStringProperty,
+      notepadNode,
       options
     );
 

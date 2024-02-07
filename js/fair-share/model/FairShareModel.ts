@@ -16,25 +16,33 @@ import Apple from './Apple.js';
 import EnumerationValue from '../../../../phet-core/js/EnumerationValue.js';
 import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
-class NotepadMode extends EnumerationValue {
+export class NotepadMode extends EnumerationValue {
 
   // The information is displayed such that it is in sync with what is on the plates on the table.
-  public static readonly SYNC = new NotepadMode();
+  public static readonly SYNC = new NotepadMode( MeanShareAndBalanceStrings.syncStringProperty );
 
   // The snacks are collected into a single display that doesn't show the plates.
-  public static readonly COLLECT = new NotepadMode();
+  public static readonly COLLECT = new NotepadMode( MeanShareAndBalanceStrings.collectStringProperty );
 
   // The total amount of snacks on the table are shared evenly between the plates in the notepad.
-  public static readonly SHARE = new NotepadMode();
+  public static readonly SHARE = new NotepadMode( MeanShareAndBalanceStrings.shareStringProperty );
 
   // Gets a list of keys, values and mapping between them.  For use in EnumerationProperty and PhET-iO
   public static readonly enumeration = new Enumeration( NotepadMode, {
     phetioDocumentation: 'Describes the way in which the information in the notepad is displayed.'
   } );
+
+  public constructor(
+    public readonly stringProperty: LocalizedStringProperty
+  ) {
+    super();
+  }
 }
 
 export default class FairShareModel extends SharingModel<Apple> {
