@@ -20,19 +20,19 @@ import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
-class NotepadOrganizationMode extends EnumerationValue {
+class NotepadMode extends EnumerationValue {
 
   // The information is displayed such that it is in sync with what is on the plates on the table.
-  public static readonly SYNC = new NotepadOrganizationMode();
+  public static readonly SYNC = new NotepadMode();
 
   // The snacks are collected into a single display that doesn't show the plates.
-  public static readonly COLLECT = new NotepadOrganizationMode();
+  public static readonly COLLECT = new NotepadMode();
 
   // The total amount of snacks on the table are shared evenly between the plates in the notepad.
-  public static readonly SHARE = new NotepadOrganizationMode();
+  public static readonly SHARE = new NotepadMode();
 
   // Gets a list of keys, values and mapping between them.  For use in EnumerationProperty and PhET-iO
-  public static readonly enumeration = new Enumeration( NotepadOrganizationMode, {
+  public static readonly enumeration = new Enumeration( NotepadMode, {
     phetioDocumentation: 'Describes the way in which the information in the notepad is displayed.'
   } );
 }
@@ -41,13 +41,13 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // An enumeration property that controls the way in which the quantity of snacks on the table are displayed on the
   // notepad.  See the enumeration for more information on the possible modes.
-  public readonly notepadOrganizationModeProperty: EnumerationProperty<NotepadOrganizationMode>;
+  public readonly notepadModeEnumerationProperty: EnumerationProperty<NotepadMode>;
 
   public constructor( providedOptions: FairShareModelOptions ) {
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
-    this.notepadOrganizationModeProperty = new EnumerationProperty( NotepadOrganizationMode.SYNC, {
-      tandem: providedOptions.tandem.createTandem( 'notepadOrganizationModeProperty' ),
+    this.notepadModeEnumerationProperty = new EnumerationProperty( NotepadMode.SYNC, {
+      tandem: providedOptions.tandem.createTandem( 'notepadModeEnumerationProperty' ),
       phetioFeatured: true
     } );
   }
