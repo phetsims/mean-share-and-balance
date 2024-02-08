@@ -45,7 +45,8 @@ export default class FairShareScreenView extends SharingScreenView {
     } );
 
     const notepadNode = new FairShareNotepadNode( model.notepadModeEnumerationProperty, {
-      readoutPatternStringProperty: totalApplesPatternStringProperty
+      readoutPatternStringProperty: totalApplesPatternStringProperty,
+      tandem: options.tandem.createTandem( 'notepadNode' )
     } );
 
     super(
@@ -64,7 +65,7 @@ export default class FairShareScreenView extends SharingScreenView {
     } );
     this.addChild( this.applesLayerNode );
 
-    model.numberOfPlatesProperty.link( numberOfPlates => {
+    model.numberOfPlatesProperty.link( () => {
       this.centerPlayAreaNodes();
     } );
   }

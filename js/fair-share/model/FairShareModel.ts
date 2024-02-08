@@ -38,9 +38,7 @@ export class NotepadMode extends EnumerationValue {
     phetioDocumentation: 'Describes the way in which the information in the notepad is displayed.'
   } );
 
-  public constructor(
-    public readonly stringProperty: LocalizedStringProperty
-  ) {
+  public constructor( public readonly stringProperty: LocalizedStringProperty ) {
     super();
   }
 }

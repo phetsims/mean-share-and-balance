@@ -39,11 +39,10 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     const options = providedOptions;
 
-
     const modelViewTransformNotepadCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    //Predict Mean Line that acts as a slider for alternative input.
+    // Predict Mean Line that acts as a slider for alternative input.
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
       model.numberOfCupsProperty, () => model.getActiveNotepadCups(),
@@ -63,6 +62,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
+
     // Add all cup nodes to the view
     const notepadCupNodes: Array<NotepadCupNode> = [];
     model.notepadCups.forEach( ( cupModel, index ) => {
@@ -79,7 +79,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       tableCupNodes.push( cupNode );
     } );
 
-    // Add all pipe nodes to the view
+    // Add all pipe nodes to the view.
     const pipeNodes: Array<PipeNode> = [];
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
@@ -89,13 +89,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       pipeNodes.push( pipeNode );
     } );
 
-    // This also includes the pipes that connect the notepad cups as well as the draggable water level triangle
+    // This also includes the pipes that connect the notepad cups as well as the draggable water level triangle.
     const waterCupLayerNode = new Node( {
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...notepadCupNodes, ...tableCupNodes, ...pipeNodes ]
     } );
 
-    const notepad = new NotepadNode();
+    const notepadNode = new NotepadNode( {
+      tandem: options.tandem.createTandem( 'notepadNode' )
+    } );
 
     const tableNode = new LabTableNode( { centerX: waterCupLayerNode.centerX } );
 
@@ -129,7 +131,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.centerX = cupsAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
       tableNode.centerX = waterCupLayerNode.centerX - 10;
-      notepad.centerX = waterCupLayerNode.centerX - 10;
+      notepadNode.centerX = waterCupLayerNode.centerX - 10;
       tableNode.y = waterCupLayerNode.bottom - 30;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
@@ -147,13 +149,14 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.interruptSubtreeInput();
     } );
 
-    this.screenViewRootNode.addChild( notepad );
+    this.screenViewRootNode.addChild( notepadNode );
     this.screenViewRootNode.addChild( tableNode );
     this.screenViewRootNode.addChild( waterCupLayerNode );
     this.screenViewRootNode.addChild( predictMeanSlider );
 
     this.screenViewRootNode.pdomOrder = [ ...tableCupNodes, pipeNodes[ 0 ], predictMeanSlider, controlPanel, this.resetAllButton ];
   }
+
   public override reset(): void {
     super.reset();
   }

@@ -76,7 +76,6 @@ export default class TablePlateNode extends Node {
           const appleNode = new Image( greenApple_png, {
             maxWidth: APPLE_IMAGE_WIDTH,
             x: ( index % 2 ) * APPLE_IMAGE_WIDTH * 0.8
-
           } );
           appleNode.bottom = -Math.floor( index / 2 ) * appleNode.height * 0.8;
           node = appleNode;

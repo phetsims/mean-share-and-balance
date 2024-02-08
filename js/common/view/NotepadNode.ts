@@ -17,6 +17,8 @@ import { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{
@@ -25,13 +27,15 @@ type SelfOptions = {
   }> | null;
 };
 
-export type NotepadNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'children'>;
+export type NotepadNodeOptions = SelfOptions &
+  StrictOmit<NodeOptions, 'children'> &
+  PickRequired<PhetioObjectOptions, 'tandem'>;
 
 const NOTEPAD_RING_BOTTOM = 33.5;
 
 export default class NotepadNode extends Node {
 
-  public constructor( providedOptions?: NotepadNodeOptions ) {
+  public constructor( providedOptions: NotepadNodeOptions ) {
 
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
       readoutPatternStringProperty: null

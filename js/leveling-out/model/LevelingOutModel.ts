@@ -39,7 +39,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
 
     this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
-      getGroupItemValue: candyBar => candyBar.parentPlateProperty.value.linePlacement
+      getGroupItemValue: candyBar => candyBar.parentPlateProperty.value.linePlacement,
+      tandem: options.tandem.createTandem( 'groupSortInteractionModel' )
     } );
     this.sortingRangeProperty = new DerivedProperty( [ this.numberOfPlatesProperty ],
       numberOfPlates => new Range( 0, numberOfPlates - 1 ) );

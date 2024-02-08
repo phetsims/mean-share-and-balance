@@ -55,7 +55,8 @@ export default class LevelingOutScreenView extends SharingScreenView {
     } );
 
     const notepadNode = new NotepadNode( {
-      readoutPatternStringProperty: totalCandyBarsPatternStringProperty
+      readoutPatternStringProperty: totalCandyBarsPatternStringProperty,
+      tandem: options.tandem.createTandem( 'notepadNode' )
     } );
 
     super(
