@@ -21,6 +21,7 @@ import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility
 import Range from '../../../../dot/js/Range.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -30,6 +31,9 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
   public groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public sortingRangeProperty: TReadOnlyProperty<Range>;
+
+  // This emitter is used to update the keyboard focus when stack changes on a plate.
+  private stackChangedEmitter: Emitter;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -44,6 +48,17 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     } );
     this.sortingRangeProperty = new DerivedProperty( [ this.numberOfPlatesProperty ],
       numberOfPlates => new Range( 0, numberOfPlates - 1 ) );
+    this.stackChangedEmitter = new Emitter();
+
+    const selectedCandyBarProperty = this.groupSortInteractionModel.selectedGroupItemProperty;
+    this.stackChangedEmitter.addListener( () => {
+      const selectedCandyBar = selectedCandyBarProperty.value;
+
+      if ( selectedCandyBar !== null ) {
+        const parentPlate = selectedCandyBar?.parentPlateProperty.value;
+        selectedCandyBarProperty.value = this.getTopActiveCandyBarAssignedToPlate( parentPlate );
+      }
+    } );
 
     // In Mean Share and Balance, we decided arrays start counting at 1 for phet-io.
     let totalCandyBarCount = 1;
@@ -71,8 +86,18 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         candyBar.parentPlateProperty.link( plate => {
           const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
           const newY = LevelingOutModel.getCandyBarYPosition( numberOfCandyBarsOnPlate );
-          candyBar.travelTo( new Vector2( plate.xPosition, newY ) );
+          const endPosition = new Vector2( plate.xPosition, newY );
+
+          // Keyboard interaction should not animate the candy bar.
+          if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
+            candyBar.forceAnimationToFinish();
+            candyBar.positionProperty.set( endPosition );
+          }
+          else {
+            candyBar.travelTo( new Vector2( plate.xPosition, newY ) );
+          }
           this.reorganizeSnacks( plate );
+          this.stackChangedEmitter.emit();
         } );
 
         this.snacks.push( candyBar );
@@ -102,6 +127,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         if ( plate.isActiveProperty.value ) {
           if ( candyBarNumber > oldCandyBarNumber ) {
             this.tablePlateCandyBarAmountIncrease( plate, candyBarNumber - oldCandyBarNumber );
+            this.stackChangedEmitter.emit();
           }
           else if ( candyBarNumber < oldCandyBarNumber ) {
             this.tablePlateCandyBarAmountDecrease( plate, oldCandyBarNumber - candyBarNumber );

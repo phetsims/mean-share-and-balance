@@ -169,12 +169,15 @@ export default class LevelingOutScreenView extends SharingScreenView {
     this.notepadBoundsProperty.value = this.candyBarLayerNode.globalToLocalBounds( this.notepad.globalBounds );
 
     // TODO: clean up the shape of the highlight, see: https://github.com/phetsims/mean-share-and-balance/issues/137
-    this.groupSortInteractionView.groupSortGroupFocusHighlightPath.shape = Shape.rect(
+    const focusRect = Shape.rect(
       this.candyBarLayerNode.localBounds.x - 10,
       this.notepadBoundsProperty.value.y + 80,
       this.candyBarLayerNode.localBounds.width + 10,
       this.notepadBoundsProperty.value.height - 100
     );
+    this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );
+
+    this.groupSortInteractionView.grabReleaseCueNode.centerBottom = new Vector2( focusRect.bounds.centerX, focusRect.bounds.minY );
   }
 }
 
