@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * Adds a RectangularRadioButtonGroup to the NotepadNode for the Fair Share screen
