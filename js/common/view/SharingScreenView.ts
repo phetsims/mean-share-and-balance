@@ -112,9 +112,14 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    options.children = [ peopleLayerNode, tableNode, notepadNode, meanCalculationDialog ];
 
     super( model, questionBarStringProperty, questionBarColor, options );
+
+    // Children must be added to the screenViewRootNode in order to properly set PDOM order for alt-input.
+    this.screenViewRootNode.addChild( peopleLayerNode );
+    this.screenViewRootNode.addChild( tableNode );
+    this.screenViewRootNode.addChild( notepadNode );
+    this.screenViewRootNode.addChild( meanCalculationDialog );
 
     this.tableNode = tableNode;
     this.notepad = notepadNode;
@@ -142,7 +147,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     this.meanCalculationDialog = meanCalculationDialog;
-    this.addChild( controlsAlignBox );
+    this.screenViewRootNode.addChild( controlsAlignBox );
   }
 
   protected centerPlayAreaNodes(): void {

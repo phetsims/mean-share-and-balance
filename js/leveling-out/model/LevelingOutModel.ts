@@ -17,11 +17,19 @@ import Plate from '../../common/model/Plate.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import CandyBar from './CandyBar.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
+import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import Range from '../../../../dot/js/Range.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
+//TODO: Does this now need to extend PhetioObject to work with GroupSortInteractionModel?, see: https://github.com/phetsims/mean-share-and-balance/issues/137
 export default class LevelingOutModel extends SharingModel<CandyBar> {
+
+  public groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
+  public sortingRangeProperty: TReadOnlyProperty<Range>;
 
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
@@ -29,6 +37,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     super( options );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
+
+    this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
+      getGroupItemValue: candyBar => candyBar.parentPlateProperty.value.linePlacement
+    } );
+    this.sortingRangeProperty = new DerivedProperty( [ this.numberOfPlatesProperty ],
+      numberOfPlates => new Range( 0, numberOfPlates - 1 ) );
 
     // In Mean Share and Balance, we decided arrays start counting at 1 for phet-io.
     let totalCandyBarCount = 1;
@@ -51,6 +65,13 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
           // phet-io
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
+        } );
+
+        candyBar.parentPlateProperty.link( plate => {
+          const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
+          const newY = LevelingOutModel.getCandyBarYPosition( numberOfCandyBarsOnPlate );
+          candyBar.travelTo( new Vector2( plate.xPosition, newY ) );
+          this.reorganizeSnacks( plate );
         } );
 
         this.snacks.push( candyBar );
@@ -256,6 +277,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
   public override reset(): void {
     super.reset();
+    this.groupSortInteractionModel.reset();
     this.snacks.forEach( candyBar => { candyBar.reset(); } );
   }
 

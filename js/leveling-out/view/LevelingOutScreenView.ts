@@ -11,7 +11,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
-import { Node } from '../../../../scenery/js/imports.js';
+import { InteractiveHighlightingNode, Node } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadPlateNode from './NotepadPlateNode.js';
@@ -25,6 +25,10 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
+import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/group-sort/view/GroupSortInteractionView.js';
+import CandyBar from '../model/CandyBar.js';
+import Utils from '../../../../dot/js/Utils.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -32,6 +36,7 @@ type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOp
 export default class LevelingOutScreenView extends SharingScreenView {
   private readonly candyBarLayerNode: Node;
   private readonly notepadBoundsProperty: Property<Bounds2>;
+  private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
 
   public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -75,25 +80,21 @@ export default class LevelingOutScreenView extends SharingScreenView {
       const closestPlate = _.minBy(
         platesWithSpace, plate => Math.abs( plate.xPosition - candyBarNode.candyBar.positionProperty.value.x )
       );
-
       assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );
 
-      // Calculate and set the dropped candy bar's destination.
-      const numberOfCandyBarsOnPlate = model.getNumberOfCandyBarsStackedOnPlate( closestPlate! );
-      const oldY = candyBarNode.candyBar.positionProperty.value.y;
-      const newY = LevelingOutModel.getCandyBarYPosition( numberOfCandyBarsOnPlate );
-      candyBarNode.candyBar.travelTo( new Vector2( closestPlate!.xPosition, newY ) );
-
-      // Swap candy bars if parentPlate changes, so that each person always has the same total number of candy bars so
+      // Swap candy bars if parentPlate changes. Each person always has the same total number of candy bars so
       // that when their spinner is incremented, they can promote their own inactive candy bar to active.
       const currentParent = candyBarNode.candyBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarAssignedToPlate( closestPlate! );
-        inactiveCandyBarForSwap.positionProperty.set( new Vector2( currentParent.xPosition, oldY ) );
         inactiveCandyBarForSwap.parentPlateProperty.set( currentParent );
+        candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
       }
-
-      candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
+      else {
+        // When the parent plate stays the same we need to animate back to the top of the stack
+        const newY = LevelingOutModel.getCandyBarYPosition( model.getNumberOfCandyBarsStackedOnPlate( closestPlate ) );
+        candyBarNode.candyBar.travelTo( new Vector2( closestPlate.xPosition, newY ) );
+      }
     };
 
     // Create a node on the node pad to represent each plate in the model.
@@ -108,19 +109,53 @@ export default class LevelingOutScreenView extends SharingScreenView {
           visibleProperty: candyBar.isActiveProperty
         }
       ) );
+    const notepadCandyBarsNode = new InteractiveHighlightingNode( {
+      focusable: true,
+      tagName: 'div',
+      children: notepadCandyBars,
+      excludeInvisibleChildrenFromBounds: true
+    } );
 
     // This contains all the candy bars from the top (notepad) snackType and the bottom (table) snackType.
     this.candyBarLayerNode = new Node( {
 
       // See peopleLayerNode.excludeInvisibleChildrenFromBounds comment
       excludeInvisibleChildrenFromBounds: true,
-      children: [ ...this.tablePlateNodes, ...notepadPlateNodes, ...notepadCandyBars ]
+      children: [ ...this.tablePlateNodes, ...notepadPlateNodes, notepadCandyBarsNode ]
     } );
 
-    this.addChild( this.candyBarLayerNode );
+    this.screenViewRootNode.addChild( this.candyBarLayerNode );
+
+    this.groupSortInteractionView = new GroupSortInteractionView(
+      model.groupSortInteractionModel,
+      notepadCandyBarsNode,
+      {
+        getNextSelectedGroupItem: ( delta, candyBar ) => {
+          const plateLinePlacement = candyBar.parentPlateProperty.value.linePlacement;
+          const numberOfPlates = model.numberOfPlatesProperty.value;
+          const nextPlate = Utils.clamp( plateLinePlacement + delta, 0, numberOfPlates - 1 );
+          return model.getTopActiveCandyBarAssignedToPlate( model.plates[ nextPlate ] );
+        },
+        getGroupItemToSelect: () => model.getTopActiveCandyBarAssignedToPlate( model.plates[ 0 ] ),
+        getNodeFromModelItem: candyBar => {
+          const node = notepadCandyBars.find( candyBarNode => candyBarNode.candyBar === candyBar );
+          assert && assert( node !== undefined, 'A candyBar model must have an associated node' );
+          return node!;
+        },
+        sortingRangeProperty: model.sortingRangeProperty,
+        sortGroupItem: ( candyBar, newPlateIndex ) => candyBar.parentPlateProperty.set( model.plates[ newPlateIndex ] )
+      }
+    );
+
     model.numberOfPlatesProperty.link( () => {
       this.centerPlayAreaNodes();
     } );
+
+    // TODO: Clean this up, https://github.com/phetsims/mean-share-and-balance/issues/151
+    this.screenViewRootNode.setPDOMOrder( [
+      notepadCandyBarsNode,
+      ...this.tablePlateNodes
+    ] );
   }
 
   protected override centerPlayAreaNodes(): void {
@@ -131,6 +166,14 @@ export default class LevelingOutScreenView extends SharingScreenView {
 
     // Transform to the bounds of the candy bar, since they are in an intermediate layer.
     this.notepadBoundsProperty.value = this.candyBarLayerNode.globalToLocalBounds( this.notepad.globalBounds );
+
+    // TODO: clean up the shape of the highlight, see: https://github.com/phetsims/mean-share-and-balance/issues/137
+    this.groupSortInteractionView.groupSortGroupFocusHighlightPath.shape = Shape.rect(
+      this.candyBarLayerNode.localBounds.x - 10,
+      this.notepadBoundsProperty.value.y + 80,
+      this.candyBarLayerNode.localBounds.width + 10,
+      this.notepadBoundsProperty.value.height - 100
+    );
   }
 }
 
