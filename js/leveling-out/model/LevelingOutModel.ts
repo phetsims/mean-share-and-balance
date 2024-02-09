@@ -72,7 +72,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         const candyBar = new CandyBar( {
           isActive: isActive,
           plate: plate,
-          position: SnackStacker.getCandyBarPositionInStack( plate, candyBarIndex ),
+          position: SnackStacker.getStackedCandyBarPosition( plate, candyBarIndex ),
 
           // phet-io
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
@@ -80,7 +80,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
         candyBar.parentPlateProperty.link( plate => {
           const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
-          const endPosition = SnackStacker.getCandyBarPositionInStack( plate, numberOfCandyBarsOnPlate );
+          const endPosition = SnackStacker.getStackedCandyBarPosition( plate, numberOfCandyBarsOnPlate );
 
           // Keyboard interaction should not animate the candy bar.
           if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
@@ -195,12 +195,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
     // The non-animating candy bars should be at the bottom of the stack (any animating candy bars will go on top).
     nonAnimatingActiveCandyBars.forEach( ( candyBar, i ) => {
-      candyBar.positionProperty.set( SnackStacker.getCandyBarPositionInStack( plate, i ) );
+      candyBar.positionProperty.set( SnackStacker.getStackedCandyBarPosition( plate, i ) );
     } );
 
     // Set a potentially new destination for any animating candy bars.
     animatingCandyBars.forEach( ( candyBar, i ) => {
-      candyBar.travelTo( SnackStacker.getCandyBarPositionInStack( plate, i + nonAnimatingActiveCandyBars.length ) );
+      candyBar.travelTo( SnackStacker.getStackedCandyBarPosition( plate, i + nonAnimatingActiveCandyBars.length ) );
     } );
   }
 

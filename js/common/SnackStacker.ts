@@ -7,7 +7,7 @@
  */
 
 import meanShareAndBalance from '../meanShareAndBalance.js';
-import { Image, Node } from '../../../scenery/js/imports.js';
+import { Image, Path } from '../../../scenery/js/imports.js';
 import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
@@ -20,8 +20,8 @@ const APPLE_X_MARGIN = 3; // in screen coords
 class SnackStacker {
 
   /**
-   * Position the provided scenery Node based on the type of snack and the position within the stack.  This positioning
-   * is done assuming that the Node is in a parent node with a plate at the bottom.
+   * Position the provided scenery Image Node based on the type of snack and the position within the stack.  This
+   * positioning is done assuming that the Node is in a parent node with a plate at the bottom.
    */
   public static setSnackImageNodePosition( snackNode: Image, snackType: SnackType, positionInStack: number ): void {
     assert && assert( snackType === 'candyBars' || snackType === 'apples', 'unknown snack type' );
@@ -39,7 +39,11 @@ class SnackStacker {
     }
   }
 
-  public static setSnackGraphicPosition( snackNode: Node, snackType: SnackType, positionInStack: number ): void {
+  /**
+   * Position the graphical node that is being used to depict all or part of a snack.  This method is used to position
+   * the nodes that are *not* represented as images in the view.
+   */
+  public static setSnackGraphicPosition( snackNode: Path, snackType: SnackType, positionInStack: number ): void {
 
     assert && assert( snackType === 'candyBars' || snackType === 'apples', 'unknown snack type' );
 
@@ -69,9 +73,10 @@ class SnackStacker {
    * Get the position for a candy bar model element that is stacked on a plate.  The position is based on where the
    * plate is in model space and the candy bar's position in the stack.
    * @param plate - plate on which the candy bar is to be stacked
-   * @param positionInStack - position in the stack for the candy bar, 0 is the bottom and it goes up from there.
+   * @param positionInStack - position in the stack for the candy bar, 0 is the bottom, and it goes up from there.
+   * @returns - a 2D vector in coordinate space that can be used to set the position of a candy
    */
-  public static getCandyBarPositionInStack( plate: Plate, positionInStack: number ): Vector2 {
+  public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
     const yPosition = MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
                       MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
                       ( positionInStack + 1 ) * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +

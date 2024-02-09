@@ -95,7 +95,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
       else {
 
         // When the parent plate stays the same we need to animate back to the top of the stack
-        candyBarNode.candyBar.travelTo( SnackStacker.getCandyBarPositionInStack(
+        candyBarNode.candyBar.travelTo( SnackStacker.getStackedCandyBarPosition(
           closestPlate,
           model.getNumberOfCandyBarsStackedOnPlate( closestPlate )
         ) );
