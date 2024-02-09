@@ -14,7 +14,6 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import CandyBar from './CandyBar.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
@@ -22,6 +21,7 @@ import Range from '../../../../dot/js/Range.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
+import SnackStacker from '../../common/SnackStacker.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -66,18 +66,13 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     this.plates.forEach( plate => {
 
       // Create and initialize all the candy bars.
-      for ( let candyBarIndex = 0;
-            candyBarIndex < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
-            candyBarIndex++ ) {
-
-        const x = plate.xPosition;
-        const y = LevelingOutModel.getCandyBarYPosition( candyBarIndex );
+      _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, candyBarIndex => {
         const isActive = plate.isActiveProperty.value && candyBarIndex < plate.snackNumberProperty.value;
 
         const candyBar = new CandyBar( {
           isActive: isActive,
           plate: plate,
-          position: new Vector2( x, y ),
+          position: SnackStacker.getCandyBarPositionInStack( plate, candyBarIndex ),
 
           // phet-io
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
@@ -85,8 +80,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
         candyBar.parentPlateProperty.link( plate => {
           const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
-          const newY = LevelingOutModel.getCandyBarYPosition( numberOfCandyBarsOnPlate );
-          const endPosition = new Vector2( plate.xPosition, newY );
+          const endPosition = SnackStacker.getCandyBarPositionInStack( plate, numberOfCandyBarsOnPlate );
 
           // Keyboard interaction should not animate the candy bar.
           if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
@@ -94,14 +88,14 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             candyBar.positionProperty.set( endPosition );
           }
           else {
-            candyBar.travelTo( new Vector2( plate.xPosition, newY ) );
+            candyBar.travelTo( endPosition );
           }
           this.reorganizeSnacks( plate );
           this.stackChangedEmitter.emit();
         } );
 
         this.snacks.push( candyBar );
-      }
+      } );
 
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
       plate.isActiveProperty.lazyLink( isActive => {
@@ -199,18 +193,14 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const nonAnimatingActiveCandyBars = this.getActiveCandyBarsOnPlate( plate );
     const animatingCandyBars = this.getActiveCandyBarsAnimatingToPlate( plate );
 
-    // The non-animating candy bars should be at the bottom of the stack. Animating candy bars will go on top.
-    // This is needed primarily for handling multitouch and race conditions.
+    // The non-animating candy bars should be at the bottom of the stack (any animating candy bars will go on top).
     nonAnimatingActiveCandyBars.forEach( ( candyBar, i ) => {
-      candyBar.positionProperty.set( new Vector2( plate.xPosition, LevelingOutModel.getCandyBarYPosition( i ) ) );
+      candyBar.positionProperty.set( SnackStacker.getCandyBarPositionInStack( plate, i ) );
     } );
 
     // Set a potentially new destination for any animating candy bars.
     animatingCandyBars.forEach( ( candyBar, i ) => {
-      candyBar.travelTo( new Vector2(
-        plate.xPosition,
-        LevelingOutModel.getCandyBarYPosition( i + nonAnimatingActiveCandyBars.length )
-      ) );
+      candyBar.travelTo( SnackStacker.getCandyBarPositionInStack( plate, i + nonAnimatingActiveCandyBars.length ) );
     } );
   }
 
@@ -306,17 +296,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     super.reset();
     this.groupSortInteractionModel.reset();
     this.snacks.forEach( candyBar => { candyBar.reset(); } );
-  }
-
-  /**
-   * Static function to get the Y position of a candy bar stacked on a plate in the notepad based on its position (i.e.
-   * index) in the stack.  Zero is the bottom-most position.  The Y position is for the top of the candy bar.
-   */
-  public static getCandyBarYPosition( stackPosition: number ): number {
-    return MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y -
-           MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
-           ( ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
-               MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) * ( stackPosition + 1 ) );
   }
 }
 

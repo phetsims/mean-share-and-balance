@@ -16,7 +16,6 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadPlateNode from './NotepadPlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import NotepadCandyBarNode from './NotepadCandyBarNode.js';
@@ -29,6 +28,8 @@ import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/
 import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
 import { Shape } from '../../../../kite/js/imports.js';
+import SnackStacker from '../../common/SnackStacker.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -92,9 +93,12 @@ export default class LevelingOutScreenView extends SharingScreenView {
         candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
       }
       else {
+
         // When the parent plate stays the same we need to animate back to the top of the stack
-        const newY = LevelingOutModel.getCandyBarYPosition( model.getNumberOfCandyBarsStackedOnPlate( closestPlate ) );
-        candyBarNode.candyBar.travelTo( new Vector2( closestPlate.xPosition, newY ) );
+        candyBarNode.candyBar.travelTo( SnackStacker.getCandyBarPositionInStack(
+          closestPlate,
+          model.getNumberOfCandyBarsStackedOnPlate( closestPlate )
+        ) );
       }
     };
 

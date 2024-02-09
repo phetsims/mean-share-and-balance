@@ -17,6 +17,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import SnackStacker from '../../common/SnackStacker.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -24,28 +25,23 @@ type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequire
 const STROKE_WIDTH = 1;
 
 export default class NotepadPlateNode extends Node {
-  public constructor( plate: Plate, providedOptions: NotepadPlateNodeOptions ) {
 
-    const candyBarVerticalSpacing = MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
-                                    MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING;
+  public constructor( plate: Plate, providedOptions: NotepadPlateNodeOptions ) {
 
     const candyBarOutlineNodes: Node[] = [];
     _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, i => {
-      candyBarOutlineNodes.push( new Rectangle(
+      const candyBarOutlineNode = new Rectangle(
         0,
         0,
         MeanShareAndBalanceConstants.CANDY_BAR_WIDTH - STROKE_WIDTH,
         MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT - STROKE_WIDTH,
         {
           stroke: MeanShareAndBalanceColors.candyBarColorProperty,
-          lineDash: [ 1, 2 ],
-          centerX: MeanShareAndBalanceConstants.CANDY_BAR_WIDTH / 2,
-          centerY: -( MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
-                      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT / 2 +
-                      MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH +
-                      candyBarVerticalSpacing * i )
+          lineDash: [ 1, 2 ]
         }
-      ) );
+      );
+      SnackStacker.setSnackGraphicPosition( candyBarOutlineNode, 'candyBars', i );
+      candyBarOutlineNodes.push( candyBarOutlineNode );
     } );
 
     const plateNode = new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {

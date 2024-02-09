@@ -5,6 +5,7 @@
  * plate can vary.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
@@ -20,6 +21,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import plate_png from '../../../images/plate_png.js';
 import { SnackType } from '../../common/view/SharingScreenView.js';
+import SnackStacker from '../../common/SnackStacker.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -56,31 +58,20 @@ export default class TablePlateNode extends Node {
 
     const candyBarScale = 0.04;
 
-    // Create the Nodes representing the individual snacks each person brought.
+    // Create and position the Nodes representing the individual snacks that are on this plate.
     const snacks = _.times(
       MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
       index => {
-        let node;
         if ( options.snackType === 'candyBars' ) {
-
-          // Create the candy bar Node and position it to be stacked on the plate.
-          const candyBarNode = new Image( chocolateBar_png, {
-            scale: candyBarScale,
-            x: 0
-          } );
-          candyBarNode.bottom = index *
-                                -( candyBarNode.height + MeanShareAndBalanceConstants.TABLE_CANDY_BAR_VERTICAL_SPACING );
-          node = candyBarNode;
+          const candyBarNode = new Image( chocolateBar_png, { scale: candyBarScale } );
+          SnackStacker.setSnackImageNodePosition( candyBarNode, 'candyBars', index );
+          return candyBarNode;
         }
         else {
-          const appleNode = new Image( greenApple_png, {
-            maxWidth: APPLE_IMAGE_WIDTH,
-            x: ( index % 2 ) * APPLE_IMAGE_WIDTH * 0.8
-          } );
-          appleNode.bottom = -Math.floor( index / 2 ) * appleNode.height * 0.8;
-          node = appleNode;
+          const appleNode = new Image( greenApple_png, { maxWidth: APPLE_IMAGE_WIDTH } );
+          SnackStacker.setSnackImageNodePosition( appleNode, 'apples', index );
+          return appleNode;
         }
-        return node;
       }
     );
 
@@ -98,6 +89,7 @@ export default class TablePlateNode extends Node {
       centerBottom: new Vector2( plateImage.centerX, plateImage.centerY )
     } );
 
+    // Put the plate and snacks together in a Node.
     const plateAndSnacksNode = new Node( {
       children: [ plateImage, snacksNode ],
       layoutOptions: {
