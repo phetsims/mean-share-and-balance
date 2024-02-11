@@ -40,7 +40,6 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly snacks: T[];
   public readonly meanProperty: TReadOnlyProperty<number>;
 
-  // TODO: Do we need options here, or can we just pass in a tandem?  See https://github.com/phetsims/mean-share-and-balance/issues/138.
   public constructor( options: SharingModelOptions ) {
 
     this.numberOfPlatesRangeProperty = new Property<Range>(
