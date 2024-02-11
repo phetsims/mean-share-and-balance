@@ -54,7 +54,13 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     this.stackChangedEmitter.addListener( () => {
       const selectedCandyBar = selectedCandyBarProperty.value;
 
-      if ( selectedCandyBar !== null ) {
+      // If the selected candy bar is not active, default back to the first top active candy bar or null if there are
+      // no active candy bars.
+      if ( selectedCandyBar !== null && !selectedCandyBar.isActiveProperty.value ) {
+        const platesWithSnacks = this.getPlatesWithSnacks();
+        selectedCandyBarProperty.value = this.getTopActiveCandyBarAssignedToPlate( platesWithSnacks[ 0 ] );
+      }
+      else if ( selectedCandyBar !== null ) {
         const parentPlate = selectedCandyBar?.parentPlateProperty.value;
         selectedCandyBarProperty.value = this.getTopActiveCandyBarAssignedToPlate( parentPlate );
       }
@@ -121,11 +127,11 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         if ( plate.isActiveProperty.value ) {
           if ( candyBarNumber > oldCandyBarNumber ) {
             this.tablePlateCandyBarAmountIncrease( plate, candyBarNumber - oldCandyBarNumber );
-            this.stackChangedEmitter.emit();
           }
           else if ( candyBarNumber < oldCandyBarNumber ) {
             this.tablePlateCandyBarAmountDecrease( plate, oldCandyBarNumber - candyBarNumber );
           }
+          this.stackChangedEmitter.emit();
         }
       } );
     } );
@@ -139,21 +145,16 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     return this.snacks.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
   }
 
-  public getTopActiveCandyBarAssignedToPlate( plate: Plate ): CandyBar {
+  public getTopActiveCandyBarAssignedToPlate( plate: Plate ): CandyBar | null {
     const activeCandyBarsOnPlate = this.getActiveCandyBarsAssignedToPlate( plate );
-    assert && assert( activeCandyBarsOnPlate.length > 0, `There is no top candy bar on plate since active candyBars is: ${activeCandyBarsOnPlate.length}` );
     const topCandyBar = _.minBy( activeCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
-    return topCandyBar!;
+    return topCandyBar || null;
   }
 
-  public getBottomInactiveCandyBarAssignedToPlate( plate: Plate ): CandyBar {
+  public getBottomInactiveCandyBarAssignedToPlate( plate: Plate ): CandyBar | null {
     const inactiveCandyBarsOnPlate = this.getInactiveSnacksAssignedToPlate( plate );
-    assert && assert(
-      inactiveCandyBarsOnPlate.length > 0,
-      `There is no inactive bottom candy bar on plate since inactive candyBars is: ${inactiveCandyBarsOnPlate.length}`
-    );
     const bottomCandyBar = _.maxBy( inactiveCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
-    return bottomCandyBar!;
+    return bottomCandyBar || null;
   }
 
   /**
@@ -215,7 +216,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       const delta = numberOfTablePlateSnacks - numberOfNotepadPlateSnacks;
       for ( let i = 0; i < delta; i++ ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
-        this.getTopActiveCandyBarAssignedToPlate( maxPlate ).isActiveProperty.set( false );
+        const topCandyBar = this.getTopActiveCandyBarAssignedToPlate( maxPlate );
+        assert && assert( topCandyBar,
+          `There are no plates with active candy bars, but we are still trying to reconcile our number of
+          tablePlateSnacks: ${numberOfTablePlateSnacks} and our number of
+          notepadPlateSnacks: ${numberOfNotepadPlateSnacks}.` );
+        topCandyBar!.isActiveProperty.set( false );
         this.reorganizeSnacks( maxPlate );
       }
     }
@@ -223,7 +229,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       const delta = numberOfNotepadPlateSnacks - numberOfTablePlateSnacks;
       for ( let i = 0; i < delta; i++ ) {
         const minPlate = this.getPlateWithLeastCandyBars();
-        this.getBottomInactiveCandyBarAssignedToPlate( minPlate ).isActiveProperty.set( true );
+        const bottomInactiveCandyBar = this.getBottomInactiveCandyBarAssignedToPlate( minPlate );
+        assert && assert( bottomInactiveCandyBar,
+          `There are no plates with inactive candy bars, but we are still trying to reconcile our number of
+          tablePlateSnacks: ${numberOfTablePlateSnacks} and our number of
+          notepadPlateSnacks: ${numberOfNotepadPlateSnacks}.` );
+        bottomInactiveCandyBar!.isActiveProperty.set( true );
         this.reorganizeSnacks( minPlate );
       }
     }
@@ -247,11 +258,20 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
           minPlate !== plate,
           `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}`
         );
-        this.getBottomInactiveCandyBarAssignedToPlate( minPlate ).isActiveProperty.set( true );
+        const bottomInactiveCandyBar = this.getBottomInactiveCandyBarAssignedToPlate( minPlate );
+        assert && assert( bottomInactiveCandyBar,
+          `There are no inactive candy bars.
+          The number of total candy bars on the table is: ${this.totalSnacksProperty.value}, and
+          the number of active plates is: ${this.numberOfPlatesProperty.value}.` );
+        bottomInactiveCandyBar!.isActiveProperty.set( true );
         this.reorganizeSnacks( minPlate );
       }
       else {
-        this.getBottomInactiveCandyBarAssignedToPlate( plate ).isActiveProperty.set( true );
+        const bottomInactiveCandyBar = this.getBottomInactiveCandyBarAssignedToPlate( plate );
+        assert && assert( bottomInactiveCandyBar,
+          `The plate has no inactive candy bars.
+          The number of active candy bars on the plate is: ${numberOfCandyBarsOnPlate}` );
+        bottomInactiveCandyBar!.isActiveProperty.set( true );
       }
       this.reorganizeSnacks( plate );
     }
@@ -266,11 +286,18 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
       if ( numberOfCandyBarsOnPlate === 0 ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
-        this.getTopActiveCandyBarAssignedToPlate( maxPlate ).isActiveProperty.set( false );
+        const topCandyBar = this.getTopActiveCandyBarAssignedToPlate( maxPlate );
+        assert && assert( topCandyBar,
+          `There are no plates with active candy bars.
+          The current number of total candy bars on the table is: ${this.totalSnacksProperty.value}.` );
+        topCandyBar!.isActiveProperty.set( false );
         this.reorganizeSnacks( maxPlate );
       }
       else {
-        this.getTopActiveCandyBarAssignedToPlate( plate ).isActiveProperty.set( false );
+        const topCandyBar = this.getTopActiveCandyBarAssignedToPlate( plate );
+        assert && assert( topCandyBar,
+          `This plate has no active candy bars. The numberOfCandyBarsOnPlate is: ${numberOfCandyBarsOnPlate}.` );
+        topCandyBar!.isActiveProperty.set( false );
       }
       this.reorganizeSnacks( plate );
     }
@@ -280,7 +307,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length ) );
 
     // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN.
-    // candyBarsNumberProperty will always be a number.
+    // The length of the active candy bars array will always be a number.
     return maxPlate!;
   }
 
@@ -288,8 +315,15 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length ) );
 
     // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN.
-    // candyBarsNumberProperty will always be a number.
+    // The length of the active candy bars array will always be a number.
     return minPlate!;
+  }
+
+  /**
+   * Get all the plates that have at least one candy bar on them.
+   */
+  public getPlatesWithSnacks(): Array<Plate> {
+    return this.plates.filter( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length > 0 );
   }
 
   public override reset(): void {

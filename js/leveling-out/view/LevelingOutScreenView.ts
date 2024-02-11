@@ -89,7 +89,9 @@ export default class LevelingOutScreenView extends SharingScreenView {
       const currentParent = candyBarNode.candyBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarAssignedToPlate( closestPlate! );
-        inactiveCandyBarForSwap.parentPlateProperty.set( currentParent );
+        assert && assert( inactiveCandyBarForSwap,
+          `There are no inactive candy bars on the plate ${closestPlate!.linePlacement}` );
+        inactiveCandyBarForSwap!.parentPlateProperty.set( currentParent );
         candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
       }
       else {
@@ -136,10 +138,14 @@ export default class LevelingOutScreenView extends SharingScreenView {
       notepadCandyBarsNode,
       {
         getNextSelectedGroupItem: ( delta, candyBar ) => {
-          const plateLinePlacement = candyBar.parentPlateProperty.value.linePlacement;
-          const numberOfPlates = model.numberOfPlatesProperty.value;
-          const nextPlate = Utils.clamp( plateLinePlacement + delta, 0, numberOfPlates - 1 );
-          return model.getTopActiveCandyBarAssignedToPlate( model.plates[ nextPlate ] );
+          const platesWithSnacks = model.getPlatesWithSnacks();
+          assert && assert( platesWithSnacks.length !== 0,
+            'In order to select the next group item there must be active candy bars. The number of' +
+            'active candy bars is: ' + model.getActiveCandyBars().length );
+          const currentIndex = platesWithSnacks.indexOf( candyBar.parentPlateProperty.value );
+          const nextPlate = Utils.clamp( currentIndex + delta, 0, platesWithSnacks.length - 1 );
+          const topCandyBar = model.getTopActiveCandyBarAssignedToPlate( platesWithSnacks[ nextPlate ] );
+          return topCandyBar!;
         },
         getGroupItemToSelect: () => model.getTopActiveCandyBarAssignedToPlate( model.plates[ 0 ] ),
         getNodeFromModelItem: candyBar => {
