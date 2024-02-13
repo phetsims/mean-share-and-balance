@@ -11,10 +11,10 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
-import { InteractiveHighlightingNode, Node } from '../../../../scenery/js/imports.js';
+import { InteractiveHighlightingNode } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import NotepadPlateNode from './NotepadPlateNode.js';
+import LevelingOutNotepadPlateNode from './LevelingOutNotepadPlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -35,7 +35,6 @@ type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 export default class LevelingOutScreenView extends SharingScreenView {
-  private readonly candyBarLayerNode: Node;
   private readonly notepadBoundsProperty: Property<Bounds2>;
   private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
 
@@ -68,10 +67,10 @@ export default class LevelingOutScreenView extends SharingScreenView {
       options );
 
     // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper. But
-    // since the candyBarLayerNode changes its horizontal position to keep things centered for varying numbers of
-    // people, we must coordinate the drag bounds when that changes.  This is in the coordinate frame of the
-    // candyBarLayerNode.  This initial value is not in the correct coordinate frame, but it is specified correctly
-    // before the end of the constructor.
+    // since the snackLayerNode changes its horizontal position to keep things centered for varying numbers of people,
+    // we must coordinate the drag bounds when that changes.  This is in the coordinate frame of the snackLayerNode.
+    // This initial value is not in the correct coordinate frame, but it is specified correctly before the end of the
+    // constructor.
     this.notepadBoundsProperty = new Property( this.notepad.bounds );
 
     // function for what candy bars should do at the end of their drag
@@ -104,10 +103,11 @@ export default class LevelingOutScreenView extends SharingScreenView {
       }
     };
 
-    // Create a node on the node pad to represent each plate in the model.
-    const notepadPlateNodes = model.plates.map( plate => new NotepadPlateNode( plate, {
+    // Create the nodes on the notepad that represent the plate in the model.
+    const notepadPlateNodes = model.plates.map( plate => new LevelingOutNotepadPlateNode( plate, {
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
+    notepadPlateNodes.forEach( plateNode => { this.snackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
     const notepadCandyBars = model.snacks.map( ( candyBar, i ) =>
@@ -122,16 +122,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
       children: notepadCandyBars,
       excludeInvisibleChildrenFromBounds: true
     } );
-
-    // This contains all the candy bars from the top (notepad) snackType and the bottom (table) snackType.
-    this.candyBarLayerNode = new Node( {
-
-      // See peopleLayerNode.excludeInvisibleChildrenFromBounds comment
-      excludeInvisibleChildrenFromBounds: true,
-      children: [ ...this.tablePlateNodes, ...notepadPlateNodes, notepadCandyBarsNode ]
-    } );
-
-    this.screenViewRootNode.addChild( this.candyBarLayerNode );
+    this.snackLayerNode.addChild( notepadCandyBarsNode );
 
     this.groupSortInteractionView = new GroupSortInteractionView(
       model.groupSortInteractionModel,
@@ -172,22 +163,22 @@ export default class LevelingOutScreenView extends SharingScreenView {
   protected override centerPlayAreaNodes(): void {
     super.centerPlayAreaNodes();
 
-    // The candyBarLayerNode and peopleLayerNode bounds change when the number of people change, due to excludeInvisibleChildrenFromBounds
-    this.candyBarLayerNode.centerX = this.playAreaCenterX;
-
-    // Transform to the bounds of the candy bar, since they are in an intermediate layer.
-    this.notepadBoundsProperty.value = this.candyBarLayerNode.globalToLocalBounds( this.notepad.globalBounds );
+    // Update the bounds that constrain where the candy bars can be dragged.
+    this.notepadBoundsProperty.value = this.snackLayerNode.globalToLocalBounds( this.notepad.globalBounds );
 
     // TODO: clean up the shape of the highlight, see: https://github.com/phetsims/mean-share-and-balance/issues/137
     const focusRect = Shape.rect(
-      this.candyBarLayerNode.localBounds.x - 10,
+      this.snackLayerNode.localBounds.x - 10,
       this.notepadBoundsProperty.value.y + 80,
-      this.candyBarLayerNode.localBounds.width + 10,
+      this.snackLayerNode.localBounds.width + 10,
       this.notepadBoundsProperty.value.height - 100
     );
     this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );
 
-    this.groupSortInteractionView.grabReleaseCueNode.centerBottom = new Vector2( focusRect.bounds.centerX, focusRect.bounds.minY );
+    this.groupSortInteractionView.grabReleaseCueNode.centerBottom = new Vector2(
+      focusRect.bounds.centerX,
+      focusRect.bounds.minY
+    );
   }
 }
 

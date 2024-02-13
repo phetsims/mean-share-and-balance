@@ -15,17 +15,15 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import FairShareModel from '../model/FairShareModel.js';
 import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
-import { Node } from '../../../../scenery/js/imports.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import FairShareNotepadNode from './FairShareNotepadNode.js';
+import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 export default class FairShareScreenView extends SharingScreenView {
-
-  private readonly applesLayerNode: Node;
 
   public constructor( model: FairShareModel, providedOptions: FairShareScreenViewOptions ) {
 
@@ -34,17 +32,18 @@ export default class FairShareScreenView extends SharingScreenView {
       showSyncButton: false
     }, providedOptions );
 
+    // Create the string that will be used to describe the apples on the notepad, e.g. "Total = 3 apples".
     const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
         MeanShareAndBalanceStrings.appleStringProperty,
         MeanShareAndBalanceStrings.applesStringProperty ],
       ( total, singular, plural ) => total === 1 ? singular : plural );
-
     const totalApplesPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalApplesPatternStringProperty, {
       total: model.totalSnacksProperty,
       measurement: measurementStringProperty
     } );
 
-    const notepadNode = new FairShareNotepadNode( model.notepadModeEnumerationProperty, {
+    // Create the notepad Node where the graphical representations of the snacks will be displayed.
+    const notepadNode = new FairShareNotepadNode( model.notepadModeProperty, {
       readoutPatternStringProperty: totalApplesPatternStringProperty,
       tandem: options.tandem.createTandem( 'notepadNode' )
     } );
@@ -57,22 +56,15 @@ export default class FairShareScreenView extends SharingScreenView {
       options
     );
 
-    this.applesLayerNode = new Node( {
-
-      // See peopleLayerNode.excludeInvisibleChildrenFromBounds comment
-      excludeInvisibleChildrenFromBounds: true,
-      children: [ ...this.tablePlateNodes ]
-    } );
-    this.addChild( this.applesLayerNode );
+    // Create the nodes on the notepad that represent the plate in the model.
+    const notepadPlateNodes = model.plates.map(
+      plate => new FairShareNotepadPlateNode( plate, model.notepadModeProperty )
+    );
+    notepadPlateNodes.forEach( plateNode => { this.snackLayerNode.addChild( plateNode ); } );
 
     model.numberOfPlatesProperty.link( () => {
       this.centerPlayAreaNodes();
     } );
-  }
-
-  protected override centerPlayAreaNodes(): void {
-    super.centerPlayAreaNodes();
-    this.applesLayerNode.centerX = this.playAreaCenterX;
   }
 }
 

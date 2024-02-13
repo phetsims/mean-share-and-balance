@@ -54,6 +54,9 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   private readonly meanCalculationDialog: Dialog;
   protected readonly playAreaCenterX: number;
 
+  // the layer where the snacks will be shown for both the table and the notepad
+  protected readonly snackLayerNode: Node;
+
   public constructor(
     model: SharingModel<Snack>,
     questionBarStringProperty: TReadOnlyProperty<string>,
@@ -89,11 +92,20 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     // Create table nodes and layers.
     const tableNode = new PartyTableNode();
 
+    // Create the layer where the snacks and the plates that hold them will be shown.
+    const snackLayerNode = new Node( {
+
+      // The entire node containing snacks is centered.  If the invisible snacks contribute to the bounds, then
+      // centering won't work correctly.
+      excludeInvisibleChildrenFromBounds: true
+    } );
+
     // Create the visual representation of the plates that sit on the table.
     const tablePlateNodes = model.plates.map( plate => new TablePlateNode( plate, {
       snackType: providedOptions.snackType,
       tandem: providedOptions.tandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
+    tablePlateNodes.forEach( tablePlateNode => { snackLayerNode.addChild( tablePlateNode ); } );
 
     // TODO: Do the people images need to be instrumented? https://github.com/phetsims/mean-share-and-balance/issues/140
     const people: Node[] = tablePlateNodes.map( ( plate, i ) => {
@@ -112,7 +124,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-
     super( model, questionBarStringProperty, questionBarColor, options );
 
     // Children must be added to the screenViewRootNode in order to properly set PDOM order for alt-input.
@@ -120,11 +131,13 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     this.screenViewRootNode.addChild( tableNode );
     this.screenViewRootNode.addChild( notepadNode );
     this.screenViewRootNode.addChild( meanCalculationDialog );
+    this.screenViewRootNode.addChild( snackLayerNode );
 
     this.tableNode = tableNode;
     this.notepad = notepadNode;
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
+    this.snackLayerNode = snackLayerNode;
 
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH +
                                        MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
@@ -153,6 +166,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   protected centerPlayAreaNodes(): void {
     this.notepad.centerX = this.playAreaCenterX;
     this.tableNode.centerX = this.playAreaCenterX;
+    this.snackLayerNode.centerX = this.playAreaCenterX;
 
     // We want the people to be slightly to the left of their snacks.
     this.peopleLayerNode.centerX = this.playAreaCenterX - 40;

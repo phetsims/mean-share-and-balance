@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * In the upper (notepad) snackType, contains all the candy bars on a plate. Each plate in the model has one
- * NotepadPlateNode.
+ * LevelingOutNotepadPlateNode displays the plate and the outlined candy bars in the notepad for the Leveling Out
+ * screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -18,13 +18,14 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import Plate from '../../common/model/Plate.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import SnackStacker from '../../common/SnackStacker.js';
+import LevelingOutModel from '../model/LevelingOutModel.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
 // constants
 const STROKE_WIDTH = 1;
 
-export default class NotepadPlateNode extends Node {
+export default class LevelingOutNotepadPlateNode extends Node {
 
   public constructor( plate: Plate, providedOptions: NotepadPlateNodeOptions ) {
 
@@ -51,7 +52,7 @@ export default class NotepadPlateNode extends Node {
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
       x: plate.xPosition,
-      bottom: MeanShareAndBalanceConstants.NOTEPAD_PLATE_CENTER_Y + MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2,
+      bottom: LevelingOutModel.NOTEPAD_PLATE_CENTER_Y + MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2,
       visibleProperty: plate.isActiveProperty,
       excludeInvisibleChildrenFromBounds: false,
       children: [ ...candyBarOutlineNodes, plateNode ]
@@ -68,4 +69,4 @@ export default class NotepadPlateNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'NotepadPlateNode', NotepadPlateNode );
+meanShareAndBalance.register( 'LevelingOutNotepadPlateNode', LevelingOutNotepadPlateNode );

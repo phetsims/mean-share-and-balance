@@ -331,6 +331,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     this.groupSortInteractionModel.reset();
     this.snacks.forEach( candyBar => { candyBar.reset(); } );
   }
+
+  public static readonly NOTEPAD_PLATE_CENTER_Y = 330;
 }
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );

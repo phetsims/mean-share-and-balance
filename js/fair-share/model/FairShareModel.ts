@@ -47,16 +47,23 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // An enumeration property that controls the way in which the quantity of snacks on the table are displayed on the
   // notepad.  See the enumeration for more information on the possible modes.
-  public readonly notepadModeEnumerationProperty: EnumerationProperty<NotepadMode>;
+  public readonly notepadModeProperty: EnumerationProperty<NotepadMode>;
 
   public constructor( providedOptions: FairShareModelOptions ) {
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
-    this.notepadModeEnumerationProperty = new EnumerationProperty( NotepadMode.SYNC, {
-      tandem: providedOptions.tandem.createTandem( 'notepadModeEnumerationProperty' ),
+    this.notepadModeProperty = new EnumerationProperty( NotepadMode.SYNC, {
+      tandem: providedOptions.tandem.createTandem( 'notepadModeProperty' ),
       phetioFeatured: true
     } );
   }
+
+  public override reset(): void {
+    this.notepadModeProperty.reset();
+    super.reset();
+  }
+
+  public static readonly NOTEPAD_PLATE_CENTER_Y = 300;
 }
 
 meanShareAndBalance.register( 'FairShareModel', FairShareModel );
