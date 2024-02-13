@@ -28,6 +28,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
+import { combineOptions } from '../../../../phet-core/js/imports.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -101,8 +102,17 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     const tableNode = new LabTableNode( { centerX: waterCupLayerNode.centerX } );
 
+    const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
+      children: [ notepadNode, tableNode, waterCupLayerNode, predictMeanSlider ]
+    } );
+
     // Instantiate Parent
-    super( model, MeanShareAndBalanceStrings.introQuestionStringProperty, MeanShareAndBalanceColors.introQuestionBarColorProperty, options );
+    super(
+      model,
+      MeanShareAndBalanceStrings.introQuestionStringProperty,
+      MeanShareAndBalanceColors.introQuestionBarColorProperty,
+      notepadNode,
+      superOptions );
 
     // Controls on Right side of screen
     const controlPanel = new IntroControlPanel( model.tickMarksVisibleProperty, model.meanVisibleProperty, model.predictMeanVisibleProperty,
@@ -149,12 +159,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.interruptSubtreeInput();
     } );
 
-    this.screenViewRootNode.addChild( notepadNode );
-    this.screenViewRootNode.addChild( tableNode );
-    this.screenViewRootNode.addChild( waterCupLayerNode );
-    this.screenViewRootNode.addChild( predictMeanSlider );
-
-    this.screenViewRootNode.pdomOrder = [ ...tableCupNodes, pipeNodes[ 0 ], predictMeanSlider, controlPanel, this.resetAllButton ];
+    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controlPanel );
   }
 
   public override reset(): void {

@@ -21,18 +21,21 @@ import TModel from '../../../../joist/js/TModel.js';
 export type MeanShareAndBalanceScreenViewOptions = WithRequired<ScreenViewOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceScreenView extends ScreenView {
+  protected readonly notepad: Node;
   protected readonly resetAllButton: ResetAllButton;
   public readonly questionBar: QuestionBar;
-  protected readonly screenViewRootNode: Node;
 
   protected constructor(
     model: TModel,
     questionBarStringProperty: TReadOnlyProperty<string>,
     questionBarColor: TColor,
+    notepadNode: Node,
     providedOptions: MeanShareAndBalanceScreenViewOptions ) {
     const options = providedOptions;
 
     super( options );
+
+    this.notepad = notepadNode;
 
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: questionBarStringProperty,
@@ -55,11 +58,8 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
-    this.screenViewRootNode = new Node( {
-      children: [ this.questionBar, this.resetAllButton ]
-    } );
-
-    this.addChild( this.screenViewRootNode );
+    this.addChild( this.questionBar );
+    this.addChild( this.resetAllButton );
   }
 
   /**
@@ -67,6 +67,19 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
    */
   public reset(): void {
     // May be used for future screens
+  }
+
+  protected msabSetPDOMOrder( firstInteractionNodes: Node[], secondInteractionNodes: Node[], controlsNode: Node ): void {
+    this.pdomPlayAreaNode.setPDOMOrder( [
+      ...firstInteractionNodes,
+      this.notepad,
+      ...secondInteractionNodes
+    ] );
+
+    this.pdomControlAreaNode.setPDOMOrder( [
+      controlsNode,
+      this.resetAllButton
+    ] );
   }
 }
 

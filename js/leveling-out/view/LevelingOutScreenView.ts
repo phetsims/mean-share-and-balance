@@ -152,12 +152,6 @@ export default class LevelingOutScreenView extends SharingScreenView {
     model.numberOfPlatesProperty.link( () => {
       this.centerPlayAreaNodes();
     } );
-
-    // TODO: Clean this up, https://github.com/phetsims/mean-share-and-balance/issues/151
-    this.screenViewRootNode.setPDOMOrder( [
-      notepadCandyBarsNode,
-      ...this.tablePlateNodes
-    ] );
   }
 
   protected override centerPlayAreaNodes(): void {

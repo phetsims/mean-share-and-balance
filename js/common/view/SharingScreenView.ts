@@ -15,7 +15,7 @@ import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } f
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
-import optionize from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import PartyTableNode from './PartyTableNode.js';
 import Dialog from '../../../../sun/js/Dialog.js';
@@ -47,11 +47,11 @@ export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenVi
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
 
 export default class SharingScreenView extends MeanShareAndBalanceScreenView {
-  protected readonly notepad: Node;
   private readonly tableNode: Node;
   protected readonly tablePlateNodes: Node[];
   private readonly peopleLayerNode: Node;
   private readonly meanCalculationDialog: Dialog;
+  private readonly controls: Node;
   protected readonly playAreaCenterX: number;
 
   // the layer where the snacks will be shown for both the table and the notepad
@@ -124,20 +124,17 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true
     } );
 
-    super( model, questionBarStringProperty, questionBarColor, options );
+    const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
+      children: [ peopleLayerNode, tableNode, notepadNode, meanCalculationDialog, snackLayerNode ]
+    } );
 
-    // Children must be added to the screenViewRootNode in order to properly set PDOM order for alt-input.
-    this.screenViewRootNode.addChild( peopleLayerNode );
-    this.screenViewRootNode.addChild( tableNode );
-    this.screenViewRootNode.addChild( notepadNode );
-    this.screenViewRootNode.addChild( meanCalculationDialog );
-    this.screenViewRootNode.addChild( snackLayerNode );
+    super( model, questionBarStringProperty, questionBarColor, notepadNode, superOptions );
 
     this.tableNode = tableNode;
-    this.notepad = notepadNode;
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
     this.snackLayerNode = snackLayerNode;
+    this.controls = controls;
 
     const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH +
                                        MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
@@ -160,7 +157,9 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     this.meanCalculationDialog = meanCalculationDialog;
-    this.screenViewRootNode.addChild( controlsAlignBox );
+    this.addChild( controlsAlignBox );
+
+    this.msabSetPDOMOrder( [ this.snackLayerNode ], this.tablePlateNodes, controls );
   }
 
   protected centerPlayAreaNodes(): void {
