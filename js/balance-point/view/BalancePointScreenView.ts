@@ -14,7 +14,6 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -23,9 +22,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
   public constructor( model: BalancePointModel, providedOptions: BalancePointScreenViewOptions ) {
 
     const options = optionize<BalancePointScreenViewOptions, SelfOptions, SoccerScreenViewOptions>()( {
-      questionBarOptions: {
-        questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty
-      },
       physicalRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
       chartViewWidth: 300,
       numberLineXMargin: 10
