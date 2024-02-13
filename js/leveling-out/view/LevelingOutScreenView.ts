@@ -34,6 +34,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
+const CANDY_BAR_FOCUS_X_MARGIN = 10;
 export default class LevelingOutScreenView extends SharingScreenView {
   private readonly notepadBoundsProperty: Property<Bounds2>;
   private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
@@ -160,12 +161,12 @@ export default class LevelingOutScreenView extends SharingScreenView {
     // Update the bounds that constrain where the candy bars can be dragged.
     this.notepadBoundsProperty.value = this.snackLayerNode.globalToLocalBounds( this.notepad.globalBounds );
 
-    // TODO: clean up the shape of the highlight, see: https://github.com/phetsims/mean-share-and-balance/issues/137
     const focusRect = Shape.rect(
-      this.snackLayerNode.localBounds.x - 10,
-      this.notepadBoundsProperty.value.y + 80,
-      this.snackLayerNode.localBounds.width + 10,
-      this.notepadBoundsProperty.value.height - 100
+      this.snackLayerNode.localBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
+      this.notepadBoundsProperty.value.y + 80, // empirically determined to sit below the total readout,
+      // but have enough vertical space for 10 candy bars
+      this.snackLayerNode.localBounds.width + CANDY_BAR_FOCUS_X_MARGIN,
+      this.notepadBoundsProperty.value.height - 100 // empirically determined
     );
     this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );
 
