@@ -65,7 +65,9 @@ const MeanShareAndBalanceConstants = {
   NOTEPAD_PAPER_CENTER_Y: 220,
 
   NOTEPAD_PLATE_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
-  NOTEPAD_PLATE_LINE_WIDTH: 1.95
+  NOTEPAD_PLATE_LINE_WIDTH: 1.95,
+
+  SOCCER_BALL_RANGE: new Range( 0, 10 )
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

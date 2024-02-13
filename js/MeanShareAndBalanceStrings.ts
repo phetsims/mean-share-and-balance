@@ -16,6 +16,7 @@ type StringsType = {
     'introStringProperty': LocalizedStringProperty;
     'levelingOutStringProperty': LocalizedStringProperty;
     'fairShareStringProperty': LocalizedStringProperty;
+    'balancePointStringProperty': LocalizedStringProperty;
   };
   'predictMeanStringProperty': LocalizedStringProperty;
   'meanStringProperty': LocalizedStringProperty;
@@ -36,6 +37,7 @@ type StringsType = {
   'totalApplesPatternStringProperty': LocalizedStringProperty;
   'appleStringProperty': LocalizedStringProperty;
   'applesStringProperty': LocalizedStringProperty;
+  'balancePointQuestionStringProperty': LocalizedStringProperty;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

@@ -1,0 +1,39 @@
+// Copyright 2023, University of Colorado Boulder
+
+/**
+ * Screen that uses a soccer context to explore mean.
+ *
+ * @author Marla Schulz (PhET Interactive Simulations)
+ *
+ */
+
+import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
+import PickRequired from '../../../phet-core/js/types/PickRequired.js';
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
+import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
+import BalancePointScreenView from './view/BalancePointScreenView.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
+import BalancePointModel from './model/BalancePointModel.js';
+
+
+type SelfOptions = EmptySelfOptions;
+
+type BalancePointScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
+
+export default class BalancePointScreen extends Screen<BalancePointModel, BalancePointScreenView> {
+  public constructor( providedOptions: BalancePointScreenOptions ) {
+
+    const options = optionize<BalancePointScreenOptions, SelfOptions, ScreenOptions>()( {
+      name: MeanShareAndBalanceStrings.screen.balancePointStringProperty,
+      backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty
+    }, providedOptions );
+    super(
+      () => new BalancePointModel( { tandem: options.tandem.createTandem( 'model' ) } ),
+      model => new BalancePointScreenView( model, { tandem: options.tandem.createTandem( 'view' ) } ),
+      options
+    );
+  }
+}
+
+meanShareAndBalance.register( 'BalancePointScreen', BalancePointScreen );

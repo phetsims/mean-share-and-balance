@@ -28,6 +28,9 @@ const meanShareAndBalanceColors = {
   fairShareScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'fairShareScreenBackground', {
     default: '#F8E3E2'
   } ),
+  balancePointScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balancePointScreenBackground', {
+    default: '#0076BF'
+  } ),
   introQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introQuestionBar', {
     default: '#2496D6'
   } ),
@@ -87,6 +90,9 @@ const meanShareAndBalanceColors = {
   } ),
   appleColorProperty: new ProfileColorProperty( meanShareAndBalance, 'apple', {
     default: '#00A048'
+  } ),
+  balancePointQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balancePointQuestionBar', {
+    default: '#009246'
   } )
 };
 
