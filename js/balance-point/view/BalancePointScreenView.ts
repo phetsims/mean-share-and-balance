@@ -11,7 +11,7 @@ import SoccerScreenView, { SoccerScreenViewOptions } from '../../../../soccer-co
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { combineOptions, EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
+import { EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
@@ -21,6 +21,7 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import ScreenView from '../../../../joist/js/ScreenView.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import { PatternStringProperty } from '../../../../axon/js/imports.js';
+import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -48,10 +49,10 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       tandem: options.tandem.createTandem( 'notepadNode' )
     } );
 
-    const superOptions = combineOptions<SoccerScreenViewOptions>( {
-      children: [ notepadNode ]
-    }, options );
-    super( model, superOptions );
+    super( model, options );
+
+    // Background
+    const backgroundNode = new BackgroundNode( 550, this.visibleBoundsProperty );
 
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,
@@ -70,6 +71,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
+    this.addChild( backgroundNode );
+    this.addChild( notepadNode );
     this.addChild( questionBar );
     this.addChild( resetAllButton );
     this.addChild( this.playAreaNumberLineNode );
