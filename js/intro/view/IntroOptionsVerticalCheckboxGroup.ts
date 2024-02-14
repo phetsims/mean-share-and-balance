@@ -22,7 +22,7 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
 
     super( [ {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.predictMeanStringProperty, {
-          fontSize: 15,
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
           tandem: tandem.createTandem( 'predictMeanText' )
         } ),
@@ -33,7 +33,7 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
         tandemName: 'predictMeanCheckbox'
       }, {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.meanStringProperty, {
-          fontSize: 15,
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
           tandem: tandem.createTandem( 'meanText' )
         } ),
@@ -44,7 +44,7 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
         tandemName: 'meanCheckbox'
       }, {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
-          fontSize: 15,
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
           tandem: tandem.createTandem( 'tickMarksText' )
         } ),
@@ -55,7 +55,7 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
         tandemName: 'tickMarksCheckbox'
       }, {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.cupWaterLevelStringProperty, {
-          fontSize: 15,
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
           tandem: tandem.createTandem( 'cupWaterLevelText' )
         } ),
@@ -64,11 +64,9 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
         tandemName: 'waterCupLevelCheckbox'
       } ], {
 
-        checkboxOptions: {
-          boxWidth: 16
-        },
+        checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
         align: 'left',
-        layoutOptions: { column: 0, row: 0, xAlign: 'left' },
+        layoutOptions: { align: 'left' },
         tandem: providedOptions.tandem.createTandem( 'introOptionsCheckboxGroup' )
       }
     );

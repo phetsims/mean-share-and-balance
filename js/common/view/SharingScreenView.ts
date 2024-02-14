@@ -52,7 +52,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   private readonly peopleLayerNode: Node;
   private readonly meanCalculationDialog: Dialog;
   private readonly controls: Node;
-  protected readonly playAreaCenterX: number;
 
   // the layer where the snacks will be shown for both the table and the notepad
   protected readonly snackLayerNode: Node;
@@ -135,10 +134,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     this.peopleLayerNode = peopleLayerNode;
     this.snackLayerNode = snackLayerNode;
     this.controls = controls;
-
-    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH +
-                                       MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
-    this.playAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
 
     // Don't include the questionBar in the usable bounds.
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,

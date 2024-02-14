@@ -29,7 +29,8 @@ export default class SyncButton extends RectangularPushButton {
           fontSize: 15,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncIcon.width
         } )
-      ]
+      ],
+      stretch: false
     } );
 
     const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {

@@ -15,6 +15,7 @@ import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
 
 const DEFAULT_MARGIN = 15;
+const CONTROLS_MAX_TEXT_WIDTH = 175;
 
 const MeanShareAndBalanceConstants = {
 
@@ -48,7 +49,12 @@ const MeanShareAndBalanceConstants = {
   MOUSE_AREA_DILATION: 5,
   TOUCH_AREA_DILATION: 10,
 
-  MAX_CONTROLS_TEXT_WIDTH: 175,
+  MAX_CONTROLS_TEXT_WIDTH: CONTROLS_MAX_TEXT_WIDTH,
+  CONTROLS_PREFERRED_WIDTH: CONTROLS_MAX_TEXT_WIDTH + 25,
+  CHECKBOX_FONT_SIZE: 15,
+  CHECKBOX_OPTIONS: {
+    boxWidth: 16
+  },
 
   CANDY_BAR_WIDTH: 45,
   CANDY_BAR_HEIGHT: 12,
@@ -68,7 +74,8 @@ const MeanShareAndBalanceConstants = {
   NOTEPAD_PLATE_LINE_WIDTH: 1.95,
 
   SOCCER_BALL_RANGE: new Range( 0, 10 ),
-  NUMBER_SPINNER_KICK_RANGE: new Range( 0, 7 )
+  NUMBER_SPINNER_KICK_RANGE: new Range( 0, 7 ),
+  GROUND_POSITION_Y: 550
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

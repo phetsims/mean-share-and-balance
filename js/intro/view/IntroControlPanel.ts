@@ -10,7 +10,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { GridBox, GridBoxOptions } from '../../../../scenery/js/imports.js';
+import { VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
@@ -19,10 +19,12 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import IntroOptionsVerticalCheckboxGroup from './IntroOptionsVerticalCheckboxGroup.js';
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import PipeSwitch from './PipeSwitch.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
-type IntroControlPanelOptions = StrictOmit<GridBoxOptions, 'children'> & PickRequired<GridBoxOptions, 'tandem'>;
+type IntroControlPanelOptions = StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
 
-export default class IntroControlPanel extends GridBox {
+export default class IntroControlPanel extends VBox {
   public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
                       predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>, arePipesOpenProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
@@ -37,14 +39,21 @@ export default class IntroControlPanel extends GridBox {
     const pipeSwitch = new PipeSwitch( arePipesOpenProperty, options.tandem.createTandem( 'pipeSwitch' ) );
 
     // Number Spinner
-    const numberSpinnerVBox = new NumberSpinnerVBox( numberOfCupsProperty, { tandem: options.tandem.createTandem( 'numberSpinnerVBox' ) } );
+    const numberSpinnerVBox = new NumberSpinnerVBox(
+      numberOfCupsProperty,
+      MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE,
+      MeanShareAndBalanceStrings.numberOfCupsStringProperty,
+      {
+        minContentHeight: 140,
+        tandem: options.tandem.createTandem( 'numberSpinnerVBox' )
+      } );
 
     numberOfCupsProperty.link( () => {
       pipeSwitch.interruptSubtreeInput();
       introOptionsCheckboxGroup.interruptSubtreeInput();
     } );
 
-    const combinedOptions = combineOptions<GridBoxOptions>( { children: [ introOptionsCheckboxGroup, pipeSwitch, numberSpinnerVBox ] }, providedOptions );
+    const combinedOptions = combineOptions<VBoxOptions>( { children: [ introOptionsCheckboxGroup, pipeSwitch, numberSpinnerVBox ] }, providedOptions );
     super( combinedOptions );
   }
 }

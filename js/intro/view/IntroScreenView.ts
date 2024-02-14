@@ -133,15 +133,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     this.addChild( controlsAlignBox );
 
-    // Center waterCups as they are activated and de-activated
-    const checkboxGroupWidthOffset = ( MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
-    const cupsAreaCenterX = this.layoutBounds.centerX - checkboxGroupWidthOffset;
-
     const centerWaterCupLayerNode = () => {
-      waterCupLayerNode.centerX = cupsAreaCenterX;
+      waterCupLayerNode.centerX = this.playAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
       tableNode.centerX = waterCupLayerNode.centerX - 10;
-      notepadNode.centerX = waterCupLayerNode.centerX - 10;
+      notepadNode.centerX = this.playAreaCenterX;
       tableNode.y = waterCupLayerNode.bottom - 30;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal

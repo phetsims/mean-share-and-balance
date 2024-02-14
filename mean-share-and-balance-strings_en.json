@@ -76,5 +76,8 @@
   },
   "balancePointQuestion": {
     "value": "What is the average kick distance?"
+  },
+  "numberOfBalls": {
+    "value": "Number of Balls"
   }
 }

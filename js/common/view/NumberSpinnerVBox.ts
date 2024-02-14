@@ -7,45 +7,59 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import { Range } from '../../../../dot/js/imports.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import { combineOptions, optionize } from '../../../../phet-core/js/imports.js';
 
+type SelfOptions = {
+  minContentHeight?: number;
+};
+
+type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
 
 export default class NumberSpinnerVBox extends VBox {
 
-  public constructor( numberOfCupsProperty: Property<number>, providedOptions: PickRequired<VBoxOptions, 'tandem'> ) {
+  public constructor( numberProperty: Property<number>, range: Range, stringProperty: LocalizedStringProperty, providedOptions: NumberSpinnerVBoxOptions ) {
 
-    const numberOfCupsText = new Text( MeanShareAndBalanceStrings.numberOfCupsStringProperty, {
+    const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {
+      minContentHeight: 100
+    }, providedOptions );
+
+    const numberOfCupsText = new Text( stringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
 
     const numberSpinner = new NumberSpinner(
-      numberOfCupsProperty,
-      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE ),
+      numberProperty,
+      new Property( range ),
       {
         arrowsPosition: 'leftRight',
         layoutOptions: {
           align: 'left'
         },
-        accessibleName: MeanShareAndBalanceStrings.numberOfCupsStringProperty,
+        accessibleName: stringProperty,
 
         // phet-io
         tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
       }
     );
 
-    super( {
+    const superOptions = combineOptions<VBoxOptions>( {
       children: [ numberOfCupsText, numberSpinner ],
       align: 'left',
       justify: 'bottom',
       spacing: 10,
-      layoutOptions: { column: 0, row: 2 }
+      layoutOptions: {
+        minContentHeight: options.minContentHeight
+      }
     } );
+    super( superOptions );
   }
 }
 

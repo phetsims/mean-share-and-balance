@@ -8,18 +8,18 @@
  */
 
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import SyncButton from './SyncButton.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, FireListener, Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { AlignBox, FireListener, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
+import NumberSpinnerVBox from './NumberSpinnerVBox.js';
 
 type SelfOptions = {
   meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
@@ -59,42 +59,22 @@ export default class SharingControls extends VBox {
       tandem: options.tandem.createTandem( 'syncButton' )
     } );
 
-    // LayoutOptions on the syncButton affect the content of the button, and not the layoutCell the button is in.
-    // This seems like a bug: https://github.com/phetsims/sun/issues/871
+    // We need to wrap the syncButton in a Node so that it does not stretch to the minContentWidth of the VBox.
+    // The align box gives us some added flexibility to adjust horizontal alignment of the sync button.
     const buttonAlignBox = new AlignBox( syncButton, {
       layoutOptions: {
-        minContentHeight: 100,
         align: 'left'
       },
       visible: options.showSyncButton  // Fair Share Screen does not have a SyncButton
     } );
 
     // Number Spinner
-    const numberOfPeopleText = new Text( MeanShareAndBalanceStrings.numberOfPeopleStringProperty, {
-      fontSize: 15,
-      maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
-    } );
-
-    const numberSpinner = new NumberSpinner(
+    const numberSpinnerVBox = new NumberSpinnerVBox(
       model.numberOfPlatesProperty,
-      model.numberOfPlatesRangeProperty, {
-        arrowsPosition: 'leftRight',
-        layoutOptions: {
-          align: 'left'
-        },
-        accessibleName: MeanShareAndBalanceStrings.numberOfCupsStringProperty,
-
-        // phet-io
-        tandem: options.tandem.createTandem( 'numberSpinner' )
-      }
-    );
-
-    const numberSpinnerVBox = new VBox( {
-      children: [ numberOfPeopleText, numberSpinner ],
-      align: 'left',
-      justify: 'bottom',
-      spacing: 10
-    } );
+      MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE,
+      MeanShareAndBalanceStrings.numberOfPeopleStringProperty, {
+        tandem: options.tandem
+      } );
 
 
     options.children = [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ];

@@ -24,6 +24,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
   protected readonly notepad: Node;
   protected readonly resetAllButton: ResetAllButton;
   public readonly questionBar: QuestionBar;
+  protected readonly playAreaCenterX: number;
 
   protected constructor(
     model: TModel,
@@ -34,6 +35,10 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     const options = providedOptions;
 
     super( options );
+
+    const controlsWidthOffset = ( MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH +
+                                       MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
 
     this.notepad = notepadNode;
 

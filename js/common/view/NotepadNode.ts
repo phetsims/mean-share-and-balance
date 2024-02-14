@@ -16,7 +16,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import optionize from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 
@@ -28,7 +28,7 @@ type SelfOptions = {
 };
 
 export type NotepadNodeOptions = SelfOptions &
-  StrictOmit<NodeOptions, 'children'> &
+  StrictOmit<NodeOptions, 'children' | 'centerY'> &
   PickRequired<PhetioObjectOptions, 'tandem'>;
 
 const NOTEPAD_RING_BOTTOM = 33.5;
@@ -67,7 +67,11 @@ export default class NotepadNode extends Node {
       rings.push( image );
     } );
 
-    super( { children: [ paperStackNode, ...rings ], centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y } );
+    const superOptions = combineOptions<NodeOptions>( {
+      children: [ paperStackNode, ...rings ],
+      centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y
+    }, options );
+    super( superOptions );
 
     if ( options.readoutPatternStringProperty ) {
       const readoutText = new Text( options.readoutPatternStringProperty, {

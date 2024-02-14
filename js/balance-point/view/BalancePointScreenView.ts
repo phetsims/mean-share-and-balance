@@ -28,18 +28,39 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
-const NUMBER_LINE_MARGIN_X = 100;
+const NUMBER_LINE_MARGIN_X = 150;
 const CHART_VIEW_WIDTH = ScreenView.DEFAULT_LAYOUT_BOUNDS.width - MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - NUMBER_LINE_MARGIN_X * 2;
 
 export default class BalancePointScreenView extends SoccerScreenView<BalancePointSceneModel, BalancePointModel> {
+
+  public readonly playAreaCenterX: number;
 
   public constructor( model: BalancePointModel, providedOptions: BalancePointScreenViewOptions ) {
 
     const options = optionize<BalancePointScreenViewOptions, SelfOptions, SoccerScreenViewOptions>()( {
       physicalRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
       chartViewWidth: CHART_VIEW_WIDTH,
-      numberLineXMargin: NUMBER_LINE_MARGIN_X
+      numberLineXMargin: NUMBER_LINE_MARGIN_X,
+      groundPositionY: MeanShareAndBalanceConstants.GROUND_POSITION_Y
     }, providedOptions );
+
+
+    super( model, options );
+
+    const controlsWidthOffset = ( MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH +
+                                       MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+    this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
+
+    // Background
+    const backgroundNode = new BackgroundNode( 550, this.visibleBoundsProperty );
+
+    const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
+      questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,
+      barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty
+    } );
+
+    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + questionBar.height,
+      this.layoutBounds.maxX, this.layoutBounds.maxY );
 
     // Controls
     const controls = new BalancePointControls( model, {
@@ -52,21 +73,9 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     } );
     const notepadNode = new NotepadNode( {
       readoutPatternStringProperty: totalDistancePatternStringProperty,
-      tandem: options.tandem.createTandem( 'notepadNode' )
+      tandem: options.tandem.createTandem( 'notepadNode' ),
+      centerX: this.playAreaCenterX
     } );
-
-    super( model, options );
-
-    // Background
-    const backgroundNode = new BackgroundNode( 550, this.visibleBoundsProperty );
-
-    const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
-      questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,
-      barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty
-    } );
-
-    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + questionBar.height,
-      this.layoutBounds.maxX, this.layoutBounds.maxY );
 
     const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,

@@ -9,7 +9,7 @@
 
 import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { NumberSpinner, RectangularRadioButtonGroup, VerticalCheckboxGroup } from '../../../../sun/js/imports.js';
+import { RectangularRadioButtonGroup, VerticalCheckboxGroup } from '../../../../sun/js/imports.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -18,56 +18,82 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { Property } from '../../../../axon/js/imports.js';
+import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
+
 export default class BalancePointControls extends VBox {
 
   public constructor( model: BalancePointModel, providedOptions: BalancePointControlsOptions ) {
 
     const meanFulcrumRadioButtonGroup = new RectangularRadioButtonGroup( model.isMeanFulcrumFixedProperty, [
       {
-        createNode: () => new TriangleNode( { fill: 'white', stroke: 'purple' } ),
+        createNode: () => new TriangleNode( {
+          triangleHeight: 24,
+          triangleWidth: 28,
+          fill: 'white',
+          stroke: 'purple'
+        } ),
         value: false,
         tandemName: 'movableMeanFulcrumRadioButton'
       },
       {
-        createNode: () => new TriangleNode( { fill: 'purple', stroke: 'purple' } ),
+        createNode: () => new TriangleNode( {
+          triangleHeight: 24,
+          triangleWidth: 28,
+          fill: 'purple',
+          stroke: 'purple'
+        } ),
         value: true,
         tandemName: 'fixedMeanFulcrumRadioButton'
       }
     ], {
       tandem: providedOptions.tandem.createTandem( 'meanFulcrumRadioButtonGroup' ),
-      orientation: 'horizontal'
+      orientation: 'horizontal',
+      radioButtonOptions: {
+        baseColor: 'white'
+      }
     } );
 
     const checkboxGroup = new VerticalCheckboxGroup( [
       {
-        createNode: () => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty ),
+        createNode: () => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+        } ),
         property: model.areTickMarksVisibleProperty,
         tandemName: 'tickMarksCheckbox'
       },
       {
-        createNode: () => new Text( MeanShareAndBalanceStrings.meanStringProperty ),
+        createNode: () => new Text( MeanShareAndBalanceStrings.meanStringProperty, {
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+        } ),
         property: model.isMeanVisibleProperty,
         tandemName: 'meanCheckbox'
       }
     ], {
+      checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );
 
     const infoButton = new InfoButton( {
       iconFill: '#286AA1',
-      tandem: providedOptions.tandem.createTandem( 'infoButton' )
+      tandem: providedOptions.tandem.createTandem( 'infoButton' ),
+      radius: 20,
+      xMargin: 6,
+      yMargin: 6,
+      layoutOptions: {
+        minContentHeight: 140
+      }
     } );
 
-    const rangeProperty = new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE );
-    const numberSpinner = new NumberSpinner(
+    const numberSpinner = new NumberSpinnerVBox(
       model.selectedSceneModelProperty.value.numberOfDataPointsProperty,
-      rangeProperty,
+      MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE,
+      MeanShareAndBalanceStrings.numberOfBallsStringProperty,
       {
-        arrowsPosition: 'leftRight',
         tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
       }
     );
@@ -81,7 +107,7 @@ export default class BalancePointControls extends VBox {
       ],
       spacing: 20,
       align: 'left',
-      preferredWidth: 180
+      preferredWidth: MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
     } );
   }
 }

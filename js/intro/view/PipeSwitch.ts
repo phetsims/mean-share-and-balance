@@ -31,7 +31,7 @@ export default class PipeSwitch extends ABSwitch<boolean> {
 
     const openValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), tandem.createTandem( 'openValveIcon' ) );
 
-    const combinedOptions = combineOptions<ABSwitchOptions>( { layoutOptions: { column: 0, row: 1, minContentHeight: 140 }, align: 'top', justify: 'left' }, options );
+    const combinedOptions = combineOptions<ABSwitchOptions>( { align: 'top', justify: 'left' }, options );
 
     super( arePipesOpenProperty, false, closedValveIcon, true, openValveIcon, combinedOptions );
   }
