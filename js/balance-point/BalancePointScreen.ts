@@ -15,6 +15,7 @@ import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import BalancePointScreenView from './view/BalancePointScreenView.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import BalancePointModel from './model/BalancePointModel.js';
+import BasicActionsKeyboardHelpSection from '../../../scenery-phet/js/keyboard/help/BasicActionsKeyboardHelpSection.js';
 
 
 type SelfOptions = EmptySelfOptions;
@@ -25,7 +26,8 @@ export default class BalancePointScreen extends Screen<BalancePointModel, Balanc
   public constructor( providedOptions: BalancePointScreenOptions ) {
     const options = optionize<BalancePointScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.balancePointStringProperty,
-      backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty
+      backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty,
+      createKeyboardHelpNode: () => new BasicActionsKeyboardHelpSection()
     }, providedOptions );
     super(
       () => new BalancePointModel( { tandem: options.tandem.createTandem( 'model' ) } ),
