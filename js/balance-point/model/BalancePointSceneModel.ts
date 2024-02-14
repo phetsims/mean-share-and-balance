@@ -8,7 +8,7 @@
 
 import SoccerSceneModel, { SoccerSceneModelOptions } from '../../../../soccer-common/js/model/SoccerSceneModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { NumberProperty, Property } from '../../../../axon/js/imports.js';
+import { DerivedProperty, NumberProperty, Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDistributionStrategy.js';
 import Range from '../../../../dot/js/Range.js';
@@ -19,6 +19,8 @@ import JoistStrings from '../../../../joist/js/JoistStrings.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 export default class BalancePointSceneModel extends SoccerSceneModel {
+
+  public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
 
   public constructor( options: BalancePointSceneModelOptions ) {
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
@@ -53,6 +55,12 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       tempRegionAndCultureProperty,
       options
     );
+    const valueDependencies = this.soccerBalls.map( ball => ball.valueProperty );
+    const phaseDependencies = this.soccerBalls.map( ball => ball.soccerBallPhaseProperty );
+    this.totalKickDistanceProperty = DerivedProperty.deriveAny( [ ...valueDependencies, ...phaseDependencies ], () => {
+      const activeBalls = this.getActiveSoccerBalls();
+      return activeBalls.length > 0 ? _.sumBy( this.getActiveSoccerBalls(), ball => ball.valueProperty.value! ) : 0;
+    } );
   }
 }
 

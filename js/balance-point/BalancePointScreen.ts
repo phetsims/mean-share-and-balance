@@ -23,7 +23,6 @@ type BalancePointScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tand
 
 export default class BalancePointScreen extends Screen<BalancePointModel, BalancePointScreenView> {
   public constructor( providedOptions: BalancePointScreenOptions ) {
-
     const options = optionize<BalancePointScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.balancePointStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty

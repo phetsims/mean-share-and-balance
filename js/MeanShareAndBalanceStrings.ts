@@ -37,6 +37,7 @@ type StringsType = {
   'totalApplesPatternStringProperty': LocalizedStringProperty;
   'appleStringProperty': LocalizedStringProperty;
   'applesStringProperty': LocalizedStringProperty;
+  'totalDistancePatternStringProperty': LocalizedStringProperty;
   'balancePointQuestionStringProperty': LocalizedStringProperty;
 };
 

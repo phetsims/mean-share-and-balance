@@ -29,7 +29,7 @@ const meanShareAndBalanceColors = {
     default: '#F8E3E2'
   } ),
   balancePointScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balancePointScreenBackground', {
-    default: '#0076BF'
+    default: '#BEDBF2'
   } ),
   introQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introQuestionBar', {
     default: '#2496D6'
