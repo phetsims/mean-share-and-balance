@@ -18,7 +18,7 @@ const DEFAULT_MARGIN = 15;
 
 const MeanShareAndBalanceConstants = {
 
-  NUMBER_SPINNER_RANGE: new Range( 1, 7 ),
+  NUMBER_SPINNER_CONTAINERS_RANGE: new Range( 1, 7 ),
   SCREEN_VIEW_X_MARGIN: DEFAULT_MARGIN,
   SCREEN_VIEW_Y_MARGIN: DEFAULT_MARGIN,
   INITIAL_NUMBER_OF_CUPS: 2,
@@ -67,7 +67,8 @@ const MeanShareAndBalanceConstants = {
   NOTEPAD_PLATE_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
   NOTEPAD_PLATE_LINE_WIDTH: 1.95,
 
-  SOCCER_BALL_RANGE: new Range( 0, 10 )
+  SOCCER_BALL_RANGE: new Range( 0, 10 ),
+  NUMBER_SPINNER_KICK_RANGE: new Range( 0, 7 )
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

@@ -13,11 +13,15 @@ import SoccerModel, { SoccerModelOptions } from '../../../../soccer-common/js/mo
 import BalancePointSceneModel from './BalancePointSceneModel.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
+import { BooleanProperty, Property } from '../../../../axon/js/imports.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
 
 export default class BalancePointModel extends SoccerModel<BalancePointSceneModel> {
+  public readonly isMeanFulcrumFixedProperty: Property<boolean>;
+  public readonly areTickMarksVisibleProperty: Property<boolean>;
+  public readonly isMeanVisibleProperty: Property<boolean>;
 
   public constructor( providedOptions: BalancePointModelOptions ) {
 
@@ -29,6 +33,16 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       tandem: options.tandem.createTandem( 'sceneModel' )
     } );
     super( [ sceneModel ], options );
+
+    this.isMeanFulcrumFixedProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
+    } );
+    this.areTickMarksVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'areTickMarksVisibleProperty' )
+    } );
+    this.isMeanVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isMeanVisibleProperty' )
+    } );
   }
 }
 

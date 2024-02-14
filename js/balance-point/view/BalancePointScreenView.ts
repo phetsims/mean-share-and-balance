@@ -22,6 +22,9 @@ import ScreenView from '../../../../joist/js/ScreenView.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import { PatternStringProperty } from '../../../../axon/js/imports.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
+import BalancePointControls from './BalancePointControls.js';
+import { AlignBox } from '../../../../scenery/js/imports.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -39,6 +42,9 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     }, providedOptions );
 
     // Controls
+    const controls = new BalancePointControls( model, {
+      tandem: options.tandem.createTandem( 'controls' )
+    } );
 
     // Notepad
     const totalDistancePatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalDistancePatternStringProperty, {
@@ -59,6 +65,17 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty
     } );
 
+    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + questionBar.height,
+      this.layoutBounds.maxX, this.layoutBounds.maxY );
+
+    const controlsAlignBox = new AlignBox( controls, {
+      alignBounds: playAreaBounds,
+      xAlign: 'right',
+      yAlign: 'top',
+      rightMargin: MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
+      topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
+    } );
+
     const resetAllButton = new ResetAllButton( {
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
@@ -74,6 +91,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( backgroundNode );
     this.addChild( notepadNode );
     this.addChild( questionBar );
+    this.addChild( controlsAlignBox );
     this.addChild( resetAllButton );
     this.addChild( this.playAreaNumberLineNode );
   }

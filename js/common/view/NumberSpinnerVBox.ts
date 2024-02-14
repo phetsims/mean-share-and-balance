@@ -26,7 +26,7 @@ export default class NumberSpinnerVBox extends VBox {
 
     const numberSpinner = new NumberSpinner(
       numberOfCupsProperty,
-      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_RANGE ),
+      new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE ),
       {
         arrowsPosition: 'leftRight',
         layoutOptions: {
