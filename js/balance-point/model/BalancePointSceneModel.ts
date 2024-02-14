@@ -58,8 +58,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     const valueDependencies = this.soccerBalls.map( ball => ball.valueProperty );
     const phaseDependencies = this.soccerBalls.map( ball => ball.soccerBallPhaseProperty );
     this.totalKickDistanceProperty = DerivedProperty.deriveAny( [ ...valueDependencies, ...phaseDependencies ], () => {
-      const activeBalls = this.getActiveSoccerBalls();
-      return activeBalls.length > 0 ? _.sumBy( this.getActiveSoccerBalls(), ball => ball.valueProperty.value! ) : 0;
+      const activeBalls = this.getSortedStackedObjects();
+      return activeBalls.length > 0 ? _.sumBy( this.getSortedStackedObjects(), ball => ball.valueProperty.value! ) : 0;
     } );
   }
 }
