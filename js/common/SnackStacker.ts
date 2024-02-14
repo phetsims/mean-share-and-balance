@@ -13,6 +13,7 @@ import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import LevelingOutModel from '../leveling-out/model/LevelingOutModel.js';
+import FairShareModel from '../fair-share/model/FairShareModel.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords
@@ -83,6 +84,28 @@ class SnackStacker {
                       ( positionInStack + 1 ) * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
                                                   MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING );
     return new Vector2( plate.xPosition, yPosition );
+  }
+
+  /**
+   * Get the position for an apple model element that is stacked on a plate.  The position is based on where the plate
+   * is in model space and the apple's position in the stack.
+   * @param plate - plate on which the apple is to be stacked
+   * @param positionInStack - Position in the stack of apples.  0 is the bottom left, 1 is the bottom right, 2 is the
+   * left side of the 2nd row from the bottom, and so forth.
+   * @returns - a 2D vector in coordinate space that can be used to set the position of an apple
+   */
+  public static getStackedApplePosition( plate: Plate, positionInStack: number ): Vector2 {
+    const xPosition = positionInStack % 2 === 0 ?
+                      plate.xPosition + MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS + APPLE_X_MARGIN :
+                      plate.xPosition + MeanShareAndBalanceConstants.CANDY_BAR_WIDTH -
+                      MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS - APPLE_X_MARGIN;
+    const yPosition = FairShareModel.NOTEPAD_PLATE_CENTER_Y -
+                      MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
+                      MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS -
+                      VERTICAL_SPACE_BETWEEN_APPLES -
+                      Math.floor( positionInStack / 2 ) *
+                      ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + VERTICAL_SPACE_BETWEEN_APPLES );
+    return new Vector2( xPosition, yPosition );
   }
 }
 

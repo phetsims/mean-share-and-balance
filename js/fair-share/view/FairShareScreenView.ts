@@ -19,6 +19,7 @@ import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js'
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import FairShareNotepadNode from './FairShareNotepadNode.js';
 import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
+import NotepadAppleNode from './NotepadAppleNode.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -56,14 +57,26 @@ export default class FairShareScreenView extends SharingScreenView {
       options
     );
 
-    // Create the nodes on the notepad that represent the plate in the model.
+    // Create the nodes on the notepad that represent the plates in the model.
     const notepadPlateNodes = model.plates.map(
       plate => new FairShareNotepadPlateNode( plate, model.notepadModeProperty )
     );
     notepadPlateNodes.forEach( plateNode => { this.snackLayerNode.addChild( plateNode ); } );
 
+    // Update the center of the play area when the number of active plates changes.
     model.numberOfPlatesProperty.link( () => {
       this.centerPlayAreaNodes();
+    } );
+
+    // Add the Nodes that graphically represent the apples in the notepad.
+    const appleNodesParentTandem = options.tandem.createTandem( 'appleNodes' );
+    model.snacks.forEach( ( apple, i ) => {
+      this.snackLayerNode.addChild( new NotepadAppleNode( apple, {
+            tandem: appleNodesParentTandem.createTandem( `notepadAppleNode${i + 1}` ),
+            visibleProperty: apple.isActiveProperty
+          }
+        )
+      );
     } );
   }
 }
