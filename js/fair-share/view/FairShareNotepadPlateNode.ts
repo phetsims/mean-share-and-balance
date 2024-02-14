@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * FairShareNotepadPlateNode displays the plate in the notepad for the Fair Share screen.
