@@ -15,15 +15,17 @@ import Animation from '../../../../twixt/js/Animation.js';
 import Easing from '../../../../twixt/js/Easing.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Plate from './Plate.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import { optionize } from '../../../../phet-core/js/imports.js';
 
-export type SnackOptions = {
+type SelfOptions = {
   isActive: boolean;
   plate: Plate;
   position: Vector2;
-} & PickRequired<PhetioObjectOptions, 'tandem'>;
+};
+export type SnackOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
 // constants
 const TRAVEL_SPEED = 300; // in screen coordinates per second, empirically determined to look decent
@@ -31,7 +33,7 @@ const TRAVEL_SPEED = 300; // in screen coordinates per second, empirically deter
 // Total number of snack allocated, for debugging.
 let instanceCount = 0;
 
-export default class Snack {
+export default class Snack extends PhetioObject {
 
   public readonly isActiveProperty: Property<boolean>;
   public readonly parentPlateProperty: Property<Plate>;
@@ -44,6 +46,12 @@ export default class Snack {
   public readonly instanceID = instanceCount++;
 
   public constructor( providedOptions: SnackOptions ) {
+
+    const options = optionize<SnackOptions, SelfOptions, PhetioObjectOptions>()( {
+      phetioState: false
+    }, providedOptions );
+
+    super( options );
 
     this.isActiveProperty = new BooleanProperty( providedOptions.isActive, {
 
