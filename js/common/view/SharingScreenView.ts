@@ -88,7 +88,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       providedOptions.tandem.createTandem( 'meanCalculationDialog' )
     );
 
-    // Create table nodes and layers.
+    // Create table node upon which the table plates will be shown.
     const tableNode = new PartyTableNode();
 
     // Create the layer where the snacks and the plates that hold them will be shown.
@@ -129,6 +129,13 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
 
     super( model, questionBarStringProperty, questionBarColor, notepadNode, superOptions );
 
+    // Position the notepad.
+    notepadNode.centerX = this.playAreaCenterX;
+    notepadNode.centerY = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y;
+
+    // Position the table.
+    tableNode.centerX = this.playAreaCenterX;
+
     this.tableNode = tableNode;
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
@@ -158,8 +165,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   }
 
   protected centerPlayAreaNodes(): void {
-    this.notepad.centerX = this.playAreaCenterX;
-    this.tableNode.centerX = this.playAreaCenterX;
     this.snackLayerNode.centerX = this.playAreaCenterX;
 
     // We want the people to be slightly to the left of their snacks.

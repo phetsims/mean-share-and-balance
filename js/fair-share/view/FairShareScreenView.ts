@@ -13,13 +13,15 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import FairShareModel from '../model/FairShareModel.js';
+import FairShareModel, { NotepadMode } from '../model/FairShareModel.js';
 import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import FairShareNotepadNode from './FairShareNotepadNode.js';
 import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
 import NotepadAppleNode from './NotepadAppleNode.js';
+import { Rectangle } from '../../../../scenery/js/imports.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -56,6 +58,25 @@ export default class FairShareScreenView extends SharingScreenView {
       notepadNode,
       options
     );
+
+    // Add the box that will depict the collection area, only shown in 'Collect' mode.
+    const collectionAreaVisibleProperty = new DerivedProperty( [ model.notepadModeProperty ],
+      mode => mode === NotepadMode.COLLECT
+    );
+    const collectionAreaNode = new Rectangle(
+      0,
+      0,
+      FairShareModel.COLLECTION_AREA_SIZE.width,
+      FairShareModel.COLLECTION_AREA_SIZE.height,
+      {
+        stroke: 'black',
+        cornerRadius: 8,
+        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
+        centerX: this.playAreaCenterX,
+        visibleProperty: collectionAreaVisibleProperty
+      }
+    );
+    this.addChild( collectionAreaNode );
 
     // Create the nodes on the notepad that represent the plates in the model.
     const notepadPlateNodes = model.plates.map(
