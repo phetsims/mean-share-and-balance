@@ -28,8 +28,10 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
-const NUMBER_LINE_MARGIN_X = 150;
-const CHART_VIEW_WIDTH = ScreenView.DEFAULT_LAYOUT_BOUNDS.width - MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - NUMBER_LINE_MARGIN_X * 2;
+const NUMBER_LINE_LEFT_X_MARGIN = 160;
+const NUMBER_LINE_RIGHT_X_MARGIN = 200;
+const CHART_VIEW_WIDTH = ScreenView.DEFAULT_LAYOUT_BOUNDS.width - MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
+                         - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN;
 
 export default class BalancePointScreenView extends SoccerScreenView<BalancePointSceneModel, BalancePointModel> {
 
@@ -40,7 +42,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     const options = optionize<BalancePointScreenViewOptions, SelfOptions, SoccerScreenViewOptions>()( {
       physicalRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
       chartViewWidth: CHART_VIEW_WIDTH,
-      numberLineXMargin: NUMBER_LINE_MARGIN_X,
+      numberLineXMargin: NUMBER_LINE_LEFT_X_MARGIN,
       groundPositionY: MeanShareAndBalanceConstants.GROUND_POSITION_Y
     }, providedOptions );
 
@@ -52,7 +54,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
 
     // Background
-    const backgroundNode = new BackgroundNode( 550, this.visibleBoundsProperty );
+    const backgroundNode = new BackgroundNode( MeanShareAndBalanceConstants.GROUND_POSITION_Y, this.visibleBoundsProperty );
 
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,

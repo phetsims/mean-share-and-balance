@@ -75,7 +75,7 @@ const MeanShareAndBalanceConstants = {
 
   SOCCER_BALL_RANGE: new Range( 0, 10 ),
   NUMBER_SPINNER_KICK_RANGE: new Range( 0, 7 ),
-  GROUND_POSITION_Y: 550
+  GROUND_POSITION_Y: 575
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );
