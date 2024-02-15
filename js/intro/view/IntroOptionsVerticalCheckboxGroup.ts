@@ -1,4 +1,4 @@
-// Copyright 2022, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * A vertical checkbox group that controls visibility for predictMean, Mean, tickMarks, and cupWaterLevel
