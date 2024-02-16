@@ -25,6 +25,8 @@ import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js'
 import BalancePointControls from './BalancePointControls.js';
 import { AlignBox } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import KickerPortrayalUSA from '../../../../soccer-common/js/view/KickerPortrayalUSA.js';
+import BalancePointSceneView from './BalancePointSceneView.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -32,6 +34,8 @@ const NUMBER_LINE_LEFT_X_MARGIN = 160;
 const NUMBER_LINE_RIGHT_X_MARGIN = 200;
 const CHART_VIEW_WIDTH = ScreenView.DEFAULT_LAYOUT_BOUNDS.width - MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
                          - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN;
+
+const KICKER_IMAGE_SETS = KickerPortrayalUSA.unnumberedKickerImages;
 
 export default class BalancePointScreenView extends SoccerScreenView<BalancePointSceneModel, BalancePointModel> {
 
@@ -49,8 +53,17 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     super( model, options );
 
+    // TODO: This hard codes only supporting one scene, https://github.com/phetsims/mean-share-and-balance/issues/152
+    const sceneView = new BalancePointSceneView(
+      model,
+      model.selectedSceneModelProperty.value,
+      KICKER_IMAGE_SETS,
+      this.modelViewTransform,
+      options.tandem.createTandem( 'sceneView' )
+    );
+
     const controlsWidthOffset = ( MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH +
-                                       MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+                                  MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
 
     // Background
@@ -99,12 +112,14 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
+    this.addChild( sceneView.backSceneViewLayer );
     this.addChild( backgroundNode );
     this.addChild( notepadNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );
     this.addChild( resetAllButton );
     this.addChild( this.playAreaNumberLineNode );
+    this.addChild( sceneView.frontSceneViewLayer );
   }
 }
 

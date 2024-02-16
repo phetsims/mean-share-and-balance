@@ -14,6 +14,7 @@ import BalancePointSceneModel from './BalancePointSceneModel.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
 import { BooleanProperty, Property } from '../../../../axon/js/imports.js';
+import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
@@ -23,13 +24,15 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public readonly areTickMarksVisibleProperty: Property<boolean>;
   public readonly isMeanVisibleProperty: Property<boolean>;
 
-  public constructor( providedOptions: BalancePointModelOptions ) {
+  public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, providedOptions: BalancePointModelOptions ) {
 
     const options = optionize<BalancePointModelOptions, SelfOptions, SoccerModelOptions<BalancePointSceneModel>>()( {
       phetioState: false
     }, providedOptions );
 
-    const sceneModel = new BalancePointSceneModel( {
+    const sceneModel = new BalancePointSceneModel(
+      regionAndCulturePortrayalProperty,
+      {
       tandem: options.tandem.createTandem( 'sceneModel' )
     } );
     super( [ sceneModel ], options );

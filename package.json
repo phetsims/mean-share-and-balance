@@ -25,7 +25,10 @@
     "supportsOutputJS": true,
     "simFeatures": {
       "supportsInteractiveDescription": true,
-      "supportsDynamicLocale": true
+      "supportsDynamicLocale": true,
+      "supportedRegionsAndCultures": [
+        "usa"
+      ]
     },
     "screenNameKeys": [
       "MEAN_SHARE_AND_BALANCE/screen.intro",

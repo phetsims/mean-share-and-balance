@@ -15,14 +15,13 @@ import Range from '../../../../dot/js/Range.js';
 import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
-import JoistStrings from '../../../../joist/js/JoistStrings.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
 
-  public constructor( options: BalancePointSceneModelOptions ) {
+  public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, options: BalancePointSceneModelOptions ) {
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
     } );
@@ -39,20 +38,13 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       return new SoccerBall( isFirstSoccerBall, tandem );
     };
 
-    // TODO: replace with actual region and culture property, see: https://github.com/phetsims/mean-share-and-balance/issues/152
-    const tempRegionAndCultureProperty = new Property(
-      new RegionAndCulturePortrayal(
-        JoistStrings.preferences.tabs.localization.regionAndCulture.portrayalSets.unitedStatesOfAmericaStringProperty,
-        'usa'
-      ) );
-
     super(
       maxKicksProperty,
       [ 7 ],
       kickDistributionStrategy,
       kickRange,
       createSoccerBall,
-      tempRegionAndCultureProperty,
+      regionAndCulturePortrayalProperty,
       options
     );
     const valueDependencies = this.soccerBalls.map( ball => ball.valueProperty );
