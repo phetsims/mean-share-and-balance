@@ -21,6 +21,7 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import { Bounds2, Dimension2 } from '../../../../dot/js/imports.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -68,6 +69,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       phetioFeatured: true
     } );
 
+    // Define the area where the apples will be collected when in Collection mode.
     this.collectionArea = new Bounds2(
       0,
       MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y - 100,
@@ -78,6 +80,108 @@ export default class FairShareModel extends SharingModel<Apple> {
     const applesParentTandem = options.tandem.createTandem( 'notepadApples' );
     let totalApplesCount = 1; // start at 1 for more user friendly phet-io IDs
 
+    // Define a function that will update the state of all apples based on things like the selected display mode, the
+    // number of active plates, and the number of apples on each plate.
+    const updateApples = () => {
+
+      if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
+
+        // In this mode the positions of the apples shown on the notepad match those shown on the plates on the table.
+
+        this.plates.forEach( plate => {
+
+          const apples = this.getSnacksAssignedToPlate( plate );
+          if ( plate.isActiveProperty.value ) {
+
+            // Sort the list by position on the plate.
+            const applesInStackedOrder = apples.sort( ( a, b ) => {
+              if ( a.positionProperty.value.x === b.positionProperty.value.x ) {
+                return a.positionProperty.value.x - b.positionProperty.value.x;
+              }
+              else {
+                return b.positionProperty.value.y - a.positionProperty.value.y;
+              }
+            } );
+
+            // Set the appropriate number of apples on this plate to active.
+            applesInStackedOrder.forEach( ( apple, index ) => {
+              apple.fractionProperty.set( Fraction.ONE );
+              apple.isActiveProperty.value = plate.snackNumberProperty.value > index;
+            } );
+          }
+          else {
+
+            // Deactivate all apples on this plate.
+            apples.forEach( apple => { apple.isActiveProperty.value = false; } );
+          }
+        } );
+      }
+      else if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
+
+        // In this mode the total number of apples is split up evenly over all active plates, so each one ends up with
+        // the mean value.
+
+        const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
+        const fractionalApplePerActivePlate = this.meanProperty.value - numberOfWholeApplesPerActivePlate;
+
+        this.plates.forEach( plate => {
+
+          const apples = this.getSnacksAssignedToPlate( plate );
+          if ( plate.isActiveProperty.value ) {
+
+            // Sort the list by position on the plate.
+            // TODO: Make the sorted apples available and consolidate this repeated code, see https://github.com/phetsims/mean-share-and-balance/issues/149.
+            const applesInStackedOrder = apples.sort( ( a, b ) => {
+              if ( a.positionProperty.value.x === b.positionProperty.value.x ) {
+                return a.positionProperty.value.x - b.positionProperty.value.x;
+              }
+              else {
+                return b.positionProperty.value.y - a.positionProperty.value.y;
+              }
+            } );
+
+            // Activate and set fractional values for this plate.
+            applesInStackedOrder.forEach( ( apple, i ) => {
+              if ( i < numberOfWholeApplesPerActivePlate ) {
+                apple.isActiveProperty.set( true );
+                apple.fractionProperty.set( Fraction.ONE );
+              }
+              else if ( i === numberOfWholeApplesPerActivePlate ) {
+                if ( fractionalApplePerActivePlate > 0 ) {
+                  apple.isActiveProperty.set( true );
+                  apple.fractionProperty.set( Fraction.fromDecimal( fractionalApplePerActivePlate ) );
+                }
+                else {
+                  apple.isActiveProperty.set( false );
+                }
+              }
+              else {
+                apple.isActiveProperty.set( false );
+              }
+
+            } );
+          }
+          else {
+
+            // Deactivate all apples on this plate.
+            apples.forEach( apple => { apple.isActiveProperty.value = false; } );
+          }
+        } );
+      }
+      else if ( this.notepadModeProperty.value === NotepadMode.COLLECT ) {
+
+        // In this mode, the number of active apples are collected into stacks in the collection area.
+
+        // TODO: Implement Collect mode, see https://github.com/phetsims/mean-share-and-balance/issues/149.
+        // For now, deactivate all apples.
+        this.snacks.forEach( apple => { apple.isActiveProperty.set( false ); } );
+      }
+      else {
+        assert && assert( false, 'Unexpected mode' );
+      }
+    };
+
+    // Set up the initial states for the plates and the apples that go on them.
     this.plates.forEach( plate => {
 
       // Create and initialize all the apples.
@@ -96,46 +200,15 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.snacks.push( apple );
       } );
 
-      // Update the apple active states as the active state of the plates change.
-      plate.isActiveProperty.lazyLink( isActive => {
-
-        // TODO: Currently prototyped, implement full handling for this case, see https://github.com/phetsims/mean-share-and-balance/issues/149
-        const apples = this.getSnacksAssignedToPlate( plate );
-        if ( isActive ) {
-
-          // Sort the list by position on the plate.
-          const applesInStackedOrder = apples.sort( ( a, b ) => b.positionProperty.value.x - a.positionProperty.value.x );
-
-          // Set the appropriate number of apples on this plate to active.
-          applesInStackedOrder.forEach( ( apple, index ) => {
-            apple.isActiveProperty.value = plate.snackNumberProperty.value > index;
-          } );
-        }
-        else {
-
-          // Deactivate all apples on this plate.
-          apples.forEach( apple => { apple.isActiveProperty.value = false; } );
-        }
-      } );
+      // Update the apple states when the active state of the plates change.
+      plate.isActiveProperty.lazyLink( updateApples );
 
       // Activate or deactivate apples on the plate to match the snack number.
-      plate.snackNumberProperty.lazyLink( numberOfApples => {
-        if ( plate.isActiveProperty.value ) {
-          const apples = this.getSnacksAssignedToPlate( plate );
-          const applesInStackedOrder = apples.sort( ( a, b ) => {
-            if ( a.positionProperty.value.x === b.positionProperty.value.x ) {
-              return a.positionProperty.value.x - b.positionProperty.value.x;
-            }
-            else {
-              return b.positionProperty.value.y - a.positionProperty.value.y;
-            }
-          } );
-          applesInStackedOrder.forEach( ( apple, index ) => {
-            apple.isActiveProperty.value = numberOfApples > index;
-          } );
-        }
-      } );
+      plate.snackNumberProperty.lazyLink( updateApples );
     } );
+
+    // Update the states of the apples when the mode changes.
+    this.notepadModeProperty.link( updateApples );
   }
 
   public override reset(): void {

@@ -33,7 +33,7 @@ export default class Plate extends PhetioObject {
   // The x position of the plate in view coordinates.
   public readonly xPosition: number;
 
-  // The number of snacks (candy bars or cookies) on this plate.
+  // The number of snacks (candy bars or apples) on this plate.
   public readonly snackNumberProperty: Property<number>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
