@@ -65,7 +65,8 @@ export default class LevelingOutScreenView extends SharingScreenView {
       MeanShareAndBalanceStrings.levelingOutQuestionStringProperty,
       MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty,
       notepadNode,
-      options );
+      options
+    );
 
     // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper. But
     // since the snackLayerNode changes its horizontal position to keep things centered for varying numbers of people,

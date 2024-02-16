@@ -20,9 +20,13 @@ import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringPrope
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import SnackStacker from '../../common/SnackStacker.js';
+import { Bounds2, Dimension2 } from '../../../../dot/js/imports.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
+
+// constants
+const COLLECTION_AREA_SIZE = new Dimension2( 300, 100 );
 
 export class NotepadMode extends EnumerationValue {
 
@@ -51,7 +55,11 @@ export default class FairShareModel extends SharingModel<Apple> {
   // notepad.  See the enumeration for more information on the possible modes.
   public readonly notepadModeProperty: EnumerationProperty<NotepadMode>;
 
+  // The area in coordinate space where the Apple instances will be placed and organized when in Collection mode.
+  public readonly collectionArea: Bounds2;
+
   public constructor( providedOptions: FairShareModelOptions ) {
+
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
     super( options );
 
@@ -60,7 +68,13 @@ export default class FairShareModel extends SharingModel<Apple> {
       phetioFeatured: true
     } );
 
-    /////////////////////////////////////////////
+    this.collectionArea = new Bounds2(
+      0,
+      MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y - 100,
+      100,
+      MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 100
+    );
+
     const applesParentTandem = options.tandem.createTandem( 'notepadApples' );
     let totalApplesCount = 1; // start at 1 for more user friendly phet-io IDs
 
@@ -130,6 +144,7 @@ export default class FairShareModel extends SharingModel<Apple> {
   }
 
   public static readonly NOTEPAD_PLATE_CENTER_Y = 300;
+  public static readonly COLLECTION_AREA_SIZE = COLLECTION_AREA_SIZE;
 }
 
 meanShareAndBalance.register( 'FairShareModel', FairShareModel );

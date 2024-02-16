@@ -24,6 +24,7 @@ export default class FairShareNotepadNode extends NotepadNode {
 
     super( providedOptions );
 
+    // Add the radio buttons for selecting the different modes.
     const notepadModes = [ NotepadMode.SYNC, NotepadMode.COLLECT, NotepadMode.SHARE ];
     const notepadModeItems = _.map( notepadModes,
       choice => {
