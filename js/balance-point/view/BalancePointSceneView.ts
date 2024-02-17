@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 /**
  * Displays the soccer balls and data points for at scene in the balance point screen.
  *
