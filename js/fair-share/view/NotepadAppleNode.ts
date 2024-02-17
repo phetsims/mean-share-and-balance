@@ -8,7 +8,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Path, PathOptions, Text } from '../../../../scenery/js/imports.js';
+import { Circle, Node, NodeOptions, Path, PathOptions, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Apple from '../model/Apple.js';
@@ -18,39 +18,52 @@ import { optionize } from '../../../../phet-core/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 type SelfOptions = EmptySelfOptions;
-type NotepadAppleNodeOptions = SelfOptions & PickRequired<PathOptions, 'tandem' | 'visibleProperty'>;
+type NotepadAppleNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem' | 'visibleProperty'>;
 
-export default class NotepadAppleNode extends Path {
+export default class NotepadAppleNode extends Node {
 
   public constructor( apple: Apple, providedOptions: NotepadAppleNodeOptions ) {
 
+    // Add a dotted outline for the full circle.  This is only shown for fractional apples.
+    const outlineCircle = new Circle( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, {
+      stroke: 'black',
+      lineDash: [ 1, 2 ]
+    } );
+
+    // Add the main representation, which will be a circle for a full apply or a partial circle for a fractional apple.
+    const foregroundShape = new Path( null, {
+      stroke: 'black',
+      fill: MeanShareAndBalanceColors.appleColorProperty
+    } );
+
     const options = optionize<NotepadAppleNodeOptions, SelfOptions, PathOptions>()( {
-        fill: MeanShareAndBalanceColors.appleColorProperty,
-        stroke: 'black'
+        children: [ outlineCircle, foregroundShape ]
       },
       providedOptions
     );
 
-    super( null, options );
+    super( options );
 
-    // Update the shape as the fractional amount changes.
+    // Update the shape and the visibility of the outline as the fractional amount changes.
     apple.fractionProperty.link( fraction => {
       const radius = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS;
       if ( fraction.getValue() === 1 ) {
-        this.setShape( Shape.circle( 0, 0, radius ) );
+        foregroundShape.setShape( Shape.circle( 0, 0, radius ) );
+        outlineCircle.visible = false;
       }
       else {
         assert && assert( fraction.value < 1 && fraction.value > 0, 'unsupported fraction value' );
-        this.setShape( new Shape()
+        foregroundShape.setShape( new Shape()
           .moveTo( 0, 0 )
           .lineTo( radius, 0 )
           .arc( 0, 0, radius, 0, fraction.value * 2 * Math.PI )
           .lineTo( 0, 0 )
         );
+        outlineCircle.visible = true;
       }
     } );
 
-    // Update this Node's position when the model element moves.
+    // Update this Node's position when the model element moves.  The center of the
     apple.positionProperty.link( position => this.setTranslation( position ) );
 
     // In ?dev mode, show the index of the apple to help understand how things are organized and how they redistribute.
