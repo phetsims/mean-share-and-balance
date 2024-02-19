@@ -14,7 +14,7 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, FireListener, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { AlignBox, FireListener, VBox, VBoxOptions, Node } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
 import SharingModel from '../model/SharingModel.js';
@@ -30,6 +30,9 @@ type SharingControlsOptions = SelfOptions &
   PickRequired<VBoxOptions, 'tandem'>;
 
 export default class SharingControls extends VBox {
+
+  public readonly controlsPDOMOrder: Node[];
+
   public constructor( model: Pick<SharingModel<Snack>,
                         'isMeanAccordionExpandedProperty' |
                         'numberOfPlatesRangeProperty' |
@@ -80,6 +83,12 @@ export default class SharingControls extends VBox {
     options.children = [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ];
 
     super( options );
+
+    this.controlsPDOMOrder = [
+      numberSpinnerVBox,
+      meanAccordionBox,
+      buttonAlignBox
+    ];
   }
 }
 

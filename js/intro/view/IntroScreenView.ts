@@ -20,7 +20,7 @@ import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import IntroControlPanel from './IntroControlPanel.js';
+import IntroControls from './IntroControls.js';
 import LabTableNode from '../../common/view/LabTableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -115,15 +115,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       superOptions );
 
     // Controls on Right side of screen
-    const controlPanel = new IntroControlPanel( model.tickMarksVisibleProperty, model.meanVisibleProperty, model.predictMeanVisibleProperty,
+    const controls = new IntroControls( model.tickMarksVisibleProperty, model.meanVisibleProperty, model.predictMeanVisibleProperty,
       model.cupLevelVisibleProperty, model.numberOfCupsProperty, model.arePipesOpenProperty,
-      { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controlPanel' ) } );
+      { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controls' ) } );
 
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    const controlsAlignBox = new AlignBox( controlPanel, {
+    const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',
       yAlign: 'top',
@@ -155,7 +155,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.interruptSubtreeInput();
     } );
 
-    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controlPanel );
+    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controls.controlsPDOMOrder );
   }
 
   public override reset(): void {

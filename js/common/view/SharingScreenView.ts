@@ -161,7 +161,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     this.meanCalculationDialog = meanCalculationDialog;
     this.addChild( controlsAlignBox );
 
-    this.msabSetPDOMOrder( [ this.snackLayerNode ], this.tablePlateNodes, controls );
+    this.msabSetPDOMOrder( [ this.snackLayerNode ], this.tablePlateNodes, controls.controlsPDOMOrder );
   }
 
   protected centerPlayAreaNodes(): void {
