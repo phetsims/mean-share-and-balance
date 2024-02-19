@@ -8,7 +8,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
-import NumberSpinner from '../../../../sun/js/NumberSpinner.js';
+import NumberSpinner, { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
@@ -18,6 +18,7 @@ import { combineOptions, optionize } from '../../../../phet-core/js/imports.js';
 
 type SelfOptions = {
   minContentHeight?: number;
+  numberSpinnerOptions?: NumberSpinnerOptions;
 };
 
 type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
@@ -27,7 +28,17 @@ export default class NumberSpinnerVBox extends VBox {
   public constructor( numberProperty: Property<number>, range: Range, stringProperty: LocalizedStringProperty, providedOptions: NumberSpinnerVBoxOptions ) {
 
     const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {
-      minContentHeight: 100
+      minContentHeight: 100,
+      numberSpinnerOptions: {
+        arrowsPosition: 'leftRight',
+        layoutOptions: {
+          align: 'left'
+        },
+        accessibleName: stringProperty,
+
+        // phet-io
+        tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
+      }
     }, providedOptions );
 
     const numberOfCupsText = new Text( stringProperty, {
@@ -38,16 +49,7 @@ export default class NumberSpinnerVBox extends VBox {
     const numberSpinner = new NumberSpinner(
       numberProperty,
       new Property( range ),
-      {
-        arrowsPosition: 'leftRight',
-        layoutOptions: {
-          align: 'left'
-        },
-        accessibleName: stringProperty,
-
-        // phet-io
-        tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
-      }
+      options.numberSpinnerOptions
     );
 
     const superOptions = combineOptions<VBoxOptions>( {

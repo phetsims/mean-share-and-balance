@@ -15,6 +15,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import { Node } from '../../../../scenery/js/imports.js';
 import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortrayal.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 
 
 export default class BalancePointSceneView extends SoccerSceneView<BalancePointSceneModel> {
@@ -31,7 +32,13 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
     const getKickerImageSet = () => kickerImageSet;
     const physicalRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 
-   super( model, sceneModel, keyboardSortCueNode, getKickerImageSet, modelViewTransform, physicalRange, tandem );
+    const options = {
+      soccerBallDerivedVisibilityCallback: ( phase: SoccerBallPhase ) =>
+        phase !== SoccerBallPhase.INACTIVE && phase !== SoccerBallPhase.READY,
+      tandem: tandem
+    };
+
+    super( model, sceneModel, keyboardSortCueNode, getKickerImageSet, modelViewTransform, physicalRange, options );
   }
 }
 

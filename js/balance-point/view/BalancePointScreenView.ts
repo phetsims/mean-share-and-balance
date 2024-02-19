@@ -112,8 +112,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
-    this.addChild( sceneView.backSceneViewLayer );
     this.addChild( backgroundNode );
+    this.addChild( sceneView.backSceneViewLayer );
     this.addChild( notepadNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );

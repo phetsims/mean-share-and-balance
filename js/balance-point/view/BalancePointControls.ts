@@ -89,8 +89,9 @@ export default class BalancePointControls extends VBox {
       }
     } );
 
+    const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.numberOfKickedBallsProperty;
     const numberSpinner = new NumberSpinnerVBox(
-      model.selectedSceneModelProperty.value.numberOfDataPointsProperty,
+      numberOfDataPointsProperty,
       MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE,
       MeanShareAndBalanceStrings.numberOfBallsStringProperty,
       {
