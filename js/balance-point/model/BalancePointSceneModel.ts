@@ -88,8 +88,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     const lastBallValue = lastBall.valueProperty.value!;
     lastBall.soccerBallPhaseProperty.value = SoccerBallPhase.INACTIVE;
 
-    const stack = this.getStackAtValue( lastBallValue );
-    this.reorganizeStack( stack );
+    if ( lastBallValue !== null ) {
+      const stack = this.getStackAtValue( lastBallValue );
+      this.reorganizeStack( stack );
+    }
 
     // Set the next ball to be READY
     const unkickedBalls = this.soccerBalls.filter( ball =>
