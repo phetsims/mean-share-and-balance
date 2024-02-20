@@ -89,27 +89,34 @@ export default class BalancePointControls extends VBox {
       }
     } );
 
+    super( {
+      children: [
+        meanFulcrumRadioButtonGroup,
+        checkboxGroup,
+        infoButton
+      ],
+      spacing: 20,
+      align: 'left',
+      preferredWidth: MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
+    } );
+
     const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.numberOfKickedBallsProperty;
     const numberSpinner = new NumberSpinnerVBox(
       numberOfDataPointsProperty,
       MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE,
       MeanShareAndBalanceStrings.numberOfBallsStringProperty,
       {
+        numberSpinnerOptions: {
+          decrementFunction: value => {
+            this.interruptSubtreeInput();
+            return value - 1;
+          }
+        },
         tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
       }
     );
 
-    super( {
-      children: [
-        meanFulcrumRadioButtonGroup,
-        checkboxGroup,
-        infoButton,
-        numberSpinner
-      ],
-      spacing: 20,
-      align: 'left',
-      preferredWidth: MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
-    } );
+    this.addChild( numberSpinner );
   }
 }
 
