@@ -27,6 +27,9 @@ import { AlignBox } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import KickerPortrayalUSA from '../../../../soccer-common/js/view/KickerPortrayalUSA.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
+import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortrayal.js';
+import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortrayalAfrica.js';
+import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -35,7 +38,23 @@ const NUMBER_LINE_RIGHT_X_MARGIN = 200;
 const CHART_VIEW_WIDTH = ScreenView.DEFAULT_LAYOUT_BOUNDS.width - MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
                          - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN;
 
-const KICKER_IMAGE_SETS = KickerPortrayalUSA.unnumberedKickerImages;
+// Depending on how many characters a regionAndCulture RegionAndCulturePortrayal has will determine how we loop over the characters.
+const KICKER_IMAGE_SETS: KickerImageSet[][] = [];
+
+_.times( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, i => {
+  const locale1MaxNumberOfCharacters = KickerPortrayalUSA.unnumberedKickersCount;
+  const locale2MaxNumberOfCharacters = KickerPortrayalAfrica.unnumberedKickersCount;
+  const locale3MaxNumberOfCharacters = KickerPortrayalAfricaModest.unnumberedKickersCount;
+
+  const locale1CharacterIndex = i < locale1MaxNumberOfCharacters ? i : i % locale1MaxNumberOfCharacters;
+  const locale2CharacterIndex = i < locale2MaxNumberOfCharacters ? i : i % locale2MaxNumberOfCharacters;
+  const locale3CharacterIndex = i < locale3MaxNumberOfCharacters ? i : i % locale3MaxNumberOfCharacters;
+
+  KICKER_IMAGE_SETS.push( [ KickerPortrayalUSA.unnumberedKickerImages[ locale1CharacterIndex ],
+    KickerPortrayalAfrica.unnumberedKickerImages[ locale2CharacterIndex ],
+    KickerPortrayalAfricaModest.unnumberedKickerImages[ locale3CharacterIndex ]
+  ] );
+} );
 
 export default class BalancePointScreenView extends SoccerScreenView<BalancePointSceneModel, BalancePointModel> {
 

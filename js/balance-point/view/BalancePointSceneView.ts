@@ -16,6 +16,7 @@ import { Node } from '../../../../scenery/js/imports.js';
 import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortrayal.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
+import Kicker from '../../../../soccer-common/js/model/Kicker.js';
 
 
 export default class BalancePointSceneView extends SoccerSceneView<BalancePointSceneModel> {
@@ -23,13 +24,13 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
   public constructor(
     model: Pick<BalancePointModel, 'soccerBallsEnabledProperty' | 'groupSortInteractionModel' | 'selectedSceneModelProperty'>,
     sceneModel: BalancePointSceneModel,
-    kickerImageSet: KickerImageSet[],
+    kickerImageSets: KickerImageSet[][],
     modelViewTransform: ModelViewTransform2,
     tandem: Tandem
   ) {
 
     const keyboardSortCueNode = new Node();
-    const getKickerImageSet = () => kickerImageSet;
+    const getKickerImageSet = ( kicker: Kicker ) => kickerImageSets[ kicker.initialPlaceInLine ];
     const physicalRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 
     const options = {
