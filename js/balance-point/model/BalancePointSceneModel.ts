@@ -69,7 +69,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         this.scheduleKicks( delta );
       }
       else if ( delta < 0 ) {
-        this.regressLine();
+        const amountOfBallsToRemove = Math.abs( delta ) - this.numberOfQueuedKicksProperty.value;
+        _.times( amountOfBallsToRemove, () => this.regressLine() );
       }
     } );
   }
@@ -85,25 +86,38 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     const lastBall = kickedBalls[ kickedBalls.length - 1 ];
-    const lastBallValue = lastBall.valueProperty.value!;
+    const lastBallValue = lastBall.valueProperty.value;
     lastBall.soccerBallPhaseProperty.value = SoccerBallPhase.INACTIVE;
 
+    // A ball is only given a value right before it lands. If we remove a ball while flying we do not need to
+    // reorganize the stack.
     if ( lastBallValue !== null ) {
       const stack = this.getStackAtValue( lastBallValue );
       this.reorganizeStack( stack );
     }
 
+    // debugger;
     // Set the next ball to be READY
     const unkickedBalls = this.soccerBalls.filter( ball =>
                           ball.soccerBallPhaseProperty.value === SoccerBallPhase.INACTIVE ||
                           ball.soccerBallPhaseProperty.value === SoccerBallPhase.READY ) || null;
-    if ( unkickedBalls[ 0 ] && this.soccerBalls.indexOf( unkickedBalls[ 0 ] ) < this.maxKicksProperty.value ) {
-      unkickedBalls[ 0 ].soccerBallPhaseProperty.value = SoccerBallPhase.READY;
+    if ( unkickedBalls ) {
+
+      // There should only be one "ready" ball at a time.
+      unkickedBalls.forEach( ( ball, i ) => {
+        this.soccerBalls.indexOf( ball ) < this.maxKicksProperty.value && i === 0 ?
+        ball.soccerBallPhaseProperty.value = SoccerBallPhase.READY :
+        ball.soccerBallPhaseProperty.value = SoccerBallPhase.INACTIVE;
+      } );
     }
   }
 
   public override reset(): void {
+
+    // Reset number of kicked balls Property before super.reset to properly regress the line according
+    // to the number of balls that have already been kicked.
     this.numberOfKickedBallsProperty.reset();
+    super.reset();
   }
 }
 
