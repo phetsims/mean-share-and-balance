@@ -16,13 +16,13 @@ import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
-import Utils from '../../../../dot/js/Utils.js';
+import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
-  public readonly numberOfKickedBallsProperty: Property<number>;
+  public readonly targetNumberOfBallsProperty: Property<number>;
 
   public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, options: BalancePointSceneModelOptions ) {
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
@@ -58,34 +58,45 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       return activeBalls.length > 0 ? _.sumBy( this.getSortedStackedObjects(), ball => ball.valueProperty.value! ) : 0;
     } );
 
-    this.numberOfKickedBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
+    this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
       phetioReadOnly: true,
-      tandem: options.tandem.createTandem( 'numberOfKickedBallsProperty' )
+      tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );
 
-    this.numberOfKickedBallsProperty.lazyLink( ( newValue, oldValue ) => {
+    this.targetNumberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
       const delta = newValue - oldValue;
       if ( delta > 0 ) {
         this.scheduleKicks( delta );
       }
-      else if ( delta < 0 ) {
-        const amountOfBallsToRemove = Math.abs( delta ) - this.numberOfQueuedKicksProperty.value;
-        _.times( amountOfBallsToRemove, () => this.regressLine() );
+      else if ( delta < 0 && !isResettingProperty.value ) {
+        const ballsToRemove = -delta;
+        const numberOfBallsToRemoveFromQueue = Math.min( ballsToRemove, this.numberOfQueuedKicksProperty.value );
+        const numberOfBallsToRemoveFromField = ballsToRemove - numberOfBallsToRemoveFromQueue;
+
+        // Remove balls from the queue first, and then if any balls to remove remain, remove them from the field.
+        this.numberOfQueuedKicksProperty.value -= numberOfBallsToRemoveFromQueue;
+        _.times( numberOfBallsToRemoveFromField, () => this.regressLine() );
       }
     } );
   }
 
+  private getKickedBalls(): SoccerBall[] {
+    return this.soccerBalls.filter( ball =>
+      ball.soccerBallPhaseProperty.value === SoccerBallPhase.FLYING ||
+      ball.soccerBallPhaseProperty.value === SoccerBallPhase.STACKING ||
+      ball.soccerBallPhaseProperty.value === SoccerBallPhase.STACKED );
+  }
+
   private regressLine(): void {
-    this.activeKickIndexProperty.value = Utils.clamp( this.activeKickIndexProperty.value - 1, 0, this.maxKicksProperty.value - 1 );
+
+    this.activeKickIndexProperty.value = this.targetNumberOfBallsProperty.value;
+    this.kickers[ this.activeKickIndexProperty.value ].readyToKick();
 
     // Remove last kicked ball from field
-    const kickedBalls = this.getActiveSoccerBalls().filter( ball => {
-      return ball.soccerBallPhaseProperty.value === SoccerBallPhase.FLYING ||
-             ball.soccerBallPhaseProperty.value === SoccerBallPhase.STACKING ||
-             ball.soccerBallPhaseProperty.value === SoccerBallPhase.STACKED;
-    } );
+    const kickedBalls = this.getKickedBalls();
 
     const lastBall = kickedBalls[ kickedBalls.length - 1 ];
+
     const lastBallValue = lastBall.valueProperty.value;
     lastBall.soccerBallPhaseProperty.value = SoccerBallPhase.INACTIVE;
 
@@ -96,7 +107,6 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       this.reorganizeStack( stack );
     }
 
-    // debugger;
     // Set the next ball to be READY
     const unkickedBalls = this.soccerBalls.filter( ball =>
                           ball.soccerBallPhaseProperty.value === SoccerBallPhase.INACTIVE ||
@@ -113,11 +123,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   }
 
   public override reset(): void {
-
-    // Reset number of kicked balls Property before super.reset to properly regress the line according
-    // to the number of balls that have already been kicked.
-    this.numberOfKickedBallsProperty.reset();
     super.reset();
+    this.targetNumberOfBallsProperty.reset();
   }
 }
 

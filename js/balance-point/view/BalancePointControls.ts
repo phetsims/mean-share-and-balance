@@ -100,7 +100,7 @@ export default class BalancePointControls extends VBox {
       preferredWidth: MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
     } );
 
-    const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.numberOfKickedBallsProperty;
+    const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.targetNumberOfBallsProperty;
     const numberSpinner = new NumberSpinnerVBox(
       numberOfDataPointsProperty,
       MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE,

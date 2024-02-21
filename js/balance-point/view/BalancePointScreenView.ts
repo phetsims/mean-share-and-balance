@@ -30,6 +30,7 @@ import BalancePointSceneView from './BalancePointSceneView.js';
 import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortrayal.js';
 import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortrayalAfrica.js';
 import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
+import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -121,8 +122,11 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const resetAllButton = new ResetAllButton( {
       listener: () => {
+        assert && assert( !isResettingProperty.value, 'cannot reset while already resetting' );
+        isResettingProperty.value = true;
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
+        isResettingProperty.value = false;
       },
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN,
