@@ -79,7 +79,7 @@ export default class FairShareScreenView extends SharingScreenView {
       {
         stroke: 'black',
         cornerRadius: 8,
-        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
+        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 20,
         centerX: this.playAreaCenterX,
         visibleProperty: collectionAreaVisibleProperty
       }

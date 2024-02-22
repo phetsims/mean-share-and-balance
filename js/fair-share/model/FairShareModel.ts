@@ -27,7 +27,7 @@ type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
 // constants
-const COLLECTION_AREA_SIZE = new Dimension2( 300, 100 );
+const COLLECTION_AREA_SIZE = new Dimension2( 350, 120 );
 
 export class NotepadMode extends EnumerationValue {
 
@@ -193,11 +193,16 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         // Move all active apples to stacks in the collection area.
         const activeApples = this.snacks.filter( apple => apple.isActiveProperty.value );
-        activeApples.forEach( ( apple, index ) => {
+        activeApples.forEach( ( apple, i ) => {
 
           // TODO: This is a rough prototype for positioning, see https://github.com/phetsims/mean-share-and-balance/issues/149.
-          const x = 0;
-          const y = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 30 - index * 4;
+          //       It should be generalized to not use hard-coded values and could potentially be consolidated with the
+          //       other snack stacking code.
+          const group = Math.floor( i / 10 );
+          const column = i % 2;
+          const row = Math.floor( ( i % 10 ) / 2 );
+          const x = group * 55 + column * 20;
+          const y = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 60 - row * 20;
           apple.positionProperty.set( new Vector2( x, y ) );
         } );
       }
