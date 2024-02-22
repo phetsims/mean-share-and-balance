@@ -105,11 +105,11 @@ export default class LevelingOutScreenView extends SharingScreenView {
       }
     };
 
-    // Create the nodes on the notepad that represent the plate in the model.
+    // Create the nodes on the notepad that represent the plates in the model.
     const notepadPlateNodes = model.plates.map( plate => new LevelingOutNotepadPlateNode( plate, {
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
-    notepadPlateNodes.forEach( plateNode => { this.snackLayerNode.addChild( plateNode ); } );
+    notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
     const notepadCandyBars = model.snacks.map( ( candyBar, i ) =>
@@ -124,7 +124,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
       children: notepadCandyBars,
       excludeInvisibleChildrenFromBounds: true
     } );
-    this.snackLayerNode.addChild( notepadCandyBarsNode );
+    this.notepadSnackLayerNode.addChild( notepadCandyBarsNode );
 
     this.groupSortInteractionView = new GroupSortInteractionView(
       model.groupSortInteractionModel,
@@ -152,21 +152,21 @@ export default class LevelingOutScreenView extends SharingScreenView {
     );
 
     model.numberOfPlatesProperty.link( () => {
-      this.centerPlayAreaNodes();
+      this.updatePlayAreaLayerPositions();
     } );
   }
 
-  protected override centerPlayAreaNodes(): void {
-    super.centerPlayAreaNodes();
+  protected override updatePlayAreaLayerPositions(): void {
+    super.updatePlayAreaLayerPositions();
 
     // Update the bounds that constrain where the candy bars can be dragged.
-    this.notepadBoundsProperty.value = this.snackLayerNode.globalToLocalBounds( this.notepad.globalBounds );
+    this.notepadBoundsProperty.value = this.notepadSnackLayerNode.globalToLocalBounds( this.notepad.globalBounds );
 
     const focusRect = Shape.rect(
-      this.snackLayerNode.localBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
+      this.notepadSnackLayerNode.localBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
       this.notepadBoundsProperty.value.y + 80, // empirically determined to sit below the total readout,
       // but have enough vertical space for 10 candy bars
-      this.snackLayerNode.localBounds.width + CANDY_BAR_FOCUS_X_MARGIN,
+      this.notepadSnackLayerNode.localBounds.width + CANDY_BAR_FOCUS_X_MARGIN,
       this.notepadBoundsProperty.value.height - 100 // empirically determined
     );
     this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );

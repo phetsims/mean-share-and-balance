@@ -36,14 +36,21 @@ export default class FairShareScreenView extends SharingScreenView {
     }, providedOptions );
 
     // Create the string that will be used to describe the apples on the notepad, e.g. "Total = 3 apples".
-    const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
+    const measurementStringProperty = new DerivedProperty(
+      [
+        model.totalSnacksProperty,
         MeanShareAndBalanceStrings.appleStringProperty,
-        MeanShareAndBalanceStrings.applesStringProperty ],
-      ( total, singular, plural ) => total === 1 ? singular : plural );
-    const totalApplesPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalApplesPatternStringProperty, {
-      total: model.totalSnacksProperty,
-      measurement: measurementStringProperty
-    } );
+        MeanShareAndBalanceStrings.applesStringProperty
+      ],
+      ( total, singular, plural ) => total === 1 ? singular : plural
+    );
+    const totalApplesPatternStringProperty = new PatternStringProperty(
+      MeanShareAndBalanceStrings.totalApplesPatternStringProperty,
+      {
+        total: model.totalSnacksProperty,
+        measurement: measurementStringProperty
+      }
+    );
 
     // Create the notepad Node where the graphical representations of the snacks will be displayed.
     const notepadNode = new FairShareNotepadNode( model.notepadModeProperty, {
@@ -60,7 +67,8 @@ export default class FairShareScreenView extends SharingScreenView {
     );
 
     // Add the box that will depict the collection area, only shown in 'Collect' mode.
-    const collectionAreaVisibleProperty = new DerivedProperty( [ model.notepadModeProperty ],
+    const collectionAreaVisibleProperty = new DerivedProperty(
+      [ model.notepadModeProperty ],
       mode => mode === NotepadMode.COLLECT
     );
     const collectionAreaNode = new Rectangle(
@@ -78,26 +86,37 @@ export default class FairShareScreenView extends SharingScreenView {
     );
     this.addChild( collectionAreaNode );
 
-    // Create the nodes on the notepad that represent the plates in the model.
+    // Create the Nodes on the notepad layer that represent the plates in the model.
     const notepadPlateNodes = model.plates.map(
       plate => new FairShareNotepadPlateNode( plate, model.notepadModeProperty )
     );
-    notepadPlateNodes.forEach( plateNode => { this.snackLayerNode.addChild( plateNode ); } );
+    notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     // Update the center of the play area when the number of active plates changes.
-    model.numberOfPlatesProperty.link( () => {
-      this.centerPlayAreaNodes();
-    } );
+    model.numberOfPlatesProperty.link( this.updatePlayAreaLayerPositions.bind( this ) );
 
     // Add the Nodes that graphically represent the apples in the notepad.
     const appleNodesParentTandem = options.tandem.createTandem( 'appleNodes' );
     model.snacks.forEach( ( apple, i ) => {
-      this.snackLayerNode.addChild( new NotepadAppleNode( apple, {
+      this.notepadSnackLayerNode.addChild( new NotepadAppleNode( apple, {
             tandem: appleNodesParentTandem.createTandem( `notepadAppleNode${i + 1}` ),
             visibleProperty: apple.isActiveProperty
           }
         )
       );
+    } );
+
+    // TODO: See https://github.com/phetsims/mean-share-and-balance/issues/149.
+    //       This code repositions the layers if the width of the notepadSnackLayer changes.  It was added because of
+    //       order dependencies that were not allowing the layout to get properly updated when switching to the
+    //       "Collection" mode.  But it doesn't seem like quite the right way to do things, so I (jbphet) would like to
+    //       revisit and try to find a better way.
+    let notepadSnackLayerNodeWidth = this.notepadSnackLayerNode.bounds.width;
+    this.notepadSnackLayerNode.boundsProperty.link( bounds => {
+      if ( bounds.width !== notepadSnackLayerNodeWidth ) {
+        this.updatePlayAreaLayerPositions();
+        notepadSnackLayerNodeWidth = bounds.width;
+      }
     } );
   }
 }

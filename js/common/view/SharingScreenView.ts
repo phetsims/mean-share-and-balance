@@ -47,26 +47,26 @@ export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenVi
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
 
 export default class SharingScreenView extends MeanShareAndBalanceScreenView {
+
+  // Layers upon which other nodes will be placed.
+  private readonly peopleLayerNode: Node;
+  protected readonly tableSnackLayerNode: Node;
+  protected readonly notepadSnackLayerNode: Node;
+
+  // Various nodes used to depict visual elements in the view.
   private readonly tableNode: Node;
   protected readonly tablePlateNodes: Node[];
-  private readonly peopleLayerNode: Node;
   private readonly meanCalculationDialog: Dialog;
-  private readonly controls: Node;
+  private readonly controls: SharingControls;
 
-  // the layer where the snacks will be shown for both the table and the notepad
-  protected readonly snackLayerNode: Node;
-
-  public constructor(
-    model: SharingModel<Snack>,
-    questionBarStringProperty: TReadOnlyProperty<string>,
-    questionBarColor: TColor,
-    notepadNode: NotepadNode,
-    providedOptions: SharingScreenViewOptions ) {
+  public constructor( model: SharingModel<Snack>,
+                      questionBarStringProperty: TReadOnlyProperty<string>,
+                      questionBarColor: TColor,
+                      notepadNode: NotepadNode,
+                      providedOptions: SharingScreenViewOptions ) {
 
     const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()(
-      {
-        showSyncButton: true
-      },
+      { showSyncButton: true },
       providedOptions
     );
 
@@ -91,8 +91,16 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     // Create table node upon which the table plates will be shown.
     const tableNode = new PartyTableNode();
 
-    // Create the layer where the snacks and the plates that hold them will be shown.
-    const snackLayerNode = new Node( {
+    // Create the layer where the snacks and the plates that appear on the tablewill reside.
+    const tableSnackLayerNode = new Node( {
+
+      // The entire node containing snacks is centered.  If the invisible snacks contribute to the bounds, then
+      // centering won't work correctly.
+      excludeInvisibleChildrenFromBounds: true
+    } );
+
+    // Create the layer where the snacks and the plates that appear on the notepad will reside.
+    const notepadSnackLayerNode = new Node( {
 
       // The entire node containing snacks is centered.  If the invisible snacks contribute to the bounds, then
       // centering won't work correctly.
@@ -104,7 +112,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       snackType: providedOptions.snackType,
       tandem: providedOptions.tandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
-    tablePlateNodes.forEach( tablePlateNode => { snackLayerNode.addChild( tablePlateNode ); } );
+    tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );
 
     // TODO: Do the people images need to be instrumented? https://github.com/phetsims/mean-share-and-balance/issues/140
     const people: Node[] = tablePlateNodes.map( ( plate, i ) => {
@@ -124,7 +132,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
-      children: [ peopleLayerNode, tableNode, notepadNode, meanCalculationDialog, snackLayerNode ]
+      children: [ peopleLayerNode, tableNode, notepadNode, meanCalculationDialog, tableSnackLayerNode, notepadSnackLayerNode ]
     } );
 
     super( model, questionBarStringProperty, questionBarColor, notepadNode, superOptions );
@@ -139,15 +147,20 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     this.tableNode = tableNode;
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
-    this.snackLayerNode = snackLayerNode;
+    this.tableSnackLayerNode = tableSnackLayerNode;
+    this.notepadSnackLayerNode = notepadSnackLayerNode;
     this.controls = controls;
 
     // Don't include the questionBar in the usable bounds.
-    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
-      this.layoutBounds.maxX, this.layoutBounds.maxY );
+    const simAreaWithoutQuestionBar = new Bounds2(
+      this.layoutBounds.minX,
+      this.layoutBounds.minY + this.questionBar.height,
+      this.layoutBounds.maxX,
+      this.layoutBounds.maxY
+    );
 
     const controlsAlignBox = new AlignBox( controls, {
-      alignBounds: playAreaBounds,
+      alignBounds: simAreaWithoutQuestionBar,
       xAlign: 'right',
       yAlign: 'top',
       rightMargin: MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
@@ -161,16 +174,25 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     this.meanCalculationDialog = meanCalculationDialog;
     this.addChild( controlsAlignBox );
 
-    this.msabSetPDOMOrder( [ this.snackLayerNode ], this.tablePlateNodes, controls.controlsPDOMOrder );
+    this.msabSetPDOMOrder( [ this.notepadSnackLayerNode ], this.tablePlateNodes, controls.controlsPDOMOrder );
   }
 
-  protected centerPlayAreaNodes(): void {
-    this.snackLayerNode.centerX = this.playAreaCenterX;
+  /**
+   * Update the X positions of the nodes in the play area.  This is generally done when something changes, such as the
+   * number of people shown, that requires the nodes to be shifted such that things stay centered on the table or the
+   * notepad.
+   */
+  protected updatePlayAreaLayerPositions(): void {
 
-    // We want the people to be slightly to the left of their snacks.
-    this.peopleLayerNode.centerX = this.playAreaCenterX - 40;
+    // Center the layers and dialogs based on their current bounds.
+    this.tableSnackLayerNode.centerX = this.playAreaCenterX;
+    this.notepadSnackLayerNode.centerX = this.playAreaCenterX;
 
+    // TODO: Can this just be set at creation and not require an update?  See https://github.com/phetsims/mean-share-and-balance/issues/149.
     this.meanCalculationDialog.centerX = this.playAreaCenterX;
+
+    // We want the people to be slightly to the left of their snacks, hence the offset.
+    this.peopleLayerNode.centerX = this.playAreaCenterX - 40;
   }
 }
 

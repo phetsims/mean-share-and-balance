@@ -37,7 +37,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     super( options );
 
     const controlsWidthOffset = ( MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH +
-                                       MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+                                  MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
 
     this.notepad = notepadNode;
@@ -82,7 +82,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     ] );
 
     this.pdomControlAreaNode.setPDOMOrder( [
-        ...controlNodes,
+      ...controlNodes,
       this.resetAllButton
     ] );
   }

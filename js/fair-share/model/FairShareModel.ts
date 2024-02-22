@@ -20,7 +20,7 @@ import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringPrope
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import { Bounds2, Dimension2 } from '../../../../dot/js/imports.js';
+import { Bounds2, Dimension2, Vector2 } from '../../../../dot/js/imports.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -83,6 +83,9 @@ export default class FairShareModel extends SharingModel<Apple> {
     // Define a function that will update the state of all apples based on things like the selected display mode, the
     // number of active plates, and the number of apples on each plate.
     const updateApples = () => {
+
+      // TODO: It seems a bit excessive to have to reset these all each time.  Should this be kept?  See https://github.com/phetsims/mean-share-and-balance/issues/149.
+      this.snacks.forEach( snack => { snack.reset(); } );
 
       if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
 
@@ -158,7 +161,6 @@ export default class FairShareModel extends SharingModel<Apple> {
               else {
                 apple.isActiveProperty.set( false );
               }
-
             } );
           }
           else {
@@ -170,11 +172,34 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( this.notepadModeProperty.value === NotepadMode.COLLECT ) {
 
-        // In this mode, the number of active apples are collected into stacks in the collection area.
+        // In this mode, the active apples are collected into stacks in the collection area.
 
-        // TODO: Implement Collect mode, see https://github.com/phetsims/mean-share-and-balance/issues/149.
-        // For now, deactivate all apples.
-        this.snacks.forEach( apple => { apple.isActiveProperty.set( false ); } );
+        // Activate the number of apples on each plate to match the number of the corresponding table plate.
+        this.plates.forEach( plate => {
+          const apples = this.getSnacksAssignedToPlate( plate );
+          const applesInStackedOrder = apples.sort( ( a, b ) => {
+            if ( a.positionProperty.value.x === b.positionProperty.value.x ) {
+              return a.positionProperty.value.x - b.positionProperty.value.x;
+            }
+            else {
+              return b.positionProperty.value.y - a.positionProperty.value.y;
+            }
+          } );
+          applesInStackedOrder.forEach( ( apple, i ) => {
+            apple.isActiveProperty.value = plate.isActiveProperty.value &&
+                                           ( i < plate.snackNumberProperty.value );
+          } );
+        } );
+
+        // Move all active apples to stacks in the collection area.
+        const activeApples = this.snacks.filter( apple => apple.isActiveProperty.value );
+        activeApples.forEach( ( apple, index ) => {
+
+          // TODO: This is a rough prototype for positioning, see https://github.com/phetsims/mean-share-and-balance/issues/149.
+          const x = 0;
+          const y = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 30 - index * 4;
+          apple.positionProperty.set( new Vector2( x, y ) );
+        } );
       }
       else {
         assert && assert( false, 'Unexpected mode' );
