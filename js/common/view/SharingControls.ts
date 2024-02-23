@@ -35,9 +35,8 @@ export default class SharingControls extends VBox {
 
   public constructor( model: Pick<SharingModel<Snack>,
                         'isMeanAccordionExpandedProperty' |
-                        'numberOfPlatesRangeProperty' |
                         'numberOfPlatesProperty' |
-                        'meanProperty' |
+                        'totalSnacksProperty' |
                         'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>,
                       providedOptions: SharingControlsOptions ) {
@@ -49,8 +48,13 @@ export default class SharingControls extends VBox {
 
     const meanAccordionBoxOptions = combineOptions<MeanAccordionBoxOptions>( providedOptions.meanAccordionBoxOptions,
       { tandem: options.tandem } );
-    const meanAccordionBox = new MeanAccordionBox( model.meanProperty, meanCalculationDialogVisibleProperty,
-      model.isMeanAccordionExpandedProperty, meanAccordionBoxOptions );
+    const meanAccordionBox = new MeanAccordionBox(
+      model.totalSnacksProperty,
+      model.numberOfPlatesProperty,
+      meanCalculationDialogVisibleProperty,
+      model.isMeanAccordionExpandedProperty,
+      meanAccordionBoxOptions
+    );
 
     const syncListener = new FireListener( {
       fire: () => model.syncData(),
