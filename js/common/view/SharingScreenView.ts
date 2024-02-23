@@ -132,7 +132,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
-      children: [ peopleLayerNode, tableNode, notepadNode, meanCalculationDialog, tableSnackLayerNode, notepadSnackLayerNode ]
+      children: [ peopleLayerNode, tableNode, notepadNode, tableSnackLayerNode, notepadSnackLayerNode, meanCalculationDialog ]
     } );
 
     super( model, questionBarStringProperty, questionBarColor, notepadNode, superOptions );
