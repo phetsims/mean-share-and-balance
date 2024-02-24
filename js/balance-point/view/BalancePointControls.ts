@@ -16,9 +16,9 @@ import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
+import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
@@ -78,16 +78,10 @@ export default class BalancePointControls extends VBox {
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );
 
-    const infoButton = new InfoButton( {
-      iconFill: '#286AA1',
-      tandem: providedOptions.tandem.createTandem( 'infoButton' ),
-      radius: 20,
-      xMargin: 6,
-      yMargin: 6,
-      layoutOptions: {
-        minContentHeight: 140
-      }
-    } );
+    const infoButton = new InfoBooleanStickyToggleButton(
+      model.isMeanInfoDialogVisibleProperty,
+      providedOptions.tandem.createTandem( 'infoButton' )
+    );
 
     super( {
       children: [

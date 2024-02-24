@@ -23,6 +23,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public readonly isMeanFulcrumFixedProperty: Property<boolean>;
   public readonly areTickMarksVisibleProperty: Property<boolean>;
   public readonly isMeanVisibleProperty: Property<boolean>;
+  public readonly isMeanInfoDialogVisibleProperty: Property<boolean>;
 
   public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, providedOptions: BalancePointModelOptions ) {
 
@@ -33,8 +34,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     const sceneModel = new BalancePointSceneModel(
       regionAndCulturePortrayalProperty,
       {
-      tandem: options.tandem.createTandem( 'sceneModel' )
-    } );
+        tandem: options.tandem.createTandem( 'sceneModel' )
+      } );
     super( [ sceneModel ], options );
 
     this.isMeanFulcrumFixedProperty = new BooleanProperty( false, {
@@ -45,6 +46,9 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     } );
     this.isMeanVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isMeanVisibleProperty' )
+    } );
+    this.isMeanInfoDialogVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isMeanInfoDialogVisibleProperty' )
     } );
   }
 }

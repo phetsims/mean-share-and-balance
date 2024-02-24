@@ -31,6 +31,7 @@ import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortraya
 import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortrayalAfrica.js';
 import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
+import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -112,6 +113,23 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       centerX: this.playAreaCenterX
     } );
 
+    const calculationDependencies = [
+      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
+      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
+    ];
+
+    const meanInfoDialog = new MeanCalculationDialog(
+      calculationDependencies,
+      () => model.selectedSceneModelProperty.value.getSortedStackedObjects().map( ball => ball.valueProperty.value! ),
+      () => model.selectedSceneModelProperty.value.getSortedStackedObjects().length,
+      model.isMeanInfoDialogVisibleProperty, notepadNode.bounds,
+      {
+        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
+        centerX: this.playAreaCenterX,
+        tandem: options.tandem.createTandem( 'meanInfoDialog' )
+      }
+    );
+
     const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',
@@ -143,6 +161,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( resetAllButton );
     this.addChild( this.playAreaNumberLineNode );
     this.addChild( sceneView.frontSceneViewLayer );
+    this.addChild( meanInfoDialog );
   }
 }
 

@@ -81,9 +81,16 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       }
     } );
 
+    const calculationDependencies = [
+      ...model.plates.map( plate => plate.isActiveProperty ),
+      ...model.plates.map( plate => plate.snackNumberProperty )
+    ];
+
     // Create the dialog that will show the various ways to calculate the mean.
     const meanCalculationDialog = new MeanCalculationDialog(
-      model.plates,
+      calculationDependencies,
+      () => model.getActivePlates().map( plate => plate.snackNumberProperty.value ),
+      () => model.getActivePlates().length,
       model.meanCalculationDialogVisibleProperty,
       notepadNode.bounds,
       {

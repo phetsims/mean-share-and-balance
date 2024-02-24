@@ -12,7 +12,6 @@ import Dialog, { DialogOptions } from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { AlignBox, GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
-import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
@@ -21,6 +20,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction';
 
@@ -43,7 +43,10 @@ const VINCULUM_LINE_WIDTH = 1;
 
 export default class MeanCalculationDialog extends Dialog {
 
-  public constructor( plates: Array<Plate>,
+  public constructor( calculationDependencies: ( Property<boolean> | Property<number> )[] |
+                        ( Property<SoccerBallPhase> | Property<number | null> )[],
+                      getValues: () => number[],
+                      getNumberOfActiveDataObjects: () => number,
                       visibleProperty: Property<boolean>,
                       notebookPaperBounds: Bounds2,
                       providedOptions: MeanCalculationDialogOptions ) {
@@ -86,28 +89,25 @@ export default class MeanCalculationDialog extends Dialog {
     } );
 
     // Monitor the number of active plates and snacks and update the equations as changes occur.
-    const isActiveProperties = plates.map( plate => plate.isActiveProperty );
-    const numberOfSnacksProperties = plates.map( plate => plate.snackNumberProperty );
-    Multilink.multilinkAny( [ ...isActiveProperties, ...numberOfSnacksProperties ], () => {
+    Multilink.multilinkAny( [ ...calculationDependencies ], () => {
 
       // Assemble the various numbers needed to create the equations.
-      const numbersOfSnacksOnPlates = plates.filter(
-        plate => plate.isActiveProperty.value ).map( plate => plate.snackNumberProperty.value
-      );
-      const numberOfActivePlates = plates.filter( plate => plate.isActiveProperty.value ).length;
-      const totalNumberOfSnacks = _.sum( numbersOfSnacksOnPlates );
-      const mean = totalNumberOfSnacks / numberOfActivePlates;
+      const values = getValues();
+
+      const numberOfActiveDataObjects = getNumberOfActiveDataObjects();
+      const totalValues = _.sum( values );
+      const mean = totalValues / numberOfActiveDataObjects;
       const meanWholePart = Math.floor( mean );
-      const meanRemainder = totalNumberOfSnacks - ( meanWholePart * numberOfActivePlates );
+      const meanRemainder = totalValues - ( meanWholePart * numberOfActiveDataObjects );
 
       // Create the Node that shows a set of numbers being added together on top that correspond to the number of
       // snacks on top and the number of plates on the bottom.
-      const additionText = new Text( numbersOfSnacksOnPlates.join( ' + ' ), FRACTION_NUMBER_OPTIONS );
+      const additionText = new Text( values.join( ' + ' ), FRACTION_NUMBER_OPTIONS );
       const additionFractionLine = new Line( 0, 0, additionText.width, 0, {
         stroke: 'black',
         lineWidth: VINCULUM_LINE_WIDTH
       } );
-      const additionDenominatorText = new Text( numberOfActivePlates, FRACTION_NUMBER_OPTIONS );
+      const additionDenominatorText = new Text( numberOfActiveDataObjects, FRACTION_NUMBER_OPTIONS );
       const additionFraction = new VBox( { children: [ additionText, additionFractionLine, additionDenominatorText ] } );
 
       // Create the Node that shows the total number of snacks on top and the number of plates on the bottom.
@@ -116,8 +116,8 @@ export default class MeanCalculationDialog extends Dialog {
       // const denominatorText = new Text( numberOfActivePlates, FRACTION_NUMBER_OPTIONS );
       // const unreducedFraction = new VBox( { children: [ numeratorText, fractionLine, denominatorText ] } );
       const unreducedFraction = new MixedFractionNode( {
-        numerator: totalNumberOfSnacks,
-        denominator: numberOfActivePlates,
+        numerator: totalValues,
+        denominator: numberOfActiveDataObjects,
         fractionNumbersFont: FRACTION_NUMBER_FONT,
         vinculumLineWidth: VINCULUM_LINE_WIDTH
       } );
@@ -130,7 +130,7 @@ export default class MeanCalculationDialog extends Dialog {
         decimalOrUnreducedFraction = new MixedFractionNode( {
           whole: meanWholePart > 0 ? meanWholePart : null,
           numerator: meanRemainder > 0 ? meanRemainder : null,
-          denominator: meanRemainder > 0 ? numberOfActivePlates : null,
+          denominator: meanRemainder > 0 ? numberOfActiveDataObjects : null,
           wholeNumberFont: WHOLE_NUMBER_FONT,
           fractionNumbersFont: FRACTION_NUMBER_FONT,
           vinculumLineWidth: VINCULUM_LINE_WIDTH
