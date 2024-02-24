@@ -153,8 +153,8 @@ export default class MeanAccordionBox extends AccordionBox {
             whole: wholePart > 0 ? wholePart : null,
             numerator: remainder > 0 ? remainderAsFraction.numerator : null,
             denominator: remainder > 0 ? remainderAsFraction.denominator : null,
-            wholeNumberFontSize: 24,
-            fractionFontSize: 14,
+            wholeNumberFont: new PhetFont( 24 ),
+            fractionNumbersFont: new PhetFont( 14 ),
             vinculumLineWidth: 1,
             centerX: plateNode.centerX,
             bottom: -meanSnacksGraphicNode.height

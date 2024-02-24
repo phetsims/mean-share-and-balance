@@ -81,11 +81,15 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       }
     } );
 
+    // Create the dialog that will show the various ways to calculate the mean.
     const meanCalculationDialog = new MeanCalculationDialog(
       model.plates,
       model.meanCalculationDialogVisibleProperty,
       notepadNode.bounds,
-      providedOptions.tandem.createTandem( 'meanCalculationDialog' )
+      {
+        calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'decimal' : 'mixedFraction',
+        tandem: providedOptions.tandem.createTandem( 'meanCalculationDialog' )
+      }
     );
 
     // Create table node upon which the table plates will be shown.
@@ -144,6 +148,9 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     // Position the table.
     tableNode.centerX = this.playAreaCenterX;
 
+    // Position the dialog.
+    meanCalculationDialog.centerX = this.playAreaCenterX;
+
     this.tableNode = tableNode;
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
@@ -187,9 +194,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     // Center the layers and dialogs based on their current bounds.
     this.tableSnackLayerNode.centerX = this.playAreaCenterX;
     this.notepadSnackLayerNode.centerX = this.playAreaCenterX;
-
-    // TODO: Can this just be set at creation and not require an update?  See https://github.com/phetsims/mean-share-and-balance/issues/149.
-    this.meanCalculationDialog.centerX = this.playAreaCenterX;
 
     // We want the people to be slightly to the left of their snacks, hence the offset.
     this.peopleLayerNode.centerX = this.playAreaCenterX - 40;
