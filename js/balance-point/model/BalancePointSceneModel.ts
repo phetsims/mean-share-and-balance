@@ -37,7 +37,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         rightSkewedData: [
           0, 25, 45, 30, 18,
           12, 10, 5, 4, 4, 4 ],
-        valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE
+        valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
+        tandem: options.tandem.createTandem( 'kickDistributionStrategy' )
       }
     );
 
