@@ -32,7 +32,13 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     const kickDistributionStrategy = new KickDistributionStrategy(
       'randomSkew',
       null,
-      'right'
+      'right',
+      {
+        rightSkewedData: [
+          0, 25, 45, 30, 18,
+          12, 10, 5, 4, 4, 4 ],
+        valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE
+      }
     );
 
     const kickRange = new Range( 0, 10 );
