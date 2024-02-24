@@ -14,14 +14,13 @@ import { AlignBox, GridBox, Line, Text, VBox } from '../../../../scenery/js/impo
 import Utils from '../../../../dot/js/Utils.js';
 import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction';
 
@@ -31,7 +30,7 @@ type SelfOptions = {
   // controls which.
   calculatedMeanDisplayMode?: MeanDisplayType;
 };
-export type MeanCalculationDialogOptions = SelfOptions & PickRequired<DialogOptions, 'tandem'>;
+export type MeanCalculationDialogOptions = SelfOptions & WithRequired<DialogOptions, 'tandem'>;
 
 // constants
 const LABEL_FONT = new PhetFont( 16 );
@@ -60,8 +59,7 @@ export default class MeanCalculationDialog extends Dialog {
       resize: false,
       closeButtonListener: () => this.visibleProperty.set( false ),
       layoutStrategy: _.noop,
-      calculatedMeanDisplayMode: 'decimal',
-      centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y
+      calculatedMeanDisplayMode: 'decimal'
     }, providedOptions );
 
     const meanEqualsAdditionFractionText = new Text(

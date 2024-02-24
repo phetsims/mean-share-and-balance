@@ -88,6 +88,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       notepadNode.bounds,
       {
         calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'decimal' : 'mixedFraction',
+        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         tandem: providedOptions.tandem.createTandem( 'meanCalculationDialog' )
       }
     );
@@ -148,7 +149,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     // Position the table.
     tableNode.centerX = this.playAreaCenterX;
 
-    // Position the dialog.
+    // Position the dialog.  TODO: Move this to initialization after restructure, see https://github.com/phetsims/mean-share-and-balance/issues/149.
     meanCalculationDialog.centerX = this.playAreaCenterX;
 
     this.tableNode = tableNode;
