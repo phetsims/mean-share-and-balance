@@ -58,7 +58,7 @@ export default class Plate extends PhetioObject {
     } );
     this.xPosition = options.xPosition;
 
-    this.snackNumberProperty = new NumberProperty( options.isActive ? options.startingNumberOfSnacks : 0, {
+    this.snackNumberProperty = new NumberProperty( options.startingNumberOfSnacks, {
 
       range: new Range( 0, 10 ),
 

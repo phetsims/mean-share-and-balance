@@ -61,7 +61,9 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   public constructor( providedOptions: FairShareModelOptions ) {
 
-    const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
+    const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {
+      numberOfSnacksOnFirstPlate: 2
+    }, providedOptions );
     super( options );
 
     this.notepadModeProperty = new EnumerationProperty( NotepadMode.SYNC, {

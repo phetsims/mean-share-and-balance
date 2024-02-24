@@ -9,7 +9,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TModel from '../../../../joist/js/TModel.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Property from '../../../../axon/js/Property.js';
@@ -23,7 +23,11 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
-type SelfOptions = EmptySelfOptions;
+type SelfOptions = {
+
+  // Controls the number of snacks on the first plate.
+  numberOfSnacksOnFirstPlate?: number;
+};
 export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 // constants
@@ -40,7 +44,11 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly snacks: T[];
   public readonly meanProperty: TReadOnlyProperty<number>;
 
-  public constructor( options: SharingModelOptions ) {
+  public constructor( providedOptions: SharingModelOptions ) {
+
+    const options = combineOptions<SharingModelOptions>( {
+      numberOfSnacksOnFirstPlate: 3
+    }, providedOptions );
 
     this.numberOfPlatesRangeProperty = new Property<Range>(
       new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
@@ -84,7 +92,7 @@ export default class SharingModel<T extends Snack> implements TModel {
         xPosition: x,
         isActive: plateIndex < this.numberOfPlatesProperty.value,
         linePlacement: plateIndex,
-        startingNumberOfSnacks: plateIndex === 0 ? MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SNACKS_ON_FIRST_PLATE : 1,
+        startingNumberOfSnacks: plateIndex === 0 ? options.numberOfSnacksOnFirstPlate : 1,
 
         // phet-io
         tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )
