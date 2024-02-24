@@ -80,7 +80,12 @@ export default class BalancePointControls extends VBox {
 
     const infoButton = new InfoBooleanStickyToggleButton(
       model.isMeanInfoDialogVisibleProperty,
-      providedOptions.tandem.createTandem( 'infoButton' )
+      providedOptions.tandem.createTandem( 'infoButton' ),
+      {
+        layoutOptions: {
+          minContentHeight: 140
+        }
+      }
     );
 
     super( {
