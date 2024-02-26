@@ -86,8 +86,24 @@ export default class MeanCalculationDialog extends Dialog {
       LABEL_TEXT_OPTIONS
     );
 
+    // Set a min content height when using mixed fractions, otherwise the grid layout can jump around when switching
+    // between whole and mixed numbers;
+    let minContentHeight = 0;
+    if ( options.calculatedMeanDisplayMode === 'mixedFraction' ) {
+
+      // Create a dummy mixed number from which to derive the min content height.
+      const unreducedFraction = new MixedFractionNode( {
+        numerator: 9,
+        denominator: 10,
+        fractionNumbersFont: FRACTION_NUMBER_FONT,
+        vinculumLineWidth: VINCULUM_LINE_WIDTH
+      } );
+      minContentHeight = unreducedFraction.bounds.height;
+    }
+
     const calculationNode = new GridBox( {
-      margin: 10
+      margin: 10,
+      minContentHeight: minContentHeight
     } );
 
     const alignedCalculationNode = new AlignBox( calculationNode, {
