@@ -34,6 +34,8 @@ import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 import NotepadNode from './NotepadNode.js';
+import Animation from '../../../../twixt/js/Animation.js';
+import Easing from '../../../../twixt/js/Easing.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -58,6 +60,9 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   protected readonly tablePlateNodes: Node[];
   private readonly meanCalculationDialog: Dialog;
   private readonly controls: SharingControls;
+
+  // An animation that can be created to move the layers that hold the plates and snacks.
+  private layerPositionAnimation: Animation | null = null;
 
   public constructor( model: SharingModel<Snack>,
                       questionBarStringProperty: TReadOnlyProperty<string>,
@@ -194,17 +199,49 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
 
   /**
    * Update the X positions of the nodes in the play area.  This is generally done when something changes, such as the
-   * number of people shown, that requires the nodes to be shifted such that things stay centered on the table or the
-   * notepad.
+   * number of people shown, that requires the nodes to be shifted such that things stay centered on the table and/or
+   * the notepad.
    */
   protected updatePlayAreaLayerPositions(): void {
 
-    // Center the layers and dialogs based on their current bounds.
-    this.tableSnackLayerNode.centerX = this.playAreaCenterX;
-    this.notepadSnackLayerNode.centerX = this.playAreaCenterX;
+    // If there is an animation in progress, stop it.
+    if ( this.layerPositionAnimation ) {
+      this.layerPositionAnimation.stop();
+    }
 
-    // We want the people to be slightly to the left of their snacks, hence the offset.
-    this.peopleLayerNode.centerX = this.playAreaCenterX - 40;
+    const currentCenterX = this.tableSnackLayerNode.centerX;
+    const targetCenterX = this.playAreaCenterX;
+
+    // Create a new animation to update the layer positions.
+    this.layerPositionAnimation = new Animation( {
+      from: currentCenterX,
+      to: targetCenterX,
+      setValue: xPosition => {
+
+        // Set the positions of the layers.
+        this.tableSnackLayerNode.centerX = xPosition;
+
+        if ( this.notepadSnackLayerNode.centerX !== this.playAreaCenterX ) {
+          this.notepadSnackLayerNode.centerX = xPosition;
+        }
+
+        // We want the people to be slightly to the left of their snacks, hence the offset.
+        this.peopleLayerNode.centerX = xPosition - 40;
+      },
+      duration: 0.5,
+      easing: Easing.CUBIC_OUT
+    } );
+
+    const finish = () => {
+      this.layerPositionAnimation = null;
+    };
+
+    // handlers for when the animation completes
+    this.layerPositionAnimation.finishEmitter.addListener( finish );
+    this.layerPositionAnimation.stopEmitter.addListener( finish );
+
+    // Kick off the animation.
+    this.layerPositionAnimation.start();
   }
 }
 

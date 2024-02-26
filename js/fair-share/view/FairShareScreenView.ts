@@ -106,16 +106,9 @@ export default class FairShareScreenView extends SharingScreenView {
       );
     } );
 
-    // TODO: See https://github.com/phetsims/mean-share-and-balance/issues/149.
-    //       This code repositions the layers if the width of the notepadSnackLayer changes.  It was added because of
-    //       order dependencies that were not allowing the layout to get properly updated when switching to the
-    //       "Collection" mode.  But it doesn't seem like quite the right way to do things, so I (jbphet) would like to
-    //       revisit and try to find a better way.
-    let notepadSnackLayerNodeWidth = this.notepadSnackLayerNode.bounds.width;
-    this.notepadSnackLayerNode.boundsProperty.link( bounds => {
-      if ( bounds.width !== notepadSnackLayerNodeWidth ) {
+    model.snacksAdjusted.addListener( () => {
+      if ( this.notepadSnackLayerNode.centerX !== this.playAreaCenterX ) {
         this.updatePlayAreaLayerPositions();
-        notepadSnackLayerNodeWidth = bounds.width;
       }
     } );
   }

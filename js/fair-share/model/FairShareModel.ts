@@ -22,6 +22,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import SnackStacker from '../../common/SnackStacker.js';
 import { Bounds2, Dimension2, Vector2 } from '../../../../dot/js/imports.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import { Emitter } from '../../../../axon/js/imports.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -58,6 +59,8 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // The area in coordinate space where the Apple instances will be placed and organized when in Collection mode.
   public readonly collectionArea: Bounds2;
+
+  public readonly snacksAdjusted = new Emitter();
 
   public constructor( providedOptions: FairShareModelOptions ) {
 
@@ -211,6 +214,10 @@ export default class FairShareModel extends SharingModel<Apple> {
       else {
         assert && assert( false, 'Unexpected mode' );
       }
+
+      // Trigger an emitter that indicates some rearrangement has occurred.  This can be used by the view to finalize
+      // any updates that are needed.
+      this.snacksAdjusted.emit();
     };
 
     // Set up the initial states for the plates and the apples that go on them.
