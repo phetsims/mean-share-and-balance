@@ -142,13 +142,13 @@ export default class MeanCalculationDialog extends Dialog {
         vinculumLineWidth: VINCULUM_LINE_WIDTH
       } );
 
-      let decimalOrUnreducedFraction;
+      let decimalOrMixedFraction;
       if ( options.calculatedMeanDisplayMode === 'decimal' ) {
-        decimalOrUnreducedFraction = new Text( Utils.toFixedNumber( mean, 2 ), DECIMAL_NUMBER_OPTIONS );
+        decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 2 ), DECIMAL_NUMBER_OPTIONS );
       }
       else {
-        decimalOrUnreducedFraction = new MixedFractionNode( {
-          whole: meanWholePart > 0 ? meanWholePart : null,
+        decimalOrMixedFraction = new MixedFractionNode( {
+          whole: ( meanWholePart > 0 || totalValues === 0 ) ? meanWholePart : null,
           numerator: meanRemainder > 0 ? meanRemainder : null,
           denominator: meanRemainder > 0 ? numberOfActiveDataObjects : null,
           wholeNumberFont: WHOLE_NUMBER_FONT,
@@ -160,7 +160,7 @@ export default class MeanCalculationDialog extends Dialog {
       calculationNode.rows = [
         [ meanEqualsAdditionFractionText, additionFraction ],
         [ meanEqualsUnreducedFractionText, unreducedFraction ],
-        [ meanEqualsDecimalOrMixedFractionText, decimalOrUnreducedFraction ]
+        [ meanEqualsDecimalOrMixedFractionText, decimalOrMixedFraction ]
       ];
     } );
 

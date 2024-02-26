@@ -140,7 +140,7 @@ export default class MeanAccordionBox extends AccordionBox {
 
           // Use a decimal number for the candy bars.
           meanReadout = new Text( Utils.toFixed( mean, 1 ), {
-            font: new PhetFont( 14 ),
+            font: new PhetFont( 18 ),
             centerX: plateNode.centerX,
             bottom: -meanSnacksGraphicNode.height
           } );
@@ -150,7 +150,7 @@ export default class MeanAccordionBox extends AccordionBox {
           // Use a fraction for the apples.
           const remainderAsFraction = new Fraction( total - ( wholePart * divisor ), divisor );
           meanReadout = new MixedFractionNode( {
-            whole: wholePart > 0 ? wholePart : null,
+            whole: wholePart > 0 || total === 0 ? wholePart : null,
             numerator: remainder > 0 ? remainderAsFraction.numerator : null,
             denominator: remainder > 0 ? remainderAsFraction.denominator : null,
             wholeNumberFont: new PhetFont( 24 ),
@@ -182,7 +182,7 @@ export default class MeanAccordionBox extends AccordionBox {
       expandedProperty: isMeanAccordionExpandedProperty,
       contentVerticalAlign: 'bottom',
       layoutOptions: {
-        minContentHeight: 215
+        minContentHeight: 225 // empirically determined
       },
       buttonXMargin: ACCORDION_BOX_MARGIN,
       buttonYMargin: ACCORDION_BOX_MARGIN,
