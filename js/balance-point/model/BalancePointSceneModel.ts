@@ -8,7 +8,7 @@
 
 import SoccerSceneModel, { SoccerSceneModelOptions } from '../../../../soccer-common/js/model/SoccerSceneModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DerivedProperty, NumberProperty, Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
+import { BooleanProperty, DerivedProperty, NumberProperty, Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDistributionStrategy.js';
 import Range from '../../../../dot/js/Range.js';
@@ -20,6 +20,10 @@ import isResettingProperty from '../../../../soccer-common/js/model/isResettingP
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 export default class BalancePointSceneModel extends SoccerSceneModel {
+
+  // Controls whether the column supports for the beam are present or not, fixing the beam in a horizontal position
+  // when present, and allowing the beam to tilt when not.
+  public readonly beamSupportsPresentProperty: BooleanProperty;
 
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
   public readonly targetNumberOfBallsProperty: Property<number>;
@@ -57,6 +61,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       regionAndCulturePortrayalProperty,
       options
     );
+    this.beamSupportsPresentProperty = new BooleanProperty( true, {
+      tandem: options.tandem.createTandem( 'beamSupportsPresentProperty' )
+    } );
+
     const valueDependencies = this.soccerBalls.map( ball => ball.valueProperty );
     const phaseDependencies = this.soccerBalls.map( ball => ball.soccerBallPhaseProperty );
     const positionDependencies = this.soccerBalls.map( ball => ball.positionProperty );

@@ -31,6 +31,7 @@ type StringsType = {
   'fairShareQuestionStringProperty': LocalizedStringProperty;
   'numberOfPeopleStringProperty': LocalizedStringProperty;
   'meanEqualsStringProperty': LocalizedStringProperty;
+  'meanEqualsPatternStringProperty': LocalizedStringProperty;
   'totalCandyBarsPatternStringProperty': LocalizedStringProperty;
   'barStringProperty': LocalizedStringProperty;
   'barsStringProperty': LocalizedStringProperty;
@@ -40,6 +41,8 @@ type StringsType = {
   'totalDistancePatternStringProperty': LocalizedStringProperty;
   'balancePointQuestionStringProperty': LocalizedStringProperty;
   'numberOfBallsStringProperty': LocalizedStringProperty;
+  'checkStringProperty': LocalizedStringProperty;
+  'resetStringProperty': LocalizedStringProperty;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

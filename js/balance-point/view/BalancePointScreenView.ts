@@ -19,8 +19,6 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
-import NotepadNode from '../../common/view/NotepadNode.js';
-import { PatternStringProperty } from '../../../../axon/js/imports.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 import BalancePointControls from './BalancePointControls.js';
 import { AlignBox } from '../../../../scenery/js/imports.js';
@@ -33,6 +31,7 @@ import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/Kicke
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
+import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -75,10 +74,11 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     super( model, options );
 
-    // TODO: This hard codes only supporting one scene, https://github.com/phetsims/mean-share-and-balance/issues/152
+    // There is only one scene in the balance point screen.
+    const sceneModel = model.selectedSceneModelProperty.value;
     const sceneView = new BalancePointSceneView(
       model,
-      model.selectedSceneModelProperty.value,
+      sceneModel,
       KICKER_IMAGE_SETS,
       this.modelViewTransform,
       options.tandem.createTandem( 'sceneView' )
@@ -105,11 +105,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     } );
 
     // Notepad
-    const totalDistancePatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalDistancePatternStringProperty, {
-      total: model.selectedSceneModelProperty.value.totalKickDistanceProperty
-    } );
-    const notepadNode = new NotepadNode( {
-      readoutPatternStringProperty: totalDistancePatternStringProperty,
+    const notepadNode = new BalancePointNotepadNode( sceneModel, model.isMeanVisibleProperty, {
       tandem: options.tandem.createTandem( 'notepadNode' ),
       centerX: this.playAreaCenterX
     } );

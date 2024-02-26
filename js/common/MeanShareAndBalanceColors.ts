@@ -67,12 +67,6 @@ const meanShareAndBalanceColors = {
   pipeGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'pipeGradientDark', {
     default: '#4d4d4d'
   } ),
-  handleGradientLightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'handleGradientLight', {
-    default: 'red'
-  } ),
-  handleGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'handleGradientDark', {
-    default: 'firebrick'
-  } ),
   levelingOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutQuestionBar', {
     default: '#78C4F7'
   } ),
@@ -93,6 +87,12 @@ const meanShareAndBalanceColors = {
   } ),
   balancePointQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balancePointQuestionBar', {
     default: '#009246'
+  } ),
+  meanColorProperty: new ProfileColorProperty( meanShareAndBalance, 'mean', {
+    default: '#690BFF'
+  } ),
+  checkButtonColorProperty: new ProfileColorProperty( meanShareAndBalance, 'checkButton', {
+    default: '#FFF383'
   } )
 };
 

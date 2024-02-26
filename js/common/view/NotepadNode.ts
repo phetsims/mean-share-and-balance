@@ -19,6 +19,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import { Bounds2 } from '../../../../dot/js/imports.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{
@@ -34,6 +35,8 @@ export type NotepadNodeOptions = SelfOptions &
 const NOTEPAD_RING_BOTTOM = 33.5;
 
 export default class NotepadNode extends Node {
+
+  protected readonly paperStackBounds: Bounds2;
 
   public constructor( providedOptions: NotepadNodeOptions ) {
 
@@ -73,6 +76,8 @@ export default class NotepadNode extends Node {
     }, options );
     super( superOptions );
 
+    this.paperStackBounds = paperStackNode.bounds;
+
     if ( options.readoutPatternStringProperty ) {
       const readoutText = new Text( options.readoutPatternStringProperty, {
         font: new PhetFont( 16 ),
@@ -81,7 +86,7 @@ export default class NotepadNode extends Node {
       } );
 
       const readoutAlignBox = new AlignBox( readoutText, {
-        alignBounds: paperStackNode.bounds,
+        alignBounds: this.paperStackBounds,
         xAlign: 'center',
         yAlign: 'top',
         yMargin: NOTEPAD_RING_BOTTOM + 5

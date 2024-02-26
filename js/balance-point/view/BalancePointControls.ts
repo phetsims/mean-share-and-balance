@@ -19,6 +19,7 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
@@ -33,7 +34,7 @@ export default class BalancePointControls extends VBox {
           triangleHeight: 24,
           triangleWidth: 28,
           fill: 'white',
-          stroke: 'purple'
+          stroke: MeanShareAndBalanceColors.meanColorProperty
         } ),
         value: false,
         tandemName: 'movableMeanFulcrumRadioButton'
@@ -42,8 +43,8 @@ export default class BalancePointControls extends VBox {
         createNode: () => new TriangleNode( {
           triangleHeight: 24,
           triangleWidth: 28,
-          fill: 'purple',
-          stroke: 'purple'
+          fill: MeanShareAndBalanceColors.meanColorProperty,
+          stroke: MeanShareAndBalanceColors.meanColorProperty
         } ),
         value: true,
         tandemName: 'fixedMeanFulcrumRadioButton'
