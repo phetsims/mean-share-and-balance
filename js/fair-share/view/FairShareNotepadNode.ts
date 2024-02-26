@@ -9,18 +9,18 @@
 
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { NotepadMode } from '../model/FairShareModel.js';
+import FairShareModel, { NotepadMode } from '../model/FairShareModel.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
-import { AlignBox, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
 export default class FairShareNotepadNode extends NotepadNode {
 
-  public constructor( notepadModeEnumerationProperty: Property<NotepadMode>,
-                      providedOptions: FairShareNotepadNodeOptions ) {
+  public constructor( notepadModeProperty: Property<NotepadMode>, providedOptions: FairShareNotepadNodeOptions ) {
 
     super( providedOptions );
 
@@ -37,7 +37,7 @@ export default class FairShareNotepadNode extends NotepadNode {
       }
     );
     const notepadModeRadioButtonGroup = new RectangularRadioButtonGroup<NotepadMode>(
-      notepadModeEnumerationProperty,
+      notepadModeProperty,
       notepadModeItems,
       {
         orientation: 'horizontal',
@@ -45,6 +45,26 @@ export default class FairShareNotepadNode extends NotepadNode {
         tandem: providedOptions.tandem.createTandem( 'notepadModeRadioButtonGroup' )
       }
     );
+
+    // Add the box that will depict the collection area, only shown in 'Collect' mode.
+    const collectionAreaVisibleProperty = new DerivedProperty(
+      [ notepadModeProperty ],
+      mode => mode === NotepadMode.COLLECT
+    );
+    const collectionAreaNode = new Rectangle(
+      0,
+      0,
+      FairShareModel.COLLECTION_AREA_SIZE.width,
+      FairShareModel.COLLECTION_AREA_SIZE.height,
+      {
+        stroke: 'black',
+        cornerRadius: 8,
+        centerX: this.width / 2,
+        centerY: this.height / 2,
+        visibleProperty: collectionAreaVisibleProperty
+      }
+    );
+    this.addChild( collectionAreaNode );
 
     const radioButtonGroupAlignBox = new AlignBox( notepadModeRadioButtonGroup, {
       alignBounds: this.localBounds,
