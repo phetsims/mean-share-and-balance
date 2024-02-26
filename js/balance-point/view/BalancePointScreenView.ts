@@ -32,6 +32,7 @@ import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortr
 import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
+import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -113,6 +114,17 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       centerX: this.playAreaCenterX
     } );
 
+    const notepadNodeBounds = notepadNode.bounds;
+
+    const notepadNumberLineNode = new NumberLineNode( CHART_VIEW_WIDTH, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, {
+      includeXAxis: false,
+      color: 'black',
+      x: NUMBER_LINE_LEFT_X_MARGIN,
+      bottom: notepadNodeBounds.maxY - 15,
+      showTickMarks: false,
+      visibleProperty: model.areTickMarksVisibleProperty
+    } );
+
     const calculationDependencies = [
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
@@ -122,7 +134,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       calculationDependencies,
       () => model.selectedSceneModelProperty.value.getSortedStackedObjects().map( ball => ball.valueProperty.value! ),
       () => model.selectedSceneModelProperty.value.getSortedStackedObjects().length,
-      model.isMeanInfoDialogVisibleProperty, notepadNode.bounds,
+      model.isMeanInfoDialogVisibleProperty, notepadNodeBounds,
       {
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         centerX: this.playAreaCenterX,
@@ -156,6 +168,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
     this.addChild( notepadNode );
+    this.addChild( notepadNumberLineNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );
     this.addChild( resetAllButton );
