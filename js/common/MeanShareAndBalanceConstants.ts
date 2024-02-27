@@ -13,9 +13,13 @@ import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 import { LinearGradient, Pattern } from '../../../scenery/js/imports.js';
 import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
+import ScreenView from '../../../joist/js/ScreenView.js';
 
 const DEFAULT_MARGIN = 15;
 const CONTROLS_MAX_TEXT_WIDTH = 175;
+const CONTROLS_PREFERRED_WIDTH = CONTROLS_MAX_TEXT_WIDTH + 25;
+const NUMBER_LINE_LEFT_X_MARGIN = 135;
+const NUMBER_LINE_RIGHT_X_MARGIN = 215;
 
 const MeanShareAndBalanceConstants = {
 
@@ -49,7 +53,7 @@ const MeanShareAndBalanceConstants = {
   TOUCH_AREA_DILATION: 10,
 
   MAX_CONTROLS_TEXT_WIDTH: CONTROLS_MAX_TEXT_WIDTH,
-  CONTROLS_PREFERRED_WIDTH: CONTROLS_MAX_TEXT_WIDTH + 25,
+  CONTROLS_PREFERRED_WIDTH: CONTROLS_PREFERRED_WIDTH,
   CHECKBOX_FONT_SIZE: 15,
   CHECKBOX_OPTIONS: {
     boxWidth: 16
@@ -75,7 +79,10 @@ const MeanShareAndBalanceConstants = {
   SOCCER_BALL_RANGE: new Range( 0, 10 ),
   NUMBER_SPINNER_KICK_RANGE: new Range( 0, 7 ),
   GROUND_POSITION_Y: 575,
-  INITIAL_NUMBER_OF_SOCCER_BALLS: 0
+  INITIAL_NUMBER_OF_SOCCER_BALLS: 0,
+  NUMBER_LINE_LEFT_X_MARGIN: NUMBER_LINE_LEFT_X_MARGIN,
+  CHART_VIEW_WIDTH: ScreenView.DEFAULT_LAYOUT_BOUNDS.width - CONTROLS_PREFERRED_WIDTH
+                    - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

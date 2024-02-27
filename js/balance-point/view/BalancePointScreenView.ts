@@ -18,7 +18,6 @@ import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import ScreenView from '../../../../joist/js/ScreenView.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 import BalancePointControls from './BalancePointControls.js';
 import { AlignBox } from '../../../../scenery/js/imports.js';
@@ -30,15 +29,10 @@ import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortr
 import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
-import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
-const NUMBER_LINE_LEFT_X_MARGIN = 160;
-const NUMBER_LINE_RIGHT_X_MARGIN = 200;
-const CHART_VIEW_WIDTH = ScreenView.DEFAULT_LAYOUT_BOUNDS.width - MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
-                         - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN;
 
 // Depending on how many characters a regionAndCulture RegionAndCulturePortrayal has will determine how we loop over the characters.
 const KICKER_IMAGE_SETS: KickerImageSet[][] = [];
@@ -66,8 +60,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const options = optionize<BalancePointScreenViewOptions, SelfOptions, SoccerScreenViewOptions>()( {
       physicalRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
-      chartViewWidth: CHART_VIEW_WIDTH,
-      numberLineXMargin: NUMBER_LINE_LEFT_X_MARGIN,
+      chartViewWidth: MeanShareAndBalanceConstants.CHART_VIEW_WIDTH,
+      numberLineXMargin: MeanShareAndBalanceConstants.NUMBER_LINE_LEFT_X_MARGIN,
       groundPositionY: MeanShareAndBalanceConstants.GROUND_POSITION_Y
     }, providedOptions );
 
@@ -105,21 +99,13 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     } );
 
     // Notepad
-    const notepadNode = new BalancePointNotepadNode( sceneModel, model.isMeanVisibleProperty, {
-      tandem: options.tandem.createTandem( 'notepadNode' ),
-      centerX: this.playAreaCenterX
-    } );
+    const notepadNode = new BalancePointNotepadNode( sceneModel, this.modelViewTransform, this.playAreaNumberLineNode,
+      model.areTickMarksVisibleProperty, model.isMeanVisibleProperty, {
+        tandem: options.tandem.createTandem( 'notepadNode' ),
+        centerX: this.playAreaCenterX
+      } );
 
     const notepadNodeBounds = notepadNode.bounds;
-
-    const notepadNumberLineNode = new NumberLineNode( CHART_VIEW_WIDTH, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, {
-      includeXAxis: false,
-      color: 'black',
-      x: NUMBER_LINE_LEFT_X_MARGIN,
-      bottom: notepadNodeBounds.maxY - 15,
-      showTickMarks: false,
-      visibleProperty: model.areTickMarksVisibleProperty
-    } );
 
     const calculationDependencies = [
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
@@ -164,7 +150,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
     this.addChild( notepadNode );
-    this.addChild( notepadNumberLineNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );
     this.addChild( resetAllButton );
