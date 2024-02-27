@@ -9,7 +9,7 @@
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { DerivedProperty, PatternStringProperty, TReadOnlyProperty } from '../../../../axon/js/imports.js';
-import { AlignBox, Text, Node, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import { EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
@@ -18,7 +18,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import { RectangularPushButton } from '../../../../sun/js/imports.js';
-import Utils from '../../../../dot/js/Utils.js';
+import createValueReadoutStringProperty from '../../../../soccer-common/js/model/createValueReadoutStringProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -40,14 +40,13 @@ export default class BalancePointNotepadNode extends NotepadNode {
     super( options );
 
     // Create the mean readout text.
-    const meanReadoutPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.meanEqualsPatternStringProperty, {
-      mean: sceneModel.meanValueProperty
-    }, {
-      maps: {
-        mean: mean => mean ? Utils.toFixed( mean, 1 ) : 0.0
-      }
-    } );
-    const meanReadoutText = new Text( meanReadoutPatternStringProperty, {
+    const meanReadoutStringProperty = createValueReadoutStringProperty(
+      sceneModel.meanValueProperty,
+      MeanShareAndBalanceStrings.meanEqualsPatternStringProperty,
+      MeanShareAndBalanceStrings.meanEqualsUnknownStringProperty,
+      1
+    );
+    const meanReadoutText = new Text( meanReadoutStringProperty, {
       font: new PhetFont( 16 ),
       fill: MeanShareAndBalanceColors.meanColorProperty,
       visibleProperty: isMeanVisibleProperty
