@@ -57,8 +57,7 @@ export default class Snack extends PhetioObject {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),
-      phetioReadOnly: true,
-      phetioState: false
+      phetioReadOnly: true
     } );
 
     this.parentPlateProperty = new Property( providedOptions.plate, {
@@ -69,8 +68,13 @@ export default class Snack extends PhetioObject {
       phetioValueType: ReferenceIO( IOType.ObjectIO )
     } );
 
-    // REVIEW: These may need phetioState: true
-    this.positionProperty = new Property( providedOptions.position );
+    this.positionProperty = new Property( providedOptions.position, {
+
+      // phet-io
+      tandem: providedOptions.tandem.createTandem( 'positionProperty' ),
+      phetioReadOnly: true,
+      phetioValueType: Vector2.Vector2IO
+    } );
   }
 
   /**
