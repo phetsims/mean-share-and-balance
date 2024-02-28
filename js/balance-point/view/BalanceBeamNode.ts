@@ -25,7 +25,6 @@ const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createRectangleInvertedYMappi
 export default class BalanceBeamNode extends Node {
 
   public constructor(
-    modelViewTransform: ModelViewTransform2,
     playAreaNumberLineNode: NumberLineNode,
     paperStackBounds: Bounds2,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>

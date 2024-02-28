@@ -21,7 +21,6 @@ import { RectangularPushButton } from '../../../../sun/js/imports.js';
 import createValueReadoutStringProperty from '../../../../soccer-common/js/model/createValueReadoutStringProperty.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import BalanceBeamNode from './BalanceBeamNode.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -33,7 +32,6 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
   public constructor(
     sceneModel: BalancePointSceneModel,
-    modelViewTransform: ModelViewTransform2,
     playAreaNumberLineNode: NumberLineNode,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanVisibleProperty: TReadOnlyProperty<boolean>,
@@ -100,7 +98,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     } );
     this.addChild( alignBox );
 
-    const balanceBeamNode = new BalanceBeamNode( modelViewTransform, playAreaNumberLineNode,
+    const balanceBeamNode = new BalanceBeamNode( playAreaNumberLineNode,
       this.paperStackBounds, areTickMarksVisibleProperty );
     this.addChild( balanceBeamNode );
   }
