@@ -11,7 +11,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Image, ImageOptions } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import TablePlateNode from './TablePlateNode.js';
+import TablePlateNode from '../../common/view/TablePlateNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;

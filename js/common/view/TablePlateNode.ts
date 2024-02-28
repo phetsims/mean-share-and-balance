@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A snackType of a plate with a stack of candy bars on it.  The number of candy bars that are stacked on the
+ * A snackType of a plate with a stack of snacks on it.  The number of snacks that are stacked on the
  * plate can vary.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -10,18 +10,18 @@
 
 import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../../common/model/Plate.js';
+import Plate from '../model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
 import greenApple_png from '../../../images/greenApple_png.js';
-import chocolateBar_png from '../../../images/chocolateBar_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import plate_png from '../../../images/plate_png.js';
-import { SnackType } from '../../common/view/SharingScreenView.js';
-import SnackStacker from '../../common/SnackStacker.js';
+import { SnackType } from './SharingScreenView.js';
+import SnackStacker from '../SnackStacker.js';
+import candyBar_svg from '../../../images/candyBar_svg.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -31,6 +31,7 @@ type PersonNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem'>;
 
 // constants
 const APPLE_IMAGE_WIDTH = 25; // in screen coords
+const CANDY_BAR_IMAGE_HEIGHT = 25; // in screen coords
 
 export default class TablePlateNode extends Node {
 
@@ -56,14 +57,12 @@ export default class TablePlateNode extends Node {
       }
     );
 
-    const candyBarScale = 0.04;
-
     // Create and position the Nodes representing the individual snacks that are on this plate.
     const snacks = _.times(
       MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
       index => {
         if ( options.snackType === 'candyBars' ) {
-          const candyBarNode = new Image( chocolateBar_png, { scale: candyBarScale } );
+          const candyBarNode = new Image( candyBar_svg, { maxHeight: CANDY_BAR_IMAGE_HEIGHT } );
           SnackStacker.setSnackImageNodePosition( candyBarNode, 'candyBars', index );
           return candyBarNode;
         }
@@ -93,7 +92,7 @@ export default class TablePlateNode extends Node {
     const plateAndSnacksNode = new Node( {
       children: [ plateImage, snacksNode ],
       layoutOptions: {
-        minContentHeight: ( 265 * candyBarScale ) * 10
+        minContentHeight: CANDY_BAR_IMAGE_HEIGHT * 10
       }
     } );
 
