@@ -163,17 +163,16 @@ export default class SharingModel<T extends Snack> implements TModel {
   }
 
   /**
-   * Propagate the ground truth values (at the bottom of the screen, on the table) to the candy bars that are being
-   * shown on the plates in the notepad.
+   * Propagate the ground truth values (at the bottom of the screen, on the table) to the snacks that are being shown
+   * on the plates in the notepad.
    */
   public syncData(): void {
-
-    this.plates.forEach( ( tablePlate, index ) => {
-      this.getSnacksAssignedToPlate( this.plates[ index ] ).forEach( ( snack, i ) => {
-        snack.isActiveProperty.value = i < tablePlate.snackNumberProperty.value && tablePlate.isActiveProperty.value;
+    this.plates.forEach( plate => {
+      this.getSnacksAssignedToPlate( plate ).forEach( ( snack, i ) => {
+        snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
       } );
-      if ( tablePlate.isActiveProperty.value ) {
-        this.reorganizeSnacks( tablePlate );
+      if ( plate.isActiveProperty.value ) {
+        this.reorganizeSnacks( plate );
       }
     } );
   }

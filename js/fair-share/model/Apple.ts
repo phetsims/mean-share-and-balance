@@ -1,7 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * The Apple class models an item that can appear on plates in the notepad of the Fair Share screen.
+ * The Apple class models an apple that can appear on plates in the notepad of the Fair Share screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
