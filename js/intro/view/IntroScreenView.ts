@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, ManualConstraint, Node } from '../../../../scenery/js/imports.js';
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -133,26 +133,28 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
     this.addChild( controlsAlignBox );
 
-    const centerWaterCupLayerNode = () => {
-      waterCupLayerNode.centerX = this.playAreaCenterX;
-      predictMeanSlider.x = waterCupLayerNode.x - 12.5;
-      tableNode.centerX = waterCupLayerNode.centerX - 10;
+    notepadNode.centerX = this.playAreaCenterX;
 
-      tableNode.y = waterCupLayerNode.bottom - 30;
+    ManualConstraint.create( this, [ waterCupLayerNode ], waterCupLayerProxy => {
+      waterCupLayerProxy.centerX = this.playAreaCenterX;
+      predictMeanSlider.x = waterCupLayerProxy.x - 12.5;
+      tableNode.centerX = waterCupLayerProxy.centerX - 10;
+
+      tableNode.y = waterCupLayerProxy.bottom - 30;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
       // order and they all do the same thing so this highlight indicates that there will only be one stop in the
       // traversal order.
-      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value ).map( pipe => Shape.bounds( pipe.globalBounds ) );
-      const transformedPipeShapeBounds = Shape.union( pipeBoundsShapes ).transformed( pipeNodes[ 0 ].getGlobalToLocalMatrix() );
+      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value )
+        .map( pipe => Shape.bounds( pipe.globalBounds ) );
 
       // Focus highlight is set on the valveNode because it is what receives focus (not the PipeNode).
-      pipeNodes[ 0 ].focusHighlight = transformedPipeShapeBounds;
-    };
+      pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes )
+        .transformed( pipeNodes[ 0 ].getGlobalToLocalMatrix() );
+    } );
 
     model.numberOfCupsProperty.link( () => {
       this.interruptSubtreeInput();
-      centerWaterCupLayerNode();
     } );
 
     this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controls.controlsPDOMOrder );
