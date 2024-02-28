@@ -137,7 +137,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       waterCupLayerNode.centerX = this.playAreaCenterX;
       predictMeanSlider.x = waterCupLayerNode.x - 12.5;
       tableNode.centerX = waterCupLayerNode.centerX - 10;
-      notepadNode.centerX = this.playAreaCenterX;
+
       tableNode.y = waterCupLayerNode.bottom - 30;
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
@@ -151,8 +151,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     };
 
     model.numberOfCupsProperty.link( () => {
+      this.interruptSubtreeInput();
       centerWaterCupLayerNode();
-      waterCupLayerNode.interruptSubtreeInput();
     } );
 
     this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controls.controlsPDOMOrder );

@@ -11,7 +11,6 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import { Node, Path, RadialGradient, Rectangle } from '../../../../scenery/js/imports.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -20,7 +19,7 @@ const LINE_WIDTH = 1;
 
 export default class ValveNode extends Node {
 
-  public constructor( parentCenter: Vector2, rotationProperty: Property<number>, tandem: Tandem ) {
+  public constructor( parentCenter: Vector2, rotationProperty: Property<number> ) {
     // Valve drawing
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, MeanShareAndBalanceConstants.VALVE_RADIUS + 2 )
       .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
@@ -54,10 +53,7 @@ export default class ValveNode extends Node {
       children: [ innerPipe, outerValve, innerValve ],
       cursor: 'pointer',
       x: parentCenter.x,
-      y: parentCenter.y,
-
-      // phet-io
-      tandem: tandem.createTandem( 'valveNode' )
+      y: parentCenter.y
     } );
 
     rotationProperty.link( rotation => {

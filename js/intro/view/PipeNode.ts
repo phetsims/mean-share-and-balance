@@ -71,7 +71,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     pipeRectangle.clipArea = createPipeClipArea( pipeRectangle.localBounds, MeanShareAndBalanceConstants.VALVE_RADIUS );
 
-    const valveNode = new ValveNode( pipeCenter, pipe.rotationProperty, options.tandem );
+    const valveNode = new ValveNode( pipeCenter, pipe.rotationProperty );
 
     // Set pointer areas for valveNode
     valveNode.mouseArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );

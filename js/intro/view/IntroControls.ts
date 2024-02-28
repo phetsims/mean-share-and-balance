@@ -10,7 +10,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { VBox, VBoxOptions, Node } from '../../../../scenery/js/imports.js';
+import { Node, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
@@ -27,6 +27,7 @@ type IntroControlPanelOptions = StrictOmit<VBoxOptions, 'children'> & PickRequir
 export default class IntroControls extends VBox {
 
   public readonly controlsPDOMOrder: Node[];
+
   public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
                       predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>, arePipesOpenProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
@@ -47,7 +48,7 @@ export default class IntroControls extends VBox {
       MeanShareAndBalanceStrings.numberOfCupsStringProperty,
       {
         minContentHeight: 140,
-        tandem: options.tandem.createTandem( 'numberSpinnerVBox' )
+        tandem: options.tandem
       } );
 
     numberOfCupsProperty.link( () => {

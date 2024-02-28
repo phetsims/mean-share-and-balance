@@ -27,9 +27,9 @@ export default class PipeSwitch extends ABSwitch<boolean> {
       tandem: tandem
     };
 
-    const closedValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( 0 ), tandem.createTandem( 'closedValveIcon' ) );
+    const closedValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( 0 ) );
 
-    const openValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ), tandem.createTandem( 'openValveIcon' ) );
+    const openValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ) );
 
     const combinedOptions = combineOptions<ABSwitchOptions>( { align: 'top', justify: 'left' }, options );
 

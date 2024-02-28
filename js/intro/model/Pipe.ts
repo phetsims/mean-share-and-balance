@@ -16,9 +16,7 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
+import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
@@ -26,40 +24,37 @@ type SelfOptions = {
   isActive?: boolean;
 };
 
-type StateObject = {
-  position: Vector2;
-};
+export type PipeOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export type PipeOptions =
-  SelfOptions
-  & StrictOmit<PhetioObjectOptions, 'phetioType'>
-  & PickRequired<PhetioObjectOptions, 'tandem'>;
-
-export default class Pipe extends PhetioObject {
+export default class Pipe {
 
   // Whether pipe is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
+
   // Property tracks if the pipe's valve is in a clicked state.
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
+
   // The x and y positions of the pipe in the view.
   public readonly position: Vector2;
+
   // Holds the valve node rotation value. Closed is 0, and open is Pi/2
   public readonly rotationProperty: Property<number>;
   public readonly arePipesOpenProperty: Property<boolean>;
 
   public constructor( arePipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
-      isActive: false,
-
-      // phet-io
-      phetioType: Pipe.PipeIO
+      isActive: false
     }, providedOptions );
 
-    super( options );
-
-    this.rotationProperty = new NumberProperty( 0 );
+    this.rotationProperty = new NumberProperty( 0, {
+      tandem: options.tandem.createTandem( 'rotationProperty' ),
+      phetioReadOnly: true
+    } );
     this.arePipesOpenProperty = arePipesOpenProperty;
-    this.isActiveProperty = new BooleanProperty( options.isActive );
+    this.isActiveProperty = new BooleanProperty( options.isActive, {
+      tandem: options.tandem.createTandem( 'isActiveProperty' ),
+      phetioReadOnly: true
+    } );
 
     this.position = options.position;
   }
@@ -79,18 +74,6 @@ export default class Pipe extends PhetioObject {
     this.rotationProperty.value = rotationThreshold <= dt ? targetRotation : proposedRotation;
   }
 
-  public static readonly PipeIO = new IOType<Pipe>( 'PipeIO', {
-    valueType: Pipe,
-    toStateObject: ( pipe: Pipe ) => ( {
-      position: pipe.position
-    } ),
-    stateObjectToCreateElementArguments: ( stateObject: StateObject ) => {
-      return [ stateObject.position ];
-    },
-    stateSchema: {
-      position: Vector2.Vector2IO
-    }
-  } );
 }
 
 
