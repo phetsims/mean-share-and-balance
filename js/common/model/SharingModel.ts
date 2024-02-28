@@ -174,7 +174,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   public syncData(): void {
     this.plates.forEach( plate => {
       this.getSnacksAssignedToPlate( plate ).forEach( ( snack, i ) => {
-        snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
+        snack.isActiveProperty.value = i < plate.snackNumberProperty.value && plate.isActiveProperty.value;
       } );
       if ( plate.isActiveProperty.value ) {
         this.reorganizeSnacks( plate );
