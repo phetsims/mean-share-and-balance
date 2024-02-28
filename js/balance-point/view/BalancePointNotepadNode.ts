@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * The BalancePointNotepadNode adds a mean readout and check button to the notepad node for the balance point screen.

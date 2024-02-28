@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 
 /**
  * The Balance Beam in the notepad representation plots data points along the x-axis and allows users to move the balance
