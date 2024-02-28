@@ -170,14 +170,11 @@ export default class SharingModel<T extends Snack> implements TModel {
   /**
    * Propagate the ground truth values (at the bottom of the screen, on the table) to the snacks that are being shown
    * on the plates in the notepad.
-   *
-   * TODO: JB lets check in to make sure this is actually necessary. https://github.com/phetsims/mean-share-and-balance/issues/148
    */
-  public syncData( handleSnackSyncing =
-                     ( plate: Plate, index: number ) => index < plate.snackNumberProperty.value ): void {
+  public syncData(): void {
     this.plates.forEach( plate => {
       this.getSnacksAssignedToPlate( plate ).forEach( ( snack, i ) => {
-        snack.isActiveProperty.value = handleSnackSyncing( plate, i );
+        snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
       } );
       if ( plate.isActiveProperty.value ) {
         this.reorganizeSnacks( plate );

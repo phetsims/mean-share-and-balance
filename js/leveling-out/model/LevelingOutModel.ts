@@ -334,11 +334,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     return this.plates.filter( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length > 0 );
   }
 
-  public override syncData(): void {
-    super.syncData( ( plate, index ) =>
-      index < plate.snackNumberProperty.value && plate.isActiveProperty.value );
-  }
-
   public override reset(): void {
     super.reset();
     this.groupSortInteractionModel.reset();
