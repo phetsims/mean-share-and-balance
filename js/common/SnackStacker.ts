@@ -16,8 +16,8 @@ import LevelingOutModel from '../leveling-out/model/LevelingOutModel.js';
 import FairShareModel from '../fair-share/model/FairShareModel.js';
 
 // constants
-const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords
-const APPLE_X_MARGIN = 3; // in screen coords
+const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined
+const HORIZONTAL_SPACE_BETWEEN_APPLES = 5; // in screen coords, empirically determined
 
 class SnackStacker {
 
@@ -43,7 +43,7 @@ class SnackStacker {
 
   /**
    * Position the graphical node that is being used to depict all or part of a snack.  This method is used to position
-   * the nodes that are *not* represented as images in the view.
+   * the nodes that are *not* represented as images in the view.  The position is set in
    */
   public static setSnackGraphicPosition( snackNode: Path, snackType: SnackType, positionInStack: number ): void {
 
@@ -52,20 +52,19 @@ class SnackStacker {
     if ( snackType === 'candyBars' ) {
 
       // The candy bar graphic Nodes are stacked in a single column with a little space between each.
-      snackNode.centerX = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH / 2;
+      snackNode.centerX = LevelingOutModel.CANDY_BAR_WIDTH / 2;
       snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
-                             MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT / 2 +
-                             positionInStack * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+                             LevelingOutModel.CANDY_BAR_HEIGHT / 2 +
+                             positionInStack * ( LevelingOutModel.CANDY_BAR_HEIGHT +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     }
     else {
 
       // The apples are stacked in two columns with some space between them in both the x and y dimensions.
-      snackNode.left = positionInStack % 2 === 0 ?
-                       APPLE_X_MARGIN :
-        // TODO: It feels weird to me to use the candy bar width here.  There should be a constant for the plate width.  See https://github.com/phetsims/mean-share-and-balance/issues/149.
-                       MeanShareAndBalanceConstants.CANDY_BAR_WIDTH - snackNode.width - APPLE_X_MARGIN;
+      snackNode.centerX = positionInStack % 2 === 0 ?
+                          Plate.WIDTH / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
+                          Plate.WIDTH / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
       snackNode.bottom = -Math.floor( positionInStack / 2 ) * ( snackNode.width + VERTICAL_SPACE_BETWEEN_APPLES ) -
                          VERTICAL_SPACE_BETWEEN_APPLES;
     }
@@ -81,9 +80,9 @@ class SnackStacker {
   public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
     const yPosition = LevelingOutModel.NOTEPAD_PLATE_CENTER_Y -
                       MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
-                      ( positionInStack + 1 ) * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+                      ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
                                                   MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING );
-    return new Vector2( plate.xPosition, yPosition );
+    return new Vector2( plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2, yPosition );
   }
 
   /**
@@ -95,10 +94,10 @@ class SnackStacker {
    * @returns - a 2D vector in coordinate space that can be used to set the position of an apple
    */
   public static getStackedApplePosition( plate: Plate, positionInStack: number ): Vector2 {
+    const appleRadius = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS;
     const xPosition = positionInStack % 2 === 0 ?
-                      plate.xPosition + MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS + APPLE_X_MARGIN :
-                      plate.xPosition + MeanShareAndBalanceConstants.CANDY_BAR_WIDTH -
-                      MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS - APPLE_X_MARGIN;
+                      plate.xPositionProperty.value - appleRadius - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
+                      plate.xPositionProperty.value + appleRadius + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
     const yPosition = FairShareModel.NOTEPAD_PLATE_CENTER_Y -
                       MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
                       MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS -

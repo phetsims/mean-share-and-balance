@@ -25,11 +25,11 @@ export default class FairShareNotepadPlateNode extends Line {
       ( isActive, notepadMode ) => isActive && ( notepadMode !== NotepadMode.COLLECT )
     );
 
-    super( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
+    super( 0, 0, Plate.WIDTH, 0, {
       stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN,
       lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH,
       visibleProperty: plateVisibleProperty,
-      x: plate.xPosition,
+      centerX: plate.xPositionProperty.value,
       centerY: FairShareModel.NOTEPAD_PLATE_CENTER_Y
     } );
   }

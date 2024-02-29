@@ -32,6 +32,7 @@ export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions
 
 // constants
 const MAX_PLATES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
+const INTER_PLATE_DISTANCE = 55; // in screen coords
 
 export default class SharingModel<T extends Snack> implements TModel {
 
@@ -87,10 +88,10 @@ export default class SharingModel<T extends Snack> implements TModel {
     // Create the set of plates that will hold the snacks.
     this.plates = [];
     _.times( MAX_PLATES, plateIndex => {
-      const x = plateIndex * MeanShareAndBalanceConstants.TABLE_PLATE_WIDTH;
+      const initialXPosition = plateIndex * ( Plate.WIDTH + INTER_PLATE_DISTANCE );
       const plate = new Plate( {
-        xPosition: x,
-        isActive: plateIndex < this.numberOfPlatesProperty.value,
+        initialXPosition: initialXPosition,
+        isInitiallyActive: plateIndex < this.numberOfPlatesProperty.value,
         linePlacement: plateIndex,
         startingNumberOfSnacks: plateIndex === 0 ? options.numberOfSnacksOnFirstPlate : 1,
 
@@ -108,8 +109,8 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.totalSnacksProperty = DerivedProperty.deriveAny(
       totalSnacksPropertyDependencies,
       () => {
-        const candyBarAmounts = this.getActivePlates().map( plate => plate.snackNumberProperty.value );
-        return _.sum( candyBarAmounts );
+        const snackAmounts = this.getActivePlates().map( plate => plate.snackNumberProperty.value );
+        return _.sum( snackAmounts );
       },
       {
         tandem: options.tandem.createTandem( 'totalSnacksProperty' ),
@@ -117,7 +118,7 @@ export default class SharingModel<T extends Snack> implements TModel {
       }
     );
 
-    // Calculates the mean based on the "ground-truth" candyBars on the table.
+    // Calculates the mean based on the "ground-truth" snacks on the table.
     this.meanProperty = new DerivedProperty(
       [ this.totalSnacksProperty, this.numberOfPlatesProperty ],
       ( totalSnacks, numberOfPlates ) => totalSnacks / numberOfPlates, {

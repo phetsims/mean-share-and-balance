@@ -15,10 +15,11 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import { TReadOnlyProperty } from '../../../../axon/js/imports.js';
 
 type SelfOptions = {
-  isActive: boolean;
-  xPosition: number;
+  isInitiallyActive?: boolean;
+  initialXPosition?: number;
   linePlacement: number;
   startingNumberOfSnacks?: number;
 };
@@ -30,8 +31,8 @@ export default class Plate extends PhetioObject {
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
 
-  // The x position of the plate in view coordinates.
-  public readonly xPosition: number;
+  // The X position of the center of this plate relative to the center of the table.
+  public readonly xPositionProperty: TReadOnlyProperty<number>;
 
   // The number of snacks (candy bars or apples) on this plate.
   public readonly snackNumberProperty: Property<number>;
@@ -42,13 +43,15 @@ export default class Plate extends PhetioObject {
   public constructor( providedOptions: PlateOptions ) {
 
     const options = optionize<PlateOptions, SelfOptions, PhetioObjectOptions>()( {
+      isInitiallyActive: false,
+      initialXPosition: 0,
       phetioState: false,
       startingNumberOfSnacks: 1
     }, providedOptions );
 
     super( options );
 
-    this.isActiveProperty = new BooleanProperty( options.isActive, {
+    this.isActiveProperty = new BooleanProperty( options.isInitiallyActive, {
 
       // phet-io
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
@@ -56,7 +59,7 @@ export default class Plate extends PhetioObject {
       // Takes its value from LevelingOutModel.numberOfPeopleProperty, so cannot be independently adjusted.
       phetioReadOnly: true
     } );
-    this.xPosition = options.xPosition;
+    this.xPositionProperty = new NumberProperty( options.initialXPosition );
 
     this.snackNumberProperty = new NumberProperty( options.startingNumberOfSnacks, {
 
@@ -74,6 +77,9 @@ export default class Plate extends PhetioObject {
     this.isActiveProperty.reset();
     this.snackNumberProperty.reset();
   }
+
+  // Width of the plate (aka diameter) in screen coordinates.
+  public static readonly WIDTH = 45;
 }
 
 meanShareAndBalance.register( 'Plate', Plate );

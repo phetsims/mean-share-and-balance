@@ -71,7 +71,7 @@ export default class FairShareScreenView extends SharingScreenView {
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     // Update the center of the play area when the number of active plates changes.
-    model.numberOfPlatesProperty.link( this.updatePlayAreaLayerPositions.bind( this ) );
+    model.numberOfPlatesProperty.link( this.updatePlayAreaLayerPositions.bind( this, true ) );
 
     // Add the Nodes that graphically represent the apples in the notepad.
     const appleNodesParentTandem = options.tandem.createTandem( 'appleNodes' );
@@ -86,7 +86,7 @@ export default class FairShareScreenView extends SharingScreenView {
 
     model.snacksAdjusted.addListener( () => {
       if ( this.notepadSnackLayerNode.centerX !== this.playAreaCenterX ) {
-        this.updatePlayAreaLayerPositions();
+        this.updatePlayAreaLayerPositions( false );
       }
     } );
   }

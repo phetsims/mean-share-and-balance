@@ -81,7 +81,8 @@ export default class LevelingOutScreenView extends SharingScreenView {
 
       // Find the notepadPlate closest to where the candy bar was dropped.
       const closestPlate = _.minBy(
-        platesWithSpace, plate => Math.abs( plate.xPosition - candyBarNode.candyBar.positionProperty.value.x )
+        platesWithSpace,
+        plate => Math.abs( plate.xPositionProperty.value - candyBarNode.candyBar.positionProperty.value.x )
       );
       assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );
 
@@ -111,17 +112,18 @@ export default class LevelingOutScreenView extends SharingScreenView {
     } ) );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
-    const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
-    const notepadCandyBars = model.snacks.map( ( candyBar, i ) =>
+    const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
+    const notepadCandyBarNodes = model.snacks.map( ( candyBar, i ) =>
       new NotepadCandyBarNode( model, candyBar, this.notepadBoundsProperty, candyBarDropped, {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
-      ) );
+      )
+    );
     const notepadCandyBarsNode = new InteractiveHighlightingNode( {
       focusable: true,
       tagName: 'div',
-      children: notepadCandyBars,
+      children: notepadCandyBarNodes,
       excludeInvisibleChildrenFromBounds: true
     } );
     this.notepadSnackLayerNode.addChild( notepadCandyBarsNode );
@@ -142,7 +144,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
         },
         getGroupItemToSelect: () => model.getTopActiveCandyBarAssignedToPlate( model.plates[ 0 ] ),
         getNodeFromModelItem: candyBar => {
-          const node = notepadCandyBars.find( candyBarNode => candyBarNode.candyBar === candyBar );
+          const node = notepadCandyBarNodes.find( candyBarNode => candyBarNode.candyBar === candyBar );
           assert && assert( node !== undefined, 'A candyBar model must have an associated node' );
           return node!;
         },
@@ -151,13 +153,16 @@ export default class LevelingOutScreenView extends SharingScreenView {
       }
     );
 
-    model.numberOfPlatesProperty.link( () => {
-      this.updatePlayAreaLayerPositions();
+    model.numberOfPlatesProperty.lazyLink( () => {
+      this.updatePlayAreaLayerPositions( true );
     } );
+
+    // Set the initial layer positions without doing any animation.
+    this.updatePlayAreaLayerPositions( false );
   }
 
-  protected override updatePlayAreaLayerPositions(): void {
-    super.updatePlayAreaLayerPositions();
+  protected override updatePlayAreaLayerPositions( animate = false ): void {
+    super.updatePlayAreaLayerPositions( animate );
 
     // Update the bounds that constrain where the candy bars can be dragged.
     this.notepadBoundsProperty.value = this.notepadSnackLayerNode.globalToLocalBounds( this.notepad.globalBounds );

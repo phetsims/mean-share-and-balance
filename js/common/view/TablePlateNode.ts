@@ -98,7 +98,7 @@ export default class TablePlateNode extends Node {
 
     super( {
       children: [ plateAndSnacksNode, numberPicker ],
-      x: plate.xPosition,
+      centerX: plate.xPositionProperty.value,
       visibleProperty: plate.isActiveProperty
     } );
   }

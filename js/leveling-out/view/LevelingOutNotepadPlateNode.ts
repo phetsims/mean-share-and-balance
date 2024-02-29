@@ -34,8 +34,8 @@ export default class LevelingOutNotepadPlateNode extends Node {
       const candyBarOutlineNode = new Rectangle(
         0,
         0,
-        MeanShareAndBalanceConstants.CANDY_BAR_WIDTH - STROKE_WIDTH,
-        MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT - STROKE_WIDTH,
+        LevelingOutModel.CANDY_BAR_WIDTH - STROKE_WIDTH,
+        LevelingOutModel.CANDY_BAR_HEIGHT - STROKE_WIDTH,
         {
           stroke: MeanShareAndBalanceColors.candyBarColorProperty,
           lineDash: [ 1, 2 ]
@@ -45,13 +45,13 @@ export default class LevelingOutNotepadPlateNode extends Node {
       candyBarOutlineNodes.push( candyBarOutlineNode );
     } );
 
-    const plateNode = new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
+    const plateNode = new Line( 0, 0, Plate.WIDTH, 0, {
       stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN,
       lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH
     } );
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
-      x: plate.xPosition,
+      centerX: plate.xPositionProperty.value,
       bottom: LevelingOutModel.NOTEPAD_PLATE_CENTER_Y + MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2,
       visibleProperty: plate.isActiveProperty,
       excludeInvisibleChildrenFromBounds: false,

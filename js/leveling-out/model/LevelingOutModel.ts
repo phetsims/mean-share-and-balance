@@ -338,6 +338,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   }
 
   public static readonly NOTEPAD_PLATE_CENTER_Y = 330;
+  public static readonly CANDY_BAR_WIDTH = Plate.WIDTH;
+  public static readonly CANDY_BAR_HEIGHT = 12;
 }
 
 meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );

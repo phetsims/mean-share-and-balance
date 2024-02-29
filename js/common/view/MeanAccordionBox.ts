@@ -25,6 +25,8 @@ import { Shape } from '../../../../kite/js/imports.js';
 import SnackStacker from '../SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import { Multilink } from '../../../../axon/js/imports.js';
+import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
+import Plate from '../model/Plate.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -35,10 +37,7 @@ export type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOpt
 const ACCORDION_BOX_MARGIN = 8;
 
 // just for the dimensions
-const CANDY_BAR_BOUNDS = new Bounds2( 0, 0,
-  MeanShareAndBalanceConstants.CANDY_BAR_WIDTH,
-  MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT
-);
+const CANDY_BAR_BOUNDS = new Bounds2( 0, 0, LevelingOutModel.CANDY_BAR_WIDTH, LevelingOutModel.CANDY_BAR_HEIGHT );
 
 export default class MeanAccordionBox extends AccordionBox {
 
@@ -62,7 +61,7 @@ export default class MeanAccordionBox extends AccordionBox {
         const remainder = mean - wholePart;
 
         // Add the plate first, which is just a line.
-        const plateNode = new Line( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, 0, {
+        const plateNode = new Line( 0, 0, Plate.WIDTH, 0, {
           stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN,
           lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH
         } );

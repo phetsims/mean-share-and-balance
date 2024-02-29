@@ -46,7 +46,11 @@ type SelfOptions = {
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
+// constants
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
+
+// Offset for positioning individual people relative to the plate with which each is associated, in screen coordinates.
+const PEOPLE_LAYER_OFFSET = -40;
 
 export default class SharingScreenView extends MeanShareAndBalanceScreenView {
 
@@ -202,7 +206,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
    * number of people shown, that requires the nodes to be shifted such that things stay centered on the table and/or
    * the notepad.
    */
-  protected updatePlayAreaLayerPositions(): void {
+  protected updatePlayAreaLayerPositions( animate = false ): void {
 
     // If there is an animation in progress, stop it.
     if ( this.layerPositionAnimation ) {
@@ -212,36 +216,45 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     const currentCenterX = this.tableSnackLayerNode.centerX;
     const targetCenterX = this.playAreaCenterX;
 
-    // Create a new animation to update the layer positions.
-    this.layerPositionAnimation = new Animation( {
-      from: currentCenterX,
-      to: targetCenterX,
-      setValue: xPosition => {
+    if ( animate ) {
 
-        // Set the positions of the layers.
-        this.tableSnackLayerNode.centerX = xPosition;
+      // Create a new animation to update the layer positions.
+      this.layerPositionAnimation = new Animation( {
+        from: currentCenterX,
+        to: targetCenterX,
+        setValue: xPosition => {
 
-        if ( this.notepadSnackLayerNode.centerX !== this.playAreaCenterX ) {
-          this.notepadSnackLayerNode.centerX = xPosition;
-        }
+          // Set the positions of the layers.
+          this.tableSnackLayerNode.centerX = xPosition;
 
-        // We want the people to be slightly to the left of their snacks, hence the offset.
-        this.peopleLayerNode.centerX = xPosition - 40;
-      },
-      duration: 0.5,
-      easing: Easing.CUBIC_OUT
-    } );
+          if ( this.notepadSnackLayerNode.centerX !== this.playAreaCenterX ) {
+            this.notepadSnackLayerNode.centerX = xPosition;
+          }
 
-    const finish = () => {
-      this.layerPositionAnimation = null;
-    };
+          this.peopleLayerNode.centerX = xPosition - PEOPLE_LAYER_OFFSET;
+        },
+        duration: 0.5,
+        easing: Easing.CUBIC_OUT
+      } );
 
-    // handlers for when the animation completes
-    this.layerPositionAnimation.finishEmitter.addListener( finish );
-    this.layerPositionAnimation.stopEmitter.addListener( finish );
+      const finish = () => {
+        this.layerPositionAnimation = null;
+      };
 
-    // Kick off the animation.
-    this.layerPositionAnimation.start();
+      // handlers for when the animation completes
+      this.layerPositionAnimation.finishEmitter.addListener( finish );
+      this.layerPositionAnimation.stopEmitter.addListener( finish );
+
+      // Kick off the animation.
+      this.layerPositionAnimation.start();
+    }
+    else {
+
+      // No animation, just go right to the new positions.
+      this.tableSnackLayerNode.centerX = targetCenterX;
+      this.notepadSnackLayerNode.centerX = targetCenterX;
+      this.peopleLayerNode.centerX = targetCenterX - PEOPLE_LAYER_OFFSET;
+    }
   }
 }
 

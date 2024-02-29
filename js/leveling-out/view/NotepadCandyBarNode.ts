@@ -11,7 +11,6 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { DragListener, InteractiveHighlighting, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -36,7 +35,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,
                       providedOptions: NotepadCandyBarNodeOptions ) {
 
-    const candyBarRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT, {
+    const candyBarRectangle = new Rectangle( 0, 0, LevelingOutModel.CANDY_BAR_WIDTH, LevelingOutModel.CANDY_BAR_HEIGHT, {
       fill: MeanShareAndBalanceColors.candyBarColorProperty,
       stroke: 'black'
     } );
@@ -79,7 +78,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       },
 
       // The origin of the candy bar is the top left, so we must erode just on the right and bottom edge to keep
-      // the candy bar fully in the paper region
+      // the candy bar fully in the paper region.
       dragBoundsProperty: new DerivedProperty( [ notebookPaperBoundsProperty ], bounds =>
         new Bounds2( bounds.minX, bounds.minY, bounds.maxX - candyBarRectangle.width, bounds.maxY - candyBarRectangle.height )
       ),
