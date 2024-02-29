@@ -99,7 +99,9 @@ export default class BalancePointNotepadNode extends NotepadNode {
     this.addChild( alignBox );
 
     const balanceBeamNode = new BalanceBeamNode( playAreaNumberLineNode,
-      this.paperStackBounds, areTickMarksVisibleProperty );
+      this.paperStackBounds, sceneModel.fulcrumValueProperty, areTickMarksVisibleProperty, {
+      tandem: options.tandem.createTandem( 'balanceBeamNode' )
+      } );
     this.addChild( balanceBeamNode );
   }
 }

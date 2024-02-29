@@ -8,27 +8,40 @@
  *
  */
 
-import { Line, MatrixBetweenProperty, Node } from '../../../../scenery/js/imports.js';
+import { Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { TReadOnlyProperty } from '../../../../axon/js/imports.js';
+import { Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import FulcrumSlider from './FulcrumSlider.js';
+import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import { optionize } from '../../../../phet-core/js/imports.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
-// TODO: we will probably want to adjust the vertical transform once we start adding in data points,
-//  for now this is only handling x-axis transforms, https://github.com/phetsims/mean-share-and-balance/issues/152
-const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createRectangleInvertedYMapping(
-  new Bounds2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.max, 1 ),
-  new Bounds2( 0, 0, MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 1 )
+const BALANCE_BEAM_GROUND_Y = 220;
+const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
+
+export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+  new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
+  new Vector2( 0, BALANCE_BEAM_GROUND_Y ),
+  TRANSFORM_SCALE
 );
+
+type BalanceBeamNodeOptions = EmptySelfOptions & WithRequired<NodeOptions, 'tandem'>;
 export default class BalanceBeamNode extends Node {
 
   public constructor(
     playAreaNumberLineNode: NumberLineNode,
     paperStackBounds: Bounds2,
-    areTickMarksVisibleProperty: TReadOnlyProperty<boolean>
+    fulcrumValueProperty: Property<number>,
+    areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
+    providedOptions: BalanceBeamNodeOptions
   ) {
+
+    const options = optionize<BalanceBeamNodeOptions, EmptySelfOptions, NodeOptions>()( {}, providedOptions );
 
     const notepadNumberLineNode = new NumberLineNode( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH,
       MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, {
@@ -42,12 +55,20 @@ export default class BalanceBeamNode extends Node {
 
     const lineStart = BALANCE_BEAM_TRANSFORM.modelToViewX( -1 );
     const lineEnd = BALANCE_BEAM_TRANSFORM.modelToViewX( 11 );
-    const groundLine = new Line( lineStart, notepadNumberLineNode.top - 5, lineEnd, notepadNumberLineNode.top - 5, {
+    const groundY = BALANCE_BEAM_TRANSFORM.modelToViewY( 0 );
+    const groundLine = new Line( lineStart, groundY, lineEnd, groundY, {
       stroke: 'grey'
     } );
-    super( {
-      children: [ notepadNumberLineNode, groundLine ]
+
+    const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, {
+      bottom: groundY,
+      tandem: options.tandem?.createTandem( 'fulcrumSlider' )
     } );
+
+    const superOptions = combineOptions<NodeOptions>( {
+      children: [ notepadNumberLineNode, groundLine, fulcrumSlider ]
+    }, options );
+    super( superOptions );
 
     // Align with the play are number line node, based on the tick mark values
     const matrixBetweenProperty = new MatrixBetweenProperty( playAreaNumberLineNode.tickMarkSet, notepadNumberLineNode.tickMarkSet );

@@ -27,6 +27,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
   public readonly targetNumberOfBallsProperty: Property<number>;
+  public readonly fulcrumValueProperty: Property<number>;
 
   public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, options: BalancePointSceneModelOptions ) {
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
@@ -92,6 +93,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         this.numberOfQueuedKicksProperty.value -= numberOfBallsToRemoveFromQueue;
         _.times( numberOfBallsToRemoveFromField, () => this.regressLine() );
       }
+    } );
+
+    this.fulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
+      tandem: options.tandem.createTandem( 'fulcrumValueProperty' )
     } );
   }
 
