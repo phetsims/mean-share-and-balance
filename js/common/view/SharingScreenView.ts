@@ -49,7 +49,7 @@ export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenVi
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
 
 // Offset for positioning individual people relative to the plate with which each is associated, in screen coordinates.
-const PEOPLE_LAYER_X_OFFSET = -60;
+const PEOPLE_LAYER_X_OFFSET = -70;
 
 export default class SharingScreenView extends MeanShareAndBalanceScreenView {
 
