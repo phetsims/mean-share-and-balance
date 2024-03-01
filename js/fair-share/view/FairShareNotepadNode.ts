@@ -59,12 +59,10 @@ export default class FairShareNotepadNode extends NotepadNode {
       {
         stroke: 'black',
         cornerRadius: 8,
+        centerX: this.paperStackBounds.centerX,
 
-        // tweaked a bit due to notebook edge
-        centerX: this.bounds.maxX - NotepadNode.PAPER_PAGE_SIZE.width / 2 - 5,
-
-        // tweaked a bit due to where the collection is positioned on the page
-        centerY: this.bounds.height / 2 - 5,
+        // tweaked a bit due to be perfectly centered around the collection
+        centerY: this.paperStackBounds.centerY + 5,
 
         visibleProperty: collectionAreaVisibleProperty
       }

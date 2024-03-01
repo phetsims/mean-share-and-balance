@@ -34,6 +34,7 @@ export type NotepadNodeOptions = SelfOptions &
 
 const NOTEPAD_RING_BOTTOM = 33.5;
 const PAPER_PAGE_SIZE = new Dimension2( 720, 240 );
+const LABEL_MARGIN = 15;
 
 export default class NotepadNode extends Node {
 
@@ -87,8 +88,8 @@ export default class NotepadNode extends Node {
       } );
 
       const readoutAlignBox = new AlignBox( readoutText, {
-        alignBounds: this.paperStackBounds,
-        xAlign: 'center',
+        alignBounds: this.paperStackBounds.dilateX( -LABEL_MARGIN ),
+        xAlign: 'right',
         yAlign: 'top',
         yMargin: NOTEPAD_RING_BOTTOM + 5
       } );
