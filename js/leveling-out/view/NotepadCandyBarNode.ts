@@ -20,6 +20,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import CandyBar from '../model/CandyBar.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -31,6 +32,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
   public constructor( model: Pick<LevelingOutModel, 'reorganizeSnacks'>,
                       candyBar: CandyBar,
+                      modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,
                       providedOptions: NotepadCandyBarNodeOptions ) {
@@ -72,6 +74,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
     this.candyBar = candyBar;
 
     this.dragListener = new DragListener( {
+      transform: modelViewTransform,
       positionProperty: this.candyBar.positionProperty,
       offsetPosition: ( viewPoint, dragListener ) => {
         return dragListener.pointer.isTouchLike() ? new Vector2( 6, -30 ) : new Vector2( 6, -2 );
@@ -95,7 +98,9 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     this.addInputListener( this.dragListener );
 
-    this.candyBar.positionProperty.link( position => this.setTranslation( position ) );
+    this.candyBar.positionProperty.link( position =>
+      this.setTranslation( modelViewTransform.modelToViewPosition( position ) )
+    );
   }
 }
 

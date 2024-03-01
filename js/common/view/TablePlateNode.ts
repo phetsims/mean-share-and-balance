@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A snackType of a plate with a stack of snacks on it.  The number of snacks that are stacked on the
- * plate can vary.
+ * TablePlateNode is a graphical representation of a plate upon which items - generally called "snacks" in this sim -
+ * can be stacked.  This also includes a number spinner that controls the number of items stacked on the plate.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
@@ -22,6 +22,7 @@ import plate_png from '../../../images/plate_png.js';
 import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
 import candyBar_svg from '../../../images/candyBar_svg.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -35,15 +36,15 @@ const CANDY_BAR_IMAGE_HEIGHT = 25; // in screen coords
 
 export default class TablePlateNode extends Node {
 
-  public constructor( plate: Plate, providedOptions: PersonNodeOptions ) {
+  public constructor( plate: Plate, tableCenter: Vector2, providedOptions: PersonNodeOptions ) {
 
     const options = providedOptions;
 
     const plateImage = new Image( plate_png, {
-      scale: 0.1,
-      centerY: MeanShareAndBalanceConstants.TABLE_PLATE_CENTER_Y
+      maxWidth: Plate.WIDTH * 1.3 // Tweaked a little for a better look, adjust as needed.
     } );
 
+    // Create the number picker and position it relative to the plate image.
     const numberPickerRange = new Range(
       MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE,
       MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
@@ -52,7 +53,7 @@ export default class TablePlateNode extends Node {
       plate.snackNumberProperty,
       new Property( numberPickerRange ),
       {
-        centerTop: new Vector2( plateImage.centerBottom.x, MeanShareAndBalanceConstants.TABLE_PLATE_CENTER_Y + 20 ),
+        centerTop: new Vector2( plateImage.centerBottom.x, 30 ),
         tandem: options.tandem.createTandem( 'numberPicker' )
       }
     );
@@ -100,6 +101,17 @@ export default class TablePlateNode extends Node {
       children: [ plateAndSnacksNode, numberPicker ],
       centerX: plate.xPositionProperty.value,
       visibleProperty: plate.isActiveProperty
+    } );
+
+    // Create the model-view transform for positioning the plates on the table.
+    const modelToTableTopTransform = ModelViewTransform2.createOffsetScaleMapping( tableCenter, 1 );
+
+    // Set they Y position, which does not change after construction.
+    this.y = modelToTableTopTransform.transformY( 0 );
+
+    // Position this node as the plate's x position changes.
+    plate.xPositionProperty.link( xPosition => {
+      this.centerX = modelToTableTopTransform.transformX( xPosition );
     } );
   }
 }

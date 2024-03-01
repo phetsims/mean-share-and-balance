@@ -19,6 +19,7 @@ import Plate from '../../common/model/Plate.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -27,7 +28,7 @@ const STROKE_WIDTH = 1;
 
 export default class LevelingOutNotepadPlateNode extends Node {
 
-  public constructor( plate: Plate, providedOptions: NotepadPlateNodeOptions ) {
+  public constructor( plate: Plate, mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
 
     const candyBarOutlineNodes: Node[] = [];
     _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, i => {
@@ -51,8 +52,6 @@ export default class LevelingOutNotepadPlateNode extends Node {
     } );
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
-      centerX: plate.xPositionProperty.value,
-      bottom: LevelingOutModel.NOTEPAD_PLATE_CENTER_Y + MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2,
       visibleProperty: plate.isActiveProperty,
       excludeInvisibleChildrenFromBounds: false,
       children: [ ...candyBarOutlineNodes, plateNode ]
@@ -65,6 +64,14 @@ export default class LevelingOutNotepadPlateNode extends Node {
       candyBarOutlineNodes.forEach( ( node, index ) => {
         node.visible = numberOfSnacksOnPlate > index;
       } );
+    } );
+
+    // Set the Y position once.  It shouldn't change after construction.
+    this.bottom = mvt.transformY( 0 );
+
+    // Set position based on the plate's position.
+    plate.xPositionProperty.link( xPosition => {
+      this.centerX = mvt.transformX( xPosition );
     } );
   }
 }

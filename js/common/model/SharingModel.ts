@@ -32,7 +32,7 @@ export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions
 
 // constants
 const MAX_PLATES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
-const INTER_PLATE_DISTANCE = 55; // in screen coords
+const INTER_PLATE_DISTANCE = 100; // distance between plate centers, in screen coords
 
 export default class SharingModel<T extends Snack> implements TModel {
 
@@ -88,7 +88,7 @@ export default class SharingModel<T extends Snack> implements TModel {
     // Create the set of plates that will hold the snacks.
     this.plates = [];
     _.times( MAX_PLATES, plateIndex => {
-      const initialXPosition = plateIndex * ( Plate.WIDTH + INTER_PLATE_DISTANCE );
+      const initialXPosition = plateIndex * INTER_PLATE_DISTANCE;
       const plate = new Plate( {
         initialXPosition: initialXPosition,
         isInitiallyActive: plateIndex < this.numberOfPlatesProperty.value,
@@ -127,9 +127,20 @@ export default class SharingModel<T extends Snack> implements TModel {
       }
     );
 
+    // Monitor the number of active plates/people and update the positions as things come and go.
     this.numberOfPlatesProperty.link( numberOfPlates => {
-      this.plates.forEach( ( tablePlate, i ) => {
-        tablePlate.isActiveProperty.value = i < numberOfPlates;
+      const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
+      const leftPlateCenterX = -( totalSpan / 2 );
+      this.plates.forEach( ( plate, i ) => {
+        plate.isActiveProperty.value = i < numberOfPlates;
+        const previousXPosition = plate.xPositionProperty.value;
+        plate.xPositionProperty.value = leftPlateCenterX + ( i * INTER_PLATE_DISTANCE );
+        const deltaX = plate.xPositionProperty.value - previousXPosition;
+
+        // Also move any snacks that are currently on this plate.
+        this.getSnacksAssignedToPlate( plate ).forEach( snack => {
+          snack.positionProperty.value = snack.positionProperty.value.plusXY( deltaX, 0 );
+        } );
       } );
     } );
   }

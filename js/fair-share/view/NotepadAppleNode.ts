@@ -16,13 +16,16 @@ import { Shape } from '../../../../kite/js/imports.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadAppleNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem' | 'visibleProperty'>;
 
 export default class NotepadAppleNode extends Node {
 
-  public constructor( apple: Apple, providedOptions: NotepadAppleNodeOptions ) {
+  public constructor( apple: Apple,
+                      modelViewTransform: ModelViewTransform2,
+                      providedOptions: NotepadAppleNodeOptions ) {
 
     // Add a dotted outline for the full circle.  This is only shown for fractional apples.
     const outlineCircle = new Circle( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, {
@@ -63,8 +66,8 @@ export default class NotepadAppleNode extends Node {
       }
     } );
 
-    // Update this Node's position when the model element moves.  The center of the
-    apple.positionProperty.link( position => this.setTranslation( position ) );
+    // Update this Node's position when the model element moves.
+    apple.positionProperty.link( position => this.setTranslation( modelViewTransform.modelToViewPosition( position ) ) );
 
     // In ?dev mode, show the index of the apple to help understand how things are organized and how they redistribute.
     if ( phet.chipper.queryParameters.dev ) {

@@ -13,7 +13,6 @@ import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import LevelingOutModel from '../leveling-out/model/LevelingOutModel.js';
-import FairShareModel from '../fair-share/model/FairShareModel.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined
@@ -78,8 +77,7 @@ class SnackStacker {
    * @returns - a 2D vector in coordinate space that can be used to set the position of a candy
    */
   public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
-    const yPosition = LevelingOutModel.NOTEPAD_PLATE_CENTER_Y -
-                      MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
+    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
                       ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
                                                   MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING );
     return new Vector2( plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2, yPosition );
@@ -98,8 +96,7 @@ class SnackStacker {
     const xPosition = positionInStack % 2 === 0 ?
                       plate.xPositionProperty.value - appleRadius - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
                       plate.xPositionProperty.value + appleRadius + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
-    const yPosition = FairShareModel.NOTEPAD_PLATE_CENTER_Y -
-                      MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
+    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
                       MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS -
                       VERTICAL_SPACE_BETWEEN_APPLES -
                       Math.floor( positionInStack / 2 ) *

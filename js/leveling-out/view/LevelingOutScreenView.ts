@@ -27,9 +27,10 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/group-sort/view/GroupSortInteractionView.js';
 import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
-import { Shape } from '../../../../kite/js/imports.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Vector2 } from '../../../../dot/js/imports.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -68,12 +69,13 @@ export default class LevelingOutScreenView extends SharingScreenView {
       options
     );
 
-    // To constrain the dragging of candy bar nodes in the upper area, we need to track the bounds of the paper. But
-    // since the snackLayerNode changes its horizontal position to keep things centered for varying numbers of people,
-    // we must coordinate the drag bounds when that changes.  This is in the coordinate frame of the snackLayerNode.
-    // This initial value is not in the correct coordinate frame, but it is specified correctly before the end of the
-    // constructor.
-    this.notepadBoundsProperty = new Property( this.notepad.bounds );
+    // Calculate the bounds for constraining the dragging of the candy bars in the notepad.
+    this.notepadBoundsProperty = new Property( new Bounds2(
+      -this.notepad.bounds.width / 2,
+      -this.notepad.height + this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_CENTER_Y,
+      this.notepad.width / 2,
+      this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_CENTER_Y
+    ) );
 
     // function for what candy bars should do at the end of their drag
     const candyBarDropped = ( candyBarNode: NotepadCandyBarNode ) => {
@@ -107,14 +109,18 @@ export default class LevelingOutScreenView extends SharingScreenView {
     };
 
     // Create the nodes on the notepad that represent the plates in the model.
-    const notepadPlateNodes = model.plates.map( plate => new LevelingOutNotepadPlateNode( plate, {
+    const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
+      new Vector2( this.playAreaCenterX, LevelingOutModel.NOTEPAD_PLATE_CENTER_Y ),
+      1
+    );
+    const notepadPlateNodes = model.plates.map( plate => new LevelingOutNotepadPlateNode( plate, modelToNotepadTransform, {
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
     const notepadCandyBarNodes = model.snacks.map( ( candyBar, i ) =>
-      new NotepadCandyBarNode( model, candyBar, this.notepadBoundsProperty, candyBarDropped, {
+      new NotepadCandyBarNode( model, candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
@@ -153,33 +159,23 @@ export default class LevelingOutScreenView extends SharingScreenView {
       }
     );
 
-    model.numberOfPlatesProperty.lazyLink( () => {
-      this.updatePlayAreaLayerPositions( true );
+    this.notepadSnackLayerNode.boundsProperty.link( () => {
+      const focusRect = Shape.rect(
+        this.notepadSnackLayerNode.localBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
+
+        // Empirically determined to sit below the total readout, but have enough vertical space for 10 candy bars.
+        this.notepad.boundsProperty.value.y + 80,
+
+        this.notepadSnackLayerNode.visibleLocalBounds.width + 2 * CANDY_BAR_FOCUS_X_MARGIN,
+        this.notepad.boundsProperty.value.height - 100 // empirically determined
+      );
+      this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );
+
+      this.groupSortInteractionView.grabReleaseCueNode.centerBottom = new Vector2(
+        focusRect.bounds.centerX,
+        focusRect.bounds.minY
+      );
     } );
-
-    // Set the initial layer positions without doing any animation.
-    this.updatePlayAreaLayerPositions( false );
-  }
-
-  protected override updatePlayAreaLayerPositions( animate = false ): void {
-    super.updatePlayAreaLayerPositions( animate );
-
-    // Update the bounds that constrain where the candy bars can be dragged.
-    this.notepadBoundsProperty.value = this.notepadSnackLayerNode.globalToLocalBounds( this.notepad.globalBounds );
-
-    const focusRect = Shape.rect(
-      this.notepadSnackLayerNode.localBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
-      this.notepadBoundsProperty.value.y + 80, // empirically determined to sit below the total readout,
-      // but have enough vertical space for 10 candy bars
-      this.notepadSnackLayerNode.localBounds.width + CANDY_BAR_FOCUS_X_MARGIN,
-      this.notepadBoundsProperty.value.height - 100 // empirically determined
-    );
-    this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );
-
-    this.groupSortInteractionView.grabReleaseCueNode.centerBottom = new Vector2(
-      focusRect.bounds.centerX,
-      focusRect.bounds.minY
-    );
   }
 }
 

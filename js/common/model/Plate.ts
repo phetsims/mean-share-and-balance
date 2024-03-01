@@ -15,7 +15,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { TReadOnlyProperty } from '../../../../axon/js/imports.js';
+import { TProperty } from '../../../../axon/js/imports.js';
 
 type SelfOptions = {
   isInitiallyActive?: boolean;
@@ -32,7 +32,7 @@ export default class Plate extends PhetioObject {
   public readonly isActiveProperty: Property<boolean>;
 
   // The X position of the center of this plate relative to the center of the table.
-  public readonly xPositionProperty: TReadOnlyProperty<number>;
+  public readonly xPositionProperty: TProperty<number>;
 
   // The number of snacks (candy bars or apples) on this plate.
   public readonly snackNumberProperty: Property<number>;

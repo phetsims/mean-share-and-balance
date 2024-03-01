@@ -20,6 +20,8 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import FairShareNotepadNode from './FairShareNotepadNode.js';
 import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
 import NotepadAppleNode from './NotepadAppleNode.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Vector2 } from '../../../../dot/js/imports.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -65,29 +67,22 @@ export default class FairShareScreenView extends SharingScreenView {
     );
 
     // Create the Nodes on the notepad layer that represent the plates in the model.
+    const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
+      new Vector2( this.playAreaCenterX, FairShareModel.NOTEPAD_PLATE_CENTER_Y ),
+      1
+    );
     const notepadPlateNodes = model.plates.map(
-      plate => new FairShareNotepadPlateNode( plate, model.notepadModeProperty )
+      plate => new FairShareNotepadPlateNode( plate, modelToNotepadTransform, model.notepadModeProperty )
     );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
-
-    // Update the center of the play area when the number of active plates changes.
-    model.numberOfPlatesProperty.link( this.updatePlayAreaLayerPositions.bind( this, true ) );
 
     // Add the Nodes that graphically represent the apples in the notepad.
     const appleNodesParentTandem = options.tandem.createTandem( 'appleNodes' );
     model.snacks.forEach( ( apple, i ) => {
-      this.notepadSnackLayerNode.addChild( new NotepadAppleNode( apple, {
-            tandem: appleNodesParentTandem.createTandem( `notepadAppleNode${i + 1}` ),
-            visibleProperty: apple.isActiveProperty
-          }
-        )
-      );
-    } );
-
-    model.snacksAdjusted.addListener( () => {
-      if ( this.notepadSnackLayerNode.centerX !== this.playAreaCenterX ) {
-        this.updatePlayAreaLayerPositions( false );
-      }
+      this.notepadSnackLayerNode.addChild( new NotepadAppleNode( apple, modelToNotepadTransform, {
+        tandem: appleNodesParentTandem.createTandem( `notepadAppleNode${i + 1}` ),
+        visibleProperty: apple.isActiveProperty
+      } ) );
     } );
   }
 }
