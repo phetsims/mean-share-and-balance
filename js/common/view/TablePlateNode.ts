@@ -18,7 +18,7 @@ import Property from '../../../../axon/js/Property.js';
 import greenApple_png from '../../../images/greenApple_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import plate_png from '../../../images/plate_png.js';
+import plate_svg from '../../../images/plate_svg.js';
 import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
 import candyBar_svg from '../../../images/candyBar_svg.js';
@@ -40,7 +40,7 @@ export default class TablePlateNode extends Node {
 
     const options = providedOptions;
 
-    const plateImage = new Image( plate_png, {
+    const plateImage = new Image( plate_svg, {
       maxWidth: Plate.WIDTH * 1.3 // Tweaked a little for a better look, adjust as needed.
     } );
 
