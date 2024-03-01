@@ -52,7 +52,7 @@ class SnackStacker {
 
       // The candy bar graphic Nodes are stacked in a single column with a little space between each.
       snackNode.centerX = LevelingOutModel.CANDY_BAR_WIDTH / 2;
-      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 +
+      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
                              LevelingOutModel.CANDY_BAR_HEIGHT / 2 +
                              positionInStack * ( LevelingOutModel.CANDY_BAR_HEIGHT +
@@ -77,9 +77,9 @@ class SnackStacker {
    * @returns - a 2D vector in coordinate space that can be used to set the position of a candy
    */
   public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
-    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
-                      ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
-                                                  MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING );
+    const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
+                         ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
+                         MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     return new Vector2( plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2, yPosition );
   }
 
