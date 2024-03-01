@@ -19,7 +19,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import { Bounds2 } from '../../../../dot/js/imports.js';
+import { Bounds2, Dimension2 } from '../../../../dot/js/imports.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{
@@ -33,6 +33,7 @@ export type NotepadNodeOptions = SelfOptions &
   PickRequired<PhetioObjectOptions, 'tandem'>;
 
 const NOTEPAD_RING_BOTTOM = 33.5;
+const PAPER_PAGE_SIZE = new Dimension2( 720, 240 );
 
 export default class NotepadNode extends Node {
 
@@ -45,8 +46,8 @@ export default class NotepadNode extends Node {
     }, providedOptions );
 
     const paperStackNode = new Node();
-    const paperWidth = 720;
-    const paperHeight = 240;
+    const paperWidth = PAPER_PAGE_SIZE.width;
+    const paperHeight = PAPER_PAGE_SIZE.height;
     const paperStackHeight = 4;
     const stackOffset = 3;
 
@@ -95,6 +96,8 @@ export default class NotepadNode extends Node {
       this.addChild( readoutAlignBox );
     }
   }
+
+  public static readonly PAPER_PAGE_SIZE = PAPER_PAGE_SIZE;
 }
 
 meanShareAndBalance.register( 'NotepadNode', NotepadNode );

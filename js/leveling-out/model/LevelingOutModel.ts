@@ -103,6 +103,14 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         this.snacks.push( candyBar );
       } );
 
+      // Monitor the X position of each plate and move the candy bars that are on it when changes occur.
+      plate.xPositionProperty.lazyLink( ( xPosition, previousXPosition ) => {
+        const deltaX = xPosition - previousXPosition;
+        this.getSnacksAssignedToPlate( plate ).forEach( candyBar => {
+          candyBar.positionProperty.value = candyBar.positionProperty.value.plusXY( deltaX, 0 );
+        } );
+      } );
+
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
       plate.isActiveProperty.lazyLink( isActive => {
         const candyBars = this.getSnacksAssignedToPlate( plate );

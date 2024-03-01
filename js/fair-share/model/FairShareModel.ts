@@ -28,8 +28,14 @@ type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
 // constants
-const COLLECTION_AREA_SIZE = new Dimension2( 350, 120 );
 const APPLES_PER_COLLECTION_GROUP = 10;
+const VERTICAL_SPACE_BETWEEN_APPLES_COLLECTION = 4; // in screen coords, empirically determined
+const HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION = 5; // in screen coords, empirically determined
+const INTER_STACKED_GROUP_SPACING = 20;
+const COLLECTION_BOTTOM_Y = 10; // in screen coords, empirically determined
+
+// Size of the collection area, empirically determined. Could be derived from other constants, but didn't seem worth it.
+const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
 
 export class NotepadMode extends EnumerationValue {
 
@@ -75,6 +81,19 @@ export default class FairShareModel extends SharingModel<Apple> {
       phetioFeatured: true
     } );
 
+    this.plates.forEach( plate => {
+
+      // Move the apples on the plates when the plates themselves move except when the notepad is in Collect mode.
+      plate.xPositionProperty.lazyLink( ( xPosition, previousXPosition ) => {
+        if ( this.notepadModeProperty.value !== NotepadMode.COLLECT ) {
+          const deltaX = xPosition - previousXPosition;
+          this.getSnacksAssignedToPlate( plate ).forEach( candyBar => {
+            candyBar.positionProperty.value = candyBar.positionProperty.value.plusXY( deltaX, 0 );
+          } );
+        }
+      } );
+    } );
+
     // Define the area where the apples will be collected when in Collection mode.
     this.collectionArea = new Bounds2(
       0,
@@ -115,7 +134,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           const sortedApples = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
           sortedApples.forEach( apple => {
             if ( apple.isActiveProperty.value ) {
-              apple.travelTo( getCollectionPosition( collectionIndex++ ) );
+              apple.travelTo( this.getCollectionPosition( collectionIndex++ ) );
             }
           } );
         } );
@@ -221,7 +240,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         // Move all active apples to stacks in the collection area.
         const activeApples = this.snacks.filter( apple => apple.isActiveProperty.value );
         activeApples.forEach( ( apple, i ) => {
-          apple.positionProperty.value = getCollectionPosition( i );
+          apple.positionProperty.value = this.getCollectionPosition( i );
         } );
       }
       else {
@@ -272,7 +291,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else {
 
-        // The model is in Collection mode.  Activate the appropriate apples and move them to the necessary places
+        // The model is in Collection mode.  Make sure the appropriate apples are active and in the right places
         // within the collection.
         let collectionItemIndex = 0;
         this.plates.forEach( plate => {
@@ -281,17 +300,7 @@ export default class FairShareModel extends SharingModel<Apple> {
             const appleIsActive = plate.isActiveProperty.value && i < plate.snackNumberProperty.value;
             apple.isActiveProperty.value = appleIsActive;
             if ( appleIsActive ) {
-
-              // Move this to the appropriate place in the collection.
-              const group = Math.floor( collectionItemIndex / APPLES_PER_COLLECTION_GROUP );
-              const column = collectionItemIndex % 2;
-              const row = Math.floor( ( collectionItemIndex % APPLES_PER_COLLECTION_GROUP ) / 2 );
-
-              // Set the position.  The offsets in these calculations were empirically determined.
-              const x = group * 55 + column * 20;
-              const y = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 60 - row * 20;
-              apple.positionProperty.set( new Vector2( x, y ) );
-              collectionItemIndex++;
+              apple.positionProperty.set( this.getCollectionPosition( collectionItemIndex++ ) );
             }
             else {
 
@@ -331,6 +340,59 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.totalSnacksProperty.link( handleNumberOfActiveSnacksChanged );
   }
 
+  /**
+   * Get a position in model space for an apple in the "Collect" mode based on its index.
+   */
+  private getCollectionPosition( positionIndex: number ): Vector2 {
+    const centerToCenterXInStack = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 +
+                                   HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION;
+    const centerToCenterY = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 +
+                            VERTICAL_SPACE_BETWEEN_APPLES_COLLECTION;
+    const centerToCenterXBetweenGroupLeftSides = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 4 +
+                                                 HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION +
+                                                 INTER_STACKED_GROUP_SPACING;
+    const centerToCenterXBetweenGroups = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 +
+                                         INTER_STACKED_GROUP_SPACING;
+
+    // The set of stacks in the collection is centered by design, so first we need to figure out the overall span of the
+    // stacks so that this can be factored in to the position calculations.
+    const numberOfCompleteGroups = Math.floor( this.totalSnacksProperty.value / APPLES_PER_COLLECTION_GROUP );
+    const numberOfApplesNotInCompleteGroup = this.totalSnacksProperty.value -
+                                             ( numberOfCompleteGroups * APPLES_PER_COLLECTION_GROUP );
+    let totalSpan = numberOfCompleteGroups * centerToCenterXInStack +
+                    Math.max( numberOfCompleteGroups - 1, 0 ) * centerToCenterXBetweenGroups;
+
+    if ( numberOfApplesNotInCompleteGroup === 1 ) {
+      if ( numberOfCompleteGroups > 0 ) {
+
+        // Add an amount to the total span corresponding to a partial additional group.
+        totalSpan += centerToCenterXBetweenGroups;
+      }
+    }
+    else if ( numberOfApplesNotInCompleteGroup >= 2 ) {
+
+      if ( numberOfCompleteGroups > 0 ) {
+
+        // Add an amount to the total span corresponding to an additional group.
+        totalSpan += centerToCenterXBetweenGroupLeftSides;
+      }
+      else {
+
+        // The total span is for one partial group with two columns.
+        totalSpan += centerToCenterXInStack;
+      }
+    }
+    const xAdjustForCentering = totalSpan / 2;
+
+    const group = Math.floor( positionIndex / APPLES_PER_COLLECTION_GROUP );
+    const column = positionIndex % 2;
+    const row = Math.floor( ( positionIndex % APPLES_PER_COLLECTION_GROUP ) / 2 );
+    const x = group * centerToCenterXBetweenGroupLeftSides + column * centerToCenterXInStack - xAdjustForCentering;
+    const y = -( COLLECTION_BOTTOM_Y + MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS +
+                 VERTICAL_SPACE_BETWEEN_APPLES_COLLECTION + row * centerToCenterY );
+    return new Vector2( x, y );
+  }
+
   public override reset(): void {
     this.notepadModeProperty.reset();
     super.reset();
@@ -353,18 +415,6 @@ const sortApplesByStackingOrder = ( apples: Apple[] ) => {
       return b.positionProperty.value.y - a.positionProperty.value.y;
     }
   } );
-};
-
-/**
- * Get a position for an apple in the "Collect" mode based on its index.
- */
-const getCollectionPosition = ( positionIndex: number ) => {
-  const group = Math.floor( positionIndex / APPLES_PER_COLLECTION_GROUP );
-  const column = positionIndex % 2;
-  const row = Math.floor( ( positionIndex % APPLES_PER_COLLECTION_GROUP ) / 2 );
-  const x = group * 55 + column * 20;
-  const y = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 60 - row * 20;
-  return new Vector2( x, y );
 };
 
 meanShareAndBalance.register( 'FairShareModel', FairShareModel );

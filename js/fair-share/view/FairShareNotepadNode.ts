@@ -46,7 +46,7 @@ export default class FairShareNotepadNode extends NotepadNode {
       }
     );
 
-    // Add the box that will depict the collection area, only shown in 'Collect' mode.
+    // Add the box that will depict the collection area, which is only shown in 'Collect' mode.
     const collectionAreaVisibleProperty = new DerivedProperty(
       [ notepadModeProperty ],
       mode => mode === NotepadMode.COLLECT
@@ -59,8 +59,13 @@ export default class FairShareNotepadNode extends NotepadNode {
       {
         stroke: 'black',
         cornerRadius: 8,
-        centerX: this.width / 2,
-        centerY: this.height / 2,
+
+        // tweaked a bit due to notebook edge
+        centerX: this.bounds.maxX - NotepadNode.PAPER_PAGE_SIZE.width / 2 - 5,
+
+        // tweaked a bit due to where the collection is positioned on the page
+        centerY: this.bounds.height / 2 - 5,
+
         visibleProperty: collectionAreaVisibleProperty
       }
     );

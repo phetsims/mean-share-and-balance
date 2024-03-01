@@ -127,20 +127,13 @@ export default class SharingModel<T extends Snack> implements TModel {
       }
     );
 
-    // Monitor the number of active plates/people and update the positions as things come and go.
+    // Monitor the number of active plates/people and update the plate positions to keep them centered.
     this.numberOfPlatesProperty.link( numberOfPlates => {
       const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
       const leftPlateCenterX = -( totalSpan / 2 );
       this.plates.forEach( ( plate, i ) => {
         plate.isActiveProperty.value = i < numberOfPlates;
-        const previousXPosition = plate.xPositionProperty.value;
         plate.xPositionProperty.value = leftPlateCenterX + ( i * INTER_PLATE_DISTANCE );
-        const deltaX = plate.xPositionProperty.value - previousXPosition;
-
-        // Also move any snacks that are currently on this plate.
-        this.getSnacksAssignedToPlate( plate ).forEach( snack => {
-          snack.positionProperty.value = snack.positionProperty.value.plusXY( deltaX, 0 );
-        } );
       } );
     } );
   }

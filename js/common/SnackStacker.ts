@@ -77,10 +77,11 @@ class SnackStacker {
    * @returns - a 2D vector in coordinate space that can be used to set the position of a candy
    */
   public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
+    const xPosition = plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2;
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
                          ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
-    return new Vector2( plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2, yPosition );
+    return new Vector2( xPosition, yPosition );
   }
 
   /**
