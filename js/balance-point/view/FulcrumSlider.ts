@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 /**
  * The fulcrum of the balance beam is a slider that can move along the x-axis in increments of a tenth.
  *
