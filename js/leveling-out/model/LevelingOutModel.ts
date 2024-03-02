@@ -43,7 +43,10 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
 
     this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
-      getGroupItemValue: candyBar => candyBar.parentPlateProperty.value.linePlacement,
+      getGroupItemValue: candyBar => {
+        assert && assert( candyBar.parentPlateProperty.value, 'candyBar is not assigned to a plate' );
+        return candyBar.parentPlateProperty.value!.linePlacement;
+      },
       tandem: options.tandem.createTandem( 'groupSortInteractionModel' )
     } );
     this.sortingRangeProperty = new DerivedProperty( [ this.numberOfPlatesProperty ],
@@ -62,7 +65,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       }
       else if ( selectedCandyBar !== null ) {
         const parentPlate = selectedCandyBar?.parentPlateProperty.value;
-        selectedCandyBarProperty.value = this.getTopActiveCandyBarAssignedToPlate( parentPlate );
+        assert && assert( parentPlate, 'selectedCandyBar has no parent plate, but it should' );
+        selectedCandyBarProperty.value = this.getTopActiveCandyBarAssignedToPlate( parentPlate! );
       }
     } );
 
@@ -85,19 +89,21 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         } );
 
         candyBar.parentPlateProperty.link( plate => {
-          const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
-          const endPosition = SnackStacker.getStackedCandyBarPosition( plate, numberOfCandyBarsOnPlate );
+          if ( plate ) {
+            const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
+            const endPosition = SnackStacker.getStackedCandyBarPosition( plate, numberOfCandyBarsOnPlate );
 
-          // Keyboard interaction should not animate the candy bar.
-          if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
-            candyBar.forceAnimationToFinish();
-            candyBar.positionProperty.set( endPosition );
+            // Keyboard interaction should not animate the candy bar.
+            if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
+              candyBar.forceAnimationToFinish();
+              candyBar.positionProperty.set( endPosition );
+            }
+            else {
+              candyBar.travelTo( endPosition );
+            }
+            this.reorganizeSnacks( plate );
+            this.stackChangedEmitter.emit();
           }
-          else {
-            candyBar.travelTo( endPosition );
-          }
-          this.reorganizeSnacks( plate );
-          this.stackChangedEmitter.emit();
         } );
 
         this.snacks.push( candyBar );

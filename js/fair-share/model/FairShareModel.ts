@@ -22,7 +22,8 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import SnackStacker from '../../common/SnackStacker.js';
 import { Bounds2, Dimension2, Vector2 } from '../../../../dot/js/imports.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
-import { Emitter } from '../../../../axon/js/imports.js';
+import Plate from '../../common/model/Plate.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -67,7 +68,9 @@ export default class FairShareModel extends SharingModel<Apple> {
   // The area in coordinate space where the Apple instances will be placed and organized when in Collection mode.
   public readonly collectionArea: Bounds2;
 
-  public readonly snacksAdjusted = new Emitter();
+  // Apples that were placed at the top of the collection area when transitioning from Collect to Share mode and that
+  // need to be turned into fractional apples and sent to a plate.
+  private readonly applesAwaitingFractionalization: Apple[] = [];
 
   public constructor( providedOptions: FairShareModelOptions ) {
 
@@ -113,22 +116,38 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.snacks.forEach( snack => { snack.fractionProperty.reset(); } );
       }
 
-      if ( notepadMode === NotepadMode.SYNC && previousNotepadMode === NotepadMode.COLLECT ) {
+      if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
 
-        // Animate the movement of the whole apples from the collection area to the individual plates.
+        this.redistributeUnparentedApples();
+        const activeApples = this.getActiveSnacks();
+        const inactiveApples = this.getInactiveSnacks();
+
         this.plates.forEach( plate => {
-          const sortedApples = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
-          let stackPosition = 0;
-          sortedApples.forEach( apple => {
-            if ( apple.isActiveProperty.value ) {
-              apple.travelTo( SnackStacker.getStackedApplePosition( plate, stackPosition++ ) );
+          _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, stackPosition => {
+            if ( stackPosition < plate.snackNumberProperty.value ) {
+
+              // Animate the apple traveling to the plate.
+              const apple = activeApples.shift();
+              if ( apple ) {
+                apple.parentPlateProperty.value = plate;
+                apple.travelTo( SnackStacker.getStackedApplePosition( plate, stackPosition ) );
+              }
+            }
+            else {
+
+              // Move the inactive apple instantly to the plate.
+              const apple = inactiveApples.shift();
+              if ( apple ) {
+                apple.parentPlateProperty.value = plate;
+                apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, stackPosition );
+              }
             }
           } );
         } );
       }
-      else if ( notepadMode === NotepadMode.COLLECT && previousNotepadMode === NotepadMode.SYNC ) {
+      else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.COLLECT ) {
 
-        // Animate the movement of the whole apples the individual plates to the collection area.
+        // Animate the movement of the whole apples from the individual plates to the collection area.
         let collectionIndex = 0;
         this.plates.forEach( plate => {
           const sortedApples = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
@@ -136,7 +155,123 @@ export default class FairShareModel extends SharingModel<Apple> {
             if ( apple.isActiveProperty.value ) {
               apple.travelTo( this.getCollectionPosition( collectionIndex++ ) );
             }
+            apple.parentPlateProperty.value = null;
           } );
+        } );
+      }
+      else if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SHARE ) {
+
+        // This change is animated, and the animation happens in two phases.  First, all the whole apples go from their
+        // position in the collection to the appropriate position on the plate while the whole pieces that will become
+        // fractional move to the top. After that, the whole ones at the top become fractional and move to where they
+        // need to go.
+
+        this.redistributeUnparentedApples();
+        const numberOfWholeApplesPerPlate = Math.floor( this.meanProperty.value );
+        let numberOfOutstandingAnimationsForWholeApples = 0;
+        const animationCompleteEmitter = new Emitter();
+        animationCompleteEmitter.addListener( () => {
+          numberOfOutstandingAnimationsForWholeApples--;
+          if ( numberOfOutstandingAnimationsForWholeApples === 0 ) {
+
+            // The animations for moving the whole apples to the plates are all complete, so now distribute the
+            // fractional bits, if any.
+            const fractionAmount = new Fraction(
+              this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
+              this.numberOfPlatesProperty.value
+            );
+
+            if ( fractionAmount.getValue() > 0 ) {
+              // Get the position of the rightmost apple that's currently waiting for positioning the new ones.
+              const rightmostWaitingApplePosition = this.applesAwaitingFractionalization.reduce(
+                ( previousPosition, apple ) => apple.positionProperty.value.x > previousPosition.x ?
+                                               apple.positionProperty.value :
+                                               previousPosition,
+                new Vector2( Number.NEGATIVE_INFINITY, 0 )
+              );
+
+              const inactiveApples = this.getInactiveSnacks();
+              const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
+                                                     this.applesAwaitingFractionalization.length;
+              _.times( numberOfAdditionalApplesNeeded, i => {
+                const appleToAdd = inactiveApples.pop();
+                if ( appleToAdd instanceof Apple ) {
+                  appleToAdd.isActiveProperty.value = true;
+                  appleToAdd.fractionProperty.value = fractionAmount;
+                  appleToAdd.positionProperty.value = new Vector2(
+                    rightmostWaitingApplePosition.x + ( i + 1 ) * MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION,
+                    rightmostWaitingApplePosition.y
+                  );
+                  this.applesAwaitingFractionalization.push( appleToAdd );
+                }
+              } );
+              this.applesAwaitingFractionalization.forEach( ( apple, i ) => {
+                apple.fractionProperty.value = fractionAmount;
+                const plate = this.plates[ i ];
+                apple.parentPlateProperty.value = plate;
+                const destination = SnackStacker.getStackedApplePosition( plate, numberOfWholeApplesPerPlate );
+                apple.travelTo( destination );
+              } );
+              this.applesAwaitingFractionalization.length = 0;
+            }
+          }
+        } );
+
+        const availableActiveApples = this.getActiveSnacks();
+        this.plates.forEach( plate => {
+          if ( plate.isActiveProperty.value ) {
+
+            // Move the correct number of whole apples to this plate.
+            _.times( numberOfWholeApplesPerPlate, i => {
+              const destination = SnackStacker.getStackedApplePosition( plate, i );
+              const apple = availableActiveApples.shift();
+              assert && assert( apple, 'there should be at least one apple available' );
+              if ( apple ) {
+                apple.parentPlateProperty.value = plate;
+                numberOfOutstandingAnimationsForWholeApples++;
+                apple.travelTo( destination, animationCompleteEmitter );
+              }
+            } );
+          }
+        } );
+
+        // The remaining active apples are moved to the top of the screen prior to being made fractional and
+        // distributed.
+        availableActiveApples.forEach( ( apple, i ) => {
+          numberOfOutstandingAnimationsForWholeApples++;
+
+          // TODO: I (jbphet) had to add this test to get around a type issue.  Is there a better way? https://github.com/phetsims/mean-share-and-balance/issues/149
+          if ( apple instanceof Apple ) {
+            this.applesAwaitingFractionalization.push( apple );
+          }
+          apple.travelTo(
+            new Vector2(
+              i * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+              -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
+            ),
+            animationCompleteEmitter
+          );
+        } );
+      }
+      else if ( previousNotepadMode === NotepadMode.SHARE && notepadMode === NotepadMode.COLLECT ) {
+
+        // Animate the movement of the apples from the individual plates to the collection area.
+        let collectionIndex = 0;
+        this.plates.forEach( plate => {
+          if ( plate.isActiveProperty.value ) {
+            const activeApplesOnPlate = this.getSnacksAssignedToPlate( plate ).filter( apple => apple.isActiveProperty.value );
+            activeApplesOnPlate.forEach( apple => {
+              apple.fractionProperty.value = Fraction.ONE;
+              if ( collectionIndex < this.totalSnacksProperty.value ) {
+                apple.travelTo( this.getCollectionPosition( collectionIndex ) );
+                apple.parentPlateProperty.value = null;
+                collectionIndex++;
+              }
+              else {
+                apple.isActiveProperty.value = false;
+              }
+            } );
+          }
         } );
       }
       else if ( notepadMode === NotepadMode.SYNC ) {
@@ -169,9 +304,6 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( notepadMode === NotepadMode.SHARE ) {
 
-        // TODO: Resetting all the snacks is temporary while details of animation and such are worked out, see https://github.com/phetsims/mean-share-and-balance/issues/149.
-        this.snacks.forEach( snack => { snack.reset(); } );
-
         // In this mode the total number of apples is split up evenly over all active plates, so each one ends up with
         // the mean value.
 
@@ -184,17 +316,9 @@ export default class FairShareModel extends SharingModel<Apple> {
           if ( plate.isActiveProperty.value ) {
 
             // Sort the list by position on the plate.
-            // TODO: Make the sorted apples available and consolidate this repeated code, see https://github.com/phetsims/mean-share-and-balance/issues/149.
-            const applesInStackedOrder = apples.sort( ( a, b ) => {
-              if ( a.positionProperty.value.x === b.positionProperty.value.x ) {
-                return a.positionProperty.value.x - b.positionProperty.value.x;
-              }
-              else {
-                return b.positionProperty.value.y - a.positionProperty.value.y;
-              }
-            } );
+            const applesInStackedOrder = sortApplesByStackingOrder( apples );
 
-            // Activate and set fractional values for this plate.
+            // Activate and set fractional values for the apples on this plate.
             applesInStackedOrder.forEach( ( apple, i ) => {
               if ( i < numberOfWholeApplesPerActivePlate ) {
                 apple.isActiveProperty.set( true );
@@ -208,6 +332,7 @@ export default class FairShareModel extends SharingModel<Apple> {
                 else {
                   apple.isActiveProperty.set( false );
                 }
+                apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, i );
               }
               else {
                 apple.isActiveProperty.set( false );
@@ -221,54 +346,29 @@ export default class FairShareModel extends SharingModel<Apple> {
           }
         } );
       }
-      else if ( notepadMode === NotepadMode.COLLECT ) {
-
-        // In this mode, the active apples are collected into stacks in the collection area.
-
-        // Activate the number of apples on each plate to match the number of the corresponding table plate.
-        this.plates.forEach( plate => {
-          const applesInStackedOrder = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
-          applesInStackedOrder.forEach( ( apple, i ) => {
-            const appleIsActive = plate.isActiveProperty.value && i < plate.snackNumberProperty.value;
-            apple.isActiveProperty.value = appleIsActive;
-            if ( appleIsActive ) {
-              apple.fractionProperty.value = Fraction.ONE;
-            }
-          } );
-        } );
-
-        // Move all active apples to stacks in the collection area.
-        const activeApples = this.snacks.filter( apple => apple.isActiveProperty.value );
-        activeApples.forEach( ( apple, i ) => {
-          apple.positionProperty.value = this.getCollectionPosition( i );
-        } );
-      }
       else {
-        assert && assert( false, 'Unexpected mode' );
+        assert && assert( false, 'Unhandled mode change' );
       }
-
-      // Trigger an emitter that indicates some rearrangement has occurred.  This can be used by the view to finalize
-      // any updates that are needed.
-      // eslint-disable-next-line bad-sim-text
-      setTimeout( () => { this.snacksAdjusted.emit(); }, 1 );
-      // this.snacksAdjusted.emit();
     };
 
-    const handleNumberOfActiveSnacksChanged = () => {
+    const handleNumberOfActiveSnacksChanged = ( totalSnacks: number ) => {
       const notepadMode = this.notepadModeProperty.value;
       if ( notepadMode === NotepadMode.SYNC || notepadMode === NotepadMode.SHARE ) {
 
         // Activate the appropriate number of apples on each plate.
         this.plates.forEach( plate => {
+
           const applesOnPlate = this.getSnacksAssignedToPlate( plate );
           if ( plate.isActiveProperty.value ) {
-            const sortedApples = sortApplesByStackingOrder( applesOnPlate );
+
+            // Get the apples on the plate.
             const numberOfApplesOnThisPlate = notepadMode === NotepadMode.SHARE ?
                                               this.meanProperty.value :
                                               plate.snackNumberProperty.value;
+
             const wholePart = Math.floor( numberOfApplesOnThisPlate );
             const fractionalPart = numberOfApplesOnThisPlate - wholePart;
-            sortedApples.forEach( ( apple, i ) => {
+            applesOnPlate.forEach( ( apple, i ) => {
               if ( i < wholePart ) {
                 apple.fractionProperty.value = Fraction.ONE;
                 apple.isActiveProperty.value = true;
@@ -281,6 +381,8 @@ export default class FairShareModel extends SharingModel<Apple> {
                 apple.isActiveProperty.value = false;
               }
             } );
+
+            this.reorganizeSnacks( plate );
           }
           else {
 
@@ -293,23 +395,31 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         // The model is in Collection mode.  Make sure the appropriate apples are active and in the right places
         // within the collection.
-        let collectionItemIndex = 0;
-        this.plates.forEach( plate => {
-          const sortedApples = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
-          sortedApples.forEach( ( apple, i ) => {
-            const appleIsActive = plate.isActiveProperty.value && i < plate.snackNumberProperty.value;
-            apple.isActiveProperty.value = appleIsActive;
-            if ( appleIsActive ) {
-              apple.positionProperty.set( this.getCollectionPosition( collectionItemIndex++ ) );
-            }
-            else {
+        const activeApples = this.getActiveSnacks();
+        const inactiveApples = this.getInactiveSnacks();
+        const delta = totalSnacks - activeApples.length;
+        if ( delta > 0 ) {
 
-              // Inactive apples should be in their default positions.
-              apple.positionProperty.reset();
-            }
+          // Activate the needed apples.
+          _.times( delta, () => {
+            const apple = inactiveApples.shift();
+            assert && assert( apple, 'there should be an inactive apple available' );
+            apple!.isActiveProperty.value = true;
+            activeApples.push( apple! );
           } );
+        }
+        else if ( delta < 0 ) {
+
+          // Deactivate apples that are no longer needed.
+          const apple = activeApples.pop();
+          assert && assert( apple, 'there should be an active apple available' );
+          apple!.isActiveProperty.value = false;
+          inactiveApples.push( apple! );
+        }
+
+        activeApples.forEach( ( activeApple, i ) => {
+          activeApple.positionProperty.set( this.getCollectionPosition( i ) );
         } );
-        this.snacksAdjusted.emit();
       }
     };
 
@@ -338,6 +448,23 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     // Update the view when the number of active apples changes.
     this.totalSnacksProperty.link( handleNumberOfActiveSnacksChanged );
+  }
+
+  /**
+   * Assign any apples that don't have a parent plan to one that has space.  This is generally used when switching
+   * from Collect mode to any of the other modes.
+   */
+  private redistributeUnparentedApples(): void {
+    const unparentedApples = this.snacks.filter( apple => apple.parentPlateProperty.value === null );
+    this.plates.forEach( plate => {
+      const applesOnPlate = this.getSnacksAssignedToPlate( plate );
+      _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE - applesOnPlate.length, () => {
+        const apple = unparentedApples.pop();
+        if ( apple ) {
+          apple.parentPlateProperty.value = plate;
+        }
+      } );
+    } );
   }
 
   /**
@@ -393,8 +520,25 @@ export default class FairShareModel extends SharingModel<Apple> {
     return new Vector2( x, y );
   }
 
+  /**
+   * Re-stack snacks on the plate.
+   */
+  public override reorganizeSnacks( plate: Plate ): void {
+    let stackIndex = 0;
+    const applesOnPlate = this.getSnacksAssignedToPlate( plate );
+    const activeApplesOnPlate = applesOnPlate.filter( apple => apple.isActiveProperty.value );
+    const inactiveApplesOnPlate = applesOnPlate.filter( apple => !apple.isActiveProperty.value );
+    activeApplesOnPlate.forEach( apple => {
+      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, stackIndex++ );
+    } );
+    inactiveApplesOnPlate.forEach( apple => {
+      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, stackIndex++ );
+    } );
+  }
+
   public override reset(): void {
     this.notepadModeProperty.reset();
+    this.applesAwaitingFractionalization.length = 0;
     super.reset();
   }
 

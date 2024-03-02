@@ -87,7 +87,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       ),
       start: () => {
         candyBar.stateProperty.set( 'dragging' );
-        model.reorganizeSnacks( candyBar.parentPlateProperty.value );
+        model.reorganizeSnacks( candyBar.parentPlateProperty.value! );
         this.moveToFront();
       },
       end: () => {

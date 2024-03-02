@@ -19,6 +19,8 @@ import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioO
 import Plate from './Plate.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
+import NullableIO from '../../../../tandem/js/types/NullableIO.js';
+import { Emitter } from '../../../../axon/js/imports.js';
 
 type SelfOptions = {
   isActive: boolean;
@@ -36,7 +38,7 @@ let instanceCount = 0;
 export default class Snack extends PhetioObject {
 
   public readonly isActiveProperty: Property<boolean>;
-  public readonly parentPlateProperty: Property<Plate>;
+  public readonly parentPlateProperty: Property<Plate | null>;
   public readonly positionProperty: Property<Vector2>;
 
   // An animation for moving this snack from one location to another in a continuous fashion.
@@ -60,12 +62,12 @@ export default class Snack extends PhetioObject {
       phetioReadOnly: true
     } );
 
-    this.parentPlateProperty = new Property( providedOptions.plate, {
+    this.parentPlateProperty = new Property<Plate | null>( providedOptions.plate, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'parentPlateProperty' ),
       phetioReadOnly: true,
-      phetioValueType: ReferenceIO( IOType.ObjectIO )
+      phetioValueType: NullableIO( ReferenceIO( IOType.ObjectIO ) )
     } );
 
     this.positionProperty = new Property( providedOptions.position, {
@@ -81,8 +83,10 @@ export default class Snack extends PhetioObject {
    * Travel to the specified destination in a continuous manner instead of instantaneously.  This is used to animate the
    * motion of a candy bar from one place to another.  It is okay to call this when an animation is in progress - it
    * will cause a new animation from the current location to the new destination.
+   * @param destination - 2D location where this should go
+   * @param destinationReachedEmitter - if provided, this emitter is fired when the destination is reached
    */
-  public travelTo( destination: Vector2 ): void {
+  public travelTo( destination: Vector2, destinationReachedEmitter: Emitter | null = null ): void {
 
     // If there is already an animation in progress, take steps to redirect it to the (presumably) new destination.
     if ( this.travelAnimation ) {
@@ -108,10 +112,15 @@ export default class Snack extends PhetioObject {
       easing: Easing.CUBIC_OUT
     } );
 
-    // handlers for when the animation completes
-    this.travelAnimation.finishEmitter.addListener( this.finishAnimation.bind( this ) );
+    // handlers for when the animation completes or is stopped
+    this.travelAnimation.finishEmitter.addListener( () => {
+      this.positionProperty.set( destination );
+      destinationReachedEmitter && destinationReachedEmitter.emit();
+      this.finishAnimation();
+    } );
     this.travelAnimation.stopEmitter.addListener( () => {
       this.positionProperty.set( destination );
+      destinationReachedEmitter && destinationReachedEmitter.emit();
       this.finishAnimation();
     } );
 
@@ -119,10 +128,6 @@ export default class Snack extends PhetioObject {
     this.travelAnimation.start();
   }
 
-  /**
-   * Take any steps that are necessary when an animation finishes, whether because it made it to the end or was stopped.
-   * This can be overridden to provide unique behavior in subclasses if needed.
-   */
   protected finishAnimation(): void {
     this.travelAnimation = null;
   }

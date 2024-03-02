@@ -140,10 +140,16 @@ export default class LevelingOutScreenView extends SharingScreenView {
       {
         getNextSelectedGroupItem: ( delta, candyBar ) => {
           const platesWithSnacks = model.getPlatesWithSnacks();
-          assert && assert( platesWithSnacks.length !== 0,
+          assert && assert(
+            platesWithSnacks.length !== 0,
             'In order to select the next group item there must be active candy bars. The number of' +
-            'active candy bars is: ' + model.getActiveCandyBars().length );
-          const currentIndex = platesWithSnacks.indexOf( candyBar.parentPlateProperty.value );
+            'active candy bars is: ' + model.getActiveCandyBars().length
+          );
+          assert && assert(
+            candyBar.parentPlateProperty.value,
+            'the selected candyBar does not have a parent plate - how did that happen?'
+          );
+          const currentIndex = platesWithSnacks.indexOf( candyBar.parentPlateProperty.value! );
           const nextPlate = Utils.clamp( currentIndex + delta, 0, platesWithSnacks.length - 1 );
           const topCandyBar = model.getTopActiveCandyBarAssignedToPlate( platesWithSnacks[ nextPlate ] );
           return topCandyBar!;

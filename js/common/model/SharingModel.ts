@@ -138,8 +138,16 @@ export default class SharingModel<T extends Snack> implements TModel {
     } );
   }
 
-  public getActivePlates(): Array<Plate> {
+  public getActivePlates(): Plate[] {
     return this.plates.filter( plate => plate.isActiveProperty.value );
+  }
+
+  public getActiveSnacks(): Snack[] {
+    return this.snacks.filter( snack => snack.isActiveProperty.value );
+  }
+
+  public getInactiveSnacks(): Snack[] {
+    return this.snacks.filter( snack => !snack.isActiveProperty.value );
   }
 
   public getSnacksAssignedToPlate( plate: Plate ): Array<T> {
@@ -154,7 +162,7 @@ export default class SharingModel<T extends Snack> implements TModel {
    * Re-stack snacks on the plate.
    */
   public reorganizeSnacks( plate: Plate ): void {
-    //TODO: FairShare implementation still needed: https://github.com/phetsims/mean-share-and-balance/issues/149
+    // does nothing in base class, should be overridden
   }
 
   /**
