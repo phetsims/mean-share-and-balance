@@ -10,20 +10,25 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import { EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
+import { optionize } from '../../../../phet-core/js/imports.js';
 import { Property } from '../../../../axon/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import { Dimension2 } from '../../../../dot/js/imports.js';
 import { BALANCE_BEAM_TRANSFORM } from './BalanceBeamNode.js';
 import Utils from '../../../../dot/js/Utils.js';
 
-type BalanceBeamFulcrumOptions = WithRequired<HSliderOptions, 'tandem'>;
+type SelfOptions = {
+  fulcrumHeight: number; // in meters
+  fulcrumWidth: number; // in meters
+};
+
+type BalanceBeamFulcrumOptions = SelfOptions & WithRequired<HSliderOptions, 'tandem'>;
 export default class FulcrumSlider extends HSlider {
 
   public constructor( fulcrumValueProperty: Property<number>, providedOptions: BalanceBeamFulcrumOptions ) {
 
-    const triangleHeight = BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( -0.6 ); // the transform is inverted.
-    const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( 0.8 );
+    const triangleHeight = BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight );
+    const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( providedOptions.fulcrumWidth );
     const thumbNode = new TriangleNode( {
       triangleHeight: triangleHeight,
       triangleWidth: triangleWidth,
@@ -31,7 +36,7 @@ export default class FulcrumSlider extends HSlider {
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
 
-    const options = optionize<BalanceBeamFulcrumOptions, EmptySelfOptions, HSliderOptions>()( {
+    const options = optionize<BalanceBeamFulcrumOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
       thumbYOffset: triangleHeight / 2,
       trackFillEnabled: null,

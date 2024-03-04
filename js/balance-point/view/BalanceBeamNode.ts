@@ -20,6 +20,7 @@ import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optio
 import { optionize } from '../../../../phet-core/js/imports.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import LevelSupportColumnNode from '../../../../scenery-phet/js/LevelSupportColumnNode.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -37,6 +38,7 @@ export default class BalanceBeamNode extends Node {
     playAreaNumberLineNode: NumberLineNode,
     paperStackBounds: Bounds2,
     fulcrumValueProperty: Property<number>,
+    beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamNodeOptions
   ) {
@@ -56,17 +58,38 @@ export default class BalanceBeamNode extends Node {
     const lineStart = BALANCE_BEAM_TRANSFORM.modelToViewX( -1 );
     const lineEnd = BALANCE_BEAM_TRANSFORM.modelToViewX( 11 );
     const groundY = BALANCE_BEAM_TRANSFORM.modelToViewY( 0 );
-    const groundLine = new Line( lineStart, groundY, lineEnd, groundY, {
+    const lineWidth = 1;
+    const groundLineCenterY = groundY - lineWidth / 2;
+    const groundLine = new Line( lineStart, groundLineCenterY, lineEnd, groundLineCenterY, {
       stroke: 'grey'
     } );
 
+    const fulcrumHeight = -0.7; // the transform is inverted.
+    const fulcrumWidth = 0.85;
     const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, {
+      fulcrumHeight: fulcrumHeight,
+      fulcrumWidth: fulcrumWidth,
       bottom: groundY,
       tandem: options.tandem?.createTandem( 'fulcrumSlider' )
     } );
 
+    const supportColumns = _.times( 2, i => {
+
+      return new LevelSupportColumnNode( BALANCE_BEAM_TRANSFORM,
+        LevelSupportColumnNode.createLevelSupportColumnShape(
+          0.4,
+          fulcrumHeight,
+          0
+        ), {
+          bottom: groundY,
+          centerX: BALANCE_BEAM_TRANSFORM.modelToViewX( i === 0 ? -0.5 : 10.5 ),
+          visibleProperty: beamSupportsPresentProperty
+      } );
+    } );
+
+
     const superOptions = combineOptions<NodeOptions>( {
-      children: [ notepadNumberLineNode, groundLine, fulcrumSlider ]
+      children: [ notepadNumberLineNode, groundLine, ...supportColumns, fulcrumSlider ]
     }, options );
     super( superOptions );
 
