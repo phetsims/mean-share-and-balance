@@ -552,9 +552,6 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.applesAwaitingFractionalization.length = 0;
     this.notepadModeProperty.reset();
 
-    // TODO: the bug we were getting was order dependency. The notepadMode needs to reset before the plates and snacks.
-    //   is a code comment enough, or does that feel fragile? Should we have a reset in progress Property?
-    //   https://github.com/phetsims/mean-share-and-balance/issues/149
     super.reset();
   }
 

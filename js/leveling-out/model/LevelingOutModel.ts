@@ -343,6 +343,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   public override reset(): void {
     super.reset();
     this.groupSortInteractionModel.reset();
+
+    // TODO: Reset is getting angry if we remove this. https://github.com/phetsims/mean-share-and-balance/issues/157
     this.snacks.forEach( candyBar => { candyBar.reset(); } );
   }
 
