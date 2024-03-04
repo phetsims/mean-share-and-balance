@@ -20,7 +20,6 @@ import Plate from './Plate.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
 import NullableIO from '../../../../tandem/js/types/NullableIO.js';
-import { Emitter } from '../../../../axon/js/imports.js';
 
 type SelfOptions = {
   isActive: boolean;
@@ -81,12 +80,10 @@ export default class Snack extends PhetioObject {
 
   /**
    * Travel to the specified destination in a continuous manner instead of instantaneously.  This is used to animate the
-   * motion of a candy bar from one place to another.  It is okay to call this when an animation is in progress - it
+   * motion of a snack from one place to another.  It is okay to call this when an animation is in progress - it
    * will cause a new animation from the current location to the new destination.
-   * @param destination - 2D location where this should go
-   * @param destinationReachedEmitter - if provided, this emitter is fired when the destination is reached
    */
-  public travelTo( destination: Vector2, destinationReachedEmitter: Emitter | null = null ): void {
+  public travelTo( destination: Vector2 ): void {
 
     // If there is already an animation in progress, take steps to redirect it to the (presumably) new destination.
     if ( this.travelAnimation ) {
@@ -115,12 +112,10 @@ export default class Snack extends PhetioObject {
     // handlers for when the animation completes or is stopped
     this.travelAnimation.finishEmitter.addListener( () => {
       this.positionProperty.set( destination );
-      destinationReachedEmitter && destinationReachedEmitter.emit();
       this.finishAnimation();
     } );
     this.travelAnimation.stopEmitter.addListener( () => {
       this.positionProperty.set( destination );
-      destinationReachedEmitter && destinationReachedEmitter.emit();
       this.finishAnimation();
     } );
 
