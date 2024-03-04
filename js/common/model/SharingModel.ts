@@ -169,10 +169,11 @@ export default class SharingModel<T extends Snack> implements TModel {
    * Restore initial state.
    */
   public reset(): void {
-    this.numberOfPlatesProperty.reset();
     this.isMeanAccordionExpandedProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
+    this.snacks.forEach( snack => snack.reset() );
     this.plates.forEach( plate => plate.reset() );
+    this.numberOfPlatesProperty.reset();
   }
 
   /**
