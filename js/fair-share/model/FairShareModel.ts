@@ -197,11 +197,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         // The remaining active apples are moved to the top of the screen prior to being made fractional and
         // distributed.
         availableActiveApples.forEach( ( apple, i ) => {
-
-          // TODO: I (jbphet) had to add this test to get around a type issue.  Is there a better way? https://github.com/phetsims/mean-share-and-balance/issues/149
-          if ( apple instanceof Apple ) {
-            this.applesAwaitingFractionalization.push( apple );
-          }
+          this.applesAwaitingFractionalization.push( apple );
           apple.travelTo(
             new Vector2(
               i * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
@@ -241,7 +237,7 @@ export default class FairShareModel extends SharingModel<Apple> {
                                                    this.applesAwaitingFractionalization.length;
             _.times( numberOfAdditionalApplesNeeded, i => {
               const appleToAdd = inactiveApples.pop();
-              if ( appleToAdd instanceof Apple ) {
+              if ( appleToAdd ) {
                 appleToAdd.isActiveProperty.value = true;
                 appleToAdd.fractionProperty.value = fractionAmount;
                 appleToAdd.positionProperty.value = new Vector2(

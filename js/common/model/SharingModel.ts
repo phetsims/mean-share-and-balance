@@ -39,7 +39,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly numberOfPlatesRangeProperty: Property<Range>;
   public readonly numberOfPlatesProperty: Property<number>;
   public readonly totalSnacksProperty: TReadOnlyProperty<number>;
-  public readonly plates: Array<Plate>;
+  public readonly plates: Plate[];
   public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
   public readonly snacks: T[];
@@ -142,19 +142,19 @@ export default class SharingModel<T extends Snack> implements TModel {
     return this.plates.filter( plate => plate.isActiveProperty.value );
   }
 
-  public getActiveSnacks(): Snack[] {
+  public getActiveSnacks(): T[] {
     return this.snacks.filter( snack => snack.isActiveProperty.value );
   }
 
-  public getInactiveSnacks(): Snack[] {
+  public getInactiveSnacks(): T[] {
     return this.snacks.filter( snack => !snack.isActiveProperty.value );
   }
 
-  public getSnacksAssignedToPlate( plate: Plate ): Array<T> {
+  public getSnacksAssignedToPlate( plate: Plate ): T[] {
     return this.snacks.filter( snack => snack.parentPlateProperty.value === plate );
   }
 
-  public getInactiveSnacksAssignedToPlate( plate: Plate ): Array<T> {
+  public getInactiveSnacksAssignedToPlate( plate: Plate ): T[] {
     return this.getSnacksAssignedToPlate( plate ).filter( snack => !snack.isActiveProperty.value );
   }
 
