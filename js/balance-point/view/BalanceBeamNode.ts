@@ -73,20 +73,17 @@ export default class BalanceBeamNode extends Node {
       tandem: options.tandem?.createTandem( 'fulcrumSlider' )
     } );
 
+    const columnWidth = 15; // empirically determined
+    const columnHeight = BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( fulcrumHeight );
     const supportColumns = _.times( 2, i => {
-
-      return new LevelSupportColumnNode( BALANCE_BEAM_TRANSFORM,
-        LevelSupportColumnNode.createLevelSupportColumnShape(
-          0.4,
-          fulcrumHeight,
-          0
-        ), {
-          bottom: groundY,
-          centerX: BALANCE_BEAM_TRANSFORM.modelToViewX( i === 0 ? -0.5 : 10.5 ),
-          visibleProperty: beamSupportsPresentProperty
+      return new LevelSupportColumnNode( {
+        columnWidth: columnWidth,
+        columnHeight: columnHeight,
+        bottom: groundY,
+        centerX: BALANCE_BEAM_TRANSFORM.modelToViewX( i === 0 ? -0.5 : 10.5 ),
+        visibleProperty: beamSupportsPresentProperty
       } );
     } );
-
 
     const superOptions = combineOptions<NodeOptions>( {
       children: [ notepadNumberLineNode, groundLine, ...supportColumns, fulcrumSlider ]
