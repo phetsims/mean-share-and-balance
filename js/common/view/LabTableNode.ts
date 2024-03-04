@@ -8,10 +8,10 @@
  */
 
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import labDesk_png from '../../../images/labDesk_png.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import labDesk_svg from '../../../images/labDesk_svg.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -20,7 +20,7 @@ export default class LabTableNode extends Node {
 
   public constructor( providedOptions?: TableNodeOptions ) {
 
-    const table = new Image( labDesk_png, { scale: 0.5 } );
+    const table = new Image( labDesk_svg, { scale: 0.5 } );
     const tableBottom = new Rectangle( 28, 25, table.width - 54, 2000, {
       fill: '#b59373',
       stroke: 'black',

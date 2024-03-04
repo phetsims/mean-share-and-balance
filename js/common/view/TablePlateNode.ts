@@ -15,7 +15,6 @@ import NumberPicker from '../../../../sun/js/NumberPicker.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
-import greenApple_png from '../../../images/greenApple_png.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import plate_svg from '../../../images/plate_svg.js';
@@ -23,6 +22,7 @@ import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
 import candyBar_svg from '../../../images/candyBar_svg.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import greenApple_svg from '../../../images/greenApple_svg.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -68,7 +68,7 @@ export default class TablePlateNode extends Node {
           return candyBarNode;
         }
         else {
-          const appleNode = new Image( greenApple_png, { maxWidth: APPLE_IMAGE_WIDTH } );
+          const appleNode = new Image( greenApple_svg, { maxWidth: APPLE_IMAGE_WIDTH } );
           SnackStacker.setSnackImageNodePosition( appleNode, 'apples', index );
           return appleNode;
         }

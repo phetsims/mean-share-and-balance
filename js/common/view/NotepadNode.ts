@@ -9,7 +9,6 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { AlignBox, Image, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import notepadRing_png from '../../../images/notepadRing_png.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -20,6 +19,7 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import { Bounds2, Dimension2 } from '../../../../dot/js/imports.js';
+import notepadRing_svg from '../../../images/notepadRing_svg.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{
@@ -68,7 +68,7 @@ export default class NotepadNode extends Node {
 
     _.times( numberOfRings, ( i: number ) => {
       const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
-      const image = new Image( notepadRing_png, { x: x, bottom: NOTEPAD_RING_BOTTOM, scale: 0.8 } );
+      const image = new Image( notepadRing_svg, { x: x, bottom: NOTEPAD_RING_BOTTOM, scale: 0.8 } );
       rings.push( image );
     } );
 

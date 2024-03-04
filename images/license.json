@@ -23,14 +23,6 @@
     "license": "contact phethelp@colorado.edu",
     "notes": "created by Mariah Hermsmeyer"
   },
-  "greenApple.png": {
-    "text": [
-      "Copyright 2024 University of Colorado Boulder"
-    ],
-    "projectURL": "https://phet.colorado.edu",
-    "license": "contact phethelp@colorado.edu",
-    "notes": "created by John Blanco, assumed to be temporary until final artwork is available"
-  },
   "pencil.png": {
     "text": [
       "Copyright 2002-2015 University of Colorado Boulder"
@@ -48,14 +40,6 @@
     "notes": "created by Mariah Hermsmeyer"
   },
   "labDesk.svg": {
-    "text": [
-      "Copyright 2022 University of Colorado Boulder"
-    ],
-    "projectURL": "https://phet.colorado.edu",
-    "license": "contact phethelp@colorado.edu",
-    "notes": "created by Mariah Hermsmeyer"
-  },
-  "labDesk.png": {
     "text": [
       "Copyright 2022 University of Colorado Boulder"
     ],
@@ -144,14 +128,6 @@
     "notes": "created by Mariah Hermsmeyer"
   },
   "notepadRing.svg": {
-    "text": [
-      "Copyright 2022 University of Colorado Boulder"
-    ],
-    "projectURL": "https://phet.colorado.edu",
-    "license": "contact phethelp@colorado.edu",
-    "notes": "created by Mariah Hermsmeyer"
-  },
-  "notepadRing.png": {
     "text": [
       "Copyright 2022 University of Colorado Boulder"
     ],
