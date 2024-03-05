@@ -201,7 +201,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
   /**
    * When candyBars are added to a plate in the notepad they may appear in random positions or be overlapping. Re-stack
-   * them.
+   * them such that the active ones are on the bottom and inactive ones (which are invisible) are on top.
    */
   public override reorganizeSnacks( plate: Plate ): void {
     super.reorganizeSnacks( plate );

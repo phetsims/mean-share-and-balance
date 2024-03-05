@@ -37,7 +37,7 @@ const VERTICAL_SPACE_BETWEEN_APPLES_COLLECTION = 4; // in screen coords, empiric
 const HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION = 5; // in screen coords, empirically determined
 const INTER_STACKED_GROUP_SPACING = 20;
 const COLLECTION_BOTTOM_Y = 10; // in screen coords, empirically determined
-const APPLE_FRACTION_DISTRIBUTION_DELAY = 1; // in seconds
+const APPLE_FRACTION_DISTRIBUTION_DELAY = 0.75; // in seconds
 
 // Size of the collection area, empirically determined. Could be derived from other constants, but didn't seem worth it.
 const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
@@ -129,12 +129,6 @@ export default class FairShareModel extends SharingModel<Apple> {
         } );
         this.applesAwaitingFractionalization.length = 0;
         this.snacks.forEach( snack => snack.forceAnimationToFinish() );
-      }
-
-      if ( previousNotepadMode === NotepadMode.SHARE ) {
-
-        // Any time we leave the SHARE mode we should make sure we don't have fractional apples anywhere.
-        this.snacks.forEach( snack => { snack.fractionProperty.reset(); } );
       }
 
       if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
@@ -281,6 +275,9 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( previousNotepadMode === NotepadMode.SHARE && notepadMode === NotepadMode.COLLECT ) {
 
+        // Make sure all apples are whole.
+        this.snacks.forEach( snack => { snack.fractionProperty.reset(); } );
+
         // Animate the movement of the apples from the individual plates to the collection area.
         let collectionIndex = 0;
         this.plates.forEach( plate => {
@@ -300,80 +297,63 @@ export default class FairShareModel extends SharingModel<Apple> {
           }
         } );
       }
-      else if ( notepadMode === NotepadMode.SYNC ) {
+      else if ( ( previousNotepadMode === NotepadMode.SHARE || previousNotepadMode === null ) &&
+                notepadMode === NotepadMode.SYNC ) {
 
-        // In this mode the positions of the apples shown on the notepad match those shown on the plates on the table.
+        // In the Sync mode the number of apples on the notepad plates match those shown on the table plates. There is
+        // no animation needed for this mode change, so a simple way to make this happen is to set all snacks to have
+        // their default parent plates and then activate the appropriate number of apples on each plate.
 
+        this.snacks.forEach( snack => {
+          snack.fractionProperty.reset();
+          snack.parentPlateProperty.reset();
+        } );
+
+        // Position all snacks and activate them according to the number on each plate.
         this.plates.forEach( plate => {
 
           const apples = this.getSnacksAssignedToPlate( plate );
-          if ( plate.isActiveProperty.value ) {
-
-            // Sort the list by position on the plate.
-            const applesInStackedOrder = sortApplesByStackingOrder( apples );
-
-            // Set the appropriate number of apples on this plate to active.
-            applesInStackedOrder.forEach( ( apple, index ) => {
-              apple.fractionProperty.set( Fraction.ONE );
-              apple.isActiveProperty.value = plate.snackNumberProperty.value > index;
-            } );
-          }
-          else {
-
-            // Deactivate all apples on this plate.
-            apples.forEach( apple => {
-              apple.isActiveProperty.value = false;
-              apple.fractionProperty.value = Fraction.ONE;
-            } );
-          }
+          apples.forEach( ( apple, index ) => {
+            apple.moveTo( SnackStacker.getStackedApplePosition( plate, index ) );
+            apple.isActiveProperty.value = plate.isActiveProperty.value && index < plate.snackNumberProperty.value;
+          } );
         } );
       }
-      else if ( notepadMode === NotepadMode.SHARE ) {
+      else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.SHARE ) {
 
-        // In this mode the total number of apples is split up evenly over all active plates, so each one ends up with
-        // the mean value.
+        // In the Share mode the total number of apples is split up evenly over all active plates, so each one ends up
+        // with the mean value, which could include a fractional part.  There is no animation for this transition.
 
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
-        const fractionalApplePerActivePlate = this.meanProperty.value - numberOfWholeApplesPerActivePlate;
+        const fractionalAmount = numberOfWholeApplesPerActivePlate === this.meanProperty.value ?
+                                 Fraction.ZERO :
+                                 new Fraction(
+                                   this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
+                                   this.numberOfPlatesProperty.value
+                                 );
+        const totalActiveApplesPerActivePlate = numberOfWholeApplesPerActivePlate + ( fractionalAmount.value > 0 ? 1 : 0 );
 
         this.plates.forEach( plate => {
 
-          const apples = this.getSnacksAssignedToPlate( plate );
-          if ( plate.isActiveProperty.value ) {
+          const allApplesOnPlate = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
 
-            // Sort the list by position on the plate.
-            const applesInStackedOrder = sortApplesByStackingOrder( apples );
+          allApplesOnPlate.forEach( ( apple, i ) => {
 
-            // Activate and set fractional values for the apples on this plate.
-            applesInStackedOrder.forEach( ( apple, i ) => {
-              if ( i < numberOfWholeApplesPerActivePlate ) {
-                apple.isActiveProperty.set( true );
-                apple.fractionProperty.set( Fraction.ONE );
-              }
-              else if ( i === numberOfWholeApplesPerActivePlate ) {
-                if ( fractionalApplePerActivePlate > 0 ) {
-                  apple.isActiveProperty.set( true );
-                  apple.fractionProperty.set( Fraction.fromDecimal( fractionalApplePerActivePlate ) );
-                }
-                else {
-                  apple.isActiveProperty.set( false );
-                }
-                apple.moveTo( SnackStacker.getStackedApplePosition( plate, i ) );
-              }
-              else {
-                apple.isActiveProperty.set( false );
-              }
-            } );
-          }
-          else {
+            // Activate the whole apples for this plate as well as potentially one fractional one.
+            apple.isActiveProperty.value = plate.isActiveProperty.value && i < totalActiveApplesPerActivePlate;
 
-            // Deactivate all apples on this plate.
-            apples.forEach( apple => { apple.isActiveProperty.value = false; } );
-          }
+            // Set the apple to a whole or fractional value.
+            if ( i === numberOfWholeApplesPerActivePlate && fractionalAmount.value > 0 ) {
+              apple.fractionProperty.value = fractionalAmount;
+            }
+            else {
+              apple.fractionProperty.value = Fraction.ONE;
+            }
+          } );
         } );
       }
       else {
-        assert && assert( false, 'Unhandled mode change' );
+        assert && assert( false, `Unhandled state transition - from ${previousNotepadMode} to ${notepadMode}` );
       }
     };
 
