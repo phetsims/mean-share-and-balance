@@ -166,21 +166,13 @@ export default class SharingModel<T extends Snack> implements TModel {
   }
 
   /**
-   * Restore initial state.
-   */
-  public reset(): void {
-    this.isMeanAccordionExpandedProperty.reset();
-    this.meanCalculationDialogVisibleProperty.reset();
-    this.snacks.forEach( snack => snack.reset() );
-    this.plates.forEach( plate => plate.reset() );
-    this.numberOfPlatesProperty.reset();
-  }
-
-  /**
    * Propagate the ground truth values (at the bottom of the screen, on the table) to the snacks that are being shown
    * on the plates in the notepad.
    */
   public syncData(): void {
+    this.snacks.forEach( snack => {
+      snack.parentPlateProperty.reset();
+    } );
     this.plates.forEach( plate => {
       this.getSnacksAssignedToPlate( plate ).forEach( ( snack, i ) => {
         snack.isActiveProperty.value = i < plate.snackNumberProperty.value && plate.isActiveProperty.value;
@@ -189,6 +181,17 @@ export default class SharingModel<T extends Snack> implements TModel {
         this.reorganizeSnacks( plate );
       }
     } );
+  }
+
+  /**
+   * Restore initial state.
+   */
+  public reset(): void {
+    this.isMeanAccordionExpandedProperty.reset();
+    this.meanCalculationDialogVisibleProperty.reset();
+    this.snacks.forEach( snack => snack.reset() );
+    this.plates.forEach( plate => plate.reset() );
+    this.numberOfPlatesProperty.reset();
   }
 }
 

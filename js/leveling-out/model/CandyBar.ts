@@ -50,6 +50,11 @@ export default class CandyBar extends Snack {
     super.finishAnimation();
   }
 
+  public override forceAnimationToFinish(): void {
+    this.stateProperty.set( 'plate' );
+    super.forceAnimationToFinish();
+  }
+
   public override reset(): void {
     super.reset();
     this.stateProperty.reset();

@@ -22,7 +22,6 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -94,15 +93,11 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             const endPosition = SnackStacker.getStackedCandyBarPosition( plate, numberOfCandyBarsOnPlate );
 
             // Keyboard interaction should not animate the candy bar.
-            if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ||
-             candyBar.positionProperty.value === Vector2.ZERO ) {
+            if ( candyBar.stateProperty.value !== 'dragging' ) {
               candyBar.forceAnimationToFinish();
               candyBar.positionProperty.set( endPosition );
             }
             else {
-
-              // TODO: This is currently animating on reset. JB I really want a `resetInProgressProperty`
-              //  https://github.com/phetsims/mean-share-and-balance/issues/157
               candyBar.moveTo( endPosition, true );
             }
             this.reorganizeSnacks( plate );
