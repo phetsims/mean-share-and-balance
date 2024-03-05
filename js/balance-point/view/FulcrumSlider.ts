@@ -11,7 +11,7 @@ import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import { optionize } from '../../../../phet-core/js/imports.js';
-import { Property } from '../../../../axon/js/imports.js';
+import { Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import { Dimension2 } from '../../../../dot/js/imports.js';
 import { BALANCE_BEAM_TRANSFORM } from './BalanceBeamNode.js';
@@ -25,7 +25,11 @@ type SelfOptions = {
 type BalanceBeamFulcrumOptions = SelfOptions & WithRequired<HSliderOptions, 'tandem'>;
 export default class FulcrumSlider extends HSlider {
 
-  public constructor( fulcrumValueProperty: Property<number>, providedOptions: BalanceBeamFulcrumOptions ) {
+  public constructor(
+    fulcrumValueProperty: Property<number>,
+    isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
+    providedOptions: BalanceBeamFulcrumOptions
+  ) {
 
     const triangleHeight = BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight );
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( providedOptions.fulcrumWidth );
@@ -33,6 +37,8 @@ export default class FulcrumSlider extends HSlider {
       triangleHeight: triangleHeight,
       triangleWidth: triangleWidth,
       fill: MeanShareAndBalanceColors.meanColorProperty,
+      stroke: MeanShareAndBalanceColors.meanColorProperty,
+      lineWidth: 1.5,
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
 
@@ -47,6 +53,12 @@ export default class FulcrumSlider extends HSlider {
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 )
     }, providedOptions );
     super( fulcrumValueProperty, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, options );
+
+    isMeanFulcrumFixedProperty.link( isMeanFulcrumFixed => {
+      this.pickable = !isMeanFulcrumFixed; // JB is this the right way to do this?
+      thumbNode.fill = isMeanFulcrumFixed ? MeanShareAndBalanceColors.meanColorProperty : 'white';
+      thumbNode.lineDash = isMeanFulcrumFixed ? [] : [ 2, 2 ];
+    } );
   }
 }
 

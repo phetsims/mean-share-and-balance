@@ -35,6 +35,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     playAreaNumberLineNode: NumberLineNode,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanVisibleProperty: TReadOnlyProperty<boolean>,
+    isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalancePointNotepadNodeOptions
   ) {
 
@@ -100,7 +101,8 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
     const balanceBeamNode = new BalanceBeamNode( playAreaNumberLineNode,
       this.paperStackBounds, sceneModel.fulcrumValueProperty,
-      sceneModel.beamSupportsPresentProperty, areTickMarksVisibleProperty, {
+      sceneModel.beamSupportsPresentProperty, areTickMarksVisibleProperty,
+      isMeanFulcrumFixedProperty, {
       tandem: options.tandem.createTandem( 'balanceBeamNode' )
       } );
     this.addChild( balanceBeamNode );

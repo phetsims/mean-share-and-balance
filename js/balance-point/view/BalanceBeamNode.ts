@@ -40,6 +40,7 @@ export default class BalanceBeamNode extends Node {
     fulcrumValueProperty: Property<number>,
     beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
+    isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamNodeOptions
   ) {
 
@@ -66,7 +67,7 @@ export default class BalanceBeamNode extends Node {
 
     const fulcrumHeight = -0.7; // the transform is inverted.
     const fulcrumWidth = 0.85;
-    const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, {
+    const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, isMeanFulcrumFixedProperty, {
       fulcrumHeight: fulcrumHeight,
       fulcrumWidth: fulcrumWidth,
       bottom: groundY,

@@ -100,7 +100,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     // Notepad
     const notepadNode = new BalancePointNotepadNode( sceneModel, this.playAreaNumberLineNode,
-      model.areTickMarksVisibleProperty, model.isMeanVisibleProperty, {
+      model.areTickMarksVisibleProperty, model.isMeanVisibleProperty, model.isMeanFulcrumFixedProperty, {
         tandem: options.tandem.createTandem( 'notepadNode' ),
         centerX: this.playAreaCenterX
       } );
