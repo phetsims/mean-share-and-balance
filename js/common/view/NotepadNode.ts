@@ -68,7 +68,7 @@ export default class NotepadNode extends Node {
 
     _.times( numberOfRings, ( i: number ) => {
       const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
-      const image = new Image( notepadRing_svg, { x: x, bottom: NOTEPAD_RING_BOTTOM, scale: 0.8 } );
+      const image = new Image( notepadRing_svg, { x: x, bottom: NOTEPAD_RING_BOTTOM, maxHeight: 55 } );
       rings.push( image );
     } );
 
