@@ -38,6 +38,7 @@ export default class BalanceBeamNode extends Node {
     playAreaNumberLineNode: NumberLineNode,
     paperStackBounds: Bounds2,
     fulcrumValueProperty: Property<number>,
+    meanValueProperty: TReadOnlyProperty<number | null>,
     beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
@@ -67,7 +68,8 @@ export default class BalanceBeamNode extends Node {
 
     const fulcrumHeight = -0.7; // the transform is inverted.
     const fulcrumWidth = 0.85;
-    const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, isMeanFulcrumFixedProperty, {
+    const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, meanValueProperty,
+      isMeanFulcrumFixedProperty, {
       fulcrumHeight: fulcrumHeight,
       fulcrumWidth: fulcrumWidth,
       bottom: groundY,

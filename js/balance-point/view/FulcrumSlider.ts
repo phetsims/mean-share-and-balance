@@ -17,6 +17,7 @@ import Property from '../../../../axon/js/Property.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = {
   fulcrumHeight: number; // in meters
@@ -28,6 +29,7 @@ export default class FulcrumSlider extends HSlider {
 
   public constructor(
     fulcrumValueProperty: Property<number>,
+    meanValueProperty: TReadOnlyProperty<number | null>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamFulcrumOptions
   ) {
@@ -59,6 +61,12 @@ export default class FulcrumSlider extends HSlider {
       this.pickable = !isMeanFulcrumFixed; // JB is this the right way to do this?
       thumbNode.fill = isMeanFulcrumFixed ? MeanShareAndBalanceColors.meanColorProperty : 'white';
       thumbNode.lineDash = isMeanFulcrumFixed ? [] : [ 2, 2 ];
+    } );
+
+    Multilink.multilink( [ meanValueProperty, isMeanFulcrumFixedProperty ], ( meanValue, isFixed ) => {
+      if ( isFixed ) {
+        fulcrumValueProperty.value = meanValue === null ? 5 : meanValue;
+      }
     } );
   }
 }

@@ -103,6 +103,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
     const balanceBeamNode = new BalanceBeamNode( playAreaNumberLineNode,
       this.paperStackBounds, sceneModel.fulcrumValueProperty,
+      sceneModel.meanValueProperty,
       sceneModel.beamSupportsPresentProperty, areTickMarksVisibleProperty,
       isMeanFulcrumFixedProperty, {
       tandem: options.tandem.createTandem( 'balanceBeamNode' )
