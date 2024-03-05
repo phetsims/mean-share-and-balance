@@ -145,9 +145,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       peopleLayerNode.left = tableCenter.x + firstPlateXPosition + PEOPLE_LAYER_X_OFFSET;
     } );
 
-    // Position the dialog.  TODO: Move this to initialization after restructure, see https://github.com/phetsims/mean-share-and-balance/issues/149.
-    meanCalculationDialog.centerX = this.playAreaCenterX;
-
     this.tablePlateNodes = tablePlateNodes;
     this.peopleLayerNode = peopleLayerNode;
     this.notepadSnackLayerNode = notepadSnackLayerNode;
@@ -181,7 +178,8 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
       tableNode,
       tableSnackLayerNode,
       notepadSnackLayerNode,
-      controlsAlignBox
+      controlsAlignBox,
+      meanCalculationDialog
     ];
     children.forEach( childNode => { this.addChild( childNode ); } );
 
