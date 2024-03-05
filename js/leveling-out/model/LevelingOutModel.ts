@@ -22,6 +22,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import SnackStacker from '../../common/SnackStacker.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -82,7 +83,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         const candyBar = new CandyBar( {
           isActive: isActive,
           plate: plate,
-          position: SnackStacker.getStackedCandyBarPosition( plate, candyBarIndex ),
 
           // phet-io
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
@@ -94,11 +94,15 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             const endPosition = SnackStacker.getStackedCandyBarPosition( plate, numberOfCandyBarsOnPlate );
 
             // Keyboard interaction should not animate the candy bar.
-            if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
+            if ( this.groupSortInteractionModel.isKeyboardFocusedProperty.value ||
+             candyBar.positionProperty.value === Vector2.ZERO ) {
               candyBar.forceAnimationToFinish();
               candyBar.positionProperty.set( endPosition );
             }
             else {
+
+              // TODO: This is currently animating on reset. JB I really want a `resetInProgressProperty`
+              //  https://github.com/phetsims/mean-share-and-balance/issues/157
               candyBar.moveTo( endPosition, true );
             }
             this.reorganizeSnacks( plate );
@@ -113,6 +117,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       plate.xPositionProperty.lazyLink( ( xPosition, previousXPosition ) => {
         const deltaX = xPosition - previousXPosition;
         this.getSnacksAssignedToPlate( plate ).forEach( candyBar => {
+          candyBar.forceAnimationToFinish();
           candyBar.positionProperty.value = candyBar.positionProperty.value.plusXY( deltaX, 0 );
         } );
       } );
@@ -343,9 +348,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   public override reset(): void {
     super.reset();
     this.groupSortInteractionModel.reset();
-
-    // TODO: Reset is getting angry if we remove this. https://github.com/phetsims/mean-share-and-balance/issues/157
-    this.snacks.forEach( candyBar => { candyBar.reset(); } );
   }
 
   public static readonly NOTEPAD_PLATE_CENTER_Y = 330;

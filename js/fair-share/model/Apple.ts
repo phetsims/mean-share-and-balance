@@ -35,6 +35,8 @@ export default class Apple extends Snack {
 
   public override reset(): void {
     this.fractionProperty.reset();
+    this.isActiveProperty.reset();
+    this.positionProperty.reset();
     super.reset();
   }
 }

@@ -36,8 +36,14 @@ let instanceCount = 0;
 
 export default class Snack extends PhetioObject {
 
-  public readonly isActiveProperty: Property<boolean>;
   public readonly parentPlateProperty: Property<Plate | null>;
+
+  // This Property controls the snack's visibility and participation in data calculations in the sim.
+  // Subclass handles reset.
+  public readonly isActiveProperty: Property<boolean>;
+
+  // For the Leveling Out screen the positionProperty is set by the parentPlateProperty and the drag handler.
+  // Subclass handles reset.
   public readonly positionProperty: Property<Vector2>;
 
   // An animation for moving this snack from one location to another in a continuous fashion.
@@ -151,9 +157,7 @@ export default class Snack extends PhetioObject {
 
   public reset(): void {
     this.forceAnimationToFinish();
-    this.positionProperty.reset();
     this.parentPlateProperty.reset();
-    this.isActiveProperty.reset();
   }
 }
 
