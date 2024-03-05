@@ -28,7 +28,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
-import { combineOptions } from '../../../../phet-core/js/imports.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;

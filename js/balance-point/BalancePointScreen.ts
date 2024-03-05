@@ -17,7 +17,7 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import BalancePointModel from './model/BalancePointModel.js';
 import BasicActionsKeyboardHelpSection from '../../../scenery-phet/js/keyboard/help/BasicActionsKeyboardHelpSection.js';
 import RegionAndCulturePortrayal from '../../../joist/js/preferences/RegionAndCulturePortrayal.js';
-import { Property } from '../../../axon/js/imports.js';
+import Property from '../../../axon/js/Property.js';
 
 
 type SelfOptions = EmptySelfOptions;

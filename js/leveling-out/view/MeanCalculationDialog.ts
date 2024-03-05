@@ -18,9 +18,9 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction';
 

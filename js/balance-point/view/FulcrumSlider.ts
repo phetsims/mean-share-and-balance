@@ -5,17 +5,18 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  *
  */
-import { HSlider, HSliderOptions } from '../../../../sun/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
-import { Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { Dimension2 } from '../../../../dot/js/imports.js';
 import { BALANCE_BEAM_TRANSFORM } from './BalanceBeamNode.js';
 import Utils from '../../../../dot/js/Utils.js';
+import HSlider, { HSliderOptions } from '../../../../sun/js/HSlider.js';
+import Property from '../../../../axon/js/Property.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
 type SelfOptions = {
   fulcrumHeight: number; // in meters

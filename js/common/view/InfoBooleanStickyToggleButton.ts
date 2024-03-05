@@ -13,7 +13,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Path } from '../../../../scenery/js/imports.js';
 import infoCircleSolidShape from '../../../../sherpa/js/fontawesome-5/infoCircleSolidShape.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import { combineOptions } from '../../../../phet-core/js/imports.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
 
 export default class InfoBooleanStickyToggleButton extends BooleanRoundStickyToggleButton {
 

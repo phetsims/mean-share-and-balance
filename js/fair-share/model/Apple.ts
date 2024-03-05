@@ -11,7 +11,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Snack, { SnackOptions } from '../../common/model/Snack.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
-import { Property } from '../../../../axon/js/imports.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 type AppleOptions = SelfOptions & SnackOptions;

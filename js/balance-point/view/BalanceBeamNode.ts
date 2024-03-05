@@ -12,15 +12,15 @@ import { Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scen
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import FulcrumSlider from './FulcrumSlider.js';
-import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
+import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import LevelSupportColumnNode from '../../../../scenery-phet/js/LevelSupportColumnNode.js';
+import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();

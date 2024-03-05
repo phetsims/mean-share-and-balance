@@ -8,13 +8,13 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import SoccerModel, { SoccerModelOptions } from '../../../../soccer-common/js/model/SoccerModel.js';
 import BalancePointSceneModel from './BalancePointSceneModel.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
-import { BooleanProperty, Property } from '../../../../axon/js/imports.js';
 import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
+import Property from '../../../../axon/js/Property.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;

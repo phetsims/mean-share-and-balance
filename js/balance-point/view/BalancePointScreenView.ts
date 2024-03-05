@@ -11,7 +11,6 @@ import SoccerScreenView, { SoccerScreenViewOptions } from '../../../../soccer-co
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
@@ -30,6 +29,7 @@ import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/Kicke
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;

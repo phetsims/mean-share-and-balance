@@ -8,19 +8,21 @@
  */
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DerivedProperty, PatternStringProperty, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import { AlignBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
-import { EmptySelfOptions, optionize } from '../../../../phet-core/js/imports.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import { RectangularPushButton } from '../../../../sun/js/imports.js';
 import createValueReadoutStringProperty from '../../../../soccer-common/js/model/createValueReadoutStringProperty.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import BalanceBeamNode from './BalanceBeamNode.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 
 type SelfOptions = EmptySelfOptions;
 

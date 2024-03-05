@@ -15,7 +15,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { TProperty } from '../../../../axon/js/imports.js';
+import TProperty from '../../../../axon/js/TProperty.js';
 
 type SelfOptions = {
   isInitiallyActive?: boolean;

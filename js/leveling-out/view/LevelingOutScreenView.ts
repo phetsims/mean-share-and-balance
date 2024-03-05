@@ -29,8 +29,8 @@ import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { Vector2 } from '../../../../dot/js/imports.js';
 import { Shape } from '../../../../kite/js/imports.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;

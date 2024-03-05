@@ -24,9 +24,9 @@ import { SnackType } from './SharingScreenView.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import SnackStacker from '../SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
-import { Multilink } from '../../../../axon/js/imports.js';
 import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
 import Plate from '../model/Plate.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = {
   snackType: SnackType;

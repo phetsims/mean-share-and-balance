@@ -33,8 +33,8 @@ import person5_png from '../../../images/person5_png.js';
 import person6_png from '../../../images/person6_png.js';
 import person7_png from '../../../images/person7_png.js';
 import NotepadNode from './NotepadNode.js';
-import { Vector2 } from '../../../../dot/js/imports.js';
 import PartyTableNode from './PartyTableNode.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 export type SnackType = 'candyBars' | 'apples';
 

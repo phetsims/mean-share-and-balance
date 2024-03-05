@@ -18,8 +18,8 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Plate from './Plate.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
 import NullableIO from '../../../../tandem/js/types/NullableIO.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
   isActive: boolean;

@@ -21,7 +21,7 @@ import FairShareNotepadNode from './FairShareNotepadNode.js';
 import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
 import NotepadAppleNode from './NotepadAppleNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { Vector2 } from '../../../../dot/js/imports.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;

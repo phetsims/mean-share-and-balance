@@ -18,8 +18,9 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import { Bounds2, Dimension2 } from '../../../../dot/js/imports.js';
 import notepadRing_svg from '../../../images/notepadRing_svg.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{

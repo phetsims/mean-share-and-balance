@@ -10,8 +10,7 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Image, ImageOptions, NodeOptions } from '../../../../scenery/js/imports.js';
 import partyTable_svg from '../../../images/partyTable_svg.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 type SelfOptions = EmptySelfOptions;

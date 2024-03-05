@@ -20,11 +20,13 @@ import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringPrope
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import { Bounds2, Dimension2, Vector2 } from '../../../../dot/js/imports.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import Plate from '../../common/model/Plate.js';
 import { TimerListener } from '../../../../axon/js/Timer.js';
-import { stepTimer } from '../../../../axon/js/imports.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import stepTimer from '../../../../axon/js/stepTimer.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;

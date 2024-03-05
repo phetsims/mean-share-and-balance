@@ -8,7 +8,6 @@
 
 import SoccerSceneModel, { SoccerSceneModelOptions } from '../../../../soccer-common/js/model/SoccerSceneModel.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { BooleanProperty, DerivedProperty, NumberProperty, Property, TReadOnlyProperty } from '../../../../axon/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDistributionStrategy.js';
 import Range from '../../../../dot/js/Range.js';
@@ -17,6 +16,11 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 export default class BalancePointSceneModel extends SoccerSceneModel {

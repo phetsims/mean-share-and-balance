@@ -9,7 +9,6 @@
 
 import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { RectangularRadioButtonGroup, VerticalCheckboxGroup } from '../../../../sun/js/imports.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -20,6 +19,8 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
+import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;

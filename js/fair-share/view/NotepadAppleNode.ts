@@ -13,8 +13,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Apple from '../model/Apple.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { optionize } from '../../../../phet-core/js/imports.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 
