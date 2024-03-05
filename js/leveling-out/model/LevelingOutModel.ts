@@ -99,7 +99,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
               candyBar.positionProperty.set( endPosition );
             }
             else {
-              candyBar.travelTo( endPosition );
+              candyBar.moveTo( endPosition, true );
             }
             this.reorganizeSnacks( plate );
             this.stackChangedEmitter.emit();
@@ -215,7 +215,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
     // Set a potentially new destination for any animating candy bars.
     animatingCandyBars.forEach( ( candyBar, i ) => {
-      candyBar.travelTo( SnackStacker.getStackedCandyBarPosition( plate, i + nonAnimatingActiveCandyBars.length ) );
+      candyBar.moveTo( SnackStacker.getStackedCandyBarPosition( plate, i + nonAnimatingActiveCandyBars.length ), true );
     } );
   }
 

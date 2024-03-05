@@ -34,9 +34,9 @@ export default class CandyBar extends Snack {
   /**
    * Override to add state-setting, see parent class for additional info.
    */
-  public override travelTo( destination: Vector2 ): void {
+  public override moveTo( destination: Vector2, animate = false ): void {
     this.stateProperty.set( 'animating' );
-    super.travelTo( destination );
+    super.moveTo( destination, animate );
   }
 
   /**

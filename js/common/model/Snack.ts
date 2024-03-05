@@ -83,7 +83,7 @@ export default class Snack extends PhetioObject {
    * motion of a snack from one place to another.  It is okay to call this when an animation is in progress - it
    * will cause a new animation from the current location to the new destination.
    */
-  public travelTo( destination: Vector2 ): void {
+  public moveTo( destination: Vector2, animate = false ): void {
 
     // If there is already an animation in progress, take steps to redirect it to the (presumably) new destination.
     if ( this.travelAnimation ) {
@@ -96,31 +96,41 @@ export default class Snack extends PhetioObject {
       // Stopping the animation will cause the candy bar to be immediately moved to the originally specified
       // destination, but we don't want that in this case, so restore the position when this was called.
       this.positionProperty.set( currentPosition );
+
+      this.travelAnimation = null;
     }
 
-    // Calculate the animation time based on the distance and speed.
-    const animationTime = this.positionProperty.value.distance( destination ) / TRAVEL_SPEED;
+    if ( animate ) {
 
-    // Create the animation.
-    this.travelAnimation = new Animation( {
-      property: this.positionProperty,
-      to: destination,
-      duration: animationTime,
-      easing: Easing.CUBIC_OUT
-    } );
+      // Calculate the animation time based on the distance and speed.
+      const animationTime = this.positionProperty.value.distance( destination ) / TRAVEL_SPEED;
 
-    // handlers for when the animation completes or is stopped
-    this.travelAnimation.finishEmitter.addListener( () => {
-      this.positionProperty.set( destination );
-      this.finishAnimation();
-    } );
-    this.travelAnimation.stopEmitter.addListener( () => {
-      this.positionProperty.set( destination );
-      this.finishAnimation();
-    } );
+      // Create the animation.
+      this.travelAnimation = new Animation( {
+        property: this.positionProperty,
+        to: destination,
+        duration: animationTime,
+        easing: Easing.CUBIC_OUT
+      } );
 
-    // Kick off the animation.
-    this.travelAnimation.start();
+      // handlers for when the animation completes or is stopped
+      this.travelAnimation.finishEmitter.addListener( () => {
+        this.positionProperty.set( destination );
+        this.finishAnimation();
+      } );
+      this.travelAnimation.stopEmitter.addListener( () => {
+        this.positionProperty.set( destination );
+        this.finishAnimation();
+      } );
+
+      // Kick off the animation.
+      this.travelAnimation.start();
+    }
+    else {
+
+      // Go immediately to the destination.
+      this.positionProperty.value = destination;
+    }
   }
 
   protected finishAnimation(): void {

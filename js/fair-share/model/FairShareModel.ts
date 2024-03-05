@@ -118,6 +118,17 @@ export default class FairShareModel extends SharingModel<Apple> {
     // moves the apples around between plates and the collection area.
     const handleModeChange = ( notepadMode: NotepadMode, previousNotepadMode: NotepadMode | null ): void => {
 
+      // Cancel any in-progress or pending animations.
+      if ( this.collectToSyncAnimationTimerListener ) {
+        stepTimer.clearTimeout( this.collectToSyncAnimationTimerListener );
+        this.collectToSyncAnimationTimerListener = null;
+        this.applesAwaitingFractionalization.forEach( apple => {
+          apple.reset();
+        } );
+        this.applesAwaitingFractionalization.length = 0;
+        this.snacks.forEach( snack => snack.forceAnimationToFinish() );
+      }
+
       if ( previousNotepadMode === NotepadMode.SHARE ) {
 
         // Any time we leave the SHARE mode we should make sure we don't have fractional apples anywhere.
@@ -138,7 +149,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               const apple = activeApples.shift();
               if ( apple ) {
                 apple.parentPlateProperty.value = plate;
-                apple.travelTo( SnackStacker.getStackedApplePosition( plate, stackPosition ) );
+                apple.moveTo( SnackStacker.getStackedApplePosition( plate, stackPosition ), true );
               }
             }
             else {
@@ -147,7 +158,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               const apple = inactiveApples.shift();
               if ( apple ) {
                 apple.parentPlateProperty.value = plate;
-                apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, stackPosition );
+                apple.moveTo( SnackStacker.getStackedApplePosition( plate, stackPosition ) );
               }
             }
           } );
@@ -161,7 +172,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           const sortedApples = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
           sortedApples.forEach( apple => {
             if ( apple.isActiveProperty.value ) {
-              apple.travelTo( this.getCollectionPosition( collectionIndex++ ) );
+              apple.moveTo( this.getCollectionPosition( collectionIndex++ ), true );
             }
             apple.parentPlateProperty.value = null;
           } );
@@ -188,7 +199,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               assert && assert( apple, 'there should be at least one apple available' );
               if ( apple ) {
                 apple.parentPlateProperty.value = plate;
-                apple.travelTo( destination );
+                apple.moveTo( destination, true );
               }
             } );
           }
@@ -198,11 +209,12 @@ export default class FairShareModel extends SharingModel<Apple> {
         // distributed.
         availableActiveApples.forEach( ( apple, i ) => {
           this.applesAwaitingFractionalization.push( apple );
-          apple.travelTo(
+          apple.moveTo(
             new Vector2(
               i * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
               -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
-            )
+            ),
+            true
           );
         } );
 
@@ -219,7 +231,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               this.numberOfPlatesProperty.value
             );
 
-            // state checking
+            // Verify the state is consistent.
             assert && assert( fractionAmount.getValue() > 0 && this.applesAwaitingFractionalization.length > 0,
               'invalid state: there must be apples available for fractionalization if the fraction is > zero'
             );
@@ -232,6 +244,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               new Vector2( Number.NEGATIVE_INFINITY, 0 )
             );
 
+            // Add the number of additional apples needed for fractionalization and distribution.
             const inactiveApples = this.getInactiveSnacks();
             const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
                                                    this.applesAwaitingFractionalization.length;
@@ -240,19 +253,21 @@ export default class FairShareModel extends SharingModel<Apple> {
               if ( appleToAdd ) {
                 appleToAdd.isActiveProperty.value = true;
                 appleToAdd.fractionProperty.value = fractionAmount;
-                appleToAdd.positionProperty.value = new Vector2(
+                appleToAdd.moveTo( new Vector2(
                   rightmostWaitingApplePosition.x + ( i + 1 ) * MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION,
                   rightmostWaitingApplePosition.y
-                );
+                ) );
                 this.applesAwaitingFractionalization.push( appleToAdd );
               }
             } );
+
+            // Distribute the fractionalized apples to the plates.
             this.applesAwaitingFractionalization.forEach( ( apple, i ) => {
               apple.fractionProperty.value = fractionAmount;
               const plate = this.plates[ i ];
               apple.parentPlateProperty.value = plate;
               const destination = SnackStacker.getStackedApplePosition( plate, numberOfWholeApplesPerPlate );
-              apple.travelTo( destination );
+              apple.moveTo( destination, true );
             } );
             this.applesAwaitingFractionalization.length = 0;
 
@@ -272,7 +287,7 @@ export default class FairShareModel extends SharingModel<Apple> {
             activeApplesOnPlate.forEach( apple => {
               apple.fractionProperty.value = Fraction.ONE;
               if ( collectionIndex < this.totalSnacksProperty.value ) {
-                apple.travelTo( this.getCollectionPosition( collectionIndex ) );
+                apple.moveTo( this.getCollectionPosition( collectionIndex ), true );
                 apple.parentPlateProperty.value = null;
                 collectionIndex++;
               }
@@ -341,7 +356,7 @@ export default class FairShareModel extends SharingModel<Apple> {
                 else {
                   apple.isActiveProperty.set( false );
                 }
-                apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, i );
+                apple.moveTo( SnackStacker.getStackedApplePosition( plate, i ) );
               }
               else {
                 apple.isActiveProperty.set( false );
