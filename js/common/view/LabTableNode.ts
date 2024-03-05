@@ -20,8 +20,8 @@ export default class LabTableNode extends Node {
 
   public constructor( providedOptions?: TableNodeOptions ) {
 
-    const table = new Image( labDesk_svg, { scale: 0.5 } );
-    const tableBottom = new Rectangle( 28, 25, table.width - 54, 2000, {
+    const table = new Image( labDesk_svg, { maxWidth: 780 } );
+    const tableBottom = new Rectangle( 34, 25, table.width - 68, 2000, {
       fill: '#b59373',
       stroke: 'black',
       lineWidth: 2
