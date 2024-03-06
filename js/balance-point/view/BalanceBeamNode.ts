@@ -21,6 +21,9 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import LevelSupportColumnNode from '../../../../scenery-phet/js/LevelSupportColumnNode.js';
 import Property from '../../../../axon/js/Property.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSceneModel.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -35,6 +38,7 @@ type BalanceBeamNodeOptions = EmptySelfOptions & WithRequired<NodeOptions, 'tand
 export default class BalanceBeamNode extends Node {
 
   public constructor(
+    sceneModel: BalancePointSceneModel,
     playAreaNumberLineNode: NumberLineNode,
     paperStackBounds: Bounds2,
     fulcrumValueProperty: Property<number>,
@@ -57,27 +61,26 @@ export default class BalanceBeamNode extends Node {
         excludeInvisibleChildrenFromBounds: true
       } );
 
-    const lineStart = BALANCE_BEAM_TRANSFORM.modelToViewX( -1 );
-    const lineEnd = BALANCE_BEAM_TRANSFORM.modelToViewX( 11 );
+    const lineStartX = BALANCE_BEAM_TRANSFORM.modelToViewX( sceneModel.leftBalanceBeamXValue );
+    const lineEndX = BALANCE_BEAM_TRANSFORM.modelToViewX( sceneModel.rightBalanceBeamXValue );
     const groundY = BALANCE_BEAM_TRANSFORM.modelToViewY( 0 );
     const lineWidth = 1;
     const groundLineCenterY = groundY - lineWidth / 2;
-    const groundLine = new Line( lineStart, groundLineCenterY, lineEnd, groundLineCenterY, {
+    const groundLine = new Line( lineStartX, groundLineCenterY, lineEndX, groundLineCenterY, {
       stroke: 'grey'
     } );
 
-    const fulcrumHeight = -0.7; // the transform is inverted.
     const fulcrumWidth = 0.85;
     const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, meanValueProperty,
       isMeanFulcrumFixedProperty, {
-      fulcrumHeight: fulcrumHeight,
-      fulcrumWidth: fulcrumWidth,
-      bottom: groundY,
-      tandem: options.tandem?.createTandem( 'fulcrumSlider' )
-    } );
+        fulcrumHeight: FULCRUM_HEIGHT,
+        fulcrumWidth: fulcrumWidth,
+        bottom: groundY,
+        tandem: options.tandem?.createTandem( 'fulcrumSlider' )
+      } );
 
     const columnWidth = 15; // empirically determined
-    const columnHeight = BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( fulcrumHeight );
+    const columnHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( FULCRUM_HEIGHT ) );
     const supportColumns = _.times( 2, i => {
       return new LevelSupportColumnNode( {
         columnWidth: columnWidth,
@@ -92,6 +95,15 @@ export default class BalanceBeamNode extends Node {
       children: [ notepadNumberLineNode, groundLine, ...supportColumns, fulcrumSlider ]
     }, options );
     super( superOptions );
+
+    // Create and add beam
+    const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value );
+    const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value );
+    const beamLine = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
+      stroke: MeanShareAndBalanceColors.meanColorProperty,
+      lineWidth: 2
+    } );
+    this.addChild( beamLine );
 
     // Align with the play are number line node, based on the tick mark values
     const matrixBetweenProperty = new MatrixBetweenProperty( playAreaNumberLineNode.tickMarkSet, notepadNumberLineNode.tickMarkSet );
@@ -108,6 +120,10 @@ export default class BalanceBeamNode extends Node {
           this.x += localDeltaX;
         }
       }
+    } );
+
+    Multilink.multilink( [ sceneModel.leftBalanceBeamYValueProperty, sceneModel.rightBalanceBeamYValueProperty ], ( leftY, rightY ) => {
+      beamLine.setLine( lineStartX, BALANCE_BEAM_TRANSFORM.modelToViewY( leftY ), lineEndX, BALANCE_BEAM_TRANSFORM.modelToViewY( rightY ) );
     } );
   }
 }

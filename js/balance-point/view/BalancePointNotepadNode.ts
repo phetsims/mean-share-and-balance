@@ -101,12 +101,12 @@ export default class BalancePointNotepadNode extends NotepadNode {
     } );
     this.addChild( alignBox );
 
-    const balanceBeamNode = new BalanceBeamNode( playAreaNumberLineNode,
+    const balanceBeamNode = new BalanceBeamNode( sceneModel, playAreaNumberLineNode,
       this.paperStackBounds, sceneModel.fulcrumValueProperty,
       sceneModel.meanValueProperty,
       sceneModel.beamSupportsPresentProperty, areTickMarksVisibleProperty,
       isMeanFulcrumFixedProperty, {
-      tandem: options.tandem.createTandem( 'balanceBeamNode' )
+        tandem: options.tandem.createTandem( 'balanceBeamNode' )
       } );
     this.addChild( balanceBeamNode );
   }

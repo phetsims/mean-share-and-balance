@@ -34,7 +34,7 @@ export default class FulcrumSlider extends HSlider {
     providedOptions: BalanceBeamFulcrumOptions
   ) {
 
-    const triangleHeight = BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight );
+    const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight ) );
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( providedOptions.fulcrumWidth );
     const thumbNode = new TriangleNode( {
       triangleHeight: triangleHeight,
