@@ -79,7 +79,8 @@ export default class NotepadNode extends Node {
     }, options );
     super( superOptions );
 
-    this.paperStackBounds = paperStackNode.bounds;
+    // Make a copy of the paper stack bounds available to subclasses for positioning of child nodes.
+    this.paperStackBounds = paperStackNode.bounds.copy();
 
     if ( options.readoutPatternStringProperty ) {
       const readoutText = new Text( options.readoutPatternStringProperty, {
@@ -89,7 +90,7 @@ export default class NotepadNode extends Node {
       } );
 
       const readoutAlignBox = new AlignBox( readoutText, {
-        alignBounds: this.paperStackBounds.dilateX( -LABEL_MARGIN ),
+        alignBounds: this.paperStackBounds.dilatedX( -LABEL_MARGIN ),
         xAlign: 'right',
         yAlign: 'top',
         yMargin: NOTEPAD_RING_BOTTOM + 5
