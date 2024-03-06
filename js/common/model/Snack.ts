@@ -144,10 +144,9 @@ export default class Snack extends PhetioObject {
   }
 
   /**
-   * If there is an in-progress animation, force it to finish immediately.
-   * Force any in-progress animation to immediately finish.  If there is no in-progress animation, this is ignored.
-   * This is primarily intended to be used in conditions like a reset or a change in conditions where having a moving
-   * candy bar could be problematic.
+   * If there is an in-progress animation, force it to finish immediately.  If there is no in-progress animation, this
+   * does nothing.  This is primarily intended to be used in conditions like a reset or a change in conditions where
+   * having a moving snack could be problematic.
    */
   public forceAnimationToFinish(): void {
     if ( this.travelAnimation ) {
