@@ -95,11 +95,11 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.plates.forEach( plate => {
 
       // Move the apples on the plates when the plates themselves move except when the notepad is in Collect mode.
-      plate.xPositionProperty.lazyLink( ( xPosition, previousXPosition ) => {
+      plate.xPositionProperty.lazyLink( () => {
         if ( this.notepadModeProperty.value !== NotepadMode.COLLECT ) {
-          const deltaX = xPosition - previousXPosition;
-          this.getSnacksAssignedToPlate( plate ).forEach( candyBar => {
-            candyBar.positionProperty.value = candyBar.positionProperty.value.plusXY( deltaX, 0 );
+          const sortedApples = sortApplesByStackingOrder( this.getSnacksAssignedToPlate( plate ) );
+          sortedApples.forEach( ( apple, i ) => {
+            apple.moveTo( SnackStacker.getStackedApplePosition( plate, i ) );
           } );
         }
       } );
