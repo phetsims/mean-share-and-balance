@@ -74,8 +74,11 @@ export default class Plate extends PhetioObject {
 
   // LinePlacement and position never changes and hence doesn't need to be reset.
   public reset(): void {
-    this.isActiveProperty.reset();
+
+    // The snack number property needs to be reset before the isActiveProperty, so that notepad snacks are updated
+    // correctly in listeners before arriving to the isActiveProperty listeners when setting Phet-io state.
     this.snackNumberProperty.reset();
+    this.isActiveProperty.reset();
   }
 
   // Width of the plate (aka diameter) in screen coordinates.

@@ -225,6 +225,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   private reconcileSnacks( plate: Plate ): void {
     const numberOfTablePlateSnacks = plate.snackNumberProperty.value;
     const numberOfNotepadPlateSnacks = this.getActiveCandyBarsAssignedToPlate( plate ).length;
+    console.log( 'numberOfNotepadPlateSnacks', numberOfNotepadPlateSnacks );
 
     if ( numberOfTablePlateSnacks > numberOfNotepadPlateSnacks ) {
       const delta = numberOfTablePlateSnacks - numberOfNotepadPlateSnacks;
