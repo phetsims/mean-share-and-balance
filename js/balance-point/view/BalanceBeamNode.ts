@@ -8,7 +8,7 @@
  *
  */
 
-import { Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Circle, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -27,6 +27,7 @@ import Multilink from '../../../../axon/js/Multilink.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
+const BEAM_DOT_RADIUS = 3;
 
 export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
   new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
@@ -96,7 +97,7 @@ export default class BalanceBeamNode extends Node {
     }, options );
     super( superOptions );
 
-    // Create and add beam
+    // Create and add beam.
     const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value );
     const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value );
     const beamLine = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
@@ -104,6 +105,19 @@ export default class BalanceBeamNode extends Node {
       lineWidth: 2
     } );
     this.addChild( beamLine );
+
+    // Add the dots that appear on the beam when tick marks are enabled.
+    const numberOfBeamDots = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength() + 1;
+    assert && assert( Number.isInteger( numberOfBeamDots ), 'number of dots should be an integer' );
+    const beamDots: Circle[] = [];
+    _.times( numberOfBeamDots, () => {
+      const dot = new Circle( BEAM_DOT_RADIUS, {
+        fill: MeanShareAndBalanceColors.meanColorProperty,
+        visibleProperty: areTickMarksVisibleProperty
+      } );
+      this.addChild( dot );
+      beamDots.push( dot );
+    } );
 
     // Align with the play are number line node, based on the tick mark values
     const matrixBetweenProperty = new MatrixBetweenProperty( playAreaNumberLineNode.tickMarkSet, notepadNumberLineNode.tickMarkSet );
@@ -122,9 +136,26 @@ export default class BalanceBeamNode extends Node {
       }
     } );
 
-    Multilink.multilink( [ sceneModel.leftBalanceBeamYValueProperty, sceneModel.rightBalanceBeamYValueProperty ], ( leftY, rightY ) => {
-      beamLine.setLine( lineStartX, BALANCE_BEAM_TRANSFORM.modelToViewY( leftY ), lineEndX, BALANCE_BEAM_TRANSFORM.modelToViewY( rightY ) );
-    } );
+    // Update the position of the beam and the tick mark dots when the model changes.
+    Multilink.multilink(
+      [ sceneModel.leftBalanceBeamYValueProperty, sceneModel.rightBalanceBeamYValueProperty ],
+      ( leftY, rightY ) => {
+
+        const startPoint = new Vector2( lineStartX, BALANCE_BEAM_TRANSFORM.modelToViewY( leftY ) );
+        const endPoint = new Vector2( lineEndX, BALANCE_BEAM_TRANSFORM.modelToViewY( rightY ) );
+
+        // Update the balance beam line.
+        beamLine.setPoint1( startPoint );
+        beamLine.setPoint2( endPoint );
+
+        // Update the tick mark dot positions.
+        const startToEndVector = endPoint.minus( startPoint );
+        const pointToPointVector = startToEndVector.withMagnitude( startToEndVector.getMagnitude() / ( beamDots.length + 1 ) );
+        beamDots.forEach( ( beamDot, i ) => {
+          beamDot.translation = startPoint.plus( pointToPointVector.times( i + 1 ) );
+        } );
+      }
+    );
   }
 }
 
