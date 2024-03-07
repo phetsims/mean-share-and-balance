@@ -21,10 +21,17 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Multilink from '../../../../axon/js/Multilink.js';
+import Utils from '../../../../dot/js/Utils.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
+const X_AXIS_RANGE = new Range(
+  MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min - 1,
+  MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.max + 1
+);
 export const FULCRUM_HEIGHT = 0.7;
+
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
   // Controls whether the column supports for the beam are present or not, fixing the beam in a horizontal position
@@ -38,9 +45,9 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   // The position of the balance beam is determined by the x and y values of the left and right end points of the line.
   // The x values never vary.
   public readonly leftBalanceBeamYValueProperty: Property<number>;
-  public readonly leftBalanceBeamXValue = -1;
+  public readonly leftBalanceBeamXValue = X_AXIS_RANGE.min;
   public readonly rightBalanceBeamYValueProperty: Property<number>;
-  public readonly rightBalanceBeamXValue = 11;
+  public readonly rightBalanceBeamXValue = X_AXIS_RANGE.max;
 
   public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, options: BalancePointSceneModelOptions ) {
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
@@ -52,15 +59,13 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       null,
       'right',
       {
-        rightSkewedData: [
-          0, 25, 45, 30, 18,
-          12, 10, 5, 4, 4, 4 ],
+        rightSkewedData: [ 0, 25, 45, 30, 18, 12, 10, 5, 4, 4, 4 ],
         valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
         tandem: options.tandem.createTandem( 'kickDistributionStrategy' )
       }
     );
 
-    const kickRange = new Range( 0, 10 );
+    const kickRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 
     const createSoccerBall = ( isFirstSoccerBall: boolean, tandem: Tandem ) => {
       return new SoccerBall( isFirstSoccerBall, tandem );
@@ -119,17 +124,38 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       tandem: options.tandem.createTandem( 'rightBalanceBeamYValueProperty' )
     } );
 
-    this.beamSupportsPresentProperty.link( supportsPresent => {
-      if ( supportsPresent ) {
-        this.leftBalanceBeamYValueProperty.reset();
-        this.rightBalanceBeamYValueProperty.reset();
+    // Update the position of the beam as other aspects of the model change.
+    Multilink.multilink( [
+        this.beamSupportsPresentProperty,
+        this.fulcrumValueProperty,
+        this.meanValueProperty
+      ],
+      ( supportsPresent, fulcrumValue, mean ) => {
+
+        const roundedMean = mean === null ?
+                            null :
+                            Utils.roundToInterval( mean, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
+
+        // If the supports are present, the beam is horizontal, which is its initial state.
+        if ( supportsPresent || mean === null || roundedMean === fulcrumValue ) {
+          this.leftBalanceBeamYValueProperty.reset();
+          this.rightBalanceBeamYValueProperty.reset();
+        }
+        else {
+
+          const tiltedToLeft = mean < fulcrumValue;
+
+          if ( tiltedToLeft ) {
+            this.leftBalanceBeamYValueProperty.value = 0;
+            this.rightBalanceBeamYValueProperty.value = 12 * FULCRUM_HEIGHT / ( fulcrumValue + 1 );
+          }
+          else {
+            this.leftBalanceBeamYValueProperty.value = 12 * FULCRUM_HEIGHT / ( 12 - ( fulcrumValue + 1 ) );
+            this.rightBalanceBeamYValueProperty.value = 0;
+          }
+        }
       }
-      else {
-        // TODO: just sketching it in, https://github.com/phetsims/mean-share-and-balance/issues/152
-        this.leftBalanceBeamYValueProperty.value = 0;
-        this.rightBalanceBeamYValueProperty.value = 4;
-      }
-    } );
+    );
   }
 
   private getKickedBalls(): SoccerBall[] {

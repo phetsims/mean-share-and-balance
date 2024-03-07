@@ -23,6 +23,9 @@ const NUMBER_LINE_RIGHT_X_MARGIN = 215;
 
 const MeanShareAndBalanceConstants = {
 
+  // The interval to which the mean value is rounded when shown to the user.  For example, 5.666667 would be 5.7.
+  MEAN_ROUNDING_INTERVAL: 0.1,
+
   NUMBER_SPINNER_CONTAINERS_RANGE: new Range( 1, 7 ),
   SCREEN_VIEW_X_MARGIN: DEFAULT_MARGIN,
   SCREEN_VIEW_Y_MARGIN: DEFAULT_MARGIN,

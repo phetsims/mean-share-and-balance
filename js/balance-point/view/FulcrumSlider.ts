@@ -52,7 +52,7 @@ export default class FulcrumSlider extends HSlider {
       trackFillDisabled: null,
       trackStroke: null,
       trackPickable: false,
-      constrainValue: value => Utils.roundToInterval( value, 0.1 ),
+      constrainValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 )
     }, providedOptions );
     super( fulcrumValueProperty, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, options );
