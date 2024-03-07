@@ -5,7 +5,7 @@
  * point in order to find the mean.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import { Circle, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
