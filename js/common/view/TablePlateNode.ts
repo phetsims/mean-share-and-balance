@@ -23,6 +23,7 @@ import SnackStacker from '../SnackStacker.js';
 import candyBar_svg from '../../../images/candyBar_svg.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import greenApple_svg from '../../../images/greenApple_svg.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -54,6 +55,7 @@ export default class TablePlateNode extends Node {
       new Property( numberPickerRange ),
       {
         centerTop: new Vector2( plateImage.centerBottom.x, 30 ),
+        color: MeanShareAndBalanceColors.numberPickerColorProperty,
         tandem: options.tandem.createTandem( 'numberPicker' )
       }
     );

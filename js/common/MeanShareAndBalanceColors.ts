@@ -93,6 +93,9 @@ const meanShareAndBalanceColors = {
   } ),
   checkButtonColorProperty: new ProfileColorProperty( meanShareAndBalance, 'checkButton', {
     default: '#FFF383'
+  } ),
+  numberPickerColorProperty: new ProfileColorProperty( meanShareAndBalance, 'numberPicker', {
+    default: '#000000'
   } )
 };
 
