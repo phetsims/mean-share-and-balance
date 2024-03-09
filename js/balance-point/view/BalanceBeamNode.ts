@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Circle, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Circle, Color, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -24,10 +24,13 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSceneModel.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
 const BEAM_DOT_RADIUS = 3;
+const BALL_GRAPHIC_RADIUS = 10;
 
 export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
   new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
@@ -52,7 +55,8 @@ export default class BalanceBeamNode extends Node {
 
     const options = optionize<BalanceBeamNodeOptions, EmptySelfOptions, NodeOptions>()( {}, providedOptions );
 
-    const notepadNumberLineNode = new NumberLineNode( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH,
+    const notepadNumberLineNode = new NumberLineNode(
+      MeanShareAndBalanceConstants.CHART_VIEW_WIDTH,
       MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, {
         includeXAxis: false,
         color: 'black',
@@ -60,7 +64,8 @@ export default class BalanceBeamNode extends Node {
         visibleProperty: areTickMarksVisibleProperty,
         bottom: paperStackBounds.bottom - 15,
         excludeInvisibleChildrenFromBounds: true
-      } );
+      }
+    );
 
     const lineStartX = BALANCE_BEAM_TRANSFORM.modelToViewX( sceneModel.leftBalanceBeamXValue );
     const lineEndX = BALANCE_BEAM_TRANSFORM.modelToViewX( sceneModel.rightBalanceBeamXValue );
@@ -134,6 +139,29 @@ export default class BalanceBeamNode extends Node {
           this.x += localDeltaX;
         }
       }
+    } );
+
+    const soccerBallToGraphicMap = new Map<SoccerBall, Circle>();
+
+    // This function updates the positions of the soccer ball graphics such that they stack on the beam.
+    const updateBallGraphicPositions = () => {
+      soccerBallToGraphicMap.forEach( ( ballCircle, soccerBall ) => {
+        const valueToMap = soccerBall.valueProperty.value === null ? 0 : soccerBall.valueProperty.value;
+        ballCircle.x = BALANCE_BEAM_TRANSFORM.modelToViewX( valueToMap );
+        ballCircle.y = BALANCE_BEAM_TRANSFORM.modelToViewY( FULCRUM_HEIGHT ) - BALL_GRAPHIC_RADIUS;
+      } );
+    };
+
+    // Add a ball graphic for each of the soccer balls in the model.
+    sceneModel.soccerBalls.forEach( soccerBall => {
+      const ballGraphicVisibleProperty = new DerivedProperty( [ soccerBall.valueProperty ], value => value !== null );
+      const soccerBallGraphic = new Circle( BALL_GRAPHIC_RADIUS, {
+        fill: Color.BLACK,
+        visibleProperty: ballGraphicVisibleProperty
+      } );
+      this.addChild( soccerBallGraphic );
+      soccerBall.valueProperty.lazyLink( updateBallGraphicPositions );
+      soccerBallToGraphicMap.set( soccerBall, soccerBallGraphic );
     } );
 
     // Update the position of the beam and the tick mark dots when the model changes.
