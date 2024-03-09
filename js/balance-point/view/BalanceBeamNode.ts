@@ -26,6 +26,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import Multilink from '../../../../axon/js/Multilink.js';
 import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -145,10 +146,21 @@ export default class BalanceBeamNode extends Node {
 
     // This function updates the positions of the soccer ball graphics such that they stack on the beam.
     const updateBallGraphicPositions = () => {
+
+      // Create a function that can be used to find the model Y position of the beam for a given X position.
+      const beamLineFunction = new LinearFunction(
+        sceneModel.leftBalanceBeamXValue,
+        sceneModel.rightBalanceBeamXValue,
+        sceneModel.leftBalanceBeamYValueProperty.value,
+        sceneModel.rightBalanceBeamYValueProperty.value
+      );
+
+      // Go through the soccer balls in the model and update the position of the corresponding graphic representation.
       soccerBallToGraphicMap.forEach( ( ballCircle, soccerBall ) => {
-        const valueToMap = soccerBall.valueProperty.value === null ? 0 : soccerBall.valueProperty.value;
-        ballCircle.x = BALANCE_BEAM_TRANSFORM.modelToViewX( valueToMap );
-        ballCircle.y = BALANCE_BEAM_TRANSFORM.modelToViewY( FULCRUM_HEIGHT ) - BALL_GRAPHIC_RADIUS;
+        const ballModelXPosition = soccerBall.valueProperty.value === null ? 0 : soccerBall.valueProperty.value;
+        const beamModelYPosition = beamLineFunction.evaluate( ballModelXPosition );
+        ballCircle.x = BALANCE_BEAM_TRANSFORM.modelToViewX( ballModelXPosition );
+        ballCircle.y = BALANCE_BEAM_TRANSFORM.modelToViewY( beamModelYPosition ) - BALL_GRAPHIC_RADIUS;
       } );
     };
 
@@ -182,6 +194,9 @@ export default class BalanceBeamNode extends Node {
         beamDots.forEach( ( beamDot, i ) => {
           beamDot.translation = startPoint.plus( pointToPointVector.times( i + 1 ) );
         } );
+
+        // Update the positions of the ball graphics that are stacked on the beam.
+        updateBallGraphicPositions();
       }
     );
   }
