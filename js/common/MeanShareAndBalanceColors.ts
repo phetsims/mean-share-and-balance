@@ -96,6 +96,9 @@ const meanShareAndBalanceColors = {
   } ),
   numberPickerColorProperty: new ProfileColorProperty( meanShareAndBalance, 'numberPicker', {
     default: '#000000'
+  } ),
+  balanceBeamBallsColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balanceBeamBalls', {
+    default: Color.BLACK
   } )
 };
 

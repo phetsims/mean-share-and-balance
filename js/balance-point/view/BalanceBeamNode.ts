@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Circle, Color, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Circle, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -24,8 +24,6 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSceneModel.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
@@ -68,6 +66,7 @@ export default class BalanceBeamNode extends Node {
       }
     );
 
+    // Calculate view coordinate values for a number of fixed values from the model.
     const lineStartX = BALANCE_BEAM_TRANSFORM.modelToViewX( sceneModel.leftBalanceBeamXValue );
     const lineEndX = BALANCE_BEAM_TRANSFORM.modelToViewX( sceneModel.rightBalanceBeamXValue );
     const groundY = BALANCE_BEAM_TRANSFORM.modelToViewY( 0 );
@@ -98,21 +97,14 @@ export default class BalanceBeamNode extends Node {
       } );
     } );
 
-    const superOptions = combineOptions<NodeOptions>( {
-      children: [ notepadNumberLineNode, groundLine, ...supportColumns, fulcrumSlider ]
-    }, options );
-    super( superOptions );
-
-    // Create and add beam.
     const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value );
     const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value );
     const beamLine = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
       stroke: MeanShareAndBalanceColors.meanColorProperty,
       lineWidth: 2
     } );
-    this.addChild( beamLine );
 
-    // Add the dots that appear on the beam when tick marks are enabled.
+    // Define the dots that appear on the beam when tick marks are enabled.
     const numberOfBeamDots = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength() + 1;
     assert && assert( Number.isInteger( numberOfBeamDots ), 'number of dots should be an integer' );
     const beamDots: Circle[] = [];
@@ -121,11 +113,29 @@ export default class BalanceBeamNode extends Node {
         fill: MeanShareAndBalanceColors.meanColorProperty,
         visibleProperty: areTickMarksVisibleProperty
       } );
-      this.addChild( dot );
       beamDots.push( dot );
     } );
 
-    // Align with the play are number line node, based on the tick mark values
+    // Add the graphical representation of the soccer balls.  These are circles that will appear to be stacked on the
+    // balance beam.
+    const soccerBallGraphics = _.times( sceneModel.soccerBalls.length, () => new Circle( BALL_GRAPHIC_RADIUS, {
+      fill: MeanShareAndBalanceColors.balanceBeamBallsColorProperty
+    } ) );
+
+    const superOptions = combineOptions<NodeOptions>( {
+      children: [
+        notepadNumberLineNode,
+        groundLine,
+        ...soccerBallGraphics,
+        ...beamDots,
+        beamLine,
+        ...supportColumns,
+        fulcrumSlider
+      ]
+    }, options );
+    super( superOptions );
+
+    // Align with the play area number line node, based on the tick mark values.
     const matrixBetweenProperty = new MatrixBetweenProperty( playAreaNumberLineNode.tickMarkSet, notepadNumberLineNode.tickMarkSet );
 
     matrixBetweenProperty.link( matrix => {
@@ -142,47 +152,25 @@ export default class BalanceBeamNode extends Node {
       }
     } );
 
-    const soccerBallToGraphicMap = new Map<SoccerBall, Circle>();
+    // Update the position of the balance beam and the balls that may be sitting on it when anything changes in the
+    // model that could require an update.
+    Multilink.multilinkAny(
+      [
+        sceneModel.leftBalanceBeamYValueProperty,
+        sceneModel.rightBalanceBeamYValueProperty,
+        ...sceneModel.soccerBalls.map( soccerBall => soccerBall.valueProperty )
+      ],
+      () => {
 
-    // This function updates the positions of the soccer ball graphics such that they stack on the beam.
-    const updateBallGraphicPositions = () => {
-
-      // Create a function that can be used to find the model Y position of the beam for a given X position.
-      const beamLineFunction = new LinearFunction(
-        sceneModel.leftBalanceBeamXValue,
-        sceneModel.rightBalanceBeamXValue,
-        sceneModel.leftBalanceBeamYValueProperty.value,
-        sceneModel.rightBalanceBeamYValueProperty.value
-      );
-
-      // Go through the soccer balls in the model and update the position of the corresponding graphic representation.
-      soccerBallToGraphicMap.forEach( ( ballCircle, soccerBall ) => {
-        const ballModelXPosition = soccerBall.valueProperty.value === null ? 0 : soccerBall.valueProperty.value;
-        const beamModelYPosition = beamLineFunction.evaluate( ballModelXPosition );
-        ballCircle.x = BALANCE_BEAM_TRANSFORM.modelToViewX( ballModelXPosition );
-        ballCircle.y = BALANCE_BEAM_TRANSFORM.modelToViewY( beamModelYPosition ) - BALL_GRAPHIC_RADIUS;
-      } );
-    };
-
-    // Add a ball graphic for each of the soccer balls in the model.
-    sceneModel.soccerBalls.forEach( soccerBall => {
-      const ballGraphicVisibleProperty = new DerivedProperty( [ soccerBall.valueProperty ], value => value !== null );
-      const soccerBallGraphic = new Circle( BALL_GRAPHIC_RADIUS, {
-        fill: Color.BLACK,
-        visibleProperty: ballGraphicVisibleProperty
-      } );
-      this.addChild( soccerBallGraphic );
-      soccerBall.valueProperty.lazyLink( updateBallGraphicPositions );
-      soccerBallToGraphicMap.set( soccerBall, soccerBallGraphic );
-    } );
-
-    // Update the position of the beam and the tick mark dots when the model changes.
-    Multilink.multilink(
-      [ sceneModel.leftBalanceBeamYValueProperty, sceneModel.rightBalanceBeamYValueProperty ],
-      ( leftY, rightY ) => {
-
-        const startPoint = new Vector2( lineStartX, BALANCE_BEAM_TRANSFORM.modelToViewY( leftY ) );
-        const endPoint = new Vector2( lineEndX, BALANCE_BEAM_TRANSFORM.modelToViewY( rightY ) );
+        // Calculate the start and end points of the balance beam line in view coordinates.
+        const startPoint = new Vector2(
+          lineStartX,
+          BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value )
+        );
+        const endPoint = new Vector2(
+          lineEndX,
+          BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value )
+        );
 
         // Update the balance beam line.
         beamLine.setPoint1( startPoint );
@@ -195,8 +183,46 @@ export default class BalanceBeamNode extends Node {
           beamDot.translation = startPoint.plus( pointToPointVector.times( i + 1 ) );
         } );
 
-        // Update the positions of the ball graphics that are stacked on the beam.
-        updateBallGraphicPositions();
+        // Create a function that will map a model X value to a Y value on the beam.
+        const beamLineFunction = new LinearFunction(
+          sceneModel.leftBalanceBeamXValue,
+          sceneModel.rightBalanceBeamXValue,
+          sceneModel.leftBalanceBeamYValueProperty.value,
+          sceneModel.rightBalanceBeamYValueProperty.value
+        );
+
+        // Go through the soccer balls in the model and update the position and visibility of the corresponding graphic
+        // representation.
+        const ballsAtEachLocation: number[] = [];
+        sceneModel.soccerBalls.forEach( ( modelSoccerBall, i ) => {
+          if ( modelSoccerBall.valueProperty.value === null ) {
+
+            // This ball is not on the field, so just set the graphic to be invisible.
+            soccerBallGraphics[ i ].visible = false;
+          }
+          else {
+
+            // This ball is on the field, so put the corresponding graphic on the appropriate position on the beam or
+            // stacked atop other balls and make it visible.
+            const ballGraphic = soccerBallGraphics[ i ];
+            ballGraphic.visible = true;
+            const ballModelXPosition = modelSoccerBall.valueProperty.value;
+            assert && assert( Number.isInteger( ballModelXPosition ), 'balls must be at integer positions' );
+            const ballsAlreadyAtThisLocation = ballsAtEachLocation[ ballModelXPosition ] === undefined ?
+                                               0 :
+                                               ballsAtEachLocation[ ballModelXPosition ];
+
+            // Set the ball graphic's position.
+            const beamModelYPosition = beamLineFunction.evaluate( modelSoccerBall.positionProperty.value.x );
+            ballGraphic.x = BALANCE_BEAM_TRANSFORM.modelToViewX( modelSoccerBall.valueProperty.value );
+            ballGraphic.y = BALANCE_BEAM_TRANSFORM.modelToViewY( beamModelYPosition ) -
+                            BALL_GRAPHIC_RADIUS -
+                            ballsAlreadyAtThisLocation * BALL_GRAPHIC_RADIUS * 2;
+
+            // Update the count of balls at this position on the beam.
+            ballsAtEachLocation[ ballModelXPosition ] = ballsAlreadyAtThisLocation + 1;
+          }
+        } );
       }
     );
   }
