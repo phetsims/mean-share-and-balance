@@ -31,6 +31,7 @@ import SnackStacker from '../../common/SnackStacker.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -79,32 +80,54 @@ export default class LevelingOutScreenView extends SharingScreenView {
 
     // function for what candy bars should do at the end of their drag
     const candyBarDropped = ( candyBarNode: NotepadCandyBarNode ) => {
-      const platesWithSpace = model.getPlatesWithSpace( model.getActivePlates() );
+      const activePlates = model.getActivePlates();
+      const platesWithSpace = model.getPlatesWithSpace( activePlates );
+
+      if ( platesWithSpace.length === 0 ) {
+        const parentPlate = candyBarNode.candyBar.parentPlateProperty.value!;
+        assert && assert( parentPlate.isActiveProperty.value,
+          'When there are no empty plates, the candy bar should still be attached to an active parent plate.' );
+        candyBarNode.candyBar.moveTo(
+          SnackStacker.getStackedCandyBarPosition(
+            parentPlate,
+            parentPlate.notepadSnackNumberProperty.value - 1
+          ),
+          true
+        );
+
+        // We dropped onto our own plate, so we can exit early.
+        return;
+      }
 
       // Find the notepadPlate closest to where the candy bar was dropped.
       const closestPlate = _.minBy(
         platesWithSpace,
         plate => Math.abs( plate.xPositionProperty.value - candyBarNode.candyBar.positionProperty.value.x )
       );
-      assert && assert( closestPlate !== undefined, 'There should always be a plate with space when a bar is dropped.' );
 
       // Swap candy bars if parentPlate changes. Each person always has the same total number of candy bars so
       // that when their spinner is incremented, they can promote their own inactive candy bar to active.
       const currentParent = candyBarNode.candyBar.parentPlateProperty.value;
       if ( currentParent !== closestPlate ) {
         const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarAssignedToPlate( closestPlate! );
-        assert && assert( inactiveCandyBarForSwap,
-          `There are no inactive candy bars on the plate ${closestPlate!.linePlacement}` );
+        assert && assert( closestPlate!.notepadSnackNumberProperty.value <
+                          MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
+          `There are no inactive candy bars on plate: ${closestPlate!.linePlacement}.` );
+        assert && assert( currentParent!.notepadSnackNumberProperty.value > 0,
+          `There are  no active candy bars on plate: ${currentParent!.linePlacement}` );
+
         inactiveCandyBarForSwap!.parentPlateProperty.set( currentParent );
         candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
+
+        currentParent!.notepadSnackNumberProperty.value--;
+        closestPlate!.notepadSnackNumberProperty.value++;
       }
       else {
-
         // When the parent plate stays the same we need to animate back to the top of the stack
         candyBarNode.candyBar.moveTo(
           SnackStacker.getStackedCandyBarPosition(
             closestPlate,
-            model.getNumberOfCandyBarsStackedOnPlate( closestPlate )
+            closestPlate.notepadSnackNumberProperty.value - 1
           ),
           true
         );
@@ -146,7 +169,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
           assert && assert(
             platesWithSnacks.length !== 0,
             'In order to select the next group item there must be active candy bars. The number of' +
-            'active candy bars is: ' + model.getActiveCandyBars().length
+            'active candy bars is: ' + model.totalSnacksProperty.value
           );
           assert && assert(
             candyBar.parentPlateProperty.value,

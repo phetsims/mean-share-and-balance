@@ -60,7 +60,7 @@ export default class LevelingOutNotepadPlateNode extends Node {
     super( options );
 
     // Set the visibility of the outline nodes based on how many candy bars are on the table plate.
-    plate.snackNumberProperty.link( numberOfSnacksOnPlate => {
+    plate.tableSnackNumberProperty.link( numberOfSnacksOnPlate => {
       candyBarOutlineNodes.forEach( ( node, index ) => {
         node.visible = numberOfSnacksOnPlate > index;
       } );

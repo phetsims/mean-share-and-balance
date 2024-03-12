@@ -35,7 +35,10 @@ export default class Plate extends PhetioObject {
   public readonly xPositionProperty: TProperty<number>;
 
   // The number of snacks (candy bars or apples) on this plate.
-  public readonly snackNumberProperty: Property<number>;
+  public readonly tableSnackNumberProperty: Property<number>;
+
+  // The number of snacks (candy bars or apples) on the notepad representation.
+  public readonly notepadSnackNumberProperty: Property<number>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
   public readonly linePlacement: number;
@@ -61,12 +64,18 @@ export default class Plate extends PhetioObject {
     } );
     this.xPositionProperty = new NumberProperty( options.initialXPosition );
 
-    this.snackNumberProperty = new NumberProperty( options.startingNumberOfSnacks, {
-
+    this.tableSnackNumberProperty = new NumberProperty( options.startingNumberOfSnacks, {
       range: new Range( 0, 10 ),
 
       // phet-io
-      tandem: options.tandem.createTandem( 'snackNumberProperty' )
+      tandem: options.tandem.createTandem( 'tableSnackNumberProperty' )
+    } );
+
+    this.notepadSnackNumberProperty = new NumberProperty( options.startingNumberOfSnacks, {
+      range: new Range( 0, 10 ),
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'notepadSnackNumberProperty' )
     } );
 
     this.linePlacement = options.linePlacement;
@@ -76,8 +85,9 @@ export default class Plate extends PhetioObject {
   public reset(): void {
 
     // The snack number property needs to be reset before the isActiveProperty, so that notepad snacks are updated
-    // correctly in listeners before arriving to the isActiveProperty listeners when setting Phet-io state.
-    this.snackNumberProperty.reset();
+    // correctly in listeners before arriving to the isActiveProperty listeners when setting Phet-io state.??
+    this.tableSnackNumberProperty.reset();
+    this.notepadSnackNumberProperty.reset();
     this.isActiveProperty.reset();
   }
 

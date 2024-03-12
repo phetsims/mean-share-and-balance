@@ -156,6 +156,8 @@ export default class Snack extends PhetioObject {
 
   public reset(): void {
     this.forceAnimationToFinish();
+    this.isActiveProperty.reset();
+    this.positionProperty.reset();
     this.parentPlateProperty.reset();
   }
 }

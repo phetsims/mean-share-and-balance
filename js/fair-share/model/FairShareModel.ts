@@ -103,6 +103,15 @@ export default class FairShareModel extends SharingModel<Apple> {
           } );
         }
       } );
+
+      plate.isActiveProperty.lazyLink( isActive => {
+        if ( !isActive ) {
+          plate.tableSnackNumberProperty.set( 0 );
+        }
+        else {
+          plate.tableSnackNumberProperty.reset();
+        }
+      } );
     } );
 
     // Define the area where the apples will be collected when in Collection mode.
@@ -131,7 +140,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         this.plates.forEach( plate => {
           _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, stackPosition => {
-            if ( stackPosition < plate.snackNumberProperty.value ) {
+            if ( stackPosition < plate.tableSnackNumberProperty.value ) {
 
               // Animate the apple traveling to the plate.
               const apple = activeApples.shift();
@@ -315,7 +324,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           const apples = this.getSnacksAssignedToPlate( plate );
           apples.forEach( ( apple, index ) => {
             apple.moveTo( SnackStacker.getStackedApplePosition( plate, index ) );
-            apple.isActiveProperty.value = plate.isActiveProperty.value && index < plate.snackNumberProperty.value;
+            apple.isActiveProperty.value = plate.isActiveProperty.value && index < plate.tableSnackNumberProperty.value;
           } );
         } );
       }
@@ -372,7 +381,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.plates.forEach( plate => {
           const apples = this.getSnacksAssignedToPlate( plate );
           apples.forEach( ( apple, index ) => {
-            apple.isActiveProperty.value = plate.isActiveProperty.value && index < plate.snackNumberProperty.value;
+            apple.isActiveProperty.value = plate.isActiveProperty.value && index < plate.tableSnackNumberProperty.value;
           } );
         } );
       }
@@ -456,7 +465,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
       // Create and initialize all the apples.
       _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, appleIndex => {
-        const isActive = plate.isActiveProperty.value && appleIndex < plate.snackNumberProperty.value;
+        const isActive = plate.isActiveProperty.value && appleIndex < plate.tableSnackNumberProperty.value;
 
         const apple = new Apple( {
           isActive: isActive,

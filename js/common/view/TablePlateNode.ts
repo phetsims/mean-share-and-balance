@@ -51,7 +51,7 @@ export default class TablePlateNode extends Node {
       MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
     );
     const numberPicker = new NumberPicker(
-      plate.snackNumberProperty,
+      plate.tableSnackNumberProperty,
       new Property( numberPickerRange ),
       {
         centerTop: new Vector2( plateImage.centerBottom.x, 30 ),
@@ -78,7 +78,7 @@ export default class TablePlateNode extends Node {
     );
 
     // Control the visibility of the snack Nodes based on the snack number value.
-    plate.snackNumberProperty.link( snackNumber => {
+    plate.tableSnackNumberProperty.link( snackNumber => {
       assert && assert( snackNumber <= snacks.length, 'snack number exceeded number of snacks' );
       snacks.forEach( ( snack, i ) => {
         snack.visibleProperty.value = i < snackNumber;

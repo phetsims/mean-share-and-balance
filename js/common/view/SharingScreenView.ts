@@ -101,13 +101,13 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
 
     const calculationDependencies = [
       ...model.plates.map( plate => plate.isActiveProperty ),
-      ...model.plates.map( plate => plate.snackNumberProperty )
+      ...model.plates.map( plate => plate.tableSnackNumberProperty )
     ];
 
     // Create the dialog that will show the various ways to calculate the mean.
     const meanCalculationDialog = new MeanCalculationDialog(
       calculationDependencies,
-      () => model.getActivePlates().map( plate => plate.snackNumberProperty.value ),
+      () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
       () => model.getActivePlates().length,
       model.meanCalculationDialogVisibleProperty,
       notepadNode.bounds,

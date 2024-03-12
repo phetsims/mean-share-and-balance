@@ -44,6 +44,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
   public readonly snacks: T[];
   public readonly meanProperty: TReadOnlyProperty<number>;
+  protected resetInProgress = false;
 
   public constructor( providedOptions: SharingModelOptions ) {
 
@@ -100,7 +101,7 @@ export default class SharingModel<T extends Snack> implements TModel {
       } );
       this.plates.push( plate );
 
-      totalSnacksPropertyDependencies.push( plate.snackNumberProperty );
+      totalSnacksPropertyDependencies.push( plate.tableSnackNumberProperty );
       totalSnacksPropertyDependencies.push( plate.isActiveProperty );
     } );
 
@@ -109,7 +110,7 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.totalSnacksProperty = DerivedProperty.deriveAny(
       totalSnacksPropertyDependencies,
       () => {
-        const snackAmounts = this.getActivePlates().map( plate => plate.snackNumberProperty.value );
+        const snackAmounts = this.getActivePlates().map( plate => plate.tableSnackNumberProperty.value );
         return _.sum( snackAmounts );
       },
       {
@@ -131,6 +132,9 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.numberOfPlatesProperty.link( numberOfPlates => {
       const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
       const leftPlateCenterX = -( totalSpan / 2 );
+      this.snacks.forEach( snack => {
+        snack.forceAnimationToFinish();
+      } );
       this.plates.forEach( ( plate, i ) => {
         plate.isActiveProperty.value = i < numberOfPlates;
         plate.xPositionProperty.value = leftPlateCenterX + ( i * INTER_PLATE_DISTANCE );
@@ -174,9 +178,15 @@ export default class SharingModel<T extends Snack> implements TModel {
       snack.parentPlateProperty.reset();
     } );
     this.plates.forEach( plate => {
-      this.getSnacksAssignedToPlate( plate ).forEach( ( snack, i ) => {
-        snack.isActiveProperty.value = i < plate.snackNumberProperty.value && plate.isActiveProperty.value;
+
+      // Iterate over snacks on plate and activate according to tableSnackNumberProperty.
+      const snacksOnPlate = this.getSnacksAssignedToPlate( plate );
+      snacksOnPlate.forEach( ( snack, i ) => {
+        snack.isActiveProperty.value = i < plate.tableSnackNumberProperty.value && plate.isActiveProperty.value;
       } );
+
+      // Set notepadSnackNumberProperty to tableSnackNumberProperty.
+      plate.notepadSnackNumberProperty.value = plate.tableSnackNumberProperty.value;
       if ( plate.isActiveProperty.value ) {
         this.reorganizeSnacks( plate );
       }

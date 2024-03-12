@@ -22,6 +22,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import SnackStacker from '../../common/SnackStacker.js';
+import Utils from '../../../../dot/js/Utils.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -42,6 +43,9 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBars' );
 
+    /**
+     * Create and define the keyboard interaction for candy bars.
+     */
     this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
       getGroupItemValue: candyBar => {
         assert && assert( candyBar.parentPlateProperty.value, 'candyBar is not assigned to a plate' );
@@ -51,9 +55,9 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     } );
     this.sortingRangeProperty = new DerivedProperty( [ this.numberOfPlatesProperty ],
       numberOfPlates => new Range( 0, numberOfPlates - 1 ) );
-    this.stackChangedEmitter = new Emitter();
-
     const selectedCandyBarProperty = this.groupSortInteractionModel.selectedGroupItemProperty;
+
+    this.stackChangedEmitter = new Emitter();
     this.stackChangedEmitter.addListener( () => {
       const selectedCandyBar = selectedCandyBarProperty.value;
 
@@ -70,18 +74,22 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       }
     } );
 
-    // In Mean Share and Balance, we decided arrays start counting at 1 for phet-io.
+    /**
+     * Create and initialize the candy bars.
+     */
     let totalCandyBarCount = 1;
 
     this.plates.forEach( plate => {
 
       // Create and initialize all the candy bars.
       _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, candyBarIndex => {
-        const isActive = plate.isActiveProperty.value && candyBarIndex < plate.snackNumberProperty.value;
+        const position = SnackStacker.getStackedCandyBarPosition( plate, candyBarIndex );
+        const isActive = plate.isActiveProperty.value && candyBarIndex < plate.notepadSnackNumberProperty.value;
 
         const candyBar = new CandyBar( {
           isActive: isActive,
           plate: plate,
+          position: position,
 
           // phet-io
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
@@ -89,7 +97,9 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
         candyBar.parentPlateProperty.link( plate => {
           if ( plate ) {
-            const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
+
+            // We do not want to use plate.notepadSnackNumberProperty.value here because it may not be updated yet.
+            const numberOfCandyBarsOnPlate = this.getActiveCandyBarsAssignedToPlate( plate ).length - 1;
             const endPosition = SnackStacker.getStackedCandyBarPosition( plate, numberOfCandyBarsOnPlate );
 
             // Keyboard interaction should not animate the candy bar.
@@ -109,62 +119,91 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       } );
 
       // Monitor the X position of each plate and move the candy bars that are on it when changes occur.
-      plate.xPositionProperty.lazyLink( ( xPosition, previousXPosition ) => {
-        const deltaX = xPosition - previousXPosition;
-        this.getSnacksAssignedToPlate( plate ).forEach( candyBar => {
+      plate.xPositionProperty.link( () => {
+        this.getSnacksAssignedToPlate( plate ).forEach( ( candyBar, i ) => {
           candyBar.forceAnimationToFinish();
-          candyBar.positionProperty.value = candyBar.positionProperty.value.plusXY( deltaX, 0 );
+          candyBar.positionProperty.value = SnackStacker.getStackedCandyBarPosition( plate, i );
         } );
       } );
+
+      /**
+       * The following three links must be lazy since they rely on an accurate delta of snack numbers.
+       * This information is not available at startup.
+       */
 
       // Connect draggable candy bar visibility to plate isActive and the number of items on the plate.
       plate.isActiveProperty.lazyLink( isActive => {
-        const candyBars = this.getSnacksAssignedToPlate( plate );
 
         // If a plate became inactive, we need to account for the extra or missing candy bars.
-        if ( !isActive ) {
+        if ( !isActive && !this.resetInProgress ) {
           this.reconcileSnacks( plate );
-          assert && assert( plate.snackNumberProperty.value === this.getActiveCandyBarsAssignedToPlate( plate ).length,
-            'The number of candy bars on the table plate should match the number of candy bars on the notepad plate.' );
+          plate.tableSnackNumberProperty.set( 0 );
+        }
+        else {
+          plate.tableSnackNumberProperty.reset();
         }
 
-        // After reconciling the snacks set the snackNumberProperty for the removed plate to 0.
-        plate.snackNumberProperty.set( isActive ? 1 : 0 );
-        candyBars.forEach( ( candyBar, i ) => {
-          candyBar.isActiveProperty.value = isActive && i < plate.snackNumberProperty.value;
-          this.reorganizeSnacks( plate );
-        } );
+        this.handleCandyBarActivation( plate );
       } );
 
       // Add/remove candy bars to/from the notepad plates as the number of them on the table plates changes.
-      plate.snackNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
-        if ( plate.isActiveProperty.value ) {
-          if ( candyBarNumber > oldCandyBarNumber ) {
-            this.tablePlateCandyBarAmountIncrease( plate, candyBarNumber - oldCandyBarNumber );
-          }
-          else if ( candyBarNumber < oldCandyBarNumber ) {
-            this.tablePlateCandyBarAmountDecrease( plate, oldCandyBarNumber - candyBarNumber );
-          }
-          this.stackChangedEmitter.emit();
+      plate.tableSnackNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
+
+        if ( !this.resetInProgress ) {
+          const originalNotepadSnackNumber = plate.notepadSnackNumberProperty.value;
+          const tableDelta = candyBarNumber - oldCandyBarNumber;
+
+          plate.notepadSnackNumberProperty.value = Utils.clamp( originalNotepadSnackNumber + tableDelta,
+            MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE,
+            MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
+          const remaining = tableDelta + originalNotepadSnackNumber - plate.notepadSnackNumberProperty.value;
+
+          // If remaining is not 0, we maxed out the space of the notepad plate and need to allocate the remaining candy
+          // bar delta to other plates.
+          remaining !== 0 && this.handleCandyBarRemainder( remaining );
         }
+
+      } );
+
+      plate.notepadSnackNumberProperty.lazyLink( () => {
+        this.handleCandyBarActivation( plate );
       } );
     } );
   }
 
-  public getActiveCandyBars(): Array<CandyBar> {
-    return this.snacks.filter( candyBar => candyBar.isActiveProperty.value );
+  /**
+   * There are various scenarios where a candy bar may have to be activated or deactivated. This function
+   * handles the activation of candy bars on a plate according to the notepadSnackNumberProperty.
+   */
+  private handleCandyBarActivation( plate: Plate ): void {
+    this.getSnacksAssignedToPlate( plate ).forEach( ( candyBar, i ) => {
+      candyBar.isActiveProperty.value = i < plate.notepadSnackNumberProperty.value && plate.isActiveProperty.value;
+    } );
+    this.reorganizeSnacks( plate );
+    this.stackChangedEmitter.emit();
   }
 
-  public getActiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
+  /**
+   * This function returns an array of active candy bars assigned to a specific plate.
+   */
+  private getActiveCandyBarsAssignedToPlate( plate: Plate ): Array<CandyBar> {
     return this.snacks.filter( candyBar => candyBar.parentPlateProperty.value === plate && candyBar.isActiveProperty.value );
   }
 
+  /**
+   * Candy bars are stacked with active candy bars on the bottom and inactive candy bars on top. This function retrieves
+   * the top active candy bar on a plate.
+   */
   public getTopActiveCandyBarAssignedToPlate( plate: Plate ): CandyBar | null {
     const activeCandyBarsOnPlate = this.getActiveCandyBarsAssignedToPlate( plate );
     const topCandyBar = _.minBy( activeCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
     return topCandyBar || null;
   }
 
+  /**
+   * Candy bars are stacked with active candy bars on the bottom and inactive candy bars on top. This function retrieves
+   * the bottom inactive candy bar on a plate.
+   */
   public getBottomInactiveCandyBarAssignedToPlate( plate: Plate ): CandyBar | null {
     const inactiveCandyBarsOnPlate = this.getInactiveSnacksAssignedToPlate( plate );
     const bottomCandyBar = _.maxBy( inactiveCandyBarsOnPlate, candyBar => candyBar.positionProperty.value.y );
@@ -172,31 +211,33 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   }
 
   /**
-   * Get all active candy bars associated with a plate that are not dragging or animating.
+   * This function returns an array of all active candy bars associated with a plate that are not dragging or animating.
    */
-  public getActiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
+  private getActiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
     const candyBars = this.getActiveCandyBarsAssignedToPlate( plate );
     return candyBars.filter( candyBar => candyBar.stateProperty.value === 'plate' );
   }
 
-  public getActiveCandyBarsAnimatingToPlate( plate: Plate ): Array<CandyBar> {
+  /**
+   * This function returns an array of all active candy bars associated with a plate that are animating. A candy bar
+   * will only animate towards its parent plate.
+   */
+  private getActiveCandyBarsAnimatingToPlate( plate: Plate ): Array<CandyBar> {
     const candyBars = this.getActiveCandyBarsAssignedToPlate( plate );
-    return candyBars.filter( candyBar => candyBar.stateProperty.value === 'animating' );
-  }
-
-  public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
-    return plates.filter( plate => {
-      const numberOfCandyBars = this.getNumberOfCandyBarsStackedOnPlate( plate );
-      return numberOfCandyBars < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
+    return candyBars.filter( candyBar => {
+      return candyBar.stateProperty.value === 'animating';
     } );
   }
 
   /**
-   * Get the number of candy bars that are currently stacked on a plate in the notepad.
-   * This includes candy bars that are animating since they need to be factored into stacking logic.
+   * This function returns an array of all active plates that have not reached full capacity.
    */
-  public getNumberOfCandyBarsStackedOnPlate( plate: Plate ): number {
-    return this.getActiveCandyBarsOnPlate( plate ).length + this.getActiveCandyBarsAnimatingToPlate( plate ).length;
+  public getPlatesWithSpace( plates: Array<Plate> ): Array<Plate> {
+    return plates.filter( plate => {
+      const numberOfCandyBars = plate.notepadSnackNumberProperty.value;
+      return plate.isActiveProperty.value &&
+             numberOfCandyBars < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
+    } );
   }
 
   /**
@@ -223,126 +264,70 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
    * When a plate becomes inactive, we need to account for the extra or missing candy bars.
    */
   private reconcileSnacks( plate: Plate ): void {
-    const numberOfTablePlateSnacks = plate.snackNumberProperty.value;
-    const numberOfNotepadPlateSnacks = this.getActiveCandyBarsAssignedToPlate( plate ).length;
+    const numberOfTablePlateSnacks = plate.tableSnackNumberProperty.value;
+    const numberOfNotepadPlateSnacks = plate.notepadSnackNumberProperty.value;
+    const remaining = numberOfNotepadPlateSnacks - numberOfTablePlateSnacks;
 
-    if ( numberOfTablePlateSnacks > numberOfNotepadPlateSnacks ) {
-      const delta = numberOfTablePlateSnacks - numberOfNotepadPlateSnacks;
-      for ( let i = 0; i < delta; i++ ) {
-        const maxPlate = this.getPlateWithMostActiveCandyBars();
-        const topCandyBar = this.getTopActiveCandyBarAssignedToPlate( maxPlate );
-        assert && assert( topCandyBar,
-          `There are no plates with active candy bars, but we are still trying to reconcile our number of
-          tablePlateSnacks: ${numberOfTablePlateSnacks} and our number of
-          notepadPlateSnacks: ${numberOfNotepadPlateSnacks}.` );
-        topCandyBar!.isActiveProperty.set( false );
-        this.reorganizeSnacks( maxPlate );
-      }
-    }
-    else if ( numberOfTablePlateSnacks < numberOfNotepadPlateSnacks ) {
-      const delta = numberOfNotepadPlateSnacks - numberOfTablePlateSnacks;
-      for ( let i = 0; i < delta; i++ ) {
-        const minPlate = this.getPlateWithLeastCandyBars();
-        const bottomInactiveCandyBar = this.getBottomInactiveCandyBarAssignedToPlate( minPlate );
-        assert && assert( bottomInactiveCandyBar,
-          `There are no plates with inactive candy bars, but we are still trying to reconcile our number of
-          tablePlateSnacks: ${numberOfTablePlateSnacks} and our number of
-          notepadPlateSnacks: ${numberOfNotepadPlateSnacks}.` );
-        bottomInactiveCandyBar!.isActiveProperty.set( true );
-        this.reorganizeSnacks( minPlate );
-      }
-    }
-
-    const snacksOnNotepadPlate = this.getSnacksAssignedToPlate( plate );
-    snacksOnNotepadPlate.forEach( ( snack, i ) => {
-      snack.isActiveProperty.value = i < plate.snackNumberProperty.value;
-    } );
+    // Update the number of notepad snacks by the amount that need to be relocated.
+    remaining !== 0 && this.handleCandyBarRemainder( remaining );
+    plate.notepadSnackNumberProperty.value -= remaining;
+    assert && assert( plate.notepadSnackNumberProperty.value === plate.tableSnackNumberProperty.value,
+      'The number of candy bars on the table and notepad plates should be the same.' );
   }
 
   /**
-   * Handle the situation where a candy bar was added to a plate on the table.  This may simply add one to the
-   * corresponding plate in the notepad, but if that plate is already full, some redistribution is necessary.
+   * This function handles the remainder of candy bars that need to be added or removed from plates due to stack
+   * discrepancies between the table and notepad. This occurs as users drag and drop candy bars in the notepad area.
    */
-  private tablePlateCandyBarAmountIncrease( plate: Plate, numberOfCandyBarsAdded: number ): void {
-    for ( let i = 0; i < numberOfCandyBarsAdded; i++ ) {
-      const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
-      if ( numberOfCandyBarsOnPlate === MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ) {
+  private handleCandyBarRemainder( remaining: number ): void {
+    _.times( Math.abs( remaining ), () => {
+      if ( remaining > 0 ) {
         const minPlate = this.getPlateWithLeastCandyBars();
-        assert && assert(
-          minPlate !== plate,
-          `minPlate ${minPlate.linePlacement} should not be the same as affected plate: ${plate.linePlacement}`
-        );
-        const bottomInactiveCandyBar = this.getBottomInactiveCandyBarAssignedToPlate( minPlate );
-        assert && assert( bottomInactiveCandyBar,
+        assert && assert( minPlate.notepadSnackNumberProperty.value < 10,
           `There are no inactive candy bars.
           The number of total candy bars on the table is: ${this.totalSnacksProperty.value}, and
           the number of active plates is: ${this.numberOfPlatesProperty.value}.` );
-        bottomInactiveCandyBar!.isActiveProperty.set( true );
-        this.reorganizeSnacks( minPlate );
+        minPlate.notepadSnackNumberProperty.value++;
       }
       else {
-        const bottomInactiveCandyBar = this.getBottomInactiveCandyBarAssignedToPlate( plate );
-        assert && assert( bottomInactiveCandyBar,
-          `The plate has no inactive candy bars.
-          The number of active candy bars on the plate is: ${numberOfCandyBarsOnPlate}` );
-        bottomInactiveCandyBar!.isActiveProperty.set( true );
-      }
-      this.reorganizeSnacks( plate );
-    }
-  }
-
-  /**
-   * When an active tablePlate removes a candyBar and there is no corresponding candyBar available on the notepad
-   * snackType, a candyBar will be removed off of the plate on the notepad with the most candyBars.
-   */
-  private tablePlateCandyBarAmountDecrease( plate: Plate, numberOfCandyBarsRemoved: number ): void {
-    for ( let i = 0; i < numberOfCandyBarsRemoved; i++ ) {
-      const numberOfCandyBarsOnPlate = this.getNumberOfCandyBarsStackedOnPlate( plate );
-      if ( numberOfCandyBarsOnPlate === 0 ) {
         const maxPlate = this.getPlateWithMostActiveCandyBars();
-        const topCandyBar = this.getTopActiveCandyBarAssignedToPlate( maxPlate );
-        assert && assert( topCandyBar,
-          `There are no plates with active candy bars.
-          The current number of total candy bars on the table is: ${this.totalSnacksProperty.value}.` );
-        topCandyBar!.isActiveProperty.set( false );
-        this.reorganizeSnacks( maxPlate );
+        assert && assert( maxPlate.notepadSnackNumberProperty.value > 0,
+          `There are no inactive candy bars.
+          The number of total candy bars on the table is: ${this.totalSnacksProperty.value}, and
+          the number of active plates is: ${this.numberOfPlatesProperty.value}.` );
+        maxPlate.notepadSnackNumberProperty.value--;
       }
-      else {
-        const topCandyBar = this.getTopActiveCandyBarAssignedToPlate( plate );
-        assert && assert( topCandyBar,
-          `This plate has no active candy bars. The numberOfCandyBarsOnPlate is: ${numberOfCandyBarsOnPlate}.` );
-        topCandyBar!.isActiveProperty.set( false );
-      }
-      this.reorganizeSnacks( plate );
-    }
+    } );
   }
 
-  public getPlateWithMostActiveCandyBars(): Plate {
-    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length ) );
+  private getPlateWithMostActiveCandyBars(): Plate {
+    const maxPlate = _.maxBy( this.getActivePlates(), ( plate => plate.notepadSnackNumberProperty.value ) );
 
     // _.maxBy can return undefined if all the elements in the array are null, undefined, or NAN.
-    // The length of the active candy bars array will always be a number.
+    // The notepadSnackNumberProperty.value will always be a number.
     return maxPlate!;
   }
 
-  public getPlateWithLeastCandyBars(): Plate {
-    const minPlate = _.minBy( this.getActivePlates(), ( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length ) );
+  private getPlateWithLeastCandyBars(): Plate {
+    const minPlate = _.minBy( this.getActivePlates(), ( plate => plate.notepadSnackNumberProperty.value ) );
 
     // _.minBy can return undefined if all the elements in the array are null, undefined, or NAN.
-    // The length of the active candy bars array will always be a number.
+    // The notepadSnackNumberProperty.value will always be a number.
     return minPlate!;
   }
 
   /**
-   * Get all the plates that have at least one candy bar on them.
+   * This function returns an array of active plates that have at least one candy bar on them.
    */
   public getPlatesWithSnacks(): Array<Plate> {
-    return this.plates.filter( plate => this.getActiveCandyBarsAssignedToPlate( plate ).length > 0 );
+    return this.plates.filter( plate => plate.isActiveProperty.value && plate.notepadSnackNumberProperty.value > 0 );
   }
 
   public override reset(): void {
+    this.resetInProgress = true;
     super.reset();
     this.groupSortInteractionModel.reset();
+    this.resetInProgress = false;
   }
 
   public static readonly NOTEPAD_PLATE_CENTER_Y = 330;
