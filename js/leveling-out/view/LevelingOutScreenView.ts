@@ -187,7 +187,13 @@ export default class LevelingOutScreenView extends SharingScreenView {
           return node!;
         },
         sortingRangeProperty: model.sortingRangeProperty,
-        sortGroupItem: ( candyBar, newPlateIndex ) => candyBar.parentPlateProperty.set( model.plates[ newPlateIndex ] )
+        sortGroupItem: ( candyBar, newPlateIndex ) => {
+          const currentParent = candyBar.parentPlateProperty.value;
+          const newParent = model.plates[ newPlateIndex ];
+          candyBar.parentPlateProperty.set( model.plates[ newPlateIndex ] );
+          currentParent!.notepadSnackNumberProperty.value--;
+          newParent.notepadSnackNumberProperty.value++;
+        }
       }
     );
 
