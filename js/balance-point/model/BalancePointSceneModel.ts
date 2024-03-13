@@ -22,7 +22,6 @@ import Property from '../../../../axon/js/Property.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import Utils from '../../../../dot/js/Utils.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -49,7 +48,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public readonly rightBalanceBeamYValueProperty: Property<number>;
   public readonly rightBalanceBeamXValue = X_AXIS_RANGE.max;
 
-  public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, options: BalancePointSceneModelOptions ) {
+  public constructor( isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
+                      regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>,
+                      options: BalancePointSceneModelOptions ) {
+
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
     } );
@@ -127,19 +129,17 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     // Update the position of the beam as other aspects of the model change.
     Multilink.multilink( [
         this.beamSupportsPresentProperty,
+        isMeanFulcrumFixedProperty,
         this.fulcrumValueProperty,
         this.meanValueProperty
       ],
-      ( supportsPresent, fulcrumValue, mean ) => {
+      ( supportsPresent, isFulcrumFixed, fulcrumValue, mean ) => {
 
-        const roundedMean = mean === null ?
-                            null :
-                            Utils.roundToInterval( mean, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
-
-        // If the supports are present, the beam is horizontal, which is its initial state.
-        if ( supportsPresent || mean === null || roundedMean === fulcrumValue ) {
-          this.leftBalanceBeamYValueProperty.reset();
-          this.rightBalanceBeamYValueProperty.reset();
+        // If the supports are present, if nothing is on the beam, or if the fulcrum is at the fixed mean position then
+        // the beam is horizontal.
+        if ( supportsPresent || mean === null || isFulcrumFixed ) {
+          this.leftBalanceBeamYValueProperty.value = FULCRUM_HEIGHT;
+          this.rightBalanceBeamYValueProperty.value = FULCRUM_HEIGHT;
         }
         else {
 
