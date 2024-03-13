@@ -65,7 +65,9 @@ export default class FulcrumSlider extends HSlider {
 
     Multilink.multilink( [ meanValueProperty, isMeanFulcrumFixedProperty ], ( meanValue, isFixed ) => {
       if ( isFixed ) {
-        fulcrumValueProperty.value = meanValue === null ? 5 : meanValue;
+        fulcrumValueProperty.value = meanValue === null ?
+                                     MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() :
+                                     Utils.roundToInterval( meanValue, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
       }
     } );
   }

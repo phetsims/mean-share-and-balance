@@ -31,19 +31,15 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       phetioState: false
     }, providedOptions );
 
-    const isMeanFulcrumFixedProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
+    const sceneModel = new BalancePointSceneModel( regionAndCulturePortrayalProperty, {
+      tandem: options.tandem.createTandem( 'sceneModel' )
     } );
-
-    const sceneModel = new BalancePointSceneModel(
-      isMeanFulcrumFixedProperty,
-      regionAndCulturePortrayalProperty,
-      { tandem: options.tandem.createTandem( 'sceneModel' ) }
-    );
 
     super( [ sceneModel ], options );
 
-    this.isMeanFulcrumFixedProperty = isMeanFulcrumFixedProperty;
+    this.isMeanFulcrumFixedProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
+    } );
     this.areTickMarksVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'areTickMarksVisibleProperty' )
     } );
