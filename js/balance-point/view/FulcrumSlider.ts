@@ -36,12 +36,13 @@ export default class FulcrumSlider extends HSlider {
 
     const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight ) );
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( providedOptions.fulcrumWidth );
+    const lineWidth = 1.5; // empirically determined
     const thumbNode = new TriangleNode( {
-      triangleHeight: triangleHeight,
+      triangleHeight: triangleHeight - lineWidth,
       triangleWidth: triangleWidth,
       fill: MeanShareAndBalanceColors.meanColorProperty,
       stroke: MeanShareAndBalanceColors.meanColorProperty,
-      lineWidth: 1.5,
+      lineWidth: lineWidth,
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
 
