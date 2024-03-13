@@ -73,6 +73,9 @@ export default class BalancePointNotepadNode extends NotepadNode {
       visibleProperty: DerivedProperty.not( sceneModel.beamSupportsPresentProperty )
     } );
     const checkButton = new RectangularPushButton( {
+
+      // The check button is not visible when the fulcrum is fixed.
+      visibleProperty: DerivedProperty.not( isMeanFulcrumFixedProperty ),
       content: new Node( { children: [ checkText, resetText ] } ),
       listener: () => {
         sceneModel.beamSupportsPresentProperty.toggle();
@@ -88,7 +91,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     const vBox = new VBox( {
       children: [ meanReadoutText, checkButton ],
       excludeInvisibleChildrenFromBounds: false,
-      align: 'left',
+      align: 'right',
       spacing: vBoxSpacing
     } );
 
@@ -101,10 +104,13 @@ export default class BalancePointNotepadNode extends NotepadNode {
     } );
     this.addChild( alignBox );
 
+    // The columns that support the beam are not visible when the fulcrum is fixed.
+    const columnsVisibleProperty = new DerivedProperty( [ isMeanFulcrumFixedProperty, sceneModel.beamSupportsPresentProperty ],
+      ( isMeanFulcrumFixed, beamSupportsPresent ) => !isMeanFulcrumFixed && beamSupportsPresent );
     const balanceBeamNode = new BalanceBeamNode( sceneModel, playAreaNumberLineNode,
       this.paperStackBounds, sceneModel.fulcrumValueProperty,
       sceneModel.meanValueProperty,
-      sceneModel.beamSupportsPresentProperty, areTickMarksVisibleProperty,
+      columnsVisibleProperty, areTickMarksVisibleProperty,
       isMeanFulcrumFixedProperty, {
         tandem: options.tandem.createTandem( 'balanceBeamNode' )
       } );
