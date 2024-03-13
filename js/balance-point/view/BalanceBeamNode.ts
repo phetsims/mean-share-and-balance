@@ -28,8 +28,9 @@ import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
-const BEAM_DOT_RADIUS = 3;
+const BEAM_DOT_RADIUS = 2;
 const BALL_GRAPHIC_RADIUS = 10;
+const BEAM_TO_BALL_BOTTOM_SPACE = 0.5; // in screen coords, empirically determined
 
 export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
   new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
@@ -99,7 +100,7 @@ export default class BalanceBeamNode extends Node {
 
     const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value );
     const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value );
-    const beamLine = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
+    const beamLineNode = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
       stroke: MeanShareAndBalanceColors.meanColorProperty,
       lineWidth: 2
     } );
@@ -126,10 +127,10 @@ export default class BalanceBeamNode extends Node {
       children: [
         notepadNumberLineNode,
         groundLine,
-        ...soccerBallGraphics,
-        ...beamDots,
-        beamLine,
         ...supportColumns,
+        ...beamDots,
+        beamLineNode,
+        ...soccerBallGraphics,
         fulcrumSlider
       ]
     }, options );
@@ -163,33 +164,46 @@ export default class BalanceBeamNode extends Node {
       () => {
 
         // Calculate the start and end points of the balance beam line in view coordinates.
-        const startPoint = new Vector2(
+        const viewStartPoint = new Vector2(
           lineStartX,
           BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value )
         );
-        const endPoint = new Vector2(
+        const viewEndPoint = new Vector2(
           lineEndX,
           BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value )
         );
 
         // Update the balance beam line.
-        beamLine.setPoint1( startPoint );
-        beamLine.setPoint2( endPoint );
+        beamLineNode.setPoint1( viewStartPoint );
+        beamLineNode.setPoint2( viewEndPoint );
 
         // Update the tick mark dot positions.
-        const startToEndVector = endPoint.minus( startPoint );
-        const pointToPointVector = startToEndVector.withMagnitude( startToEndVector.getMagnitude() / ( beamDots.length + 1 ) );
+        const startToEndVector = viewEndPoint.minus( viewStartPoint );
+        const pointToPointVector = startToEndVector.withMagnitude(
+          startToEndVector.getMagnitude() / ( beamDots.length + 1 )
+        );
         beamDots.forEach( ( beamDot, i ) => {
-          beamDot.translation = startPoint.plus( pointToPointVector.times( i + 1 ) );
+          beamDot.translation = viewStartPoint.plus( pointToPointVector.times( i + 1 ) );
         } );
 
-        // Create a function that will map a model X value to a Y value on the beam.
-        const beamLineFunction = new LinearFunction(
+        // Create a function that will map a model X (i.e. distance) value to a Y value on the beam.
+        const modelBeamLineFunction = new LinearFunction(
           sceneModel.leftBalanceBeamXValue,
           sceneModel.rightBalanceBeamXValue,
           sceneModel.leftBalanceBeamYValueProperty.value,
           sceneModel.rightBalanceBeamYValueProperty.value
         );
+
+        // Calculate the vectors needed to put the balls in a position such that they are directly above the
+        // corresponding spot on the beam and the edge of the ball is touching the beam.
+        const beamAngle = startToEndVector.getAngle();
+        const rotatedRadiusVector = new Vector2( 0, -BALL_GRAPHIC_RADIUS ).rotated( beamAngle );
+        const touchCompensationVector = new Vector2(
+          -BALL_GRAPHIC_RADIUS * Math.sin( beamAngle ),
+          -BALL_GRAPHIC_RADIUS * Math.sin( beamAngle ) * Math.tan( beamAngle )
+        );
+        const beamToBallSpacingVector = new Vector2( 0, -BEAM_TO_BALL_BOTTOM_SPACE );
+        const interBallSpacingVector = new Vector2( 0, -2 * BALL_GRAPHIC_RADIUS );
 
         // Go through the soccer balls in the model and update the position and visibility of the corresponding graphic
         // representation.
@@ -197,30 +211,29 @@ export default class BalanceBeamNode extends Node {
         sceneModel.soccerBalls.forEach( ( modelSoccerBall, i ) => {
           if ( modelSoccerBall.valueProperty.value === null ) {
 
-            // This ball is not on the field, so just set the graphic to be invisible.
+            // This soccer ball is not on the field, so just set the corresponding graphic to be invisible.
             soccerBallGraphics[ i ].visible = false;
           }
           else {
 
-            // This ball is on the field, so put the corresponding graphic on the appropriate position on the beam or
-            // stacked atop other balls and make it visible.
+            // This soccer ball is on the field, so put the corresponding graphic on the appropriate position on the
+            // beam or stacked atop other balls and make it visible.
             const ballGraphic = soccerBallGraphics[ i ];
             ballGraphic.visible = true;
-            const ballModelXPosition = modelSoccerBall.valueProperty.value;
-            assert && assert( Number.isInteger( ballModelXPosition ), 'balls must be at integer positions' );
-            const ballsAlreadyAtThisLocation = ballsAtEachLocation[ ballModelXPosition ] === undefined ?
+            const ballDistance = modelSoccerBall.valueProperty.value;
+            assert && assert( Number.isInteger( ballDistance ), 'balls must be at integer distances' );
+            const ballsAlreadyAtThisDistance = ballsAtEachLocation[ ballDistance ] === undefined ?
                                                0 :
-                                               ballsAtEachLocation[ ballModelXPosition ];
-
-            // Set the ball graphic's position.
-            const beamModelYPosition = beamLineFunction.evaluate( modelSoccerBall.positionProperty.value.x );
-            ballGraphic.x = BALANCE_BEAM_TRANSFORM.modelToViewX( modelSoccerBall.valueProperty.value );
-            ballGraphic.y = BALANCE_BEAM_TRANSFORM.modelToViewY( beamModelYPosition ) -
-                            BALL_GRAPHIC_RADIUS -
-                            ballsAlreadyAtThisLocation * BALL_GRAPHIC_RADIUS * 2;
+                                               ballsAtEachLocation[ ballDistance ];
+            const beamSurfaceModelYPosition = modelBeamLineFunction.evaluate( ballDistance );
+            const beamSurfacePointInViewSpace = BALANCE_BEAM_TRANSFORM.modelToViewXY( ballDistance, beamSurfaceModelYPosition );
+            const bottomBallPosition = beamSurfacePointInViewSpace
+              .plus( rotatedRadiusVector.plus( touchCompensationVector ) )
+              .plus( beamToBallSpacingVector );
+            ballGraphic.translation = bottomBallPosition.plus( interBallSpacingVector.times( ballsAlreadyAtThisDistance ) );
 
             // Update the count of balls at this position on the beam.
-            ballsAtEachLocation[ ballModelXPosition ] = ballsAlreadyAtThisLocation + 1;
+            ballsAtEachLocation[ ballDistance ] = ballsAlreadyAtThisDistance + 1;
           }
         } );
       }
