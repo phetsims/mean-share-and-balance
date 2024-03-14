@@ -154,7 +154,6 @@ export default class BalanceBeamNode extends Node {
           // Convert to the this.parent coordinate frame
           const localDeltaX = notepadNumberLineNode.tickMarkSet.getUniqueTrailTo( this ).getTransform().transformDeltaX( deltaX );
           this.x += localDeltaX;
-          console.log( `localDeltaX = ${localDeltaX}` );
 
           // Add a clip area so that the tilted beam doesn't go off the notebook page.
           const adjustedPaperStackBounds = paperStackBounds.shiftedX( -localDeltaX );
