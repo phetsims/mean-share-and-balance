@@ -30,7 +30,7 @@ const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
 const BEAM_DOT_RADIUS = 2;
 const BALL_GRAPHIC_RADIUS = 10;
-const BEAM_TO_BALL_BOTTOM_SPACE = 0.5; // in screen coords, empirically determined
+const MIN_BEAM_TO_BALL_BOTTOM_SPACING = 2; // in screen coords, empirically determined
 
 export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
   new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
@@ -195,14 +195,22 @@ export default class BalanceBeamNode extends Node {
         );
 
         // Calculate the vectors needed to put the balls in a position such that they are directly above the
-        // corresponding spot on the beam and the edge of the ball is touching the beam.
+        // corresponding spot on the beam and the edge of the ball is touching the beam.  To do this, we calculate two
+        // vectors, one for the minimum amount above the beam and one for the point where the edge of the ball touches
+        // the titled edge of the beam, and use the longer of the two.  These vectors are
+        const minOffsetVector = new Vector2( 0, -( BALL_GRAPHIC_RADIUS + MIN_BEAM_TO_BALL_BOTTOM_SPACING ) );
         const beamAngle = startToEndVector.getAngle();
         const rotatedRadiusVector = new Vector2( 0, -BALL_GRAPHIC_RADIUS ).rotated( beamAngle );
         const touchCompensationVector = new Vector2(
           -BALL_GRAPHIC_RADIUS * Math.sin( beamAngle ),
           -BALL_GRAPHIC_RADIUS * Math.sin( beamAngle ) * Math.tan( beamAngle )
         );
-        const beamToBallSpacingVector = new Vector2( 0, -BEAM_TO_BALL_BOTTOM_SPACE );
+        const edgeTouchOffsetVector = rotatedRadiusVector.plus( touchCompensationVector );
+        const beamToLowestBallCenterOffset = minOffsetVector.getMagnitude() >= edgeTouchOffsetVector.getMagnitude() ?
+                                             minOffsetVector :
+                                             edgeTouchOffsetVector;
+
+        // This vector is used for stacking the balls when there is more than one at the same distance.
         const interBallSpacingVector = new Vector2( 0, -2 * BALL_GRAPHIC_RADIUS );
 
         // Go through the soccer balls in the model and update the position and visibility of the corresponding graphic
@@ -211,7 +219,7 @@ export default class BalanceBeamNode extends Node {
         sceneModel.soccerBalls.forEach( ( modelSoccerBall, i ) => {
           if ( modelSoccerBall.valueProperty.value === null ) {
 
-            // This soccer ball is not on the field, so just set the corresponding graphic to be invisible.
+            // This soccer ball is not yet on the field, so just set the corresponding graphic to be invisible.
             soccerBallGraphics[ i ].visible = false;
           }
           else {
@@ -227,9 +235,7 @@ export default class BalanceBeamNode extends Node {
                                                ballsAtEachLocation[ ballDistance ];
             const beamSurfaceModelYPosition = modelBeamLineFunction.evaluate( ballDistance );
             const beamSurfacePointInViewSpace = BALANCE_BEAM_TRANSFORM.modelToViewXY( ballDistance, beamSurfaceModelYPosition );
-            const bottomBallPosition = beamSurfacePointInViewSpace
-              .plus( rotatedRadiusVector.plus( touchCompensationVector ) )
-              .plus( beamToBallSpacingVector );
+            const bottomBallPosition = beamSurfacePointInViewSpace.plus( beamToLowestBallCenterOffset );
             ballGraphic.translation = bottomBallPosition.plus( interBallSpacingVector.times( ballsAlreadyAtThisDistance ) );
 
             // Update the count of balls at this position on the beam.
