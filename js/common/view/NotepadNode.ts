@@ -43,6 +43,9 @@ export default class NotepadNode extends Node {
   // rings, and is thus useful for bounding things that need to stay on/within the notebook pages.
   protected readonly paperStackBounds: Bounds2;
 
+  // The parent node for the set of ring images.
+  protected readonly ringsNode;
+
   public constructor( providedOptions: NotepadNodeOptions ) {
 
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
@@ -66,23 +69,26 @@ export default class NotepadNode extends Node {
       paperStackNode.addChild( paper );
     }
 
-    const rings: Array<Node> = [];
+    // Create the set of notebook ring images.
+    const ringsNode = new Node();
     const numberOfRings = 8;
-
     _.times( numberOfRings, ( i: number ) => {
       const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
       const image = new Image( notepadRing_svg, { x: x, bottom: NOTEPAD_RING_BOTTOM, maxHeight: 55 } );
-      rings.push( image );
+      ringsNode.addChild( image );
     } );
 
     const superOptions = combineOptions<NodeOptions>( {
-      children: [ paperStackNode, ...rings ],
+      children: [ paperStackNode, ringsNode ],
       centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y
     }, options );
     super( superOptions );
 
     // Make a copy of the paper stack bounds available to subclasses for positioning of child nodes.
     this.paperStackBounds = paperStackNode.bounds.copy();
+
+    // Make the rings node available to subclasses for layering adjustments.
+    this.ringsNode = ringsNode;
 
     if ( options.readoutPatternStringProperty ) {
       const readoutText = new Text( options.readoutPatternStringProperty, {

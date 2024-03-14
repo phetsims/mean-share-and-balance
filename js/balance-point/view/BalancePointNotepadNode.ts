@@ -123,6 +123,9 @@ export default class BalancePointNotepadNode extends NotepadNode {
       { tandem: options.tandem.createTandem( 'balanceBeamNode' ) }
     );
     this.addChild( balanceBeamNode );
+
+    // Pull the notepad rings to the front of the z-order so that the balance beam line will appear to go behind them.
+    this.moveChildToFront( this.ringsNode );
   }
 }
 
