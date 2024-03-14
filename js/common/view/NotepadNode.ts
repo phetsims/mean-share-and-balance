@@ -39,6 +39,8 @@ const LABEL_MARGIN = 15;
 
 export default class NotepadNode extends Node {
 
+  // The bounds of the stack of notebook pages in the NotepadNode's local coordinate frame.  This does *not* include the
+  // rings, and is thus useful for bounding things that need to stay on/within the notebook pages.
   protected readonly paperStackBounds: Bounds2;
 
   public constructor( providedOptions: NotepadNodeOptions ) {

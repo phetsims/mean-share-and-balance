@@ -25,6 +25,7 @@ import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSce
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
+import { Shape } from '../../../../kite/js/imports.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -138,7 +139,10 @@ export default class BalanceBeamNode extends Node {
     super( superOptions );
 
     // Align with the play area number line node, based on the tick mark values.
-    const matrixBetweenProperty = new MatrixBetweenProperty( playAreaNumberLineNode.tickMarkSet, notepadNumberLineNode.tickMarkSet );
+    const matrixBetweenProperty = new MatrixBetweenProperty(
+      playAreaNumberLineNode.tickMarkSet,
+      notepadNumberLineNode.tickMarkSet
+    );
 
     matrixBetweenProperty.link( matrix => {
 
@@ -150,6 +154,11 @@ export default class BalanceBeamNode extends Node {
           // Convert to the this.parent coordinate frame
           const localDeltaX = notepadNumberLineNode.tickMarkSet.getUniqueTrailTo( this ).getTransform().transformDeltaX( deltaX );
           this.x += localDeltaX;
+          console.log( `localDeltaX = ${localDeltaX}` );
+
+          // Add a clip area so that the tilted beam doesn't go off the notebook page.
+          const adjustedPaperStackBounds = paperStackBounds.shiftedX( -localDeltaX );
+          this.clipArea = Shape.bounds( adjustedPaperStackBounds );
         }
       }
     } );
