@@ -28,9 +28,10 @@ import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
-const BEAM_DOT_RADIUS = 2;
-const BALL_GRAPHIC_RADIUS = 10;
-const MIN_BEAM_TO_BALL_BOTTOM_SPACING = 2; // in screen coords, empirically determined
+const BEAM_DOT_RADIUS = 2; // in screen coords
+const BALL_GRAPHIC_RADIUS = 10; // in screen coords
+const MIN_BEAM_TO_BALL_BOTTOM_SPACING = 3; // in screen coords
+const STACKED_BALL_SPACING = 1; // in screen coords
 
 export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
   new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
@@ -211,7 +212,7 @@ export default class BalanceBeamNode extends Node {
                                              edgeTouchOffsetVector;
 
         // This vector is used for stacking the balls when there is more than one at the same distance.
-        const interBallSpacingVector = new Vector2( 0, -2 * BALL_GRAPHIC_RADIUS );
+        const interBallSpacingVector = new Vector2( 0, -( 2 * BALL_GRAPHIC_RADIUS + STACKED_BALL_SPACING ) );
 
         // Go through the soccer balls in the model and update the position and visibility of the corresponding graphic
         // representation.
