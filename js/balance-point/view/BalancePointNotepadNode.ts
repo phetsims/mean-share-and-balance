@@ -105,15 +105,23 @@ export default class BalancePointNotepadNode extends NotepadNode {
     this.addChild( alignBox );
 
     // The columns that support the beam are not visible when the fulcrum is fixed.
-    const columnsVisibleProperty = new DerivedProperty( [ isMeanFulcrumFixedProperty, sceneModel.beamSupportsPresentProperty ],
-      ( isMeanFulcrumFixed, beamSupportsPresent ) => !isMeanFulcrumFixed && beamSupportsPresent );
-    const balanceBeamNode = new BalanceBeamNode( sceneModel, playAreaNumberLineNode,
-      this.paperStackBounds, sceneModel.fulcrumValueProperty,
+    const columnsVisibleProperty = new DerivedProperty(
+      [ isMeanFulcrumFixedProperty, sceneModel.beamSupportsPresentProperty ],
+      ( isMeanFulcrumFixed, beamSupportsPresent ) => !isMeanFulcrumFixed && beamSupportsPresent
+    );
+
+    // Create the node that depicts the balance beam, including the balls that are stacked on it.
+    const balanceBeamNode = new BalanceBeamNode(
+      sceneModel,
+      playAreaNumberLineNode,
+      this.paperStackBounds,
+      sceneModel.fulcrumValueProperty,
       sceneModel.meanValueProperty,
-      columnsVisibleProperty, areTickMarksVisibleProperty,
-      isMeanFulcrumFixedProperty, {
-        tandem: options.tandem.createTandem( 'balanceBeamNode' )
-      } );
+      columnsVisibleProperty,
+      areTickMarksVisibleProperty,
+      isMeanFulcrumFixedProperty,
+      { tandem: options.tandem.createTandem( 'balanceBeamNode' ) }
+    );
     this.addChild( balanceBeamNode );
   }
 }
