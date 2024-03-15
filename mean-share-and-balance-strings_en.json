@@ -91,5 +91,8 @@
   },
   "meanEqualsUnknown": {
     "value": "Mean = ?"
+  },
+  "needAtLeastOneKick": {
+    "value": "Need at least one kick"
   }
 }

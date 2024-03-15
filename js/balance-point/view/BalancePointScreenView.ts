@@ -108,16 +108,18 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     const notepadNodeBounds = notepadNode.bounds;
 
     const calculationDependencies = [
+      model.selectedSceneModelProperty,
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
     ];
 
     const meanInfoDialog = new MeanCalculationDialog(
       calculationDependencies,
-      () => model.selectedSceneModelProperty.value.getSortedStackedObjects().map( ball => ball.valueProperty.value! ),
-      () => model.selectedSceneModelProperty.value.getSortedStackedObjects().length,
+      () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
+      () => model.selectedSceneModelProperty.value.getStackedObjects().length,
       model.isMeanInfoDialogVisibleProperty, notepadNodeBounds,
       {
+        zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         centerX: this.playAreaCenterX,
         tandem: options.tandem.createTandem( 'meanInfoDialog' )

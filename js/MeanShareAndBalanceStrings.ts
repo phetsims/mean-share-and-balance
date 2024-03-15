@@ -44,6 +44,7 @@ type StringsType = {
   'checkStringProperty': LocalizedStringProperty;
   'resetStringProperty': LocalizedStringProperty;
   'meanEqualsUnknownStringProperty': LocalizedStringProperty;
+  'needAtLeastOneKickStringProperty': LocalizedStringProperty;
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;

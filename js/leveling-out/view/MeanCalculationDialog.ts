@@ -10,7 +10,7 @@
 
 import Dialog, { DialogOptions } from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, GridBox, Line, Text, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, Line, Text, TextOptions, VBox, Node } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
@@ -20,7 +20,9 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import optionize from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction';
 
@@ -29,15 +31,15 @@ type SelfOptions = {
   // One of the items in this dialog can be displayed as either a decimal number or a mixed fraction, and this option
   // controls which.
   calculatedMeanDisplayMode?: MeanDisplayType;
+  zeroDataMessageProperty?: LocalizedStringProperty | null;
 };
 export type MeanCalculationDialogOptions = SelfOptions & WithRequired<DialogOptions, 'tandem'>;
 
 // constants
 const LABEL_FONT = new PhetFont( 16 );
 const LABEL_TEXT_OPTIONS = { font: LABEL_FONT };
-const DECIMAL_NUMBER_OPTIONS = { font: new PhetFont( 16 ) };
+const DECIMAL_FONT = new PhetFont( 16 );
 const FRACTION_NUMBER_FONT = new PhetFont( 14 );
-const FRACTION_NUMBER_OPTIONS = { font: FRACTION_NUMBER_FONT };
 const WHOLE_NUMBER_FONT = new PhetFont( 18 );
 const VINCULUM_LINE_WIDTH = 1;
 
@@ -70,20 +72,30 @@ export default class MeanCalculationDialog extends Dialog {
       resize: false,
       closeButtonListener: () => this.visibleProperty.set( false ),
       layoutStrategy: _.noop,
-      calculatedMeanDisplayMode: 'decimal'
+      calculatedMeanDisplayMode: 'decimal',
+      zeroDataMessageProperty: null
     }, providedOptions );
 
+    const messageVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {
+      return getNumberOfActiveDataObjects() === 0;
+    } );
+
+    const calculationsVisibleProperty = DerivedProperty.not( messageVisibleProperty );
+
+    const calculationsTextOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS, {
+      visibleProperty: calculationsVisibleProperty
+    } );
     const meanEqualsAdditionFractionText = new Text(
       MeanShareAndBalanceStrings.meanEqualsStringProperty,
-      LABEL_TEXT_OPTIONS
+      calculationsTextOptions
     );
     const meanEqualsUnreducedFractionText = new Text(
       MeanShareAndBalanceStrings.meanEqualsStringProperty,
-      LABEL_TEXT_OPTIONS
+      calculationsTextOptions
     );
     const meanEqualsDecimalOrMixedFractionText = new Text(
       MeanShareAndBalanceStrings.meanEqualsStringProperty,
-      LABEL_TEXT_OPTIONS
+      calculationsTextOptions
     );
 
     // Set a min content height when using mixed fractions, otherwise the grid layout can jump around when switching
@@ -106,6 +118,13 @@ export default class MeanCalculationDialog extends Dialog {
       minContentHeight: minContentHeight
     } );
 
+    let zeroDataMessageText: Node | null;
+    if ( options.zeroDataMessageProperty !== null ) {
+      const messageOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS,
+        { visibleProperty: messageVisibleProperty } );
+      zeroDataMessageText = new Text( options.zeroDataMessageProperty, messageOptions );
+    }
+
     const alignedCalculationNode = new AlignBox( calculationNode, {
 
       // These bounds effectively set the size of the dialog and were empirically determined.
@@ -126,12 +145,17 @@ export default class MeanCalculationDialog extends Dialog {
 
       // Create the Node that shows a set of numbers being added together on top and the number of items to divide by
       // on the bottom.
-      const additionText = new Text( values.join( ' + ' ), FRACTION_NUMBER_OPTIONS );
+      const fractionNumberOptions = {
+        font: FRACTION_NUMBER_FONT,
+        visibleProperty: calculationsVisibleProperty
+      };
+      const additionText = new Text( values.join( ' + ' ), fractionNumberOptions );
       const additionFractionLine = new Line( 0, 0, additionText.width, 0, {
         stroke: 'black',
-        lineWidth: VINCULUM_LINE_WIDTH
+        lineWidth: VINCULUM_LINE_WIDTH,
+        visibleProperty: calculationsVisibleProperty
       } );
-      const additionDenominatorText = new Text( numberOfActiveDataObjects, FRACTION_NUMBER_OPTIONS );
+      const additionDenominatorText = new Text( numberOfActiveDataObjects, fractionNumberOptions );
       const additionFraction = new VBox( { children: [ additionText, additionFractionLine, additionDenominatorText ] } );
 
       // Create the Node that shows the total value on top and the number of items to divide by on the bottom.
@@ -139,12 +163,17 @@ export default class MeanCalculationDialog extends Dialog {
         numerator: totalValues,
         denominator: numberOfActiveDataObjects,
         fractionNumbersFont: FRACTION_NUMBER_FONT,
-        vinculumLineWidth: VINCULUM_LINE_WIDTH
+        vinculumLineWidth: VINCULUM_LINE_WIDTH,
+        visibleProperty: calculationsVisibleProperty
       } );
 
       let decimalOrMixedFraction;
       if ( options.calculatedMeanDisplayMode === 'decimal' ) {
-        decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 2 ), DECIMAL_NUMBER_OPTIONS );
+        const decimalOptions = {
+          font: DECIMAL_FONT,
+          visibleProperty: calculationsVisibleProperty
+        };
+        decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 2 ), decimalOptions );
       }
       else {
         decimalOrMixedFraction = new MixedFractionNode( {
@@ -153,14 +182,16 @@ export default class MeanCalculationDialog extends Dialog {
           denominator: meanRemainder > 0 ? numberOfActiveDataObjects : null,
           wholeNumberFont: WHOLE_NUMBER_FONT,
           fractionNumbersFont: FRACTION_NUMBER_FONT,
-          vinculumLineWidth: VINCULUM_LINE_WIDTH
+          vinculumLineWidth: VINCULUM_LINE_WIDTH,
+          visibleProperty: calculationsVisibleProperty
         } );
       }
 
       calculationNode.rows = [
         [ meanEqualsAdditionFractionText, additionFraction ],
         [ meanEqualsUnreducedFractionText, unreducedFraction ],
-        [ meanEqualsDecimalOrMixedFractionText, decimalOrMixedFraction ]
+        [ meanEqualsDecimalOrMixedFractionText, decimalOrMixedFraction ],
+        zeroDataMessageText ? [ zeroDataMessageText ] : []
       ];
     } );
 
