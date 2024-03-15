@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Circle, Line, MatrixBetweenProperty, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Circle, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -26,6 +26,9 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import Multilink from '../../../../axon/js/Multilink.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import { Shape } from '../../../../kite/js/imports.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -253,6 +256,18 @@ export default class BalanceBeamNode extends Node {
         } );
       }
     );
+
+    // Add the prompt message that is shown when no balls have been kicked.
+    const promptMessageVisibleProperty = new DerivedProperty( [ meanValueProperty ], mean => mean === null );
+    const needAtLeastOneKickMessage = new Text( MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty, {
+      font: new PhetFont( 16 ),
+      visibleProperty: promptMessageVisibleProperty
+    } );
+    ManualConstraint.create( this, [ needAtLeastOneKickMessage ], messageProxy => {
+      messageProxy.centerX = BALANCE_BEAM_TRANSFORM.modelToViewX( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() );
+      messageProxy.centerY = BALANCE_BEAM_TRANSFORM.modelToViewY( 2.1 ); // Y pos empirically determined
+    } );
+    this.addChild( needAtLeastOneKickMessage );
   }
 }
 
