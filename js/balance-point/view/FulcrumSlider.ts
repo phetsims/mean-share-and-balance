@@ -37,6 +37,7 @@ export default class FulcrumSlider extends HSlider {
     const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight ) );
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( providedOptions.fulcrumWidth );
     const lineWidth = 1.5; // empirically determined
+
     const thumbNode = new TriangleNode( {
       triangleHeight: triangleHeight - lineWidth,
       triangleWidth: triangleWidth,
@@ -45,6 +46,14 @@ export default class FulcrumSlider extends HSlider {
       lineWidth: lineWidth,
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
+
+    // When the fulcrum is in the "fixed" mode (always at the mean), but there are no balls on the beam, we want the
+    // fulcrum to appear faded.  This property determines the opacity based on that information.
+    Multilink.multilink( [ isMeanFulcrumFixedProperty, meanValueProperty ],
+      ( isMeanFulcrumFixed, meanValue ) => {
+        thumbNode.opacity = isMeanFulcrumFixed && meanValue === null ? 0.2 : 1;
+      }
+    );
 
     const options = optionize<BalanceBeamFulcrumOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
