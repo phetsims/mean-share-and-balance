@@ -42,11 +42,12 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       stroke: 'black'
     } );
 
-    //TODO: We want to add the shadow only when dragging. https://github.com/phetsims/mean-share-and-balance/issues/147
+    const shadowVisibleProperty = new DerivedProperty( [ candyBar.stateProperty ], state => state === 'dragging' || state === 'animating' );
     const candyBarShadowRectangle = new Rectangle( candyBarRectangle.rectBounds, {
       fill: 'black',
       opacity: 0.2,
       cornerRadius: 1,
+      visibleProperty: shadowVisibleProperty,
       x: 4,
       y: 2
     } );
