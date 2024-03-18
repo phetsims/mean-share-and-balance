@@ -63,6 +63,8 @@ export default class SharingControls extends VBox {
 
     const syncButton = new SyncButton( {
       inputListeners: [ syncListener ],
+      touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+      touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       tandem: options.tandem.createTandem( 'syncButton' )
     } );
 
