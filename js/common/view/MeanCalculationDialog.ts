@@ -23,6 +23,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction';
 
@@ -73,7 +74,9 @@ export default class MeanCalculationDialog extends Dialog {
       closeButtonListener: () => this.visibleProperty.set( false ),
       layoutStrategy: _.noop,
       calculatedMeanDisplayMode: 'decimal',
-      zeroDataMessageProperty: null
+      zeroDataMessageProperty: null,
+      closeButtonTouchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+      closeButtonTouchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION
     }, providedOptions );
 
     const messageVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {

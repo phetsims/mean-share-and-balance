@@ -23,6 +23,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -82,6 +83,8 @@ export default class BalancePointNotepadNode extends NotepadNode {
       listener: () => {
         sceneModel.beamSupportsPresentProperty.toggle();
       },
+      touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+      touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       tandem: options.tandem.createTandem( 'checkButton' )
     } );
     sceneModel.beamSupportsPresentProperty.link( supportsPresent => {

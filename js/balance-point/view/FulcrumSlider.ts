@@ -115,6 +115,7 @@ export default class FulcrumSlider extends HSlider {
       }
     );
 
+    // Position the fulcrum at the mean when in the "fixed" mode.
     Multilink.multilink( [ meanValueProperty, isMeanFulcrumFixedProperty ], ( meanValue, isFixed ) => {
       if ( isFixed ) {
         fulcrumValueProperty.value = meanValue === null ?
@@ -122,6 +123,10 @@ export default class FulcrumSlider extends HSlider {
                                      Utils.roundToInterval( meanValue, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
       }
     } );
+
+    // Set pointer areas for slider thumb node.
+    thumbNode.mouseArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
+    thumbNode.touchArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
   }
 
   public override reset(): void {

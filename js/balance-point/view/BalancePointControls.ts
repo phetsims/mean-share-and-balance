@@ -76,7 +76,8 @@ export default class BalancePointControls extends VBox {
       {
         layoutOptions: {
           minContentHeight: 140
-        }
+        },
+        touchAreaDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION
       }
     );
 
