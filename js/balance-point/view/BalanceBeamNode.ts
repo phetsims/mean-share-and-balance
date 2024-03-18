@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Circle, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
+import { Circle, Color, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -81,7 +81,7 @@ export default class BalanceBeamNode extends Node {
     const lineWidth = 1;
     const groundLineCenterY = groundY - lineWidth / 2;
     const groundLine = new Line( lineStartX, groundLineCenterY, lineEndX, groundLineCenterY, {
-      stroke: 'grey'
+      stroke: Color.lightGray
     } );
 
     const fulcrumWidth = 0.85;

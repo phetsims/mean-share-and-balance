@@ -75,6 +75,7 @@ export default class FulcrumSlider extends HSlider {
         rightCueingArrow
       ],
       excludeInvisibleChildrenFromBounds: false,
+      align: 'bottom',
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
 
