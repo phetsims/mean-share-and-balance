@@ -123,14 +123,14 @@ export default class LevelingOutScreenView extends SharingScreenView {
         closestPlate!.notepadSnackNumberProperty.value++;
       }
       else {
+
+        // Determine the position in the stack for this candy bar.  It will be on top of the other active ones.
+        const numberOfCandyBarsOnPlate = model.getActiveCandyBarsOnPlate( closestPlate ).length;
+        const numberOfCandyBarsAnimatingToPlate = model.getActiveCandyBarsAnimatingToPlate( closestPlate ).length;
+        const stackPosition = numberOfCandyBarsOnPlate + numberOfCandyBarsAnimatingToPlate;
+
         // When the parent plate stays the same we need to animate back to the top of the stack
-        candyBarNode.candyBar.moveTo(
-          SnackStacker.getStackedCandyBarPosition(
-            closestPlate,
-            closestPlate.notepadSnackNumberProperty.value - 1
-          ),
-          true
-        );
+        candyBarNode.candyBar.moveTo( SnackStacker.getStackedCandyBarPosition( closestPlate, stackPosition ), true );
       }
     };
 

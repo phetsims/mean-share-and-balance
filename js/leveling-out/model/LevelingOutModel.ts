@@ -213,7 +213,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   /**
    * This function returns an array of all active candy bars associated with a plate that are not dragging or animating.
    */
-  private getActiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
+  public getActiveCandyBarsOnPlate( plate: Plate ): Array<CandyBar> {
     const candyBars = this.getActiveCandyBarsAssignedToPlate( plate );
     return candyBars.filter( candyBar => candyBar.stateProperty.value === 'plate' );
   }
@@ -222,11 +222,34 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
    * This function returns an array of all active candy bars associated with a plate that are animating. A candy bar
    * will only animate towards its parent plate.
    */
-  private getActiveCandyBarsAnimatingToPlate( plate: Plate ): Array<CandyBar> {
+  public getActiveCandyBarsAnimatingToPlate( plate: Plate ): Array<CandyBar> {
     const candyBars = this.getActiveCandyBarsAssignedToPlate( plate );
     return candyBars.filter( candyBar => {
       return candyBar.stateProperty.value === 'animating';
     } );
+  }
+
+  /**
+   * Get a list of the candy bars assigned to this plate, sorted by groups as follows:
+   *   - active candy bars whose states indicate that they are on the plate
+   *   - active candy bars whose state indicate that they are either animating or dragging
+   *   - inactive candy bars
+   * Each group is sorted in stacking order, with the lower ones (closer to the plate) at lower index positions in the
+   * array.
+   */
+  public override getSnacksAssignedToPlate( plate: Plate ): CandyBar[] {
+    const sortByStackingOrder = ( cb1: CandyBar, cb2: CandyBar ) => cb2.positionProperty.value.y - cb1.positionProperty.value.y;
+    const candyBarsAssignedToPlate = this.snacks.filter( snack => snack.parentPlateProperty.value === plate );
+    const activeCandyBarsOnPlate = candyBarsAssignedToPlate
+      .filter( cb => cb.isActiveProperty.value && cb.stateProperty.value === 'plate' )
+      .sort( sortByStackingOrder );
+    const animatingOrDraggingCandyBars = candyBarsAssignedToPlate
+      .filter( cb => cb.isActiveProperty.value && cb.stateProperty.value !== 'plate' );
+    const inactiveCandyBars = candyBarsAssignedToPlate
+      .filter( cb => !cb.isActiveProperty.value )
+      .sort( sortByStackingOrder );
+    assert && assert( activeCandyBarsOnPlate.length + animatingOrDraggingCandyBars.length + inactiveCandyBars.length === candyBarsAssignedToPlate.length );
+    return [ ...activeCandyBarsOnPlate, ...animatingOrDraggingCandyBars, ...inactiveCandyBars ];
   }
 
   /**
@@ -245,7 +268,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
    * them such that the active ones are on the bottom and inactive ones (which are invisible) are on top.
    */
   public override reorganizeSnacks( plate: Plate ): void {
-    super.reorganizeSnacks( plate );
     const nonAnimatingActiveCandyBars = this.getActiveCandyBarsOnPlate( plate );
     const animatingCandyBars = this.getActiveCandyBarsAnimatingToPlate( plate );
 
