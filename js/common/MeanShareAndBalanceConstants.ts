@@ -83,7 +83,8 @@ const MeanShareAndBalanceConstants = {
   NUMBER_LINE_LEFT_X_MARGIN: NUMBER_LINE_LEFT_X_MARGIN,
   CHART_VIEW_WIDTH: ScreenView.DEFAULT_LAYOUT_BOUNDS.width - CONTROLS_PREFERRED_WIDTH
                     - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN,
-  FULCRUM_DEFAULT_POSITION: 5
+  FULCRUM_DEFAULT_POSITION: 5,
+  FULCRUM_ICON_TRIANGLE_DIMENSIONS: { triangleHeight: 20, triangleWidth: 24 }
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );

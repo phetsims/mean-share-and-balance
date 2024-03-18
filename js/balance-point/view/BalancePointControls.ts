@@ -21,6 +21,7 @@ import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyTo
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
+import MovableFulcrumIcon from './MovableFulcrumIcon.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
@@ -31,12 +32,7 @@ export default class BalancePointControls extends VBox {
 
     const meanFulcrumRadioButtonGroup = new RectangularRadioButtonGroup( model.isMeanFulcrumFixedProperty, [
       {
-        createNode: () => new TriangleNode( {
-          triangleHeight: 24,
-          triangleWidth: 28,
-          fill: 'white',
-          stroke: MeanShareAndBalanceColors.meanColorProperty
-        } ),
+        createNode: () => new MovableFulcrumIcon(),
         value: false,
         tandemName: 'movableMeanFulcrumRadioButton'
       },
