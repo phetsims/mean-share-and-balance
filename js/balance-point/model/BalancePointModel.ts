@@ -50,6 +50,14 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       tandem: options.tandem.createTandem( 'isMeanInfoDialogVisibleProperty' )
     } );
   }
+
+  public override reset(): void {
+    this.isMeanFulcrumFixedProperty.reset();
+    this.isMeanVisibleProperty.reset();
+    this.areTickMarksVisibleProperty.reset();
+    this.isMeanInfoDialogVisibleProperty.reset();
+    this.sceneModels.forEach( sceneModel => sceneModel.reset() );
+  }
 }
 
 meanShareAndBalance.register( 'BalancePointModel', BalancePointModel );
