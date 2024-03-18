@@ -27,7 +27,7 @@ import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortraya
 import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortrayalAfrica.js';
 import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
-import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
+import MeanCalculationDialog from '../../common/view/MeanCalculationDialog.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 

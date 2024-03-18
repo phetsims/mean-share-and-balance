@@ -21,7 +21,7 @@ import Dialog from '../../../../sun/js/Dialog.js';
 import { AlignBox, Node, TColor } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import SharingControls from './SharingControls.js';
-import MeanCalculationDialog from '../../leveling-out/view/MeanCalculationDialog.js';
+import MeanCalculationDialog from './MeanCalculationDialog.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import PersonImage from '../../leveling-out/view/PersonImage.js';
 import TablePlateNode from './TablePlateNode.js';

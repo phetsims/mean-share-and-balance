@@ -173,7 +173,7 @@ export default class MeanCalculationDialog extends Dialog {
           font: DECIMAL_FONT,
           visibleProperty: calculationsVisibleProperty
         };
-        decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 2 ), decimalOptions );
+        decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
       }
       else {
         decimalOrMixedFraction = new MixedFractionNode( {
