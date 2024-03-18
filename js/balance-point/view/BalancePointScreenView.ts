@@ -103,7 +103,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       model.areTickMarksVisibleProperty, model.isMeanVisibleProperty, model.isMeanFulcrumFixedProperty, {
         tandem: options.tandem.createTandem( 'notepadNode' ),
         centerX: this.playAreaCenterX
-      } );
+      }
+    );
 
     const notepadNodeBounds = notepadNode.bounds;
 
@@ -140,6 +141,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
         isResettingProperty.value = true;
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
+        notepadNode.reset();
         isResettingProperty.value = false;
       },
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,

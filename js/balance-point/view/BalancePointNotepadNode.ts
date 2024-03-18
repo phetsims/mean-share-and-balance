@@ -32,6 +32,8 @@ type BalancePointNotepadNodeOptions = SelfOptions &
 
 export default class BalancePointNotepadNode extends NotepadNode {
 
+  private readonly balanceBeamNode: BalanceBeamNode;
+
   public constructor(
     sceneModel: BalancePointSceneModel,
     playAreaNumberLineNode: NumberLineNode,
@@ -111,7 +113,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     );
 
     // Create the node that depicts the balance beam, including the balls that are stacked on it.
-    const balanceBeamNode = new BalanceBeamNode(
+    this.balanceBeamNode = new BalanceBeamNode(
       sceneModel,
       playAreaNumberLineNode,
       this.paperStackBounds,
@@ -122,12 +124,16 @@ export default class BalancePointNotepadNode extends NotepadNode {
       isMeanFulcrumFixedProperty,
       { tandem: options.tandem.createTandem( 'balanceBeamNode' ) }
     );
-    this.addChild( balanceBeamNode );
+    this.addChild( this.balanceBeamNode );
 
     // Pull the notepad rings and readout to the front of the z-order so that the balance beam line will appear
     // to go behind them.
     this.moveChildToFront( this.ringsNode );
     this.readoutNode && this.moveChildToFront( this.readoutNode );
+  }
+
+  public reset(): void {
+    this.balanceBeamNode.reset();
   }
 }
 

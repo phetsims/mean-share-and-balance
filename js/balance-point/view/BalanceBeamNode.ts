@@ -46,6 +46,8 @@ export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScale
 type BalanceBeamNodeOptions = EmptySelfOptions & WithRequired<NodeOptions, 'tandem'>;
 export default class BalanceBeamNode extends Node {
 
+  private readonly fulcrumSlider: FulcrumSlider;
+
   public constructor(
     sceneModel: BalancePointSceneModel,
     playAreaNumberLineNode: NumberLineNode,
@@ -83,13 +85,17 @@ export default class BalanceBeamNode extends Node {
     } );
 
     const fulcrumWidth = 0.85;
-    const fulcrumSlider = new FulcrumSlider( fulcrumValueProperty, meanValueProperty,
-      isMeanFulcrumFixedProperty, {
+    const fulcrumSlider = new FulcrumSlider(
+      fulcrumValueProperty,
+      meanValueProperty,
+      isMeanFulcrumFixedProperty,
+      {
         fulcrumHeight: FULCRUM_HEIGHT,
         fulcrumWidth: fulcrumWidth,
         bottom: groundY,
         tandem: options.tandem?.createTandem( 'fulcrumSlider' )
-      } );
+      }
+    );
 
     const columnWidth = 15; // empirically determined
     const columnHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( FULCRUM_HEIGHT ) );
@@ -140,6 +146,9 @@ export default class BalanceBeamNode extends Node {
       ]
     }, options );
     super( superOptions );
+
+    // Make the fulcrum slider available to methods.
+    this.fulcrumSlider = fulcrumSlider;
 
     // Align with the play area number line node, based on the tick mark values.
     const matrixBetweenProperty = new MatrixBetweenProperty(
@@ -268,6 +277,10 @@ export default class BalanceBeamNode extends Node {
       messageProxy.centerY = BALANCE_BEAM_TRANSFORM.modelToViewY( 2.1 ); // Y pos empirically determined
     } );
     this.addChild( needAtLeastOneKickMessage );
+  }
+
+  public reset(): void {
+    this.fulcrumSlider.reset();
   }
 }
 
