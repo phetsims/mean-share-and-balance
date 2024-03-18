@@ -124,8 +124,10 @@ export default class BalancePointNotepadNode extends NotepadNode {
     );
     this.addChild( balanceBeamNode );
 
-    // Pull the notepad rings to the front of the z-order so that the balance beam line will appear to go behind them.
+    // Pull the notepad rings and readout to the front of the z-order so that the balance beam line will appear
+    // to go behind them.
     this.moveChildToFront( this.ringsNode );
+    this.readoutNode && this.moveChildToFront( this.readoutNode );
   }
 }
 

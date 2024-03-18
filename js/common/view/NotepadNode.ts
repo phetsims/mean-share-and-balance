@@ -46,6 +46,9 @@ export default class NotepadNode extends Node {
   // The parent node for the set of ring images.
   protected readonly ringsNode;
 
+  // The parent node for the readout text and background.
+  protected readonly readoutNode: Node | null;
+
   public constructor( providedOptions: NotepadNodeOptions ) {
 
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
@@ -62,7 +65,7 @@ export default class NotepadNode extends Node {
       const xOffset = i * -stackOffset;
       const yOffset = i * stackOffset;
       const paper = new Rectangle( xOffset, yOffset, paperWidth, paperHeight, {
-        fill: MeanShareAndBalanceColors.paperColorProperty,
+        fill: MeanShareAndBalanceColors.notepadColorProperty,
         stroke: 'black',
         cornerRadius: 10
       } );
@@ -90,21 +93,32 @@ export default class NotepadNode extends Node {
     // Make the rings node available to subclasses for layering adjustments.
     this.ringsNode = ringsNode;
 
+    this.readoutNode = null;
+
     if ( options.readoutPatternStringProperty ) {
       const readoutText = new Text( options.readoutPatternStringProperty, {
         font: new PhetFont( 16 ),
         maxWidth: 200,
         fill: 'black'
       } );
+      const readoutBackground = new Rectangle( readoutText.bounds, {
+        children: [ readoutText ],
+        fill: MeanShareAndBalanceColors.notepadReadoutBackgroundColorProperty,
+        sizable: true,
+        layoutOptions: {
+          stretch: true
+        }
+      } );
+      readoutText.center = readoutBackground.center;
 
-      const readoutAlignBox = new AlignBox( readoutText, {
+      const readoutAlignBox = new AlignBox( readoutBackground, {
         alignBounds: this.paperStackBounds.dilatedX( -LABEL_MARGIN ),
         xAlign: 'right',
         yAlign: 'top',
         yMargin: NOTEPAD_RING_BOTTOM + 5
       } );
-
       this.addChild( readoutAlignBox );
+      this.readoutNode = readoutAlignBox;
     }
   }
 

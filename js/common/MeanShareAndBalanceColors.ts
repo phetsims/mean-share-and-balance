@@ -79,8 +79,11 @@ const meanShareAndBalanceColors = {
   candyBarHighlightColorProperty: new ProfileColorProperty( meanShareAndBalance, 'candyBarHighlight', {
     default: '#7F5039'
   } ),
-  paperColorProperty: new ProfileColorProperty( meanShareAndBalance, 'paper', {
-    default: '#F0F0F0'
+  notepadColorProperty: new ProfileColorProperty( meanShareAndBalance, 'notepad', {
+    default: 'rgb(240,240,240)'
+  } ),
+  notepadReadoutBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'notepadReadoutBackground', {
+    default: 'rgba(240,240,240,0.8)'
   } ),
   appleColorProperty: new ProfileColorProperty( meanShareAndBalance, 'apple', {
     default: '#00A048'
