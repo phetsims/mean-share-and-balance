@@ -10,7 +10,6 @@
 import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from '../model/BalancePointModel.js';
-import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
@@ -18,10 +17,10 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import MovableFulcrumIcon from './MovableFulcrumIcon.js';
+import FixedFulcrumIcon from './FixedFulcrumIcon.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
@@ -37,12 +36,7 @@ export default class BalancePointControls extends VBox {
         tandemName: 'movableMeanFulcrumRadioButton'
       },
       {
-        createNode: () => new TriangleNode( {
-          triangleHeight: 24,
-          triangleWidth: 28,
-          fill: MeanShareAndBalanceColors.meanColorProperty,
-          stroke: MeanShareAndBalanceColors.meanColorProperty
-        } ),
+        createNode: () => new FixedFulcrumIcon(),
         value: true,
         tandemName: 'fixedMeanFulcrumRadioButton'
       }

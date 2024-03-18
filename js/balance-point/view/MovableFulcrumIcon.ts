@@ -1,7 +1,7 @@
 // Copyright 2023, University of Colorado Boulder
 
 /**
- * The MovableFulcrumIcon has two arrows on each side of the fulcrum trial to indicate the direction that
+ * The MovableFulcrumIcon has two arrows on each side of the fulcrum triangle to indicate the direction that
  * the fulcrum can move.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -15,7 +15,12 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 
+// constants
+const ARROW_LENGTH = 9;
+const ARROW_LINE_WIDTH = 0.8;
+const ARROW_STARTING_OFFSET = 2;
 
 export default class MovableFulcrumIcon extends Node {
 
@@ -27,27 +32,34 @@ export default class MovableFulcrumIcon extends Node {
       lineWidth: 1.5,
       lineDash: [ 2, 2 ]
     }, MeanShareAndBalanceConstants.FULCRUM_ICON_TRIANGLE_DIMENSIONS );
-    const triangle = new TriangleNode( triangleOptions );
+    const icon = new TriangleNode( triangleOptions );
 
-    const arrowLength = 8;
-    const arrowLineWidth = 0.8;
-    const leftArrow = new ArrowNode( triangle.left, triangle.centerY, triangle.left - arrowLength, triangle.centerY, {
+    const leftArrowStart = icon.left + ARROW_STARTING_OFFSET;
+    const leftArrow = new ArrowNode( leftArrowStart, icon.centerY, leftArrowStart - ARROW_LENGTH, icon.centerY, {
       fill: MeanShareAndBalanceColors.arrowFillColorProperty,
       stroke: 'black',
-      headHeight: arrowLength / 2,
-      lineWidth: arrowLineWidth
+      headHeight: ARROW_LENGTH / 2,
+      lineWidth: ARROW_LINE_WIDTH
     } );
-    const rightArrow = new ArrowNode( triangle.right, triangle.centerY, triangle.right + arrowLength, triangle.centerY, {
+    icon.addChild( leftArrow );
+
+    const rightArrowStart = icon.right - ARROW_STARTING_OFFSET;
+    const rightArrow = new ArrowNode( rightArrowStart, icon.centerY, rightArrowStart + ARROW_LENGTH, icon.centerY, {
       fill: MeanShareAndBalanceColors.arrowFillColorProperty,
       stroke: 'black',
-      headHeight: arrowLength / 2,
-      lineWidth: arrowLineWidth
+      headHeight: ARROW_LENGTH / 2,
+      lineWidth: ARROW_LINE_WIDTH
     } );
+    icon.addChild( rightArrow );
 
+    // The aspect ratio of the icon should be square.
+    const iconDimension = icon.width > icon.height ? icon.width : icon.height;
     const superOptions = combineOptions<NodeOptions>( {
-      children: [ leftArrow, triangle, rightArrow ]
+      children: [ icon ],
+      localBounds: new Bounds2( 0, 0, iconDimension, iconDimension )
     }, options );
     super( superOptions );
+    icon.center = this.center;
   }
 }
 
