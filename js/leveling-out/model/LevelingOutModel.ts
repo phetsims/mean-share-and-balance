@@ -352,7 +352,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     this.resetInProgress = false;
   }
 
-  public static readonly NOTEPAD_PLATE_CENTER_Y = 330;
+  public static readonly NOTEPAD_PLATE_BOTTOM_Y = 330;
   public static readonly CANDY_BAR_WIDTH = Plate.WIDTH;
   public static readonly CANDY_BAR_HEIGHT = 12;
 }

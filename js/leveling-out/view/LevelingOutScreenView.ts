@@ -73,9 +73,9 @@ export default class LevelingOutScreenView extends SharingScreenView {
     // Calculate the bounds for constraining the dragging of the candy bars in the notepad.
     this.notepadBoundsProperty = new Property( new Bounds2(
       -this.notepad.bounds.width / 2,
-      -this.notepad.height + this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_CENTER_Y,
+      -this.notepad.height + this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_BOTTOM_Y,
       this.notepad.width / 2,
-      this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_CENTER_Y
+      this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_BOTTOM_Y
     ) );
 
     // function for what candy bars should do at the end of their drag
@@ -136,7 +136,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
 
     // Create the nodes on the notepad that represent the plates in the model.
     const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
-      new Vector2( this.playAreaCenterX, LevelingOutModel.NOTEPAD_PLATE_CENTER_Y ),
+      new Vector2( this.playAreaCenterX, LevelingOutModel.NOTEPAD_PLATE_BOTTOM_Y ),
       1
     );
     const notepadPlateNodes = model.plates.map( plate => new LevelingOutNotepadPlateNode( plate, modelToNotepadTransform, {

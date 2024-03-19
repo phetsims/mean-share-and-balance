@@ -52,8 +52,7 @@ class SnackStacker {
 
       // The candy bar graphic Nodes are stacked in a single column with a little space between each.
       snackNode.centerX = LevelingOutModel.CANDY_BAR_WIDTH / 2;
-      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH +
-                             MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
+      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
                              LevelingOutModel.CANDY_BAR_HEIGHT / 2 +
                              positionInStack * ( LevelingOutModel.CANDY_BAR_HEIGHT +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
@@ -78,7 +77,11 @@ class SnackStacker {
    */
   public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
     const xPosition = plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2;
-    const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING +
+
+    // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/175
+    const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
+                         MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
+                         1 +
                          ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     return new Vector2( xPosition, yPosition );
@@ -97,7 +100,7 @@ class SnackStacker {
     const xPosition = positionInStack % 2 === 0 ?
                       plate.xPositionProperty.value - appleRadius - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
                       plate.xPositionProperty.value + appleRadius + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
-    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH / 2 -
+    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT / 2 -
                       MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS -
                       VERTICAL_SPACE_BETWEEN_APPLES -
                       Math.floor( positionInStack / 2 ) *

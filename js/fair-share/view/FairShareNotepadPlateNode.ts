@@ -7,16 +7,16 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Line } from '../../../../scenery/js/imports.js';
+import { Image } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
 import { NotepadMode } from '../model/FairShareModel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 
-export default class FairShareNotepadPlateNode extends Line {
+export default class FairShareNotepadPlateNode extends Image {
 
   public constructor( plate: Plate, mvt: ModelViewTransform2, notepadModeProperty: TReadOnlyProperty<NotepadMode> ) {
 
@@ -26,9 +26,8 @@ export default class FairShareNotepadPlateNode extends Line {
       ( isActive, notepadMode ) => isActive && ( notepadMode !== NotepadMode.COLLECT )
     );
 
-    super( 0, 0, Plate.WIDTH, 0, {
-      stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN,
-      lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH,
+    super( notepadPlateSketch_svg, {
+      maxWidth: Plate.WIDTH,
       visibleProperty: plateVisibleProperty
     } );
 

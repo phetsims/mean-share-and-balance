@@ -8,7 +8,7 @@
 
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Circle, HBox, Line, Node, Path, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { Circle, HBox, Image, Node, Path, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -27,6 +27,7 @@ import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
 import Plate from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -61,9 +62,8 @@ export default class MeanAccordionBox extends AccordionBox {
         const remainder = mean - wholePart;
 
         // Add the plate first, which is just a line.
-        const plateNode = new Line( 0, 0, Plate.WIDTH, 0, {
-          stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN,
-          lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH
+        const plateNode = new Image( notepadPlateSketch_svg, {
+          maxWidth: Plate.WIDTH
         } );
         meanSnacksGraphicNode.addChild( plateNode );
 

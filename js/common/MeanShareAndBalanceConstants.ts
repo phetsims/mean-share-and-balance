@@ -11,9 +11,9 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import Range from '../../../dot/js/Range.js';
 import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 import { LinearGradient, Pattern } from '../../../scenery/js/imports.js';
+import ScreenView from '../../../joist/js/ScreenView.js';
 import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
-import ScreenView from '../../../joist/js/ScreenView.js';
 
 const DEFAULT_MARGIN = 15;
 const CONTROLS_MAX_TEXT_WIDTH = 175;
@@ -72,9 +72,9 @@ const MeanShareAndBalanceConstants = {
   MAX_NUMBER_OF_SNACKS_PER_PLATE: 10,
   MIN_NUMBER_OF_SNACKS_PER_PLATE: 0,
   NOTEPAD_PAPER_CENTER_Y: 220,
-
-  NOTEPAD_PLATE_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
-  NOTEPAD_PLATE_LINE_WIDTH: 1.95,
+  NOTEPAD_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
+  NOTEPAD_LINE_PATTERN_WIDTH: 1.95,
+  NOTEPAD_PLATE_HEIGHT: 5, // TODO: this needs to come from the image size itself. https://github.com/phetsims/mean-share-and-balance/issues/175
 
   SOCCER_BALL_RANGE: new Range( 0, 10 ),
   NUMBER_SPINNER_KICK_RANGE: new Range( 0, 7 ),

@@ -11,7 +11,7 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import { Line, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -20,6 +20,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import SnackStacker from '../../common/SnackStacker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -46,9 +47,8 @@ export default class LevelingOutNotepadPlateNode extends Node {
       candyBarOutlineNodes.push( candyBarOutlineNode );
     } );
 
-    const plateNode = new Line( 0, 0, Plate.WIDTH, 0, {
-      stroke: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_PATTERN,
-      lineWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_LINE_WIDTH
+    const plateNode = new Image( notepadPlateSketch_svg, {
+      maxWidth: Plate.WIDTH
     } );
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
