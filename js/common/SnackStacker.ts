@@ -7,7 +7,7 @@
  */
 
 import meanShareAndBalance from '../meanShareAndBalance.js';
-import { Image, Path } from '../../../scenery/js/imports.js';
+import { Image, Node } from '../../../scenery/js/imports.js';
 import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
@@ -44,7 +44,7 @@ class SnackStacker {
    * Position the graphical node that is being used to depict all or part of a snack.  This method is used to position
    * the nodes that are *not* represented as images in the view.  The position is set in
    */
-  public static setSnackGraphicPosition( snackNode: Path, snackType: SnackType, positionInStack: number ): void {
+  public static setSnackGraphicPosition( snackNode: Node, snackType: SnackType, positionInStack: number ): void {
 
     assert && assert( snackType === 'candyBars' || snackType === 'apples', 'unknown snack type' );
 

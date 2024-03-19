@@ -17,12 +17,14 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import sketchedAppleFill_svg from '../../../images/sketchedAppleFill_svg.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadAppleNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem' | 'visibleProperty'>;
 
 // constants
 const RADIUS = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS;
+const OUTLINE_LINE_DASH = [ 1, 2 ];
 
 export default class NotepadAppleNode extends Node {
 
@@ -33,7 +35,7 @@ export default class NotepadAppleNode extends Node {
     // Add a dotted outline for the full circle.  This is only shown for fractional apples.
     const outlineCircle = new Circle( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, {
       stroke: MeanShareAndBalanceColors.appleOutlineColorProperty,
-      lineDash: [ 1, 2 ]
+      lineDash: OUTLINE_LINE_DASH
     } );
 
     // Add the main representation, which will be a circle for a full apple or a partial circle for a fractional apple.
@@ -41,26 +43,18 @@ export default class NotepadAppleNode extends Node {
       stroke: MeanShareAndBalanceColors.appleOutlineColorProperty
     } );
 
-    // Create the background image, then put it into a parent node so that it can be scaled and clipped in the desired
-    // coordinate frame.
-    const backgroundImage = new Image( sketchedAppleFill_svg, {
-      centerX: 0,
-      centerY: 0
-    } );
-    const backgroundNode = new Node( {
-      children: [ backgroundImage ],
-      scale: RADIUS * 2 / backgroundImage.width
-    } );
+    // Create the background.
+    const backgroundNode = NotepadAppleNode.createBackgroundNode();
 
-    const options = optionize<NotepadAppleNodeOptions, SelfOptions, PathOptions>()( {
-        children: [ backgroundNode, outlineCircle, foregroundShape ]
-      },
+    // Layer the component Nodes together into the composite Node.
+    const options = optionize<NotepadAppleNodeOptions, SelfOptions, PathOptions>()(
+      { children: [ backgroundNode, outlineCircle, foregroundShape ] },
       providedOptions
     );
 
     super( options );
 
-    // Update the shape and the visibility of the outline as the fractional amount changes.
+    // Update the shape and the visibility of the various child nodes as the fractional amount of the apple changes.
     apple.fractionProperty.link( fraction => {
       if ( fraction.getValue() === 1 ) {
         foregroundShape.setShape( Shape.circle( 0, 0, RADIUS ) );
@@ -69,11 +63,7 @@ export default class NotepadAppleNode extends Node {
       }
       else {
         assert && assert( fraction.value < 1 && fraction.value > 0, 'unsupported fraction value' );
-        const fractionalShape = new Shape()
-          .moveTo( 0, 0 )
-          .lineTo( RADIUS, 0 )
-          .arc( 0, 0, RADIUS, 0, fraction.value * 2 * Math.PI )
-          .lineTo( 0, 0 );
+        const fractionalShape = NotepadAppleNode.getFractionalShape( fraction );
         foregroundShape.setShape( fractionalShape );
         backgroundNode.clipArea = fractionalShape;
         outlineCircle.visible = true;
@@ -87,6 +77,61 @@ export default class NotepadAppleNode extends Node {
     if ( phet.chipper.queryParameters.dev ) {
       this.addChild( new Text( apple.instanceID, { fill: 'black', centerX: 0, centerY: 0 } ) );
     }
+  }
+
+  /**
+   * Create a partial circular shape based on the apple graphic radius and the provided fractional value.
+   */
+  private static getFractionalShape( fraction: Fraction ): Shape {
+    return new Shape()
+      .moveTo( 0, 0 )
+      .lineTo( RADIUS, 0 )
+      .arc( 0, 0, RADIUS, 0, fraction.value * 2 * Math.PI )
+      .lineTo( 0, 0 );
+  }
+
+  private static createBackgroundNode(): Node {
+
+    // Create the image node that will act as the background.
+    const backgroundImage = new Image( sketchedAppleFill_svg, {
+      centerX: 0,
+      centerY: 0
+    } );
+
+    // Put the image inside a parent node that can be easily positioned and clipped.
+    return new Node( {
+      children: [ backgroundImage ],
+      scale: RADIUS * 2 / backgroundImage.width
+    } );
+  }
+
+  /**
+   * Create a non-dynamic version of the apple graphic node that doesn't require an Apple model.  This is useful for
+   * icons or graphs.
+   */
+  public static createIconNode( fraction = Fraction.ONE ): Node {
+
+    const backgroundNode = NotepadAppleNode.createBackgroundNode();
+
+    let appleIconNode;
+    if ( fraction.value === 1 ) {
+      const circle = new Circle( RADIUS, { stroke: MeanShareAndBalanceColors.appleOutlineColorProperty } );
+      appleIconNode = new Node( { children: [ backgroundNode, circle ] } );
+    }
+    else {
+      const dottedOutlineCircle = new Circle( RADIUS, {
+        stroke: MeanShareAndBalanceColors.appleOutlineColorProperty,
+        lineDash: OUTLINE_LINE_DASH
+      } );
+      const fractionalShape = NotepadAppleNode.getFractionalShape( fraction );
+      const fractionalShapeNode = new Path( fractionalShape, {
+        stroke: MeanShareAndBalanceColors.appleOutlineColorProperty
+      } );
+      backgroundNode.clipArea = fractionalShape;
+      appleIconNode = new Node( { children: [ backgroundNode, dottedOutlineCircle, fractionalShapeNode ] } );
+    }
+
+    return appleIconNode;
   }
 }
 

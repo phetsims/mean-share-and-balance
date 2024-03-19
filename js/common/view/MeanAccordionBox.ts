@@ -8,7 +8,7 @@
 
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Circle, HBox, Image, Node, Path, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { HBox, Image, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -21,13 +21,13 @@ import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js'
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import { SnackType } from './SharingScreenView.js';
-import { Shape } from '../../../../kite/js/imports.js';
 import SnackStacker from '../SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
 import Plate from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
+import NotepadAppleNode from '../../fair-share/view/NotepadAppleNode.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -60,6 +60,7 @@ export default class MeanAccordionBox extends AccordionBox {
         const mean = total / divisor;
         const wholePart = Math.floor( total / divisor );
         const remainder = mean - wholePart;
+        const remainderAsFraction = new Fraction( total - ( wholePart * divisor ), divisor );
 
         // Add the plate first, which is just a line.
         const plateNode = new Image( notepadPlateSketch_svg, {
@@ -81,11 +82,8 @@ export default class MeanAccordionBox extends AccordionBox {
           }
           else {
 
-            // Create the graphical representation for an apple.
-            wholeSnackNode = new Circle( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, {
-              fill: MeanShareAndBalanceColors.appleColorProperty,
-              stroke: 'black'
-            } );
+            // Create the graphical representation for a whole apple.
+            wholeSnackNode = NotepadAppleNode.createIconNode();
           }
 
           // Position the Node so that it appears to be stacked on a plate.
@@ -117,16 +115,7 @@ export default class MeanAccordionBox extends AccordionBox {
           else {
 
             // Create a Node that represents a fraction of an apple.
-            partialSnackNode = new Circle( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, {
-              stroke: 'black',
-              lineDash: [ 1, 2 ]
-            } );
-            const partialAppleFractionalPiece =
-              new Path( createFractionalCircleShape( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, remainder ), {
-                stroke: 'black',
-                fill: MeanShareAndBalanceColors.appleColorProperty
-              } );
-            partialSnackNode.addChild( partialAppleFractionalPiece );
+            partialSnackNode = NotepadAppleNode.createIconNode( remainderAsFraction );
           }
 
           // Position the resulting node.
@@ -147,7 +136,6 @@ export default class MeanAccordionBox extends AccordionBox {
         else {
 
           // Use a fraction for the apples.
-          const remainderAsFraction = new Fraction( total - ( wholePart * divisor ), divisor );
           remainderAsFraction.reduce();
           meanReadout = new MixedFractionNode( {
             whole: wholePart > 0 || total === 0 ? wholePart : null,
@@ -193,18 +181,5 @@ export default class MeanAccordionBox extends AccordionBox {
     } );
   }
 }
-
-/**
- * Helper function to produce a pie-chart-ish shape representing a fractional amount.
- */
-const createFractionalCircleShape = ( radius: number, fractionalAmount: number ): Shape => {
-  assert && assert( radius > 0, 'radius must be greater than zero' );
-  assert && assert( fractionalAmount > 0 && fractionalAmount < 1, 'fractionalAmount must be between 0 and 1' );
-  return new Shape()
-    .moveTo( 0, 0 )
-    .lineTo( radius, 0 )
-    .arc( 0, 0, radius, 0, fractionalAmount * 2 * Math.PI )
-    .lineTo( 0, 0 );
-};
 
 meanShareAndBalance.register( 'MeanAccordionBox', MeanAccordionBox );
