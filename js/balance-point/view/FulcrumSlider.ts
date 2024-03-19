@@ -38,7 +38,10 @@ const CUEING_ARROW_OPTIONS = {
   lineWidth: 1,
   headWidth: 22,
   headHeight: 14,
-  tailWidth: 12
+  tailWidth: 12,
+  layoutOptions: {
+    bottomMargin: 2
+  }
 };
 
 export default class FulcrumSlider extends HSlider {
