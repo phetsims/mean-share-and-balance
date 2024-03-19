@@ -57,7 +57,6 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     this.isMeanVisibleProperty.reset();
     this.areTickMarksVisibleProperty.reset();
     this.isMeanInfoDialogVisibleProperty.reset();
-    this.sceneModels.forEach( sceneModel => sceneModel.reset() );
   }
 }
 
