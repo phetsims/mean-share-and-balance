@@ -88,6 +88,9 @@ const meanShareAndBalanceColors = {
   appleColorProperty: new ProfileColorProperty( meanShareAndBalance, 'apple', {
     default: '#00A048'
   } ),
+  appleOutlineColorProperty: new ProfileColorProperty( meanShareAndBalance, 'appleOutline', {
+    default: '#555555'
+  } ),
   balancePointQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balancePointQuestionBar', {
     default: '#009246'
   } ),

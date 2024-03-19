@@ -1,24 +1,28 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * NotepadAppleNode is the graphical representation of an Apple that is shown on the notepad in this sim.  It is
- * essentially just a circle filled with the same color as the apple images that are shown on the plates.
+ * NotepadAppleNode is the graphical representation of an Apple that is shown on the notepad in this sim.  It is meant
+ * to look like a simple apple that has been sketched on a notepad.
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Circle, Node, NodeOptions, Path, PathOptions, Text } from '../../../../scenery/js/imports.js';
+import { Circle, Image, Node, NodeOptions, Path, PathOptions, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import Apple from '../model/Apple.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import sketchedAppleFill_svg from '../../../images/sketchedAppleFill_svg.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadAppleNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem' | 'visibleProperty'>;
+
+// constants
+const RADIUS = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS;
 
 export default class NotepadAppleNode extends Node {
 
@@ -28,18 +32,28 @@ export default class NotepadAppleNode extends Node {
 
     // Add a dotted outline for the full circle.  This is only shown for fractional apples.
     const outlineCircle = new Circle( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS, {
-      stroke: 'black',
+      stroke: MeanShareAndBalanceColors.appleOutlineColorProperty,
       lineDash: [ 1, 2 ]
     } );
 
-    // Add the main representation, which will be a circle for a full apply or a partial circle for a fractional apple.
+    // Add the main representation, which will be a circle for a full apple or a partial circle for a fractional apple.
     const foregroundShape = new Path( null, {
-      stroke: 'black',
-      fill: MeanShareAndBalanceColors.appleColorProperty
+      stroke: MeanShareAndBalanceColors.appleOutlineColorProperty
+    } );
+
+    // Create the background image, then put it into a parent node so that it can be scaled and clipped in the desired
+    // coordinate frame.
+    const backgroundImage = new Image( sketchedAppleFill_svg, {
+      centerX: 0,
+      centerY: 0
+    } );
+    const backgroundNode = new Node( {
+      children: [ backgroundImage ],
+      scale: RADIUS * 2 / backgroundImage.width
     } );
 
     const options = optionize<NotepadAppleNodeOptions, SelfOptions, PathOptions>()( {
-        children: [ outlineCircle, foregroundShape ]
+        children: [ backgroundNode, outlineCircle, foregroundShape ]
       },
       providedOptions
     );
@@ -48,19 +62,20 @@ export default class NotepadAppleNode extends Node {
 
     // Update the shape and the visibility of the outline as the fractional amount changes.
     apple.fractionProperty.link( fraction => {
-      const radius = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS;
       if ( fraction.getValue() === 1 ) {
-        foregroundShape.setShape( Shape.circle( 0, 0, radius ) );
+        foregroundShape.setShape( Shape.circle( 0, 0, RADIUS ) );
         outlineCircle.visible = false;
+        backgroundNode.clipArea = null;
       }
       else {
         assert && assert( fraction.value < 1 && fraction.value > 0, 'unsupported fraction value' );
-        foregroundShape.setShape( new Shape()
+        const fractionalShape = new Shape()
           .moveTo( 0, 0 )
-          .lineTo( radius, 0 )
-          .arc( 0, 0, radius, 0, fraction.value * 2 * Math.PI )
-          .lineTo( 0, 0 )
-        );
+          .lineTo( RADIUS, 0 )
+          .arc( 0, 0, RADIUS, 0, fraction.value * 2 * Math.PI )
+          .lineTo( 0, 0 );
+        foregroundShape.setShape( fractionalShape );
+        backgroundNode.clipArea = fractionalShape;
         outlineCircle.visible = true;
       }
     } );

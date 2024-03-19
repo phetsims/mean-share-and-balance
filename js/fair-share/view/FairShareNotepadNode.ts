@@ -12,10 +12,11 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import FairShareModel, { NotepadMode } from '../model/FairShareModel.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
-import { AlignBox, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, Image, Text } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import collectionArea_svg from '../../../images/collectionArea_svg.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
 export default class FairShareNotepadNode extends NotepadNode {
@@ -51,22 +52,14 @@ export default class FairShareNotepadNode extends NotepadNode {
       [ notepadModeProperty ],
       mode => mode === NotepadMode.COLLECT
     );
-    const collectionAreaNode = new Rectangle(
-      0,
-      0,
-      FairShareModel.COLLECTION_AREA_SIZE.width,
-      FairShareModel.COLLECTION_AREA_SIZE.height,
-      {
-        stroke: 'black',
-        cornerRadius: 8,
-        centerX: this.paperStackBounds.centerX,
+    const collectionAreaNode = new Image( collectionArea_svg, {
+      initialWidth: FairShareModel.COLLECTION_AREA_SIZE.width,
+      initialHeight: FairShareModel.COLLECTION_AREA_SIZE.height,
+      centerX: this.paperStackBounds.centerX,
+      centerY: this.paperStackBounds.centerY + 5, // tweaked a bit due to be perfectly centered around the collection
+      visibleProperty: collectionAreaVisibleProperty
+    } );
 
-        // tweaked a bit due to be perfectly centered around the collection
-        centerY: this.paperStackBounds.centerY + 5,
-
-        visibleProperty: collectionAreaVisibleProperty
-      }
-    );
     this.addChild( collectionAreaNode );
 
     const radioButtonGroupAlignBox = new AlignBox( notepadModeRadioButtonGroup, {
