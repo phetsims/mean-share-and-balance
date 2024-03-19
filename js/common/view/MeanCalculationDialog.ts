@@ -24,6 +24,7 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction';
 
@@ -179,10 +180,19 @@ export default class MeanCalculationDialog extends Dialog {
         decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
       }
       else {
+
+        // Calculate the fractional portion, if present.
+        let fraction;
+        if ( meanRemainder > 0 ) {
+          fraction = new Fraction( meanRemainder, numberOfActiveDataObjects );
+          fraction.reduce();
+        }
+
+        // Create a node that represents the mean as a mixed fraction.
         decimalOrMixedFraction = new MixedFractionNode( {
           whole: ( meanWholePart > 0 || totalValues === 0 ) ? meanWholePart : null,
-          numerator: meanRemainder > 0 ? meanRemainder : null,
-          denominator: meanRemainder > 0 ? numberOfActiveDataObjects : null,
+          numerator: fraction ? fraction.numerator : null,
+          denominator: fraction ? fraction.denominator : null,
           wholeNumberFont: WHOLE_NUMBER_FONT,
           fractionNumbersFont: FRACTION_NUMBER_FONT,
           vinculumLineWidth: VINCULUM_LINE_WIDTH,

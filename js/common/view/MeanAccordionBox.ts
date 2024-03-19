@@ -148,6 +148,7 @@ export default class MeanAccordionBox extends AccordionBox {
 
           // Use a fraction for the apples.
           const remainderAsFraction = new Fraction( total - ( wholePart * divisor ), divisor );
+          remainderAsFraction.reduce();
           meanReadout = new MixedFractionNode( {
             whole: wholePart > 0 || total === 0 ? wholePart : null,
             numerator: remainder > 0 ? remainderAsFraction.numerator : null,
