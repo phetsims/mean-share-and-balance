@@ -52,6 +52,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   }
 
   public override reset(): void {
+    super.reset();
     this.isMeanFulcrumFixedProperty.reset();
     this.isMeanVisibleProperty.reset();
     this.areTickMarksVisibleProperty.reset();
