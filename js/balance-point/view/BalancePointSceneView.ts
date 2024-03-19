@@ -6,7 +6,7 @@
  *
  */
 
-import SoccerSceneView from '../../../../soccer-common/js/view/SoccerSceneView.js';
+import SoccerSceneView, { SoccerSceneViewOptions } from '../../../../soccer-common/js/view/SoccerSceneView.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import BalancePointModel from '../model/BalancePointModel.js';
@@ -33,7 +33,7 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
     const getKickerImageSet = ( kicker: Kicker ) => kickerImageSets[ kicker.initialPlaceInLine ];
     const physicalRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 
-    const options = {
+    const options: SoccerSceneViewOptions = {
       soccerBallDerivedVisibilityCallback: ( phase: SoccerBallPhase ) =>
         phase !== SoccerBallPhase.INACTIVE && phase !== SoccerBallPhase.READY,
       tandem: tandem

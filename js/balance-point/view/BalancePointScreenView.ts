@@ -19,7 +19,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 import BalancePointControls from './BalancePointControls.js';
-import { AlignBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import KickerPortrayalUSA from '../../../../soccer-common/js/view/KickerPortrayalUSA.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
@@ -30,6 +30,7 @@ import isResettingProperty from '../../../../soccer-common/js/model/isResettingP
 import MeanCalculationDialog from '../../common/view/MeanCalculationDialog.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -151,8 +152,21 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
+    const kickButton = new KickButton( {
+      visibleProperty: model.selectedSceneModelProperty.value.hasKickableSoccerBallsProperty,
+      content: new Text( MeanShareAndBalanceStrings.kickStringProperty, {
+        font: KICK_BUTTON_FONT,
+        maxWidth: 80
+      } ),
+      multiKick: false,
+      tandem: options.tandem.createTandem( 'kickButton' ),
+      listener: () => model.selectedSceneModelProperty.value.targetNumberOfBallsProperty.value++,
+      centerTop: this.modelViewTransform.modelToViewXY( -1.3, 0 ).plusXY( 0, 5 )
+    } );
+
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
+    this.addChild( kickButton );
     this.addChild( notepadNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );
