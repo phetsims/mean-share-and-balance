@@ -15,6 +15,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/model/SoccerCommonGroupSortInteractionModel.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
@@ -28,6 +29,18 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, providedOptions: BalancePointModelOptions ) {
 
     const options = optionize<BalancePointModelOptions, SelfOptions, SoccerModelOptions<BalancePointSceneModel>>()( {
+      createGroupSortInteractionModel: ( soccerModel, tandem ) => {
+        return new SoccerCommonGroupSortInteractionModel(
+          soccerModel.selectedSceneModelProperty,
+          soccerModel.selectedSceneStackedSoccerBallCountProperty,
+          soccerModel.selectedSceneMaxKicksProperty,
+          soccerModel.sceneModels, {
+            getGroupItemValue: soccerBall => soccerBall.valueProperty.value,
+            enabledProperty: soccerModel.soccerBallsEnabledProperty,
+            tandem: tandem
+          }
+        );
+      },
       phetioState: false
     }, providedOptions );
 

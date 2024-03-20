@@ -172,6 +172,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( controlsAlignBox );
     this.addChild( resetAllButton );
     this.addChild( this.playAreaNumberLineNode );
+    this.addChild( this.mouseSortHandCueNode );
+    this.addChild( this.sortIndicatorArrowNode );
     this.addChild( sceneView.frontSceneViewLayer );
     this.addChild( meanInfoDialog );
   }
