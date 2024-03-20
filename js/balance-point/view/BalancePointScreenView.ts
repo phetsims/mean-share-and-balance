@@ -161,7 +161,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       multiKick: false,
       tandem: options.tandem.createTandem( 'kickButton' ),
       listener: () => model.selectedSceneModelProperty.value.targetNumberOfBallsProperty.value++,
-      centerTop: this.modelViewTransform.modelToViewXY( -1.3, 0 ).plusXY( 0, 5 )
+      centerTop: this.modelViewTransform.modelToViewXY( -1.3, 0 ).plusXY( 0, 8 )
     } );
 
     this.addChild( backgroundNode );
