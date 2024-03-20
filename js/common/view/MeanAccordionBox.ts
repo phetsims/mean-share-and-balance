@@ -28,6 +28,7 @@ import Plate from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import NotepadAppleNode from '../../fair-share/view/NotepadAppleNode.js';
+import NotepadCandyBarNode from '../../leveling-out/view/NotepadCandyBarNode.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -76,7 +77,7 @@ export default class MeanAccordionBox extends AccordionBox {
             // Create the graphical representation of a candy bar.
             wholeSnackNode = new Rectangle( CANDY_BAR_BOUNDS, {
                 fill: MeanShareAndBalanceColors.candyBarColorProperty,
-                stroke: 'black'
+                children: NotepadCandyBarNode.getSketchOutline()
               }
             );
           }
@@ -108,7 +109,9 @@ export default class MeanAccordionBox extends AccordionBox {
             // Add a partial candy bar that represents a fractional amount.
             const partialCandyBar = new Rectangle( 0, 0, remainder * CANDY_BAR_BOUNDS.width, CANDY_BAR_BOUNDS.height, {
               fill: MeanShareAndBalanceColors.candyBarColorProperty,
-              stroke: 'black'
+              children: NotepadCandyBarNode.getSketchOutline(
+                remainder * CANDY_BAR_BOUNDS.width,
+                Utils.roundToInterval( 0.975 * remainder, 0.001 ) )
             } );
             partialSnackNode.addChild( partialCandyBar );
           }

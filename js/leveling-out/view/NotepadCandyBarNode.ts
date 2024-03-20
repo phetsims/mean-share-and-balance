@@ -9,7 +9,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, InteractiveHighlighting, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { DragListener, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -21,6 +21,8 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import CandyBar from '../model/CandyBar.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
+import Matrix3 from '../../../../dot/js/Matrix3.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -39,7 +41,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     const candyBarRectangle = new Rectangle( 0, 0, LevelingOutModel.CANDY_BAR_WIDTH, LevelingOutModel.CANDY_BAR_HEIGHT, {
       fill: MeanShareAndBalanceColors.candyBarColorProperty,
-      stroke: 'black'
+      children: NotepadCandyBarNode.getSketchOutline()
     } );
 
     const shadowVisibleProperty = new DerivedProperty( [ candyBar.stateProperty ], state => state === 'dragging' || state === 'animating' );
@@ -102,6 +104,63 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
     this.candyBar.positionProperty.link( position =>
       this.setTranslation( modelViewTransform.modelToViewPosition( position ) )
     );
+  }
+
+  /**
+   * A pattern is used for the outline of the candy bar. Because of this, the pattern must be rotated and translated to
+   * match the bounds of the rectangle. This method returns the nodes that make up the outline of the candy bar.
+   *
+   * When creating partial candy bars the width and rightYTranslation may need to adjust accordingly.
+   */
+  public static getSketchOutline( candyBarWidth = LevelingOutModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[] {
+    const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
+      Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
+    );
+    const leftStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
+      Matrix3.affine(
+        0.15 * Math.cos( Math.PI / 2 ),
+        -0.15 * Math.sin( Math.PI / 2 ),
+        0.975,
+        0.15 * Math.sin( Math.PI / 2 ),
+        0.15 * Math.cos( Math.PI / 2 ),
+        0
+      ) );
+    const rightStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
+      Matrix3.affine(
+        0.15 * Math.cos( Math.PI / 2 ),
+        -0.15 * Math.sin( Math.PI / 2 ),
+        rightYTranslation,
+        0.15 * Math.sin( Math.PI / 2 ),
+        0.15 * Math.cos( Math.PI / 2 ),
+        0
+      ) );
+
+    const candyBarStrokeLeft = new Line(
+      0, 0, 0, LevelingOutModel.CANDY_BAR_HEIGHT,
+      {
+        lineWidth: 1.95,
+        stroke: leftStrokePattern
+      } );
+    const candyBarStrokeRight = new Line(
+      candyBarWidth, 0, candyBarWidth, LevelingOutModel.CANDY_BAR_HEIGHT,
+      {
+        lineWidth: 1.95,
+        stroke: rightStrokePattern
+      } );
+    const candyBarStrokeTop = new Line(
+      0, 0, candyBarWidth, 0,
+      {
+        lineWidth: 1.95,
+        stroke: horizontalStrokePattern
+      } );
+    const candyBarStrokeBottom = new Line(
+      0, LevelingOutModel.CANDY_BAR_HEIGHT, candyBarWidth, LevelingOutModel.CANDY_BAR_HEIGHT,
+      {
+        lineWidth: 1.95,
+        stroke: horizontalStrokePattern
+      } );
+
+    return [ candyBarStrokeLeft, candyBarStrokeRight, candyBarStrokeTop, candyBarStrokeBottom ];
   }
 }
 
