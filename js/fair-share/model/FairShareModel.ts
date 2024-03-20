@@ -140,10 +140,11 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         this.plates.forEach( plate => {
           _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, stackPosition => {
-            if ( stackPosition < plate.tableSnackNumberProperty.value ) {
+            if ( plate.isActiveProperty.value && stackPosition < plate.tableSnackNumberProperty.value ) {
 
-              // Animate the apple traveling to the plate.
+              // Animate the apple traveling to the plate.  This apple will be visible on the plate.
               const apple = activeApples.shift();
+              assert && assert( apple, 'an active apple should be available' );
               if ( apple ) {
                 apple.parentPlateProperty.value = plate;
                 apple.moveTo( SnackStacker.getStackedApplePosition( plate, stackPosition ), true );
@@ -151,8 +152,9 @@ export default class FairShareModel extends SharingModel<Apple> {
             }
             else {
 
-              // Move the inactive apple instantly to the plate.
+              // Move the inactive apple instantly to the plate.  This will be invisible on the plate.
               const apple = inactiveApples.shift();
+              assert && assert( apple, 'an inactive apple should be available' );
               if ( apple ) {
                 apple.parentPlateProperty.value = plate;
                 apple.moveTo( SnackStacker.getStackedApplePosition( plate, stackPosition ) );
@@ -610,10 +612,18 @@ export default class FairShareModel extends SharingModel<Apple> {
  */
 const sortApplesByStackingOrder = ( apples: Apple[] ) => {
   return apples.sort( ( a: Apple, b: Apple ) => {
-    if ( a.positionProperty.value.x === b.positionProperty.value.x ) {
+
+    // Verify that the apples aren't in the same place, since they can't be sorted if they are.
+    assert && assert( !a.positionProperty.value.equals( b.positionProperty.value ), 'apples can\'t be sorted if in the same place' );
+
+    // If the Y position is the same, sort by the X position, otherwise sort by Y position.
+    if ( a.positionProperty.value.y === b.positionProperty.value.y ) {
       return a.positionProperty.value.x - b.positionProperty.value.x;
     }
     else {
+
+      // Note that this is inverted because we are working in the graphics coordinate frame where lower Y values are
+      // higher on the screen.
       return b.positionProperty.value.y - a.positionProperty.value.y;
     }
   } );
