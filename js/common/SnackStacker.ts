@@ -78,7 +78,7 @@ class SnackStacker {
   public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
     const xPosition = plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2;
 
-    // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/175
+    // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
                          1 +
