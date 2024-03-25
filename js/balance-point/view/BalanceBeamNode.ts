@@ -91,6 +91,7 @@ export default class BalanceBeamNode extends Node {
     const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( FULCRUM_HEIGHT ) );
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( fulcrumWidth );
 
+    // The adjustable fulcrum that can be moved by the user.
     const fulcrumSlider = new FulcrumSlider(
       fulcrumValueProperty,
       meanValueProperty,
@@ -103,6 +104,7 @@ export default class BalanceBeamNode extends Node {
       }
     );
 
+    // The fixed, non-movable fulcrum that is always at the mean and is shown in fixed fulcrum mode.
     const fixedFulcrum = new TriangleNode(
       {
         fill: MeanShareAndBalanceColors.meanColorProperty,
@@ -115,6 +117,7 @@ export default class BalanceBeamNode extends Node {
       }
     );
 
+    // Update the position of the fixed fulcrum when related model values change.
     Multilink.multilink( [ isMeanFulcrumFixedProperty, meanValueProperty ], ( isFulcrumFixed, meanValue ) => {
       if ( isFulcrumFixed ) {
 
