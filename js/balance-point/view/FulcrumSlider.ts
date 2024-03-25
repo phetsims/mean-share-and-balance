@@ -10,22 +10,21 @@ import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { BALANCE_BEAM_TRANSFORM } from './BalanceBeamNode.js';
+import { FULCRUM_LINE_WIDTH } from './BalanceBeamNode.js';
 import Utils from '../../../../dot/js/Utils.js';
 import HSlider, { HSliderOptions } from '../../../../sun/js/HSlider.js';
 import Property from '../../../../axon/js/Property.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import Multilink from '../../../../axon/js/Multilink.js';
 import { Color, HBox } from '../../../../scenery/js/imports.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions = {
-  fulcrumHeight: number; // in meters
-  fulcrumWidth: number; // in meters
+  fulcrumHeight: number; // in screen coordinates
+  fulcrumWidth: number; // in screen coordinates
 };
 
 type BalanceBeamFulcrumOptions = SelfOptions & WithRequired<HSliderOptions, 'tandem'>;
@@ -56,16 +55,13 @@ export default class FulcrumSlider extends HSlider {
     providedOptions: BalanceBeamFulcrumOptions
   ) {
 
-    const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( providedOptions.fulcrumHeight ) );
-    const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( providedOptions.fulcrumWidth );
-    const lineWidth = 1.5; // empirically determined
-
     const fulcrumNode = new TriangleNode( {
-      triangleHeight: triangleHeight - lineWidth,
-      triangleWidth: triangleWidth,
-      fill: MeanShareAndBalanceColors.meanColorProperty,
+      triangleHeight: providedOptions.fulcrumHeight - FULCRUM_LINE_WIDTH,
+      triangleWidth: providedOptions.fulcrumWidth,
+      fill: 'white',
       stroke: MeanShareAndBalanceColors.meanColorProperty,
-      lineWidth: lineWidth
+      lineDash: [ 2, 2 ],
+      lineWidth: FULCRUM_LINE_WIDTH
     } );
 
     const leftCueingArrow = new ArrowNode( 0, 0, -CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
@@ -84,11 +80,12 @@ export default class FulcrumSlider extends HSlider {
 
     const options = optionize<BalanceBeamFulcrumOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
-      thumbYOffset: triangleHeight / 2,
+      thumbYOffset: providedOptions.fulcrumHeight / 2,
       trackFillEnabled: null,
       trackFillDisabled: null,
       trackStroke: null,
       trackPickable: false,
+      visibleProperty: DerivedProperty.not( isMeanFulcrumFixedProperty ),
       constrainValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
       drag: () => { this.wasDraggedProperty.value = true; }
@@ -102,30 +99,6 @@ export default class FulcrumSlider extends HSlider {
     );
     leftCueingArrow.visibleProperty = cueingArrowsVisibleProperty;
     rightCueingArrow.visibleProperty = cueingArrowsVisibleProperty;
-
-    // Change the appearance of the fulcrum based on the mode.
-    isMeanFulcrumFixedProperty.link( isMeanFulcrumFixed => {
-      this.pickable = !isMeanFulcrumFixed;
-      fulcrumNode.fill = isMeanFulcrumFixed ? MeanShareAndBalanceColors.meanColorProperty : 'white';
-      fulcrumNode.lineDash = isMeanFulcrumFixed ? [] : [ 2, 2 ];
-    } );
-
-    // When the fulcrum is in the "fixed" mode (always at the mean), but there are no balls on the beam, we want the
-    // fulcrum to appear faded.  This property determines the opacity based on that information.
-    Multilink.multilink( [ isMeanFulcrumFixedProperty, meanValueProperty ],
-      ( isMeanFulcrumFixed, meanValue ) => {
-        fulcrumNode.opacity = isMeanFulcrumFixed && meanValue === null ? 0.2 : 1;
-      }
-    );
-
-    // Position the fulcrum at the mean when in the "fixed" mode.
-    Multilink.multilink( [ meanValueProperty, isMeanFulcrumFixedProperty ], ( meanValue, isFixed ) => {
-      if ( isFixed ) {
-        fulcrumValueProperty.value = meanValue === null ?
-                                     MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() :
-                                     Utils.roundToInterval( meanValue, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
-      }
-    } );
 
     // Set pointer areas for slider thumb node.
     thumbNode.mouseArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );

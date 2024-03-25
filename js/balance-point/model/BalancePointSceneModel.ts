@@ -50,6 +50,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public readonly rightBalanceBeamXValue = X_AXIS_RANGE.max;
 
   public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>,
+                      isMeanFulcrumFixedProperty: BooleanProperty,
                       options: BalancePointSceneModelOptions ) {
 
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
@@ -131,9 +132,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       [
         this.beamSupportsPresentProperty,
         this.fulcrumValueProperty,
-        this.meanValueProperty
+        this.meanValueProperty,
+        isMeanFulcrumFixedProperty
       ],
-      ( supportsPresent, fulcrumValue, mean ) => {
+      ( supportsPresent, fulcrumValue, mean, isFulcrumFixed ) => {
 
         const roundedMean = mean === null ?
                             null :
@@ -141,7 +143,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
         // If the supports are present, if nothing is on the beam, or if the fulcrum is at the fixed mean position then
         // the beam is horizontal.
-        if ( supportsPresent || mean === null || fulcrumValue === roundedMean ) {
+        if ( supportsPresent || mean === null || isFulcrumFixed || fulcrumValue === roundedMean ) {
           this.leftBalanceBeamYValueProperty.value = FULCRUM_HEIGHT;
           this.rightBalanceBeamYValueProperty.value = FULCRUM_HEIGHT;
         }

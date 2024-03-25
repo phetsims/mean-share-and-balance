@@ -29,6 +29,8 @@ import { Shape } from '../../../../kite/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
+import Utils from '../../../../dot/js/Utils.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -36,6 +38,7 @@ const BEAM_DOT_RADIUS = 2; // in screen coords
 const BALL_GRAPHIC_RADIUS = 10; // in screen coords
 const MIN_BEAM_TO_BALL_BOTTOM_SPACING = 3; // in screen coords
 const STACKED_BALL_SPACING = 1; // in screen coords
+export const FULCRUM_LINE_WIDTH = 1.5; // in screen coords, empirically determined
 
 export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
   new Vector2( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min, 0 ),
@@ -85,17 +88,46 @@ export default class BalanceBeamNode extends Node {
     } );
 
     const fulcrumWidth = 0.85;
+    const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( FULCRUM_HEIGHT ) );
+    const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( fulcrumWidth );
+
     const fulcrumSlider = new FulcrumSlider(
       fulcrumValueProperty,
       meanValueProperty,
       isMeanFulcrumFixedProperty,
       {
-        fulcrumHeight: FULCRUM_HEIGHT,
-        fulcrumWidth: fulcrumWidth,
+        fulcrumHeight: triangleHeight,
+        fulcrumWidth: triangleWidth,
         bottom: groundY,
         tandem: options.tandem?.createTandem( 'fulcrumSlider' )
       }
     );
+
+    const fixedFulcrum = new TriangleNode(
+      {
+        fill: MeanShareAndBalanceColors.meanColorProperty,
+        stroke: MeanShareAndBalanceColors.meanColorProperty,
+        triangleHeight: triangleHeight - FULCRUM_LINE_WIDTH,
+        triangleWidth: triangleWidth,
+        bottom: groundY,
+        visibleProperty: isMeanFulcrumFixedProperty,
+        lineWidth: FULCRUM_LINE_WIDTH
+      }
+    );
+
+    Multilink.multilink( [ isMeanFulcrumFixedProperty, meanValueProperty ], ( isFulcrumFixed, meanValue ) => {
+      if ( isFulcrumFixed ) {
+
+        // Position the fulcrum at the mean when in the "fixed" mode.
+        fixedFulcrum.centerX = meanValue ?
+                               BALANCE_BEAM_TRANSFORM.modelToViewX( Utils.roundToInterval( meanValue, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ) ) :
+                               BALANCE_BEAM_TRANSFORM.modelToViewX( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() );
+
+        // When the fulcrum is in the "fixed" mode (always at the mean), but there are no balls on the beam, we want the
+        // fulcrum to appear faded.  This property determines the opacity based on that information.
+        fixedFulcrum.opacity = meanValue === null ? 0.2 : 1;
+      }
+    } );
 
     const columnWidth = 15; // empirically determined
     const columnHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( FULCRUM_HEIGHT ) );
@@ -142,7 +174,8 @@ export default class BalanceBeamNode extends Node {
         ...beamDots,
         beamLineNode,
         ...soccerBallGraphics,
-        fulcrumSlider
+        fulcrumSlider,
+        fixedFulcrum
       ]
     }, options );
     super( superOptions );
