@@ -164,6 +164,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       centerTop: this.modelViewTransform.modelToViewXY( -1.3, 0 ).plusXY( 0, 8 )
     } );
 
+    sceneView.groupSortInteractionView.setGroupFocusHighlightTop( notepadNodeBounds.bottom,
+      MeanShareAndBalanceConstants.SOCCER_BALL_RANGE );
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
     this.addChild( kickButton );
