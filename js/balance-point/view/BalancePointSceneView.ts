@@ -24,12 +24,12 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
   public constructor(
     model: Pick<BalancePointModel, 'soccerBallsEnabledProperty' | 'groupSortInteractionModel' | 'selectedSceneModelProperty'>,
     sceneModel: BalancePointSceneModel,
+    keyboardSortCueNode: Node,
     kickerImageSets: KickerImageSet[][],
     modelViewTransform: ModelViewTransform2,
     tandem: Tandem
   ) {
 
-    const keyboardSortCueNode = new Node();
     const getKickerImageSet = ( kicker: Kicker ) => kickerImageSets[ kicker.initialPlaceInLine ];
     const physicalRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 

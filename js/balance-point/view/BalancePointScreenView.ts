@@ -74,6 +74,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     const sceneView = new BalancePointSceneView(
       model,
       sceneModel,
+      this.keyboardSortCueNode,
       KICKER_IMAGE_SETS,
       this.modelViewTransform,
       options.tandem.createTandem( 'sceneView' )
