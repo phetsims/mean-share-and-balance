@@ -4,7 +4,7 @@ import ValueChangeSoundPlayer from '../../../../tambo/js/sound-generators/ValueC
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import DualSoundClip from './DualSoundClip.js';
+import CrossFadeSoundClip from './CrossFadeSoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import glassLevelSoundA_mp3 from '../../../sounds/glassLevelSoundA_mp3.js';
 import glassLevelSoundB_mp3 from '../../../sounds/glassLevelSoundB_mp3.js';
@@ -22,13 +22,12 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
                       valueRangeProperty: TReadOnlyProperty<Range>,
                       crossMix: number ) {
 
-    const soundPlayer = new DualSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, crossMix );
+    const soundPlayer = new CrossFadeSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, crossMix );
     soundManager.addSoundGenerator( soundPlayer );
 
     // Adjust the playback rate as the level changes.
     waterLevelProperty.link( waterLevel => {
       const proportion = waterLevel / valueRangeProperty.value.max;
-      // const playbackRate = 0.5 + 1.5 * proportion;
       const playbackRate = 1 + 2 * proportion;
       soundPlayer.setPlaybackRate( playbackRate );
     } );
