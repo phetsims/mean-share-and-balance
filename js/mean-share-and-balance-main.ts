@@ -16,15 +16,8 @@ import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
 import FairShareScreen from './fair-share/FairShareScreen.js';
 import BalancePointScreen from './balance-point/BalancePointScreen.js';
 import PreferencesModel from '../../joist/js/preferences/PreferencesModel.js';
-import KickerPortrayalUSA from '../../soccer-common/js/view/KickerPortrayalUSA.js';
 
-const preferencesModel = new PreferencesModel( {
-  localizationOptions: {
-    portrayals: [
-      KickerPortrayalUSA
-    ]
-  }
-} );
+const preferencesModel = new PreferencesModel( {} );
 
 const simOptions: SimOptions = {
 
@@ -47,7 +40,7 @@ simLauncher.launch( () => {
     new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } ),
     new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
     new FairShareScreen( { tandem: Tandem.ROOT.createTandem( 'fairShareScreen' ) } ),
-    new BalancePointScreen( preferencesModel.localizationModel.regionAndCulturePortrayalProperty!,
+    new BalancePointScreen(
       { tandem: Tandem.ROOT.createTandem( 'balancePointScreen' ) } )
   ], simOptions );
   sim.start();

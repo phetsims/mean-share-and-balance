@@ -13,10 +13,8 @@ import BalancePointModel from '../model/BalancePointModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import { Node } from '../../../../scenery/js/imports.js';
-import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortrayal.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
-import Kicker from '../../../../soccer-common/js/model/Kicker.js';
 
 
 export default class BalancePointSceneView extends SoccerSceneView<BalancePointSceneModel> {
@@ -25,12 +23,10 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
     model: Pick<BalancePointModel, 'soccerBallsEnabledProperty' | 'groupSortInteractionModel' | 'selectedSceneModelProperty'>,
     sceneModel: BalancePointSceneModel,
     keyboardSortCueNode: Node,
-    kickerImageSets: KickerImageSet[][],
     modelViewTransform: ModelViewTransform2,
     tandem: Tandem
   ) {
 
-    const getKickerImageSet = ( kicker: Kicker ) => kickerImageSets[ kicker.initialPlaceInLine ];
     const physicalRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 
     const options: SoccerSceneViewOptions = {
@@ -39,7 +35,7 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
       tandem: tandem
     };
 
-    super( model, sceneModel, keyboardSortCueNode, getKickerImageSet, modelViewTransform, physicalRange, options );
+    super( model, sceneModel, keyboardSortCueNode, modelViewTransform, physicalRange, options );
   }
 }
 

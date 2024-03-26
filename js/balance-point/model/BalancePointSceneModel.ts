@@ -13,7 +13,6 @@ import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDis
 import Range from '../../../../dot/js/Range.js';
 import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
@@ -49,8 +48,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public readonly rightBalanceBeamYValueProperty: Property<number>;
   public readonly rightBalanceBeamXValue = X_AXIS_RANGE.max;
 
-  public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>,
-                      isMeanFulcrumFixedProperty: BooleanProperty,
+  public constructor( isMeanFulcrumFixedProperty: BooleanProperty,
                       options: BalancePointSceneModelOptions ) {
 
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
@@ -80,7 +78,6 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       kickDistributionStrategy,
       kickRange,
       createSoccerBall,
-      regionAndCulturePortrayalProperty,
       options
     );
     this.beamSupportsPresentProperty = new BooleanProperty( true, {

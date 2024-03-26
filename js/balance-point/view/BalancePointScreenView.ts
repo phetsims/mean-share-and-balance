@@ -21,11 +21,7 @@ import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js'
 import BalancePointControls from './BalancePointControls.js';
 import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import KickerPortrayalUSA from '../../../../soccer-common/js/view/KickerPortrayalUSA.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
-import { KickerImageSet } from '../../../../soccer-common/js/view/KickerPortrayal.js';
-import KickerPortrayalAfrica from '../../../../soccer-common/js/view/KickerPortrayalAfrica.js';
-import KickerPortrayalAfricaModest from '../../../../soccer-common/js/view/KickerPortrayalAfricaModest.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import MeanCalculationDialog from '../../common/view/MeanCalculationDialog.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
@@ -34,24 +30,6 @@ import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
-
-// Depending on how many characters a regionAndCulture RegionAndCulturePortrayal has will determine how we loop over the characters.
-const KICKER_IMAGE_SETS: KickerImageSet[][] = [];
-
-_.times( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, i => {
-  const locale1MaxNumberOfCharacters = KickerPortrayalUSA.unnumberedKickersCount;
-  const locale2MaxNumberOfCharacters = KickerPortrayalAfrica.unnumberedKickersCount;
-  const locale3MaxNumberOfCharacters = KickerPortrayalAfricaModest.unnumberedKickersCount;
-
-  const locale1CharacterIndex = i < locale1MaxNumberOfCharacters ? i : i % locale1MaxNumberOfCharacters;
-  const locale2CharacterIndex = i < locale2MaxNumberOfCharacters ? i : i % locale2MaxNumberOfCharacters;
-  const locale3CharacterIndex = i < locale3MaxNumberOfCharacters ? i : i % locale3MaxNumberOfCharacters;
-
-  KICKER_IMAGE_SETS.push( [ KickerPortrayalUSA.unnumberedKickerImages[ locale1CharacterIndex ],
-    KickerPortrayalAfrica.unnumberedKickerImages[ locale2CharacterIndex ],
-    KickerPortrayalAfricaModest.unnumberedKickerImages[ locale3CharacterIndex ]
-  ] );
-} );
 
 export default class BalancePointScreenView extends SoccerScreenView<BalancePointSceneModel, BalancePointModel> {
 
@@ -75,7 +53,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       model,
       sceneModel,
       this.keyboardSortCueNode,
-      KICKER_IMAGE_SETS,
       this.modelViewTransform,
       options.tandem.createTandem( 'sceneView' )
     );

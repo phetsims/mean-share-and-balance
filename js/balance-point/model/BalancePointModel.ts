@@ -12,7 +12,6 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import SoccerModel, { SoccerModelOptions } from '../../../../soccer-common/js/model/SoccerModel.js';
 import BalancePointSceneModel from './BalancePointSceneModel.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import RegionAndCulturePortrayal from '../../../../joist/js/preferences/RegionAndCulturePortrayal.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/model/SoccerCommonGroupSortInteractionModel.js';
@@ -26,7 +25,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public readonly isMeanVisibleProperty: Property<boolean>;
   public readonly isMeanInfoDialogVisibleProperty: Property<boolean>;
 
-  public constructor( regionAndCulturePortrayalProperty: Property<RegionAndCulturePortrayal>, providedOptions: BalancePointModelOptions ) {
+  public constructor( providedOptions: BalancePointModelOptions ) {
 
     const options = optionize<BalancePointModelOptions, SelfOptions, SoccerModelOptions<BalancePointSceneModel>>()( {
       createGroupSortInteractionModel: ( soccerModel, tandem ) => {
@@ -47,7 +46,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     const isMeanFulcrumFixedProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
     } );
-    const sceneModel = new BalancePointSceneModel( regionAndCulturePortrayalProperty, isMeanFulcrumFixedProperty, {
+    const sceneModel = new BalancePointSceneModel( isMeanFulcrumFixedProperty, {
       tandem: options.tandem.createTandem( 'sceneModel' )
     } );
 
