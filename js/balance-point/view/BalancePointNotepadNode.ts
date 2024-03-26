@@ -67,13 +67,16 @@ export default class BalancePointNotepadNode extends NotepadNode {
     } );
 
     // Create the check push button. The color and text switches depending on if the supports are present or not.
+    const buttonTextMaxWidth = 80;
     const checkText = new Text( MeanShareAndBalanceStrings.checkStringProperty, {
       font: new PhetFont( 16 ),
-      visibleProperty: sceneModel.beamSupportsPresentProperty
+      visibleProperty: sceneModel.beamSupportsPresentProperty,
+      maxWidth: buttonTextMaxWidth
     } );
     const resetText = new Text( MeanShareAndBalanceStrings.resetStringProperty, {
       font: new PhetFont( 16 ),
-      visibleProperty: DerivedProperty.not( sceneModel.beamSupportsPresentProperty )
+      visibleProperty: DerivedProperty.not( sceneModel.beamSupportsPresentProperty ),
+      maxWidth: buttonTextMaxWidth
     } );
     const checkButton = new RectangularPushButton( {
 

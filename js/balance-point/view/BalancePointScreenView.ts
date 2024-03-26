@@ -157,12 +157,12 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       visibleProperty: model.selectedSceneModelProperty.value.hasKickableSoccerBallsProperty,
       content: new Text( MeanShareAndBalanceStrings.kickStringProperty, {
         font: KICK_BUTTON_FONT,
-        maxWidth: 80
+        maxWidth: 60
       } ),
       multiKick: false,
       tandem: options.tandem.createTandem( 'kickButton' ),
       listener: () => model.selectedSceneModelProperty.value.targetNumberOfBallsProperty.value++,
-      centerTop: this.modelViewTransform.modelToViewXY( -1.3, 0 ).plusXY( 0, 8 )
+      leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 )
     } );
 
     sceneView.groupSortInteractionView.setGroupFocusHighlightTop( notepadNodeBounds.bottom,

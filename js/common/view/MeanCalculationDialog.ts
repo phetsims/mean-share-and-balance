@@ -39,11 +39,12 @@ export type MeanCalculationDialogOptions = SelfOptions & WithRequired<DialogOpti
 
 // constants
 const LABEL_FONT = new PhetFont( 16 );
-const LABEL_TEXT_OPTIONS = { font: LABEL_FONT };
+const LABEL_TEXT_OPTIONS = { font: LABEL_FONT, maxWidth: 300 };
 const DECIMAL_FONT = new PhetFont( 16 );
 const FRACTION_NUMBER_FONT = new PhetFont( 14 );
 const WHOLE_NUMBER_FONT = new PhetFont( 18 );
 const VINCULUM_LINE_WIDTH = 1;
+const DIALOG_MAX_WIDTH_MARGIN = 50;
 
 export default class MeanCalculationDialog extends Dialog {
 
@@ -64,7 +65,8 @@ export default class MeanCalculationDialog extends Dialog {
                       providedOptions: MeanCalculationDialogOptions ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty, {
-      font: new PhetFont( 20 )
+      font: new PhetFont( 20 ),
+      maxWidth: notebookPaperBounds.width - DIALOG_MAX_WIDTH_MARGIN
     } );
 
     const options = optionize<MeanCalculationDialogOptions, SelfOptions, DialogOptions>()( {
@@ -125,7 +127,7 @@ export default class MeanCalculationDialog extends Dialog {
     let zeroDataMessageText: Node | null;
     if ( options.zeroDataMessageProperty !== null ) {
       const messageOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS,
-        { visibleProperty: messageVisibleProperty } );
+        { visibleProperty: messageVisibleProperty, maxWidth: notebookPaperBounds.width - DIALOG_MAX_WIDTH_MARGIN } );
       zeroDataMessageText = new Text( options.zeroDataMessageProperty, messageOptions );
     }
 

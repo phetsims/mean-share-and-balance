@@ -306,7 +306,8 @@ export default class BalanceBeamNode extends Node {
     const promptMessageVisibleProperty = new DerivedProperty( [ meanValueProperty ], mean => mean === null );
     const needAtLeastOneKickMessage = new Text( MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty, {
       font: new PhetFont( 16 ),
-      visibleProperty: promptMessageVisibleProperty
+      visibleProperty: promptMessageVisibleProperty,
+      maxWidth: this.bounds.width
     } );
     ManualConstraint.create( this, [ needAtLeastOneKickMessage ], messageProxy => {
       messageProxy.centerX = BALANCE_BEAM_TRANSFORM.modelToViewX( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() );
