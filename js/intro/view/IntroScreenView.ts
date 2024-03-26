@@ -72,9 +72,11 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       notepadCupNodes.push( cupNode );
     } );
 
+    assert && assert( model.tableCups.length > 1, 'some of the code below assumes at least 2 cups exist' );
     const tableCupNodes: Array<TableCupNode> = [];
-    model.tableCups.forEach( cupModel => {
+    model.tableCups.forEach( ( cupModel, i ) => {
       const cupNode = new TableCupNode( model.tickMarksVisibleProperty, model, cupModel, modelViewTransformTableCups, {
+        soundPlayerCrossMix: i / ( model.tableCups.length - 1 ),
         tandem: tableCupsParentTandem.createTandem( `tableCupNode${cupModel.linePlacement + 1}` )
       } );
       tableCupNodes.push( cupNode );
