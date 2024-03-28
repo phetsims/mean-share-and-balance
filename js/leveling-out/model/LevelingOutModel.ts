@@ -32,9 +32,6 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   public groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public sortingRangeProperty: TReadOnlyProperty<Range>;
 
-  // This emitter is used to update the keyboard focus when stack changes on a plate.
-  private stackChangedEmitter: Emitter;
-
   public constructor( providedOptions?: LevelingOutModelOptions ) {
 
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
@@ -58,10 +55,13 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       numberOfPlates => new Range( 0, numberOfPlates - 1 )
     );
 
-    this.stackChangedEmitter = new Emitter();
+    // This emitter is used to update the keyboard focus when stack changes on a plate.  It is meant to be fired each
+    // time something changes about the way things are stacked, since this could affect the selected item in the group.
+    const stackChangedEmitter = new Emitter();
 
+    // Update the selected item when the stack changes, since the previously selected one could now be gone or buried.
     const selectedCandyBarProperty = this.groupSortInteractionModel.selectedGroupItemProperty;
-    this.stackChangedEmitter.addListener( () => {
+    stackChangedEmitter.addListener( () => {
       const selectedCandyBar = selectedCandyBarProperty.value;
 
       // If the selected candy bar is not active, default back to the first top candy bar or null if there are no candy
@@ -76,6 +76,9 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         selectedCandyBarProperty.value = parentPlate!.getTopSnack() as CandyBar;
       }
     } );
+
+    // Fire the stackChangedEmitter when the number of plates changes since this could cause the selected item to disappear.
+    this.numberOfPlatesProperty.lazyLink( () => stackChangedEmitter.emit() );
 
     // Initialize the plates and set up plate-related behavior that is specific to the Leveling Out screen.
     this.plates.forEach( plate => {
@@ -115,6 +118,9 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
           } );
         }
       } );
+
+      // When the number of snacks on a plate changes we need to fire the emitter that updates the selected group item.
+      plate.snacksOnPlateInNotepad.lengthProperty.lazyLink( () => stackChangedEmitter.emit() );
     } );
   }
 

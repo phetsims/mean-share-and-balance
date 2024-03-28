@@ -46,8 +46,9 @@ export default class Plate extends PhetioObject {
   public readonly tableSnackNumberProperty: Property<number>;
 
   // The list of snacks that are on this plate in the notepad.  Depending on what the user has done, this may or may not
-  // be in sync with the number on the table.
-  private readonly snacksOnPlateInNotepad: ObservableArray<Snack>;
+  // be in sync with the number on the table.  DO NOT MODIFY THE CONTENTS OF THIS ARRAY OUTSIDE OF THIS CLASS.  It's
+  // only public so that clients can get to the length and lengthProperty.
+  public readonly snacksOnPlateInNotepad: ObservableArray<Snack>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
   public readonly linePlacement: number;
