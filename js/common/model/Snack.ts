@@ -10,21 +10,16 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
 import Animation from '../../../../twixt/js/Animation.js';
 import Easing from '../../../../twixt/js/Easing.js';
-import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import Plate from './Plate.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import NullableIO from '../../../../tandem/js/types/NullableIO.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
-  isActive: boolean;
-  plate: Plate;
-  position: Vector2;
+  isInitiallyActive?: boolean;
+  initialPosition?: Vector2;
 };
 export type SnackOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
@@ -35,8 +30,6 @@ const TRAVEL_SPEED = 300; // in screen coordinates per second, empirically deter
 let instanceCount = 0;
 
 export default class Snack extends PhetioObject {
-
-  public readonly parentPlateProperty: Property<Plate | null>;
 
   // This Property controls the snack's visibility and participation in data calculations in the sim.
   // Subclass handles reset.
@@ -49,38 +42,42 @@ export default class Snack extends PhetioObject {
   // An animation for moving this snack from one location to another in a continuous fashion.
   protected travelAnimation: Animation | null = null;
 
+  public isDraggingProperty: BooleanProperty;
+
   // for debugging
   public readonly instanceID = instanceCount++;
 
   public constructor( providedOptions: SnackOptions ) {
 
     const options = optionize<SnackOptions, SelfOptions, PhetioObjectOptions>()( {
+      isInitiallyActive: false,
+      initialPosition: Vector2.ZERO,
       phetioState: false
     }, providedOptions );
 
     super( options );
 
-    this.isActiveProperty = new BooleanProperty( providedOptions.isActive, {
+    this.isActiveProperty = new BooleanProperty( options.isInitiallyActive, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),
       phetioReadOnly: true
     } );
 
-    this.parentPlateProperty = new Property<Plate | null>( providedOptions.plate, {
-
-      // phet-io
-      tandem: providedOptions.tandem.createTandem( 'parentPlateProperty' ),
-      phetioReadOnly: true,
-      phetioValueType: NullableIO( ReferenceIO( IOType.ObjectIO ) )
-    } );
-
-    this.positionProperty = new Property( providedOptions.position, {
+    this.positionProperty = new Property( options.initialPosition, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'positionProperty' ),
       phetioReadOnly: true,
       phetioValueType: Vector2.Vector2IO
+    } );
+
+    // TODO: Consider not instrumenting this at all for phet-io, see https://github.com/phetsims/mean-share-and-balance/issues/193
+    this.isDraggingProperty = new BooleanProperty( false, {
+
+      // phet-io
+      tandem: providedOptions.tandem.createTandem( 'isDraggingProperty' ),
+      phetioReadOnly: true
     } );
   }
 
@@ -158,7 +155,6 @@ export default class Snack extends PhetioObject {
     this.forceAnimationToFinish();
     this.isActiveProperty.reset();
     this.positionProperty.reset();
-    this.parentPlateProperty.reset();
   }
 }
 

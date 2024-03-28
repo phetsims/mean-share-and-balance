@@ -14,6 +14,7 @@ import { LinearGradient, Pattern } from '../../../scenery/js/imports.js';
 import ScreenView from '../../../joist/js/ScreenView.js';
 import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
+import Vector2 from '../../../dot/js/Vector2.js';
 
 const DEFAULT_MARGIN = 15;
 const CONTROLS_MAX_TEXT_WIDTH = 175;
@@ -65,6 +66,7 @@ const MeanShareAndBalanceConstants = {
   APPLE_GRAPHIC_RADIUS: 8,
   TABLE_CANDY_BAR_VERTICAL_SPACING: 1.5,
   NOTEPAD_CANDY_BAR_VERTICAL_SPACING: 3,
+  UNUSED_SNACK_POSITION: new Vector2( 0, 0 ),
 
   TABLE_PLATE_CENTER_Y: 510,
   PARTY_TABLE_Y: 498,

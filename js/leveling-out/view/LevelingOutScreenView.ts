@@ -31,7 +31,6 @@ import SnackStacker from '../../common/SnackStacker.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -80,57 +79,57 @@ export default class LevelingOutScreenView extends SharingScreenView {
 
     // function for what candy bars should do at the end of their drag
     const candyBarDropped = ( candyBarNode: NotepadCandyBarNode ) => {
-      const activePlates = model.getActivePlates();
-      const platesWithSpace = model.getPlatesWithSpace( activePlates );
+      const candyBar = candyBarNode.candyBar;
 
-      if ( platesWithSpace.length === 0 ) {
-        const parentPlate = candyBarNode.candyBar.parentPlateProperty.value!;
-        assert && assert( parentPlate.isActiveProperty.value,
-          'When there are no empty plates, the candy bar should still be attached to an active parent plate.' );
-        candyBarNode.candyBar.moveTo(
-          SnackStacker.getStackedCandyBarPosition(
-            parentPlate,
-            parentPlate.notepadSnackNumberProperty.value - 1
-          ),
-          true
+      const platesWithSpace = model.getPlatesWithSpace();
+      const plateHoldingSnack = model.getPlateForSnack( candyBarNode.candyBar );
+      assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
+
+      if ( platesWithSpace.length > 0 ) {
+
+        // Find the plate closest to where the candy bar was dropped.
+        const closestPlate = platesWithSpace.reduce(
+          ( previousPlate, thisPlate ) => {
+            const candyBarXPosition = candyBar.positionProperty.value.x;
+            const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
+            const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
+            return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
+          },
+          platesWithSpace[ 0 ]
         );
 
-        // We dropped onto our own plate, so we can exit early.
-        return;
-      }
+        if ( closestPlate !== plateHoldingSnack ) {
 
-      // Find the notepadPlate closest to where the candy bar was dropped.
-      const closestPlate = _.minBy(
-        platesWithSpace,
-        plate => Math.abs( plate.xPositionProperty.value - candyBarNode.candyBar.positionProperty.value.x )
-      );
+          // Move the candy bar to the new plate, since it's closer.
+          plateHoldingSnack!.removeSnack( candyBar );
+          closestPlate.addSnackToTop( candyBar, true );
+        }
+        else {
 
-      // Swap candy bars if parentPlate changes. Each person always has the same total number of candy bars so
-      // that when their spinner is incremented, they can promote their own inactive candy bar to active.
-      const currentParent = candyBarNode.candyBar.parentPlateProperty.value;
-      if ( currentParent !== closestPlate ) {
-        const inactiveCandyBarForSwap = model.getBottomInactiveCandyBarAssignedToPlate( closestPlate! );
-        assert && assert( closestPlate!.notepadSnackNumberProperty.value <
-                          MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
-          `There are no inactive candy bars on plate: ${closestPlate!.linePlacement}.` );
-        assert && assert( currentParent!.notepadSnackNumberProperty.value > 0,
-          `There are  no active candy bars on plate: ${currentParent!.linePlacement}` );
-
-        inactiveCandyBarForSwap!.parentPlateProperty.set( currentParent );
-        candyBarNode.candyBar.parentPlateProperty.set( closestPlate! );
-
-        currentParent!.notepadSnackNumberProperty.value--;
-        closestPlate!.notepadSnackNumberProperty.value++;
+          // Put the candy bar back on the same plate.
+          candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
+        }
       }
       else {
 
-        // Determine the position in the stack for this candy bar.  It will be on top of the other active ones.
-        const numberOfCandyBarsOnPlate = model.getActiveCandyBarsOnPlate( closestPlate ).length;
-        const numberOfCandyBarsAnimatingToPlate = model.getActiveCandyBarsAnimatingToPlate( closestPlate ).length;
-        const stackPosition = numberOfCandyBarsOnPlate + numberOfCandyBarsAnimatingToPlate;
+        // There are no plates with space.  This can only occur when the candy bar is being dropped back on the plate
+        // from whence it came.
+        assert && assert( plateHoldingSnack!.hasSnack( candyBar ), 'this situation should be impossible' );
 
-        // When the parent plate stays the same we need to animate back to the top of the stack
-        candyBarNode.candyBar.moveTo( SnackStacker.getStackedCandyBarPosition( closestPlate, stackPosition ), true );
+        // Send the candy bar back to the position on the plate.
+        candyBar.moveTo( plateHoldingSnack!.getStackingPositionForSnack( candyBar ), true );
+      }
+
+      if ( platesWithSpace.length === 0 ) {
+        const parentPlate = model.getPlateForSnack( candyBarNode.candyBar );
+
+        candyBarNode.candyBar.moveTo(
+          SnackStacker.getStackedCandyBarPosition(
+            parentPlate!,
+            parentPlate!.getNumberOfHeldSnacks() - 1
+          ),
+          true
+        );
       }
     };
 
@@ -171,16 +170,14 @@ export default class LevelingOutScreenView extends SharingScreenView {
             'In order to select the next group item there must be active candy bars. The number of' +
             'active candy bars is: ' + model.totalSnacksProperty.value
           );
-          assert && assert(
-            candyBar.parentPlateProperty.value,
-            'the selected candyBar does not have a parent plate - how did that happen?'
-          );
-          const currentIndex = platesWithSnacks.indexOf( candyBar.parentPlateProperty.value! );
-          const nextPlate = Utils.clamp( currentIndex + delta, 0, platesWithSnacks.length - 1 );
-          const topCandyBar = model.getTopActiveCandyBarAssignedToPlate( platesWithSnacks[ nextPlate ] );
-          return topCandyBar!;
+          const plateContainingSnack = model.getPlateForSnack( candyBar );
+          assert && assert( plateContainingSnack, 'snack must be on plate' );
+          const currentIndex = platesWithSnacks.indexOf( plateContainingSnack! );
+          const nextPlateIndex = Utils.clamp( currentIndex + delta, 0, platesWithSnacks.length - 1 );
+          const topCandyBar = platesWithSnacks[ nextPlateIndex ].getTopSnack();
+          return topCandyBar! as CandyBar;
         },
-        getGroupItemToSelect: () => model.getTopActiveCandyBarAssignedToPlate( model.plates[ 0 ] ),
+        getGroupItemToSelect: () => model.plates[ 0 ].getTopSnack() as CandyBar,
         getNodeFromModelItem: candyBar => {
           const node = notepadCandyBarNodes.find( candyBarNode => candyBarNode.candyBar === candyBar );
           assert && assert( node !== undefined, 'A candyBar model must have an associated node' );
@@ -188,11 +185,11 @@ export default class LevelingOutScreenView extends SharingScreenView {
         },
         sortingRangeProperty: model.sortingRangeProperty,
         sortGroupItem: ( candyBar, newPlateIndex ) => {
-          const currentParent = candyBar.parentPlateProperty.value;
-          const newParent = model.plates[ newPlateIndex ];
-          candyBar.parentPlateProperty.set( model.plates[ newPlateIndex ] );
-          currentParent!.notepadSnackNumberProperty.value--;
-          newParent.notepadSnackNumberProperty.value++;
+          const currentPlate = model.getPlateForSnack( candyBar );
+          const newPlate = model.plates[ newPlateIndex ];
+          const topCandyBar = currentPlate?.removeTopSnack();
+          assert && assert( topCandyBar === candyBar, 'the selected candy bar should be the top one' );
+          newPlate.addSnackToTop( topCandyBar! );
         }
       }
     );
