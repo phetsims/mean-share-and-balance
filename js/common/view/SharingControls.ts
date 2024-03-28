@@ -20,6 +20,9 @@ import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import NumberSpinnerVBox from './NumberSpinnerVBox.js';
+import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
+import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
+import plateNumberOfSelection_mp3 from '../../../sounds/plateNumberOfSelection_mp3.js';
 
 type SelfOptions = {
   meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
@@ -78,12 +81,20 @@ export default class SharingControls extends VBox {
     } );
 
     // Number Spinner
+    const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( model.numberOfPlatesProperty, plateNumberOfSelection_mp3 );
     const numberSpinnerVBox = new NumberSpinnerVBox(
       model.numberOfPlatesProperty,
       MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE,
       MeanShareAndBalanceStrings.numberOfPeopleStringProperty, {
-        tandem: options.tandem
+        tandem: options.tandem,
+        numberSpinnerOptions: {
+          arrowsSoundPlayer: nullSoundPlayer
+        }
       } );
+
+    model.numberOfPlatesProperty.link( () => {
+      numberSpinnerSoundPlayer.play();
+    } );
 
 
     options.children = [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ];

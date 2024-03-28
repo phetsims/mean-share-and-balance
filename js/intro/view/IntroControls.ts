@@ -21,6 +21,9 @@ import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import PipeSwitch from './PipeSwitch.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
+import glassNumberOfSelection_mp3 from '../../../sounds/glassNumberOfSelection_mp3.js';
+import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 
 type IntroControlPanelOptions = StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
 
@@ -42,18 +45,23 @@ export default class IntroControls extends VBox {
     const pipeSwitch = new PipeSwitch( arePipesOpenProperty, options.tandem.createTandem( 'pipeSwitch' ) );
 
     // Number Spinner
+    const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( numberOfCupsProperty, glassNumberOfSelection_mp3 );
     const numberSpinnerVBox = new NumberSpinnerVBox(
       numberOfCupsProperty,
       MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE,
       MeanShareAndBalanceStrings.numberOfCupsStringProperty,
       {
         minContentHeight: 140,
-        tandem: options.tandem
+        tandem: options.tandem,
+        numberSpinnerOptions: {
+          arrowsSoundPlayer: nullSoundPlayer
+        }
       } );
 
     numberOfCupsProperty.link( () => {
       pipeSwitch.interruptSubtreeInput();
       introOptionsCheckboxGroup.interruptSubtreeInput();
+      numberSpinnerSoundPlayer.play();
     } );
 
     const combinedOptions = combineOptions<VBoxOptions>( { children: [ introOptionsCheckboxGroup, pipeSwitch, numberSpinnerVBox ] }, providedOptions );
