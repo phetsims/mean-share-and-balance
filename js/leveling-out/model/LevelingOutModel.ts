@@ -89,10 +89,30 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
         const delta = candyBarNumber - oldCandyBarNumber;
         if ( delta > 0 ) {
-          _.times( delta, () => { plate.addASnack(); } );
+          _.times( delta, () => {
+            if ( plate.getNumberOfNotepadSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ) {
+              plate.addASnack();
+            }
+            else {
+              const plateWithFewestSnacks = this.getPlateWithFewestSnacks();
+              assert && assert( plateWithFewestSnacks, 'when here there should always be space for snacks' );
+              plateWithFewestSnacks!.removeTopSnack();
+            }
+          } );
         }
         else {
-          _.times( -delta, () => { plate.removeTopSnack(); } );
+
+          // Remove notepad snacks from this plate or from another if this plate is now bear.
+          _.times( -delta, () => {
+            if ( plate.getNumberOfNotepadSnacks() > 0 ) {
+              plate.removeTopSnack();
+            }
+            else {
+              const plateWithMostSnacks = this.getPlateWithMostSnacks();
+              assert && assert( plateWithMostSnacks, 'when here there should always be plates with snacks' );
+              plateWithMostSnacks!.removeTopSnack();
+            }
+          } );
         }
       } );
     } );
@@ -104,7 +124,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   public getPlatesWithSpace(): Array<Plate> {
     return this.plates.filter( plate =>
       plate.isActiveProperty.value &&
-      plate.getNumberOfHeldSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
+      plate.getNumberOfNotepadSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
     );
   }
 
@@ -112,7 +132,28 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
    * This function returns an array of active plates that have at least one candy bar on them.
    */
   public getPlatesWithSnacks(): Array<Plate> {
-    return this.plates.filter( plate => plate.isActiveProperty.value && plate.getNumberOfHeldSnacks() > 0 );
+    return this.plates.filter( plate => plate.isActiveProperty.value && plate.getNumberOfNotepadSnacks() > 0 );
+  }
+
+
+  /**
+   * Get the plate with the most snacks, null if no plates have any.
+   */
+  private getPlateWithMostSnacks(): Plate | null {
+    const sortedPlatesWithSnacks = this.getPlatesWithSnacks().sort(
+      ( plateA, plateB ) => plateB.getNumberOfNotepadSnacks() - plateA.getNumberOfNotepadSnacks()
+    );
+    return sortedPlatesWithSnacks.length > 0 ? sortedPlatesWithSnacks[ 0 ] : null;
+  }
+
+  /**
+   * Get the plate with the fewest snacks, null if all plates are full.
+   */
+  private getPlateWithFewestSnacks(): Plate | null {
+    const sortedPlatesWithSpace = this.getPlatesWithSpace().sort(
+      ( plateA, plateB ) => plateA.getNumberOfNotepadSnacks() - plateB.getNumberOfNotepadSnacks()
+    );
+    return sortedPlatesWithSpace.length > 0 ? sortedPlatesWithSpace[ 0 ] : null;
   }
 
   public override reset(): void {

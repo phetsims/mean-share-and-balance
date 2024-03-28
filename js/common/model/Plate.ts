@@ -300,7 +300,7 @@ export default class Plate extends PhetioObject {
   /**
    * Get the number of snacks currently on this plate.
    */
-  public getNumberOfHeldSnacks(): number {
+  public getNumberOfNotepadSnacks(): number {
     return this.snacksOnPlateInNotepad.length;
   }
 
