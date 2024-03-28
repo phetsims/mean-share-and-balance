@@ -204,6 +204,14 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     }
   }
 
+  /**
+   * Clear data is only called in the Balance Point Screen when the region and culture is changed.
+   */
+  public override clearData(): void {
+    this.targetNumberOfBallsProperty.reset();
+    super.clearData();
+  }
+
   public override reset(): void {
     super.reset();
     this.targetNumberOfBallsProperty.reset();
