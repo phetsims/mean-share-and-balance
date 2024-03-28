@@ -15,6 +15,7 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import { Node } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
+import KickerImageSets from '../../../../soccer-common/js/view/KickerImageSets.js';
 
 
 export default class BalancePointSceneView extends SoccerSceneView<BalancePointSceneModel> {
@@ -35,7 +36,7 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
       tandem: tandem
     };
 
-    super( model, sceneModel, keyboardSortCueNode, modelViewTransform, physicalRange, options );
+    super( model, sceneModel, keyboardSortCueNode, modelViewTransform, physicalRange, KickerImageSets, options );
   }
 }
 
