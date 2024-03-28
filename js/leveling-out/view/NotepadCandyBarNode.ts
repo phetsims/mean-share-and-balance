@@ -23,6 +23,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import RichDragListener from '../../../../scenery-phet/js/RichDragListener.js';
 import grabCandyBar_mp3 from '../../../sounds/grabCandyBar_mp3.js';
 import releaseCandyBar_mp3 from '../../../sounds/releaseCandyBar_mp3.js';
@@ -122,7 +123,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
    *
    * When creating partial candy bars the width and rightYTranslation may need to adjust accordingly.
    */
-  public static getSketchOutline( candyBarWidth = LevelingOutModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[] {
+  public static getSketchOutline( candyBarWidth = LevelingOutModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
     const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
       Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
     );
