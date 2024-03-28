@@ -102,7 +102,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         }
         else {
 
-          // Remove notepad snacks from this plate or from another if this plate is now bear.
+          // Remove notepad snacks from this plate or from another if this plate is now empty.
           _.times( -delta, () => {
             if ( plate.getNumberOfNotepadSnacks() > 0 ) {
               plate.removeTopSnack();
