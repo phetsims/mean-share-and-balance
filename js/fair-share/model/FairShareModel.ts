@@ -139,7 +139,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               const apple = activeApples.shift();
               assert && assert( apple, 'an active apple should be available' );
               if ( apple ) {
-                apple.moveTo( SnackStacker.getStackedApplePosition( plate, stackPosition ), true );
+                apple.moveTo( SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, stackPosition ), true );
               }
             }
             else {
@@ -148,7 +148,7 @@ export default class FairShareModel extends SharingModel<Apple> {
               const apple = inactiveApples.shift();
               assert && assert( apple, 'an inactive apple should be available' );
               if ( apple ) {
-                apple.moveTo( SnackStacker.getStackedApplePosition( plate, stackPosition ) );
+                apple.moveTo( SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, stackPosition ) );
               }
             }
           } );
@@ -185,7 +185,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
             // Move the correct number of whole apples to the plate.
             _.times( numberOfWholeApplesPerPlate, i => {
-              const destination = SnackStacker.getStackedApplePosition( plate, i );
+              const destination = SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, i );
               const apple = availableActiveApples.shift();
               assert && assert( apple, 'there should be at least one apple available' );
               if ( apple ) {
@@ -259,7 +259,7 @@ export default class FairShareModel extends SharingModel<Apple> {
             this.applesAwaitingFractionalization.forEach( ( apple, i ) => {
               apple.fractionProperty.value = fractionAmount;
               const plate = this.plates[ i ];
-              const destination = SnackStacker.getStackedApplePosition( plate, numberOfWholeApplesPerPlate );
+              const destination = SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, numberOfWholeApplesPerPlate );
               apple.moveTo( destination, true );
             } );
             this.applesAwaitingFractionalization.length = 0;
@@ -306,7 +306,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.plates.forEach( plate => {
 
           plate.getSnackStack().forEach( ( apple, index ) => {
-            apple.moveTo( SnackStacker.getStackedApplePosition( plate, index ) );
+            apple.moveTo( SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, index ) );
             apple.isActiveProperty.value = plate.isActiveProperty.value && index < plate.tableSnackNumberProperty.value;
           } );
         } );
@@ -452,7 +452,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         const apple = new Apple( {
           isInitiallyActive: isActive,
-          initialPosition: SnackStacker.getStackedApplePosition( plate, appleIndex ),
+          initialPosition: SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, appleIndex ),
 
           // phet-io
           tandem: applesParentTandem.createTandem( `notepadApple${totalApplesCount++}` )
@@ -551,10 +551,10 @@ export default class FairShareModel extends SharingModel<Apple> {
     const activeApplesOnPlate = applesOnPlate.filter( apple => apple.isActiveProperty.value );
     const inactiveApplesOnPlate = applesOnPlate.filter( apple => !apple.isActiveProperty.value );
     activeApplesOnPlate.forEach( apple => {
-      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, stackIndex++ );
+      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, stackIndex++ );
     } );
     inactiveApplesOnPlate.forEach( apple => {
-      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate, stackIndex++ );
+      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, stackIndex++ );
     } );
   }
 

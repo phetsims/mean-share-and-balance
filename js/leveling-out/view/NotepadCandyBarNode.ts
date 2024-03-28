@@ -23,6 +23,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -68,12 +69,15 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     super( options );
 
-    // Prevent this from being pickable while animating.
-    candyBar.stateProperty.link( state => {
-      candyBarRectangle.pickable = state !== 'animating';
-    } );
-
     this.candyBar = candyBar;
+
+    // Prevent this from being pickable while animating or dragging.
+    Multilink.multilink(
+      [ candyBar.isDraggingProperty, candyBar.travelAnimationProperty ],
+      ( isDragging, travelAnimation ) => {
+        candyBarRectangle.pickable = !isDragging && !travelAnimation;
+      }
+    );
 
     this.dragListener = new DragListener( {
       transform: modelViewTransform,
@@ -88,7 +92,6 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         new Bounds2( bounds.minX, bounds.minY, bounds.maxX - candyBarRectangle.width, bounds.maxY - candyBarRectangle.height )
       ),
       start: () => {
-        candyBar.stateProperty.set( 'dragging' );
         candyBar.isDraggingProperty.value = true;
         this.moveToFront();
       },

@@ -169,7 +169,7 @@ export default class Plate extends PhetioObject {
                              SnackStacker.getStackedApplePosition;
 
     // Get the position.
-    return snackStackMethod( this, stackIndex );
+    return snackStackMethod( this.xPositionProperty.value, stackIndex );
   }
 
   /**

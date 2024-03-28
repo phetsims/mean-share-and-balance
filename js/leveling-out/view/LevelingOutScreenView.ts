@@ -125,7 +125,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
 
         candyBarNode.candyBar.moveTo(
           SnackStacker.getStackedCandyBarPosition(
-            parentPlate!,
+            parentPlate!.xPositionProperty.value,
             parentPlate!.getNumberOfNotepadSnacks() - 1
           ),
           true

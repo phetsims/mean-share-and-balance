@@ -40,7 +40,7 @@ export default class Snack extends PhetioObject {
   public readonly positionProperty: Property<Vector2>;
 
   // An animation for moving this snack from one location to another in a continuous fashion.
-  protected travelAnimation: Animation | null = null;
+  public travelAnimationProperty: Property<Animation | null> = new Property<Animation | null>( null );
 
   public isDraggingProperty: BooleanProperty;
 
@@ -89,18 +89,18 @@ export default class Snack extends PhetioObject {
   public moveTo( destination: Vector2, animate = false ): void {
 
     // If there is already an animation in progress, take steps to redirect it to the (presumably) new destination.
-    if ( this.travelAnimation ) {
+    if ( this.travelAnimationProperty.value ) {
 
       const currentPosition = this.positionProperty.value.copy();
 
       // Stop the existing animation.
-      this.travelAnimation.stop();
+      this.travelAnimationProperty.value.stop();
 
       // Stopping the animation will cause the candy bar to be immediately moved to the originally specified
       // destination, but we don't want that in this case, so restore the position when this was called.
       this.positionProperty.set( currentPosition );
 
-      this.travelAnimation = null;
+      this.travelAnimationProperty.value = null;
     }
 
     if ( animate ) {
@@ -109,7 +109,7 @@ export default class Snack extends PhetioObject {
       const animationTime = this.positionProperty.value.distance( destination ) / TRAVEL_SPEED;
 
       // Create the animation.
-      this.travelAnimation = new Animation( {
+      const travelAnimation = new Animation( {
         property: this.positionProperty,
         to: destination,
         duration: animationTime,
@@ -117,17 +117,19 @@ export default class Snack extends PhetioObject {
       } );
 
       // handlers for when the animation completes or is stopped
-      this.travelAnimation.finishEmitter.addListener( () => {
+      travelAnimation.finishEmitter.addListener( () => {
         this.positionProperty.set( destination );
         this.finishAnimation();
       } );
-      this.travelAnimation.stopEmitter.addListener( () => {
+      travelAnimation.stopEmitter.addListener( () => {
         this.positionProperty.set( destination );
         this.finishAnimation();
       } );
 
       // Kick off the animation.
-      this.travelAnimation.start();
+      travelAnimation.start();
+
+      this.travelAnimationProperty.value = travelAnimation;
     }
     else {
 
@@ -137,7 +139,7 @@ export default class Snack extends PhetioObject {
   }
 
   protected finishAnimation(): void {
-    this.travelAnimation = null;
+    this.travelAnimationProperty.value = null;
   }
 
   /**
@@ -146,8 +148,8 @@ export default class Snack extends PhetioObject {
    * having a moving snack could be problematic.
    */
   public forceAnimationToFinish(): void {
-    if ( this.travelAnimation ) {
-      this.travelAnimation.stop();
+    if ( this.travelAnimationProperty.value ) {
+      this.travelAnimationProperty.value.stop();
     }
   }
 
