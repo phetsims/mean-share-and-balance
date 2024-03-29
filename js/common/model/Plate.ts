@@ -18,7 +18,6 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TProperty from '../../../../axon/js/TProperty.js';
 import Snack from './Snack.js';
 import createObservableArray, { ObservableArray, ObservableArrayIO } from '../../../../axon/js/createObservableArray.js';
-import CandyBar from '../../leveling-out/model/CandyBar.js';
 import SnackStacker from '../SnackStacker.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
@@ -30,13 +29,16 @@ type SelfOptions = {
   initialXPosition?: number;
   linePlacement: number;
   startingNumberOfSnacks?: number;
+
+  // The function used to position the snacks on the snack stack.
+  snackStackingFunction?: ( plateXPosition: number, index: number ) => Vector2;
 };
 
 type PlateOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class Plate extends PhetioObject {
 
-  // Whether the cup is enabled in view and data calculations
+  // Whether the plate is enabled in the view and the data calculations.
   public readonly isActiveProperty: Property<boolean>;
 
   // The X position of the center of this plate relative to the center of the table.
@@ -56,6 +58,8 @@ export default class Plate extends PhetioObject {
   // The number of snacks this plate should have on it when it becomes active.
   public readonly startingNumberOfSnacks: number;
 
+  private readonly snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2;
+
   // Functions needed for obtaining and releasing snacks.
   private readonly getAvailableSnack: () => Snack | null;
   private readonly releaseSnack: ( snack: Snack ) => void;
@@ -73,7 +77,8 @@ export default class Plate extends PhetioObject {
       isInitiallyActive: false,
       initialXPosition: 0,
       phetioState: false,
-      startingNumberOfSnacks: 1
+      startingNumberOfSnacks: 1,
+      snackStackingFunction: SnackStacker.getStackedCandyBarPosition
     }, providedOptions );
 
     super( options );
@@ -81,6 +86,7 @@ export default class Plate extends PhetioObject {
     this.getAvailableSnack = getAvailableSnack;
     this.releaseSnack = releaseSnack;
     this.startingNumberOfSnacks = options.startingNumberOfSnacks;
+    this.snackStackingFunction = options.snackStackingFunction;
 
     this.isActiveProperty = new BooleanProperty( options.isInitiallyActive, {
 
@@ -153,13 +159,8 @@ export default class Plate extends PhetioObject {
    */
   private getPositionForStackedItem( stackIndex: number ): Vector2 {
 
-    // TODO: This is awkward and won't work in all cases, so come back to it.  See https://github.com/phetsims/mean-share-and-balance/issues/185.
-    const snackStackMethod = this.snacksOnPlateInNotepad.length === 0 || this.snacksOnPlateInNotepad[ 0 ] instanceof CandyBar ?
-                             SnackStacker.getStackedCandyBarPosition :
-                             SnackStacker.getStackedApplePosition;
-
     // Get the position.
-    return snackStackMethod( this.xPositionProperty.value, stackIndex );
+    return this.snackStackingFunction( this.xPositionProperty.value, stackIndex );
   }
 
   /**

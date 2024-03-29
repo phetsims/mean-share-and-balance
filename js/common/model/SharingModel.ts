@@ -25,6 +25,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import createObservableArray, { ObservableArray, ObservableArrayIO } from '../../../../axon/js/createObservableArray.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = {
 
@@ -52,7 +53,9 @@ export default class SharingModel<T extends Snack> implements TModel {
   // These are generally inactive and not visible in the view.
   protected readonly unusedSnacks: ObservableArray<Snack>;
 
-  public constructor( snackCreator: ( options: SnackOptions ) => T, providedOptions: SharingModelOptions ) {
+  public constructor( snackCreator: ( options: SnackOptions ) => T,
+                      snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
+                      providedOptions: SharingModelOptions ) {
 
     const options = combineOptions<SharingModelOptions>( {
       numberOfSnacksOnFirstPlate: 3
@@ -128,6 +131,7 @@ export default class SharingModel<T extends Snack> implements TModel {
           isInitiallyActive: plateIndex < this.numberOfPlatesProperty.value,
           linePlacement: plateIndex,
           startingNumberOfSnacks: plateIndex === 0 ? options.numberOfSnacksOnFirstPlate : 1,
+          snackStackingFunction: snackStackingFunction,
 
           // phet-io
           tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )

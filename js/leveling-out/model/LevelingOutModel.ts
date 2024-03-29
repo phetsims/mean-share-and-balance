@@ -22,6 +22,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import { SnackOptions } from '../../common/model/Snack.js';
+import SnackStacker from '../../common/SnackStacker.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -37,7 +38,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
-    super( createCandyBar, options );
+    super( createCandyBar, SnackStacker.getStackedCandyBarPosition, options );
 
     /**
      * Create and define the keyboard interaction for candy bars.

@@ -89,7 +89,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       numberOfSnacksOnFirstPlate: 2
     }, providedOptions );
 
-    super( createApple, options );
+    super( createApple, SnackStacker.getStackedApplePosition, options );
 
     this.notepadModeProperty = new EnumerationProperty( NotepadMode.SYNC, {
       tandem: providedOptions.tandem.createTandem( 'notepadModeProperty' ),
