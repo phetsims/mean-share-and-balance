@@ -175,7 +175,9 @@ export default class Plate extends PhetioObject {
 
     // Update the positions of the snacks.
     stackableSnacks.forEach( ( snack, i ) => {
-      snack.positionProperty.value = this.getPositionForStackedItem( i );
+      const position = this.getPositionForStackedItem( i );
+      const animate = !!snack.travelAnimationProperty.value;
+      snack.moveTo( position, animate );
     } );
   }
 
@@ -283,6 +285,10 @@ export default class Plate extends PhetioObject {
       else {
         removedSnack = null;
       }
+
+      // Even though it's the top item that is being removed, the stacking positions may still need to be updated since
+      // animations and dragging could affect things.
+      this.updateSnackPositions();
     }
     return removedSnack;
   }
@@ -293,6 +299,7 @@ export default class Plate extends PhetioObject {
   public removeSnack( snack: Snack ): void {
     assert && assert( this.hasSnack( snack ), 'the snack being removed is not on this plate' );
     this.snacksOnPlateInNotepad.remove( snack );
+    this.updateSnackPositions();
   }
 
   /**
