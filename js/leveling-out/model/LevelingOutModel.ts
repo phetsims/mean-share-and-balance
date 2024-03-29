@@ -86,12 +86,15 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       // Start off with the table and notepad quantities in sync.
       plate.syncNotepadToTable();
 
-      // Monitor the number of snacks on the table plate and add or remove candy bars from the notepad plate in
-      // response.  In some situations this is easy, but in others it is not.  See the code for details.
+      // Monitor the number of snacks on each table plate and add or remove candy bars from the notepad plate in
+      // response.  In some situations this is straightforward, but in others it is not.  See the code for details.
       plate.tableSnackNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
 
         const delta = candyBarNumber - oldCandyBarNumber;
+
         if ( delta > 0 ) {
+
+          // Add notepad snacks to this plate, or to another if this plate is already full.
           _.times( delta, () => {
             if ( plate.getNumberOfNotepadSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ) {
               plate.addASnack();
@@ -105,8 +108,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
         }
         else {
 
-          // Remove notepad snacks from this plate or from another if this plate is now empty.
-          _.times( -delta, () => {
+          // Remove notepad snacks from this plate, or from another if this plate is empty.
+          _.times( Math.abs( delta ), () => {
             if ( plate.getNumberOfNotepadSnacks() > 0 ) {
               plate.removeTopSnack();
             }
@@ -117,6 +120,31 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             }
           } );
         }
+      } );
+
+      // Monitor the isActiveProperty for each plate and do any redistribution of candy bars that is necessary when
+      // changes occur.
+      plate.isActiveProperty.link( isActive => {
+
+        if ( !isActive ) {
+
+          // Handle the situation where this plate went inactive and had excess candy bars on it.  The inverse
+          // situation, i.e. when goes inactive with a deficit, is handled elsewhere.
+          const excess = Math.max( plate.getNumberOfNotepadSnacks() - plate.tableSnackNumberProperty.value, 0 );
+          if ( excess > 0 ) {
+
+            // Remove snacks from this plate and add them to another.
+            _.times( excess, () => {
+              plate.removeTopSnack();
+              const plateWithFewestSnacks = this.getPlateWithFewestSnacks();
+              plateWithFewestSnacks!.addASnack();
+            } );
+          }
+        }
+
+        // Set this plate's number of table snacks to zero so that it will release the snacks it has.  This must be done
+        // after the redistribution above.
+        plate.tableSnackNumberProperty.value = isActive ? plate.startingNumberOfSnacks : 0;
       } );
 
       // When the number of snacks on a plate changes we need to fire the emitter that updates the selected group item.
@@ -163,6 +191,10 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   }
 
   public override reset(): void {
+
+    // Make sure that the number of snacks on the table and the notepad are in sync.
+    this.syncData();
+
     super.reset();
     this.groupSortInteractionModel.reset();
   }

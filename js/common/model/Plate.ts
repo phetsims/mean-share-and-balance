@@ -54,7 +54,7 @@ export default class Plate extends PhetioObject {
   public readonly linePlacement: number;
 
   // The number of snacks this plate should have on it when it becomes active.
-  private readonly startingNumberOfSnacks: number;
+  public readonly startingNumberOfSnacks: number;
 
   // Functions needed for obtaining and releasing snacks.
   private readonly getAvailableSnack: () => Snack | null;
@@ -132,16 +132,6 @@ export default class Plate extends PhetioObject {
     this.xPositionProperty.link( this.updateSnackPositions.bind( this ) );
 
     this.syncNotepadToTable();
-
-    // Monitor the active state and add or release snacks as changes occur.
-    this.isActiveProperty.link( isActive => {
-      if ( isActive ) {
-        this.tableSnackNumberProperty.value = this.startingNumberOfSnacks;
-      }
-      else {
-        this.tableSnackNumberProperty.value = 0;
-      }
-    } );
   }
 
   /**
@@ -247,11 +237,18 @@ export default class Plate extends PhetioObject {
   }
 
   /**
-   * Get the snack that is currently on the top of the stack.  This does NOT remove the snack.
+   * Get the snack that is currently on the top of the stack.  This does NOT remove the snack from the plate.  It also
+   * excludes dragging snacks.
    */
   public getTopSnack(): Snack | null {
+
+    // Exclude any snacks that are currently being dragged or are animating.
+    const snacksFullyOnPlate = this.snacksOnPlateInNotepad.filter(
+      snack => !snack.isDraggingProperty.value && !snack.travelAnimationProperty.value
+    );
+
     let highestSnackSoFar: Snack | null = null;
-    this.snacksOnPlateInNotepad.forEach( snack => {
+    snacksFullyOnPlate.forEach( snack => {
 
       // Note that Y is in the graphic coordinate frame in this model, so lower values are higher on the screen.
       if ( highestSnackSoFar === null || snack.positionProperty.value.y < highestSnackSoFar.positionProperty.value.y ) {
@@ -267,11 +264,18 @@ export default class Plate extends PhetioObject {
    */
   public removeTopSnack(): Snack | null {
     let removedSnack = null;
+
     if ( this.snacksOnPlateInNotepad.length > 0 ) {
-      const topSnack = this.getTopSnack();
+
+      // Force any in-progress animations to finish so that the stack order doesn't get messed up.
+      this.snacksOnPlateInNotepad.forEach( snack => snack.forceAnimationToFinish() );
+
+      // Remove the snack at the top of the stack.  Note that this could include ones that are being dragged (in
+      // multitouch scenarios).  This is intentional - otherwise it gets too complicated.
       removedSnack = this.snacksOnPlateInNotepad.pop();
+
       if ( removedSnack ) {
-        assert && assert( removedSnack === topSnack, 'the removed snack should be the top snack, if not, something is wrong' );
+        removedSnack.forceAnimationToFinish();
         removedSnack.isActiveProperty.value = false;
         removedSnack.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
         this.releaseSnack( removedSnack );
