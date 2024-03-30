@@ -178,8 +178,8 @@ export default class SharingModel<T extends Snack> implements TModel {
    * Get an unused snack, meaning one that isn't on a plate.  Invoking this method removes the returned snack from the
    * list of those available, so it must be tracked and added back when the client no longer needs it.
    */
-  public getUnusedSnack(): Snack | null {
-    return this.unusedSnacks.pop() || null;
+  public getUnusedSnack(): T | null {
+    return this.unusedSnacks.pop() as T || null;
   }
 
   /**

@@ -312,6 +312,15 @@ export default class Plate extends PhetioObject {
   }
 
   /**
+   * Remove all the snacks from this plate.  Has no effect if there are none.
+   */
+  public removeAllSnacks(): void {
+    while ( this.getNumberOfNotepadSnacks() > 0 ) {
+      this.removeTopSnack();
+    }
+  }
+
+  /**
    * Remove the specified snack from those that are stacked on this plate.
    */
   public removeSnack( snack: Snack ): void {

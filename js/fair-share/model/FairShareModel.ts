@@ -215,15 +215,15 @@ export default class FairShareModel extends SharingModel<Apple> {
             const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
                                                    this.appleCollection.length;
             _.times( numberOfAdditionalApplesNeeded, i => {
-              const appleToAdd = this.getUnusedSnack() as Apple;
+              const appleToAdd = this.getUnusedSnack();
               assert && assert( appleToAdd, 'there should be unused apples available to add' );
-              appleToAdd.isActiveProperty.value = true;
-              appleToAdd.fractionProperty.value = fractionAmount;
-              appleToAdd.moveTo( new Vector2(
+              appleToAdd!.isActiveProperty.value = true;
+              appleToAdd!.fractionProperty.value = fractionAmount;
+              appleToAdd!.moveTo( new Vector2(
                 rightmostWaitingApplePosition.x + ( i + 1 ) * MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION,
                 rightmostWaitingApplePosition.y
               ) );
-              this.appleCollection.push( appleToAdd );
+              this.appleCollection.push( appleToAdd! );
             } );
 
             // Distribute the fractionalized apples to the plates.
@@ -292,7 +292,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           if ( delta > 0 ) {
             _.times( delta, () => plate.addASnack() );
           }
-          else {
+          else if ( delta < 0 ) {
             _.times( Math.abs( delta ), () => plate.removeTopSnack() );
           }
 
@@ -325,6 +325,9 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( notepadMode === NotepadMode.SHARE ) {
 
+        // Make all the apples whole to start with.
+        this.getAllSnacks().forEach( snack => { snack.fractionProperty.value = Fraction.ONE; } );
+
         // Calculate the whole and fractional apples per plate.  Don't use derived values here since that could
         // introduce an order dependency.
         const wholeApplesPerPlate = Math.floor( this.totalSnacksProperty.value / this.numberOfPlatesProperty.value );
@@ -332,66 +335,60 @@ export default class FairShareModel extends SharingModel<Apple> {
           this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
           this.numberOfPlatesProperty.value
         );
-        this.plates.forEach( plate => {
+        const totalActiveApplesPerPlate = wholeApplesPerPlate + ( fractionalAppleAmount.value > 0 ? 1 : 0 );
 
-          const applesOnPlate = plate.getSnackStack() as Apple[];
+        // Add or remove snacks to match the new amount.
+        this.plates.forEach( plate => {
 
           if ( plate.isActiveProperty.value ) {
 
-            applesOnPlate.forEach( ( apple, i ) => {
-              if ( i < wholeApplesPerPlate ) {
-                apple.isActiveProperty.value = true;
-                apple.fractionProperty.value = Fraction.ONE;
-              }
-              else if ( i === wholeApplesPerPlate && fractionalAppleAmount.value > 0 ) {
-                apple.isActiveProperty.value = true;
-                apple.fractionProperty.value = fractionalAppleAmount;
-              }
-              else {
-                apple.isActiveProperty.value = false;
-              }
-            } );
+            // Calculate the difference between what is on this plate and what is needed.
+            const delta = totalActiveApplesPerPlate - plate.getNumberOfNotepadSnacks();
+            if ( delta > 0 ) {
+              _.times( delta, () => plate.addASnack() );
+            }
+            else if ( delta < 0 ) {
+              _.times( Math.abs( delta ), () => plate.removeTopSnack() );
+            }
 
-            this.reorganizeSnacks( plate );
+            // If there is a fractional amount, set it for the top apple.
+            if ( fractionalAppleAmount.value > 0 ) {
+              const topApple = plate.getTopSnack() as Apple;
+              topApple.fractionProperty.value = fractionalAppleAmount;
+            }
           }
           else {
 
-            // This plate is inactive, so deactivate all apples associated with it.
-            applesOnPlate.forEach( apple => { apple.isActiveProperty.value = false; } );
+            // This plate isn't active, so if it has any snacks they need to be released.
+            plate.removeAllSnacks();
           }
         } );
       }
       else if ( notepadMode === NotepadMode.COLLECT ) {
 
-        //  Make sure the appropriate apples are active and in the right places within the collection.
-        const activeApples = this.getActiveSnacks();
-        const inactiveApples = this.getInactiveSnacks();
-        const delta = totalSnacks - activeApples.length;
+        const delta = totalSnacks - this.appleCollection.length;
         if ( delta > 0 ) {
 
-          // Activate the needed apples.
+          // Add apples to the collection.
           _.times( delta, () => {
-            const apple = inactiveApples.shift();
-            assert && assert( apple, 'there should be an inactive apple available' );
-            apple!.isActiveProperty.value = true;
-            activeApples.push( apple! );
+            const appleToAdd = this.getUnusedSnack();
+            assert && assert( appleToAdd, 'there should be apples available to add' );
+            appleToAdd!.isActiveProperty.value = true;
+            this.appleCollection.push( appleToAdd! );
           } );
         }
         else if ( delta < 0 ) {
 
-          _.times( -delta, () => {
-
-            // Deactivate apples that are no longer needed.
-            const apple = activeApples.pop();
-            assert && assert( apple, 'there should be an active apple available' );
-            apple!.isActiveProperty.value = false;
-            inactiveApples.push( apple! );
+          // Remove apples from the collection.
+          _.times( Math.abs( delta ), () => {
+            const appleToRemove = this.appleCollection.pop();
+            assert && assert( appleToRemove, 'there should be enough apples in the collection to support this' );
+            appleToRemove!.isActiveProperty.value = false;
+            appleToRemove!.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
+            this.releaseSnack( appleToRemove! );
           } );
         }
-
-        activeApples.forEach( ( activeApple, i ) => {
-          activeApple.positionProperty.set( this.getCollectionPosition( i ) );
-        } );
+        this.updateCollectedApplePositions();
       }
       else {
         assert && assert( false, `unhandled notepad mode: ${notepadMode}` );
@@ -472,6 +469,14 @@ export default class FairShareModel extends SharingModel<Apple> {
     const y = -( COLLECTION_BOTTOM_Y + MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS +
                  VERTICAL_SPACE_BETWEEN_APPLES_COLLECTION + row * centerToCenterY );
     return new Vector2( x, y );
+  }
+
+  /**
+   * Update the positions for all apples in the collection.  It only makes sense to use this when in or going into the
+   * Collect mode.
+   */
+  private updateCollectedApplePositions( animate = false ): void {
+    this.appleCollection.forEach( ( apple, i ) => apple.moveTo( this.getCollectionPosition( i ), animate ) );
   }
 
   /**
