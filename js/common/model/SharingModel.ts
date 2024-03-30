@@ -98,8 +98,6 @@ export default class SharingModel<T extends Snack> implements TModel {
 
     this.snacks = [];
 
-    const totalSnacksPropertyDependencies: Array<TReadOnlyProperty<unknown>> = [];
-
     // parent tandem for the snacks that appear on the notepad
     const snacksParentTandem = options.tandem.createTandem( 'notepadSnacks' );
 
@@ -138,17 +136,13 @@ export default class SharingModel<T extends Snack> implements TModel {
         }
       );
       this.plates.push( plate );
-
-      totalSnacksPropertyDependencies.push( plate.tableSnackNumberProperty );
-      totalSnacksPropertyDependencies.push( plate.isActiveProperty );
     } );
 
-    // Tracks the total number of snacks based on the "ground truth" numbers for each plate. Must be deriveAny because
-    // .map() does not preserve .length().
+    // Tracks the total number of snacks based on the "ground truth" numbers for each plate.
     this.totalSnacksProperty = DerivedProperty.deriveAny(
-      totalSnacksPropertyDependencies,
+      this.plates.map( plate => plate.tableSnackNumberProperty ),
       () => {
-        const snackAmounts = this.getActivePlates().map( plate => plate.tableSnackNumberProperty.value );
+        const snackAmounts = this.plates.map( plate => plate.tableSnackNumberProperty.value );
         return _.sum( snackAmounts );
       },
       {
@@ -206,6 +200,14 @@ export default class SharingModel<T extends Snack> implements TModel {
 
   public getInactiveSnacks(): T[] {
     return this.snacks.filter( snack => !snack.isActiveProperty.value );
+  }
+
+  protected getAllSnacks(): T[] {
+    const allSnacks = this.unusedSnacks.getArrayCopy();
+    this.plates.forEach( plate => {
+      plate.getSnackStack().forEach( snack => allSnacks.push( snack ) );
+    } );
+    return allSnacks as T[];
   }
 
   /**

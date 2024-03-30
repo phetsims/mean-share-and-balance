@@ -254,15 +254,29 @@ export default class Plate extends PhetioObject {
       snack => !snack.isDraggingProperty.value && !snack.travelAnimationProperty.value
     );
 
-    let highestSnackSoFar: Snack | null = null;
-    snacksFullyOnPlate.forEach( snack => {
+    return snacksFullyOnPlate[ snacksFullyOnPlate.length - 1 ] || null;
+  }
 
-      // Note that Y is in the graphic coordinate frame in this model, so lower values are higher on the screen.
-      if ( highestSnackSoFar === null || snack.positionProperty.value.y < highestSnackSoFar.positionProperty.value.y ) {
-        highestSnackSoFar = snack;
-      }
-    } );
-    return highestSnackSoFar;
+  /**
+   * Get the top snack item and remove it from this plate, but DON'T release it back to the list of unused ones or move
+   * it.  It becomes the responsibility of the caller to make sure it doesn't get lost.
+   */
+  public getTopSnackForTransfer(): Snack | null {
+    let snack = null;
+
+    if ( this.snacksOnPlateInNotepad.length > 0 ) {
+
+      // Force any in-progress animations to finish so that the stack order doesn't get messed up.
+      this.snacksOnPlateInNotepad.forEach( snack => snack.forceAnimationToFinish() );
+
+      // Remove the snack at the top of the stack.
+      snack = this.snacksOnPlateInNotepad.pop() || null;
+
+      // Even though it's the top item that is being removed, the stacking positions may still need to be updated since
+      // animations and dragging could affect things.
+      this.updateSnackPositions();
+    }
+    return snack;
   }
 
   /**
@@ -282,7 +296,6 @@ export default class Plate extends PhetioObject {
       removedSnack = this.snacksOnPlateInNotepad.pop();
 
       if ( removedSnack ) {
-        removedSnack.forceAnimationToFinish();
         removedSnack.isActiveProperty.value = false;
         removedSnack.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
         this.releaseSnack( removedSnack );
