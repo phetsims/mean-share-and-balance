@@ -152,12 +152,6 @@ export default class Snack extends PhetioObject {
       this.travelAnimationProperty.value.stop();
     }
   }
-
-  public reset(): void {
-    this.forceAnimationToFinish();
-    this.isActiveProperty.reset();
-    this.positionProperty.reset();
-  }
 }
 
 meanShareAndBalance.register( 'Snack', Snack );

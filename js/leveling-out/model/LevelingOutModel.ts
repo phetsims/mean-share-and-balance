@@ -149,7 +149,10 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       } );
 
       // When the number of snacks on a plate changes we need to fire the emitter that updates the selected group item.
-      plate.snacksOnPlateInNotepad.lengthProperty.lazyLink( () => stackChangedEmitter.emit() );
+
+      // TODO: This the following line is here, things work when table numbers change, but it messes up basic operation.  See https://github.com/phetsims/mean-share-and-balance/issues/185.
+      //       I (jbphet) would like to go through this with @marlitas and see how to handle it.
+      // plate.snacksOnPlateInNotepad.lengthProperty.lazyLink( () => stackChangedEmitter.emit() );
     } );
   }
 

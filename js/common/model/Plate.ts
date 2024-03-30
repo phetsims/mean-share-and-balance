@@ -99,7 +99,11 @@ export default class Plate extends PhetioObject {
 
     this.xPositionProperty = new NumberProperty( options.initialXPosition );
 
-    this.tableSnackNumberProperty = new NumberProperty( options.startingNumberOfSnacks, {
+    // So that reset of isActiveProperty and reset of tableSnackNumberProperty are in agreement, make sure their initial
+    // states are compatible.
+    const initialTableSnackNumber = options.isInitiallyActive ? options.startingNumberOfSnacks : 0;
+
+    this.tableSnackNumberProperty = new NumberProperty( initialTableSnackNumber, {
       range: new Range( 0, 10 ),
 
       // phet-io
@@ -315,22 +319,6 @@ export default class Plate extends PhetioObject {
    */
   public getNumberOfNotepadSnacks(): number {
     return this.snacksOnPlateInNotepad.length;
-  }
-
-  /**
-   * Release all snacks that are currently on this plate.
-   */
-  public releaseAllSnacks(): Snack[] {
-    const snacksToRelease = this.snacksOnPlateInNotepad.getArrayCopy();
-    snacksToRelease.forEach( snack => {
-
-      // Remove this snack from the plate's list.
-      this.snacksOnPlateInNotepad.remove( snack );
-
-      // Release this snack to the model so that it can be used elsewhere.
-      this.releaseSnack( snack );
-    } );
-    return snacksToRelease;
   }
 
   /**
