@@ -30,7 +30,7 @@ export default class FairShareNotepadNode extends NotepadNode {
     const notepadModeItems = _.map( notepadModes,
       choice => {
         return {
-          createNode: () => new Text( choice.stringProperty, { font: new PhetFont( 12 ) } ),
+          createNode: () => new Text( choice.stringProperty, { font: new PhetFont( 12 ), maxWidth: 120 } ),
           value: choice,
           tandemName: `${choice.name.toLowerCase()}RadioButton`,
           options: { minWidth: 80 }
