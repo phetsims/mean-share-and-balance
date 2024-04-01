@@ -22,6 +22,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
+import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -159,6 +160,12 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         }
       }
     );
+
+    this.soccerBalls.forEach( soccerBall => {
+      soccerBall.toneEmitter.addListener( value => {
+        NumberTone.playValue( value );
+      } );
+    } );
   }
 
   private getKickedBalls(): SoccerBall[] {
