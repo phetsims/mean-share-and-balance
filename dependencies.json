@@ -29,7 +29,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "3bbb6016d201a0e5c9d4576ddae403242abcc68a",
+    "sha": "e8674159432b9f78c63da4143b296358016d12bd",
     "branch": "1.0"
   },
   "perennial-alias": {
@@ -53,7 +53,7 @@
     "branch": "HEAD"
   },
   "phetcommon": {
-    "sha": "05f3c9d1623ca2b919dfd8ba56730a978cfe5b62",
+    "sha": "00018a0d2427c571b08cb9e320e83b88c34b74b4",
     "branch": "HEAD"
   },
   "phetmarks": {
