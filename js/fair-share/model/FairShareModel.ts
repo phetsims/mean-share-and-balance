@@ -248,6 +248,8 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.getActivePlates().forEach( plate => {
           _.times( plate.getNumberOfNotepadSnacks(), () => {
             if ( this.appleCollection.length < this.totalSnacksProperty.value ) {
+
+              // REVIEW: I think we talked about using generics for this already?
               const apple = plate.getTopSnackForTransfer() as Apple;
               apple.moveTo( this.getCollectionPosition( this.appleCollection.length ), true );
               this.appleCollection.push( apple );

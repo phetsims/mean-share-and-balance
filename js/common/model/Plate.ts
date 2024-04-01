@@ -133,6 +133,8 @@ export default class Plate extends PhetioObject {
           this.snacksOnPlateInNotepad.removeItemRemovedListener( snackRemovedListener );
         }
       };
+
+      // REVIEW: Do we not need a listener here to set the isActiveProperty to false when the snack is removed?
       this.snacksOnPlateInNotepad.addItemRemovedListener( snackRemovedListener );
     } );
 
@@ -173,7 +175,7 @@ export default class Plate extends PhetioObject {
   private updateSnackPositions(): void {
 
     // By design, a snack that is dragging remains on the plate but is excluded from the stacking order.  This works
-    // better for conveying state via phet-io, where dragging state information isn't included.  So, and ordered list
+    // better for conveying state via phet-io, where dragging state information isn't included.  So, an ordered list
     // of the snacks is needed here, excluding any that are dragging.  For more information on this, see
     // https://github.com/phetsims/mean-share-and-balance/issues/193.
     const stackableSnacks = this.snacksOnPlateInNotepad.filter( snack => !snack.isDraggingProperty.value );

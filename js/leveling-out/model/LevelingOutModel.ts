@@ -103,6 +103,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             else {
               const plateWithFewestSnacks = this.getPlateWithFewestSnacks();
               assert && assert( plateWithFewestSnacks, 'when here there should always be space for snacks' );
+
+              // REVIEW: Why are we removing a snack here... Shouldn't we be adding one? This looks like a bug.
               plateWithFewestSnacks!.removeTopSnack();
             }
           } );
@@ -111,6 +113,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
           // Remove notepad snacks from this plate, or from another if this plate is empty.
           _.times( Math.abs( delta ), () => {
+
+            // REVIEW: We should probably be checking the min number of snacks on a plate, not hard coding 0.
             if ( plate.getNumberOfNotepadSnacks() > 0 ) {
               plate.removeTopSnack();
             }
@@ -131,6 +135,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
           // Handle the situation where this plate went inactive and had excess candy bars on it.  The inverse
           // situation, i.e. when goes inactive with a deficit, is handled elsewhere.
+          // REVIEW QUESTION: Where is that handled?
           const excess = Math.max( plate.getNumberOfNotepadSnacks() - plate.tableSnackNumberProperty.value, 0 );
           if ( excess > 0 ) {
 
@@ -138,6 +143,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
             _.times( excess, () => {
               plate.removeTopSnack();
               const plateWithFewestSnacks = this.getPlateWithFewestSnacks();
+
+              // REVIEW: Should we confirm that there are indeed plates with space before adding a snack?
               plateWithFewestSnacks!.addASnack();
             } );
           }
