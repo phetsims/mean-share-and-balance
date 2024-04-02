@@ -138,7 +138,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     this.moveChildToFront( this.ringsNode );
     this.readoutNode && this.moveChildToFront( this.readoutNode );
 
-    this.notepadPDOMOrder = [ checkButton, this.balanceBeamNode ];
+    this.notepadPDOMOrder = [ this.balanceBeamNode, checkButton ];
   }
 
   public reset(): void {
