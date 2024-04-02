@@ -24,6 +24,7 @@ import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js'
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -39,6 +40,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
   public constructor(
     sceneModel: BalancePointSceneModel,
     playAreaNumberLineNode: NumberLineNode,
+    fulcrumWasDraggedProperty: Property<boolean>,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
@@ -124,9 +126,8 @@ export default class BalancePointNotepadNode extends NotepadNode {
       sceneModel,
       playAreaNumberLineNode,
       this.paperStackBounds,
-      sceneModel.fulcrumValueProperty,
-      sceneModel.meanValueProperty,
       columnsVisibleProperty,
+      fulcrumWasDraggedProperty,
       areTickMarksVisibleProperty,
       isMeanFulcrumFixedProperty,
       { tandem: options.tandem.createTandem( 'balanceBeamNode' ) }

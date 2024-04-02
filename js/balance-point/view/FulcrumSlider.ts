@@ -19,7 +19,6 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import { Color, HBox } from '../../../../scenery/js/imports.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions = {
@@ -44,12 +43,9 @@ const CUEING_ARROW_OPTIONS = {
 };
 
 export default class FulcrumSlider extends HSlider {
-
-  // A Property that tracks whether the fulcrum has been dragged.
-  private readonly wasDraggedProperty = new BooleanProperty( false );
-
   public constructor(
     fulcrumValueProperty: Property<number>,
+    fulcrumWasDraggedProperty: Property<boolean>,
     meanValueProperty: TReadOnlyProperty<number | null>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamFulcrumOptions
@@ -93,13 +89,13 @@ export default class FulcrumSlider extends HSlider {
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
       a11yMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
-      drag: () => { this.wasDraggedProperty.value = true; }
+      drag: () => { fulcrumWasDraggedProperty.value = true; }
     }, providedOptions );
     super( fulcrumValueProperty, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, options );
 
     // Hook up visibility control for the cueing arrows.
     const cueingArrowsVisibleProperty = new DerivedProperty(
-      [ this.wasDraggedProperty, isMeanFulcrumFixedProperty, meanValueProperty ],
+      [ fulcrumWasDraggedProperty, isMeanFulcrumFixedProperty, meanValueProperty ],
       ( wasDragged, isMeanFulcrumFixed ) => !isMeanFulcrumFixed && !wasDragged && meanValueProperty.value !== null
     );
     leftCueingArrow.visibleProperty = cueingArrowsVisibleProperty;
@@ -108,11 +104,6 @@ export default class FulcrumSlider extends HSlider {
     // Set pointer areas for slider thumb node.
     thumbNode.mouseArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
     thumbNode.touchArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
-  }
-
-  public override reset(): void {
-    this.wasDraggedProperty.reset();
-    super.reset();
   }
 }
 
