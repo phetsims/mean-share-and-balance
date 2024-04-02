@@ -15,9 +15,6 @@ import IntroScreen from './intro/IntroScreen.js';
 import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
 import FairShareScreen from './fair-share/FairShareScreen.js';
 import BalancePointScreen from './balance-point/BalancePointScreen.js';
-import PreferencesModel from '../../joist/js/preferences/PreferencesModel.js';
-
-const preferencesModel = new PreferencesModel( {} );
 
 const simOptions: SimOptions = {
 
@@ -29,8 +26,7 @@ const simOptions: SimOptions = {
     graphicArts: 'Mariah Hermsmeyer'
     // soundDesign: '',
     // thanks: ''
-  },
-  preferencesModel: preferencesModel
+  }
 };
 
 // launch the sim - beware that scenery Image nodes created outside of simLauncher.launch() will have zero bounds
