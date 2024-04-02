@@ -156,6 +156,19 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( this.sortIndicatorArrowNode );
     this.addChild( sceneView.frontSceneViewLayer );
     this.addChild( meanInfoDialog );
+
+    this.pdomPlayAreaNode.setPDOMOrder( [
+      kickButton,
+      sceneView.backSceneViewLayer,
+      controls.numberSpinner,
+      ...notepadNode.notepadPDOMOrder
+      ]
+    );
+
+    this.pdomControlAreaNode.setPDOMOrder( [
+        ...controls.controlsPDOMOrder,
+      resetAllButton
+    ] );
   }
 }
 
