@@ -14,7 +14,6 @@ import Range from '../../../../dot/js/Range.js';
 import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
-import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
@@ -103,7 +102,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       if ( delta > 0 ) {
         this.scheduleKicks( delta );
       }
-      else if ( delta < 0 && !isResettingProperty.value ) {
+
+        // TODO: JB am I creating a listener order dependency here? https://github.com/phetsims/mean-share-and-balance/issues/196
+      // During reset or PhET-iO state setting the number of active balls may already match the target number value
+      else if ( delta < 0 && this.getKickedBalls().length !== newValue ) {
         const ballsToRemove = -delta;
         const numberOfBallsToRemoveFromQueue = Math.min( ballsToRemove, this.numberOfQueuedKicksProperty.value );
         const numberOfBallsToRemoveFromField = ballsToRemove - numberOfBallsToRemoveFromQueue;
