@@ -34,6 +34,7 @@ type BalancePointNotepadNodeOptions = SelfOptions &
 export default class BalancePointNotepadNode extends NotepadNode {
 
   private readonly balanceBeamNode: BalanceBeamNode;
+  public readonly notepadPDOMOrder: Node[];
 
   public constructor(
     sceneModel: BalancePointSceneModel,
@@ -136,6 +137,8 @@ export default class BalancePointNotepadNode extends NotepadNode {
     // to go behind them.
     this.moveChildToFront( this.ringsNode );
     this.readoutNode && this.moveChildToFront( this.readoutNode );
+
+    this.notepadPDOMOrder = [ checkButton, this.balanceBeamNode ];
   }
 
   public reset(): void {

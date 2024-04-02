@@ -7,7 +7,7 @@
  *
  */
 
-import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { Text, VBox, VBoxOptions, Node } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -26,6 +26,8 @@ type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
 
 export default class BalancePointControls extends VBox {
+  public readonly controlsPDOMOrder: Node[];
+  public readonly numberSpinner: Node;
 
   public constructor( model: BalancePointModel, providedOptions: BalancePointControlsOptions ) {
 
@@ -109,6 +111,9 @@ export default class BalancePointControls extends VBox {
     );
 
     this.addChild( numberSpinner );
+
+    this.numberSpinner = numberSpinner;
+    this.controlsPDOMOrder = [ meanFulcrumRadioButtonGroup, checkboxGroup, infoButton ];
   }
 }
 
