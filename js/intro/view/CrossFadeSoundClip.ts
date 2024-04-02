@@ -38,7 +38,7 @@ class CrossFadeSoundClip extends SoundGenerator implements TSoundPlayer {
     assert && assert( crossFade >= 0 && crossFade <= 1, 'crossFade must be between 0 and 1 (inclusive)' );
 
     const options = optionize<CrossFadeSoundClipOptions, SelfOptions, SoundGeneratorOptions>()( {
-      initialOutputLevel: 0.5
+      initialOutputLevel: 0.2
     }, providedOptions );
 
     super( options );
