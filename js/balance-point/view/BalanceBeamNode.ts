@@ -55,9 +55,8 @@ export default class BalanceBeamNode extends Node {
     sceneModel: BalancePointSceneModel,
     playAreaNumberLineNode: NumberLineNode,
     paperStackBounds: Bounds2,
-    fulcrumValueProperty: Property<number>,
-    meanValueProperty: TReadOnlyProperty<number | null>,
-    beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
+    supportColumnsVisibleProperty: TReadOnlyProperty<boolean>,
+    fulcrumWasDraggedProperty: Property<boolean>,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamNodeOptions
@@ -93,8 +92,9 @@ export default class BalanceBeamNode extends Node {
 
     // The adjustable fulcrum that can be moved by the user.
     const fulcrumSlider = new FulcrumSlider(
-      fulcrumValueProperty,
-      meanValueProperty,
+      sceneModel.fulcrumValueProperty,
+      fulcrumWasDraggedProperty,
+      sceneModel.meanValueProperty,
       isMeanFulcrumFixedProperty,
       {
         fulcrumHeight: triangleHeight,
@@ -118,7 +118,7 @@ export default class BalanceBeamNode extends Node {
     );
 
     // Update the position of the fixed fulcrum when related model values change.
-    Multilink.multilink( [ isMeanFulcrumFixedProperty, meanValueProperty ], ( isFulcrumFixed, meanValue ) => {
+    Multilink.multilink( [ isMeanFulcrumFixedProperty, sceneModel.meanValueProperty ], ( isFulcrumFixed, meanValue ) => {
       if ( isFulcrumFixed ) {
 
         // Position the fulcrum at the mean when in the "fixed" mode.
@@ -140,7 +140,7 @@ export default class BalanceBeamNode extends Node {
         columnHeight: columnHeight,
         bottom: groundY,
         centerX: BALANCE_BEAM_TRANSFORM.modelToViewX( i === 0 ? -0.5 : 10.5 ),
-        visibleProperty: beamSupportsPresentProperty
+        visibleProperty: supportColumnsVisibleProperty
       } );
     } );
 
@@ -303,7 +303,7 @@ export default class BalanceBeamNode extends Node {
     );
 
     // Add the prompt message that is shown when no balls have been kicked.
-    const promptMessageVisibleProperty = new DerivedProperty( [ meanValueProperty ], mean => mean === null );
+    const promptMessageVisibleProperty = new DerivedProperty( [ sceneModel.meanValueProperty ], mean => mean === null );
     const needAtLeastOneKickMessage = new Text( MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty, {
       font: new PhetFont( 16 ),
       visibleProperty: promptMessageVisibleProperty,
