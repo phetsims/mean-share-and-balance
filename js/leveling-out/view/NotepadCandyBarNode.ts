@@ -27,7 +27,6 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import RichDragListener from '../../../../scenery-phet/js/RichDragListener.js';
 import grabCandyBar_mp3 from '../../../sounds/grabCandyBar_mp3.js';
 import releaseCandyBar_mp3 from '../../../sounds/releaseCandyBar_mp3.js';
-import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
