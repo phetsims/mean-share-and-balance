@@ -10,21 +10,16 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
 import Animation from '../../../../twixt/js/Animation.js';
 import Easing from '../../../../twixt/js/Easing.js';
-import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import Plate from './Plate.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import NullableIO from '../../../../tandem/js/types/NullableIO.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
-  isActive: boolean;
-  plate: Plate;
-  position: Vector2;
+  isInitiallyActive?: boolean;
+  initialPosition?: Vector2;
 };
 export type SnackOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
@@ -36,8 +31,6 @@ let instanceCount = 0;
 
 export default class Snack extends PhetioObject {
 
-  public readonly parentPlateProperty: Property<Plate | null>;
-
   // This Property controls the snack's visibility and participation in data calculations in the sim.
   // Subclass handles reset.
   public readonly isActiveProperty: Property<boolean>;
@@ -47,7 +40,9 @@ export default class Snack extends PhetioObject {
   public readonly positionProperty: Property<Vector2>;
 
   // An animation for moving this snack from one location to another in a continuous fashion.
-  protected travelAnimation: Animation | null = null;
+  public travelAnimationProperty: Property<Animation | null> = new Property<Animation | null>( null );
+
+  public isDraggingProperty: BooleanProperty;
 
   // for debugging
   public readonly instanceID = instanceCount++;
@@ -55,32 +50,34 @@ export default class Snack extends PhetioObject {
   public constructor( providedOptions: SnackOptions ) {
 
     const options = optionize<SnackOptions, SelfOptions, PhetioObjectOptions>()( {
+      isInitiallyActive: false,
+      initialPosition: Vector2.ZERO,
       phetioState: false
     }, providedOptions );
 
     super( options );
 
-    this.isActiveProperty = new BooleanProperty( providedOptions.isActive, {
+    this.isActiveProperty = new BooleanProperty( options.isInitiallyActive, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),
       phetioReadOnly: true
     } );
 
-    this.parentPlateProperty = new Property<Plate | null>( providedOptions.plate, {
-
-      // phet-io
-      tandem: providedOptions.tandem.createTandem( 'parentPlateProperty' ),
-      phetioReadOnly: true,
-      phetioValueType: NullableIO( ReferenceIO( IOType.ObjectIO ) )
-    } );
-
-    this.positionProperty = new Property( providedOptions.position, {
+    this.positionProperty = new Property( options.initialPosition, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'positionProperty' ),
       phetioReadOnly: true,
       phetioValueType: Vector2.Vector2IO
+    } );
+
+    // TODO: Consider not instrumenting this at all for phet-io, see https://github.com/phetsims/mean-share-and-balance/issues/193
+    this.isDraggingProperty = new BooleanProperty( false, {
+
+      // phet-io
+      tandem: providedOptions.tandem.createTandem( 'isDraggingProperty' ),
+      phetioReadOnly: true
     } );
   }
 
@@ -92,18 +89,18 @@ export default class Snack extends PhetioObject {
   public moveTo( destination: Vector2, animate = false ): void {
 
     // If there is already an animation in progress, take steps to redirect it to the (presumably) new destination.
-    if ( this.travelAnimation ) {
+    if ( this.travelAnimationProperty.value ) {
 
       const currentPosition = this.positionProperty.value.copy();
 
       // Stop the existing animation.
-      this.travelAnimation.stop();
+      this.travelAnimationProperty.value.stop();
 
       // Stopping the animation will cause the candy bar to be immediately moved to the originally specified
       // destination, but we don't want that in this case, so restore the position when this was called.
       this.positionProperty.set( currentPosition );
 
-      this.travelAnimation = null;
+      this.travelAnimationProperty.value = null;
     }
 
     if ( animate ) {
@@ -112,7 +109,7 @@ export default class Snack extends PhetioObject {
       const animationTime = this.positionProperty.value.distance( destination ) / TRAVEL_SPEED;
 
       // Create the animation.
-      this.travelAnimation = new Animation( {
+      const travelAnimation = new Animation( {
         property: this.positionProperty,
         to: destination,
         duration: animationTime,
@@ -120,17 +117,19 @@ export default class Snack extends PhetioObject {
       } );
 
       // handlers for when the animation completes or is stopped
-      this.travelAnimation.finishEmitter.addListener( () => {
+      travelAnimation.finishEmitter.addListener( () => {
         this.positionProperty.set( destination );
         this.finishAnimation();
       } );
-      this.travelAnimation.stopEmitter.addListener( () => {
+      travelAnimation.stopEmitter.addListener( () => {
         this.positionProperty.set( destination );
         this.finishAnimation();
       } );
 
       // Kick off the animation.
-      this.travelAnimation.start();
+      travelAnimation.start();
+
+      this.travelAnimationProperty.value = travelAnimation;
     }
     else {
 
@@ -140,7 +139,7 @@ export default class Snack extends PhetioObject {
   }
 
   protected finishAnimation(): void {
-    this.travelAnimation = null;
+    this.travelAnimationProperty.value = null;
   }
 
   /**
@@ -149,16 +148,9 @@ export default class Snack extends PhetioObject {
    * having a moving snack could be problematic.
    */
   public forceAnimationToFinish(): void {
-    if ( this.travelAnimation ) {
-      this.travelAnimation.stop();
+    if ( this.travelAnimationProperty.value ) {
+      this.travelAnimationProperty.value.stop();
     }
-  }
-
-  public reset(): void {
-    this.forceAnimationToFinish();
-    this.isActiveProperty.reset();
-    this.positionProperty.reset();
-    this.parentPlateProperty.reset();
   }
 }
 

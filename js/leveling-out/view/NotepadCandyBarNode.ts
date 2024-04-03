@@ -23,6 +23,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import RichDragListener from '../../../../scenery-phet/js/RichDragListener.js';
 import grabCandyBar_mp3 from '../../../sounds/grabCandyBar_mp3.js';
 import releaseCandyBar_mp3 from '../../../sounds/releaseCandyBar_mp3.js';
@@ -35,7 +36,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   public readonly dragListener: DragListener;
   public readonly candyBar: CandyBar;
 
-  public constructor( model: Pick<LevelingOutModel, 'reorganizeSnacks'>,
+  public constructor( model: Pick<LevelingOutModel, 'getPlateForSnack'>,
                       candyBar: CandyBar,
                       modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
@@ -47,12 +48,11 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       children: NotepadCandyBarNode.getSketchOutline()
     } );
 
-    const shadowVisibleProperty = new DerivedProperty( [ candyBar.stateProperty ], state => state === 'dragging' || state === 'animating' );
     const candyBarShadowRectangle = new Rectangle( candyBarRectangle.rectBounds, {
       fill: 'black',
       opacity: 0.2,
       cornerRadius: 1,
-      visibleProperty: shadowVisibleProperty,
+      visibleProperty: candyBar.isDraggingProperty,
       x: 4,
       y: 4
     } );
@@ -72,12 +72,15 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     super( options );
 
-    // Prevent this from being pickable while animating.
-    candyBar.stateProperty.link( state => {
-      candyBarRectangle.pickable = state !== 'animating';
-    } );
-
     this.candyBar = candyBar;
+
+    // Prevent this from being pickable while animating or dragging.
+    Multilink.multilink(
+      [ candyBar.isDraggingProperty, candyBar.travelAnimationProperty ],
+      ( isDragging, travelAnimation ) => {
+        candyBarRectangle.pickable = !isDragging && !travelAnimation;
+      }
+    );
 
     // TODO: This only adds sound for mouse interactions. We will need to play the sound separately for keyboard.
     //  See: https://github.com/phetsims/mean-share-and-balance/issues/190
@@ -96,11 +99,11 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         new Bounds2( bounds.minX, bounds.minY, bounds.maxX - candyBarRectangle.width, bounds.maxY - candyBarRectangle.height )
       ),
       start: () => {
-        candyBar.stateProperty.set( 'dragging' );
-        model.reorganizeSnacks( candyBar.parentPlateProperty.value! );
+        candyBar.isDraggingProperty.value = true;
         this.moveToFront();
       },
       end: () => {
+        candyBar.isDraggingProperty.value = false;
         candyBarDropped( this );
       },
       tandem: options.tandem.createTandem( 'dragListener' )
@@ -119,7 +122,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
    *
    * When creating partial candy bars the width and rightYTranslation may need to adjust accordingly.
    */
-  public static getSketchOutline( candyBarWidth = LevelingOutModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[] {
+  public static getSketchOutline( candyBarWidth = LevelingOutModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
     const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
       Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
     );

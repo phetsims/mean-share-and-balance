@@ -32,11 +32,6 @@ export default class Apple extends Snack {
       assert && assert( fraction.value <= 1, 'fraction must be less than or equal to 1' );
     } );
   }
-
-  public override reset(): void {
-    this.fractionProperty.reset();
-    super.reset();
-  }
 }
 
 meanShareAndBalance.register( 'Apple', Apple );

@@ -71,12 +71,13 @@ class SnackStacker {
   /**
    * Get the position for a candy bar model element that is stacked on a plate.  The position is based on where the
    * plate is in model space and the candy bar's position in the stack.
-   * @param plate - plate on which the candy bar is to be stacked
+   * @param plateXPosition - the X position of the plate on which the candy bar is to be stacked
    * @param positionInStack - position in the stack for the candy bar, 0 is the bottom, and it goes up from there.
    * @returns - a 2D vector in coordinate space that can be used to set the position of a candy
    */
-  public static getStackedCandyBarPosition( plate: Plate, positionInStack: number ): Vector2 {
-    const xPosition = plate.xPositionProperty.value - LevelingOutModel.CANDY_BAR_WIDTH / 2;
+  public static getStackedCandyBarPosition( plateXPosition: number, positionInStack: number ): Vector2 {
+
+    const xPosition = plateXPosition - Plate.WIDTH / 2;
 
     // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
@@ -90,16 +91,16 @@ class SnackStacker {
   /**
    * Get the position for an apple model element that is stacked on a plate.  The position is based on where the plate
    * is in model space and the apple's position in the stack.
-   * @param plate - plate on which the apple is to be stacked
+   * @param plateXPosition - the X position of the plate on which the apple is to be stacked
    * @param positionInStack - Position in the stack of apples.  0 is the bottom left, 1 is the bottom right, 2 is the
    * left side of the 2nd row from the bottom, and so forth.
    * @returns - a 2D vector in coordinate space that can be used to set the position of an apple
    */
-  public static getStackedApplePosition( plate: Plate, positionInStack: number ): Vector2 {
+  public static getStackedApplePosition( plateXPosition: number, positionInStack: number ): Vector2 {
     const appleRadius = MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS;
     const xPosition = positionInStack % 2 === 0 ?
-                      plate.xPositionProperty.value - appleRadius - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
-                      plate.xPositionProperty.value + appleRadius + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
+                      plateXPosition - appleRadius - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
+                      plateXPosition + appleRadius + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
     const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT / 2 -
                       MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS -
                       VERTICAL_SPACE_BETWEEN_APPLES -
