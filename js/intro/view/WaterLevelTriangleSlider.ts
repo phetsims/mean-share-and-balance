@@ -36,6 +36,7 @@ type WaterLevelTriangleSliderOptions =
 
 // constants
 const DEFAULT_CROSS_MIX = 0;
+const NUMBER_OF_KEYBOARD_STEPS = 9;
 
 export default class WaterLevelTriangleSlider extends VSlider {
 
@@ -52,6 +53,7 @@ export default class WaterLevelTriangleSlider extends VSlider {
     const soundPlayer = new WaterLevelSoundPlayer(
       waterLevelProperty,
       enabledRangeProperty,
+      NUMBER_OF_KEYBOARD_STEPS - 1,
       providedOptions.soundPlayerCrossFade === undefined ? DEFAULT_CROSS_MIX : providedOptions.soundPlayerCrossFade
     );
 
@@ -65,7 +67,10 @@ export default class WaterLevelTriangleSlider extends VSlider {
         trackPickable: false,
         trackSize: new Dimension2( 0, height ),
         soundGenerator: soundPlayer,
-        soundPlayerCrossFade: 0
+        soundPlayerCrossFade: 0,
+        keyboardStep: enabledRangeProperty.value.getLength() / NUMBER_OF_KEYBOARD_STEPS,
+        shiftKeyboardStep: enabledRangeProperty.value.getLength() / NUMBER_OF_KEYBOARD_STEPS / 2,
+        pageKeyboardStep: enabledRangeProperty.value.getLength() / 4
       },
       providedOptions );
 

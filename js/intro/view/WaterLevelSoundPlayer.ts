@@ -18,13 +18,11 @@ import glassLevelSoundB_mp3 from '../../../sounds/glassLevelSoundB_mp3.js';
 import SoundUtils from '../../../../tambo/js/SoundUtils.js';
 import Utils from '../../../../dot/js/Utils.js';
 
-// constants
-const NUMBER_OF_MIDDLE_THRESHOLDS = 8;
-
 class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
 
   public constructor( waterLevelProperty: TReadOnlyProperty<number>,
                       valueRangeProperty: TReadOnlyProperty<Range>,
+                      numberOfMiddleThresholds: number,
                       crossFade: number ) {
 
     const soundPlayer = new CrossFadeSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, crossFade );
@@ -35,17 +33,17 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
       let playbackRate;
       const proportion = waterLevel / valueRangeProperty.value.max;
       if ( proportion === 1 ) {
-        playbackRate = SoundUtils.getMajorScalePlaybackRate( NUMBER_OF_MIDDLE_THRESHOLDS + 3 );
+        playbackRate = SoundUtils.getMajorScalePlaybackRate( numberOfMiddleThresholds + 3 );
       }
       else if ( proportion === 0 ) {
         playbackRate = 0.75;
       }
       else {
-        const interThresholdDistance = valueRangeProperty.value.getLength() / ( NUMBER_OF_MIDDLE_THRESHOLDS + 1 );
+        const interThresholdDistance = valueRangeProperty.value.getLength() / ( numberOfMiddleThresholds + 1 );
         const noteIndex = Utils.clamp(
-          Math.floor( ( proportion - 0.5 * interThresholdDistance ) * ( NUMBER_OF_MIDDLE_THRESHOLDS + 1 ) ),
+          Math.floor( ( proportion - 0.5 * interThresholdDistance ) * ( numberOfMiddleThresholds + 1 ) ),
           0,
-          NUMBER_OF_MIDDLE_THRESHOLDS - 1
+          numberOfMiddleThresholds - 1
         );
         playbackRate = SoundUtils.getMajorScalePlaybackRate( noteIndex );
       }
@@ -57,7 +55,7 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
       middleMovingDownSoundPlayer: soundPlayer,
       maxSoundPlayer: soundPlayer,
       minSoundPlayer: soundPlayer,
-      numberOfMiddleThresholds: NUMBER_OF_MIDDLE_THRESHOLDS
+      numberOfMiddleThresholds: numberOfMiddleThresholds
     } );
   }
 }
