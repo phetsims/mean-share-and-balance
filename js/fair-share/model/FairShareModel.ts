@@ -21,7 +21,6 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
-import Plate from '../../common/model/Plate.js';
 import { TimerListener } from '../../../../axon/js/Timer.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -477,26 +476,9 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.appleCollection.forEach( ( apple, i ) => apple.moveTo( this.getCollectionPosition( i ), animate ) );
   }
 
-  /**
-   * Re-stack snacks on the plate.
-   */
-  public override reorganizeSnacks( plate: Plate ): void {
-    let stackIndex = 0;
-    const applesOnPlate = plate.getSnackStack() as Apple[];
-    const activeApplesOnPlate = applesOnPlate.filter( apple => apple.isActiveProperty.value );
-    const inactiveApplesOnPlate = applesOnPlate.filter( apple => !apple.isActiveProperty.value );
-    activeApplesOnPlate.forEach( apple => {
-      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, stackIndex++ );
-    } );
-    inactiveApplesOnPlate.forEach( apple => {
-      apple.positionProperty.value = SnackStacker.getStackedApplePosition( plate.xPositionProperty.value, stackIndex++ );
-    } );
-  }
-
   public override reset(): void {
     this.finishInProgressAnimations();
     this.notepadModeProperty.reset();
-
     super.reset();
   }
 
