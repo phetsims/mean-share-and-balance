@@ -50,8 +50,8 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly meanProperty: TReadOnlyProperty<number>;
 
   // This ObservableArray is used to keep track of snacks that are not in use and are thus available to be moved to a
-  // plate or elsewhere. These are generally inactive and not visible in the view.  Removing a snack from this list will
-  // cause it to be activated, adding to the list will cause it to be deactivated.
+  // plate or elsewhere. These are generally inactive and not visible in the view.  Removing a snack from this array will
+  // cause it to be activated, adding to the array will cause it to be deactivated.
   protected readonly unusedSnacks: ObservableArray<Snack>;
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
