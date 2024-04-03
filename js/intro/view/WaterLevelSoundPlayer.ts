@@ -1,5 +1,12 @@
 // Copyright 2024, University of Colorado Boulder
 
+/**
+ * WaterLevelSoundPlayer is used to play the sounds for the slider that sets the water level for the cups on the first
+ * screen of the mean-share-and-balance sim.
+ *
+ * @author John Blanco (PhET Interactive Simulations)
+ */
+
 import ValueChangeSoundPlayer from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
 import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
@@ -8,13 +15,11 @@ import CrossFadeSoundClip from './CrossFadeSoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import glassLevelSoundA_mp3 from '../../../sounds/glassLevelSoundA_mp3.js';
 import glassLevelSoundB_mp3 from '../../../sounds/glassLevelSoundB_mp3.js';
+import SoundUtils from '../../../../tambo/js/SoundUtils.js';
+import Utils from '../../../../dot/js/Utils.js';
 
-/**
- * WaterLevelSoundPlayer is used to play the sounds for the slider that sets the water level for the cups on the first
- * screen of the mean-share-and-balance sim.
- *
- * @author John Blanco (PhET Interactive Simulations)
- */
+// constants
+const NUMBER_OF_MIDDLE_THRESHOLDS = 8;
 
 class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
 
@@ -27,15 +32,32 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
 
     // Adjust the playback rate as the level changes.
     waterLevelProperty.link( waterLevel => {
+      let playbackRate;
       const proportion = waterLevel / valueRangeProperty.value.max;
-      const playbackRate = 1 + 2 * proportion;
+      if ( proportion === 1 ) {
+        playbackRate = SoundUtils.getMajorScalePlaybackRate( NUMBER_OF_MIDDLE_THRESHOLDS + 3 );
+      }
+      else if ( proportion === 0 ) {
+        playbackRate = 0.75;
+      }
+      else {
+        const interThresholdDistance = valueRangeProperty.value.getLength() / ( NUMBER_OF_MIDDLE_THRESHOLDS + 1 );
+        const noteIndex = Utils.clamp(
+          Math.floor( ( proportion - 0.5 * interThresholdDistance ) * ( NUMBER_OF_MIDDLE_THRESHOLDS + 1 ) ),
+          0,
+          NUMBER_OF_MIDDLE_THRESHOLDS - 1
+        );
+        playbackRate = SoundUtils.getMajorScalePlaybackRate( noteIndex );
+      }
       soundPlayer.setPlaybackRate( playbackRate );
     } );
 
     super( valueRangeProperty, {
       middleMovingUpSoundPlayer: soundPlayer,
       middleMovingDownSoundPlayer: soundPlayer,
-      numberOfMiddleThresholds: 7
+      maxSoundPlayer: soundPlayer,
+      minSoundPlayer: soundPlayer,
+      numberOfMiddleThresholds: NUMBER_OF_MIDDLE_THRESHOLDS
     } );
   }
 }
