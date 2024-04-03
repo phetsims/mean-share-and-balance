@@ -204,14 +204,6 @@ export default class SharingModel<T extends Snack> implements TModel {
     return this.plates.filter( plate => plate.isActiveProperty.value );
   }
 
-  public getActiveSnacks(): T[] {
-    return this.snacks.filter( snack => snack.isActiveProperty.value );
-  }
-
-  public getInactiveSnacks(): T[] {
-    return this.snacks.filter( snack => !snack.isActiveProperty.value );
-  }
-
   protected getAllSnacks(): T[] {
     const allSnacks = this.unusedSnacks.getArrayCopy();
     this.plates.forEach( plate => {
@@ -231,13 +223,6 @@ export default class SharingModel<T extends Snack> implements TModel {
       }
     }
     return returnVal;
-  }
-
-  /**
-   * Re-stack snacks on the plate.
-   */
-  public reorganizeSnacks( plate: Plate ): void {
-    // does nothing in base class, should be overridden
   }
 
   /**
