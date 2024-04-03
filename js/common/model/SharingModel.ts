@@ -49,8 +49,9 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly snacks: T[];
   public readonly meanProperty: TReadOnlyProperty<number>;
 
-  // This array is used to keep track of snacks that are not in use and are thus available to be moved to a plate.
-  // These are generally inactive and not visible in the view.
+  // This ObservableArray is used to keep track of snacks that are not in use and are thus available to be moved to a
+  // plate or elsewhere. These are generally inactive and not visible in the view.  Removing a snack from this list will
+  // cause it to be activated, adding to the list will cause it to be deactivated.
   protected readonly unusedSnacks: ObservableArray<Snack>;
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
@@ -94,6 +95,15 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.unusedSnacks = createObservableArray( {
       phetioType: ObservableArrayIO( ReferenceIO( IOType.ObjectIO ) ),
       tandem: options.tandem.createTandem( 'unusedSnacks' )
+    } );
+
+    // Automatically handle some of the state changes for snacks as they come and go from the unusedSnacks list.
+    this.unusedSnacks.addItemAddedListener( snack => {
+      snack.isActiveProperty.value = false;
+      snack.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
+    } );
+    this.unusedSnacks.addItemRemovedListener( snack => {
+      snack.isActiveProperty.value = true;
     } );
 
     this.snacks = [];

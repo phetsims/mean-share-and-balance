@@ -217,7 +217,6 @@ export default class FairShareModel extends SharingModel<Apple> {
             _.times( numberOfAdditionalApplesNeeded, i => {
               const appleToAdd = this.getUnusedSnack();
               assert && assert( appleToAdd, 'there should be unused apples available to add' );
-              appleToAdd!.isActiveProperty.value = true;
               appleToAdd!.fractionProperty.value = fractionAmount;
               appleToAdd!.moveTo( new Vector2(
                 rightmostWaitingApplePosition.x + ( i + 1 ) * MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION,
@@ -375,7 +374,6 @@ export default class FairShareModel extends SharingModel<Apple> {
           _.times( delta, () => {
             const appleToAdd = this.getUnusedSnack();
             assert && assert( appleToAdd, 'there should be apples available to add' );
-            appleToAdd!.isActiveProperty.value = true;
             this.appleCollection.push( appleToAdd! );
           } );
         }
@@ -385,8 +383,6 @@ export default class FairShareModel extends SharingModel<Apple> {
           _.times( Math.abs( delta ), () => {
             const appleToRemove = this.appleCollection.pop();
             assert && assert( appleToRemove, 'there should be enough apples in the collection to support this' );
-            appleToRemove!.isActiveProperty.value = false;
-            appleToRemove!.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
             this.releaseSnack( appleToRemove! );
           } );
         }

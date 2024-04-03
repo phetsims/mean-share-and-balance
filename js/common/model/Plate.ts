@@ -117,7 +117,8 @@ export default class Plate extends PhetioObject {
 
     // When snacks are added, make sure they are in the right state and the right place.
     this.snacksOnPlateInNotepad.addItemAddedListener( snack => {
-      snack.isActiveProperty.value = true;
+
+      assert && assert( snack.isActiveProperty.value, 'by design, snacks should already be active when added to a plate' );
 
       // Add a listener that updates the stack when a resident candy bar starts being dragged.  This is done because,
       // by design, snacks stay on a plate when dragging.  See #193 for more information on this.
@@ -216,8 +217,6 @@ export default class Plate extends PhetioObject {
       while ( this.snacksOnPlateInNotepad.length > this.tableSnackNumberProperty.value ) {
         const snackToRelease = this.snacksOnPlateInNotepad.pop();
         if ( snackToRelease ) {
-          snackToRelease.isActiveProperty.value = false;
-          snackToRelease.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
           this.releaseSnack( snackToRelease );
         }
       }
@@ -298,8 +297,6 @@ export default class Plate extends PhetioObject {
       removedSnack = this.snacksOnPlateInNotepad.pop();
 
       if ( removedSnack ) {
-        removedSnack.isActiveProperty.value = false;
-        removedSnack.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
         this.releaseSnack( removedSnack );
       }
       else {
