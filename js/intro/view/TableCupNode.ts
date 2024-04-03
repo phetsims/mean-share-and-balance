@@ -22,10 +22,10 @@ import IntroModel from '../model/IntroModel.js';
 
 type SelfOptions = {
 
-  // The cross mix between the two sounds that are combined for the sound generation used for the water level.  This
+  // The cross-fade mix between the two sounds that are combined for the sound generation used for the water level. This
   // value must be between 0 and 1, inclusive.  A value of 0 indication 100% sound A, 1 indicates 100% sound be, and
   // values in between represent a proportionate mix.
-  soundPlayerCrossMix?: number;
+  soundPlayerCrossFade?: number;
 };
 
 type TableCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTransformOptions | 'children'>;
@@ -41,7 +41,7 @@ export default class TableCupNode extends Node {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: waterCup.position.x,
       visibleProperty: waterCup.isActiveProperty,
-      soundPlayerCrossMix: 0
+      soundPlayerCrossFade: 0
     }, providedOptions );
 
     // The CUP_HEIGHT is the height of the notepad cups.  The table cups have to be adjusted accordingly because of the
@@ -75,7 +75,7 @@ export default class TableCupNode extends Node {
       {
         left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
         top: waterCupNode.top + beakerLineWidth * 2,
-        soundPlayerCrossMix: options.soundPlayerCrossMix,
+        soundPlayerCrossFade: options.soundPlayerCrossFade,
 
         // phet-io
         tandem: options.tandem.createTandem( 'waterLevelSlider' )

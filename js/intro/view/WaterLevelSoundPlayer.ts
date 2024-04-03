@@ -25,9 +25,9 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
 
   public constructor( waterLevelProperty: TReadOnlyProperty<number>,
                       valueRangeProperty: TReadOnlyProperty<Range>,
-                      crossMix: number ) {
+                      crossFade: number ) {
 
-    const soundPlayer = new CrossFadeSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, crossMix );
+    const soundPlayer = new CrossFadeSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, crossFade );
     soundManager.addSoundGenerator( soundPlayer );
 
     // Adjust the playback rate as the level changes.

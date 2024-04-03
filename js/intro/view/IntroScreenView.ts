@@ -76,7 +76,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const tableCupNodes: Array<TableCupNode> = [];
     model.tableCups.forEach( ( cupModel, i ) => {
       const cupNode = new TableCupNode( model.tickMarksVisibleProperty, model, cupModel, modelViewTransformTableCups, {
-        soundPlayerCrossMix: i / ( model.tableCups.length - 1 ),
+        soundPlayerCrossFade: i / ( model.tableCups.length - 1 ),
         tandem: tableCupsParentTandem.createTandem( `tableCupNode${cupModel.linePlacement + 1}` )
       } );
       tableCupNodes.push( cupNode );

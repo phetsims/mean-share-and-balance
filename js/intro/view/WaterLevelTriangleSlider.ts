@@ -24,10 +24,10 @@ import WaterLevelSoundPlayer from './WaterLevelSoundPlayer.js';
 
 type SelfOptions = {
 
-  // The cross mix between the two sounds that are combined for the sound generation used for the water level.  This
+  // The cross-fade mix between the two sounds that are combined for the sound generation used for the water level. This
   // value must be between 0 and 1, inclusive.  A value of 0 indication 100% sound A, 1 indicates 100% sound be, and
   // values in between represent a proportionate mix.
-  soundPlayerCrossMix?: number;
+  soundPlayerCrossFade?: number;
 };
 type WaterLevelTriangleSliderOptions =
   SelfOptions
@@ -52,7 +52,7 @@ export default class WaterLevelTriangleSlider extends VSlider {
     const soundPlayer = new WaterLevelSoundPlayer(
       waterLevelProperty,
       enabledRangeProperty,
-      providedOptions.soundPlayerCrossMix === undefined ? DEFAULT_CROSS_MIX : providedOptions.soundPlayerCrossMix
+      providedOptions.soundPlayerCrossFade === undefined ? DEFAULT_CROSS_MIX : providedOptions.soundPlayerCrossFade
     );
 
     const options = optionize<WaterLevelTriangleSliderOptions, SelfOptions, VSliderOptions>()( {
@@ -65,7 +65,7 @@ export default class WaterLevelTriangleSlider extends VSlider {
         trackPickable: false,
         trackSize: new Dimension2( 0, height ),
         soundGenerator: soundPlayer,
-        soundPlayerCrossMix: 0
+        soundPlayerCrossFade: 0
       },
       providedOptions );
 
