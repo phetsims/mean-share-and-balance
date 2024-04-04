@@ -24,6 +24,7 @@ import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 import TModel from '../../../../joist/js/TModel.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 
 type IntroModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
 
@@ -93,12 +94,13 @@ export default class IntroModel implements TModel {
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const tableCupPosition = new Vector2( x, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
-      const waterLevel = i === 0 ? 0.75 : MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT;
+      const waterLevel = i === 0 ? 0.75 : Utils.roundToInterval( dotRandom.nextDouble(), 0.01 );
       this.tableCups.push( new Cup( tableCupsParentTandem.createTandem( `tableCup${i + 1}` ), {
         waterLevel: waterLevel,
         position: tableCupPosition,
         isActive: i <= 1,
-        linePlacement: i
+        linePlacement: i,
+        isTableCup: true
       } ) );
 
       const notepadCupPosition = new Vector2( x, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y );
@@ -107,6 +109,7 @@ export default class IntroModel implements TModel {
         position: notepadCupPosition,
         isActive: i <= 1,
         linePlacement: i,
+        isTableCup: false,
         waterLevelPropertyOptions: {
           phetioReadOnly: true
         }
@@ -311,13 +314,20 @@ export default class IntroModel implements TModel {
    * @param waterLevel - the new water level from the table cup's listener
    * @param oldWaterLevel - the old water level from the table cup's listener
    */
-  public changeWaterLevel( tableCup: Cup, waterLevel: number, oldWaterLevel: number ): void {
-    const delta = waterLevel - oldWaterLevel;
+  public changeWaterLevel( tableCup: Cup, waterLevel: number, oldWaterLevel: number | null ): void {
     const notepadCup = this.notepadCups[ tableCup.linePlacement ];
-    const notepadCupWaterLevel = Utils.clamp( notepadCup.waterLevelProperty.value + delta, 0, 1 );
+
+    let notepadCupWaterLevel = waterLevel;
+
+    // At startup the water levels are the same, so we don't need to distribute water
+    if ( oldWaterLevel ) {
+      const delta = waterLevel - oldWaterLevel;
+      notepadCupWaterLevel = Utils.clamp( notepadCup.waterLevelProperty.value + delta, 0, 1 );
+      this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActiveNotepadCups(), notepadCup, delta );
+    }
+
     notepadCup.waterLevelProperty.set( notepadCupWaterLevel );
 
-    this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActiveNotepadCups(), notepadCup, delta );
   }
 }
 

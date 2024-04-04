@@ -64,7 +64,7 @@ export default class TableCupNode extends Node {
 
     tickMarksVisibleProperty.link( isShowingTickMarksListener );
 
-    waterCup.waterLevelProperty.lazyLink( ( waterLevel, oldWaterLevel ) => {
+    waterCup.waterLevelProperty.link( ( waterLevel, oldWaterLevel ) => {
       model.changeWaterLevel( waterCup, waterLevel, oldWaterLevel );
     } );
 

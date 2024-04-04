@@ -22,6 +22,8 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import Utils from '../../../../dot/js/Utils.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
@@ -30,6 +32,7 @@ type SelfOptions = {
   waterLevel?: number;
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
   linePlacement: number;
+  isTableCup: boolean;
 };
 
 export type CupOptions = SelfOptions;
@@ -57,11 +60,6 @@ export default class Cup {
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT
     }, providedOptions );
 
-    this.isActiveProperty = new BooleanProperty( options.isActive, {
-      // phet-io
-      tandem: tandem.createTandem( 'isActiveProperty' ),
-      phetioReadOnly: true
-    } );
     this.position = options.position;
     this.linePlacement = options.linePlacement;
 
@@ -76,18 +74,31 @@ export default class Cup {
       tandem: tandem.createTandem( 'waterLevelProperty' )
     }, options.waterLevelPropertyOptions ) );
 
-    this.isActiveProperty.lazyLink( isActive => this.partialReset() );
+    this.isActiveProperty = new BooleanProperty( options.isActive, {
+      // phet-io
+      tandem: tandem.createTandem( 'isActiveProperty' ),
+      phetioReadOnly: true
+    } );
+
+    this.isActiveProperty.link( isActive => {
+
+      // Regenerate a random value for the water level when the cup is no longer active.
+      if ( !isActive ) {
+        options.isTableCup && this.waterLevelProperty.set( Utils.roundToInterval( dotRandom.nextDouble(), 0.01 ) );
+        this.partialReset();
+      }
+    } );
   }
 
   // these properties are the only ones that should be reset when a cup is no longer active
   private partialReset(): void {
     this.enabledRangeProperty.reset();
-    this.waterLevelProperty.reset();
   }
 
   public reset(): void {
     this.partialReset();
     this.isActiveProperty.reset();
+    this.waterLevelProperty.reset();
   }
 }
 
