@@ -80,8 +80,6 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
 
     // Create the controls.
     const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
-      minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
-      spacing: 20,
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
       meanAccordionBoxOptions: {

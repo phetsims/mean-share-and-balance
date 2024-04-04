@@ -8,33 +8,28 @@
  */
 
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import SyncButton from './SyncButton.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, FireListener, VBox, VBoxOptions, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, FireListener, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
-import NumberSpinnerVBox from './NumberSpinnerVBox.js';
-import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
 import plateNumberOfSelection_mp3 from '../../../sounds/plateNumberOfSelection_mp3.js';
+import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
 
 type SelfOptions = {
   meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
   showSyncButton?: boolean;
+  vBoxOptions?: StrictOmit<VBoxOptions, 'children' | 'align'>;
 };
-type SharingControlsOptions = SelfOptions &
-  StrictOmit<VBoxOptions, 'children' | 'align'> &
-  PickRequired<VBoxOptions, 'tandem'>;
+type SharingControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
 
-export default class SharingControls extends VBox {
-
-  public readonly controlsPDOMOrder: Node[];
+export default class SharingControls extends MeanShareAndBalanceControls {
 
   public constructor( model: Pick<SharingModel<Snack>,
                         'isMeanAccordionExpandedProperty' |
@@ -44,13 +39,8 @@ export default class SharingControls extends VBox {
                       meanCalculationDialogVisibleProperty: Property<boolean>,
                       providedOptions: SharingControlsOptions ) {
 
-    const options = optionize<SharingControlsOptions, SelfOptions, VBoxOptions>()( {
-      showSyncButton: true,
-      excludeInvisibleChildrenFromBounds: false
-    }, providedOptions );
-
     const meanAccordionBoxOptions = combineOptions<MeanAccordionBoxOptions>( providedOptions.meanAccordionBoxOptions,
-      { tandem: options.tandem } );
+      { tandem: providedOptions.tandem } );
     const meanAccordionBox = new MeanAccordionBox(
       model.totalSnacksProperty,
       model.numberOfPlatesProperty,
@@ -61,14 +51,14 @@ export default class SharingControls extends VBox {
 
     const syncListener = new FireListener( {
       fire: () => model.syncData(),
-      tandem: options.tandem.createTandem( 'syncListener' )
+      tandem: providedOptions.tandem.createTandem( 'syncListener' )
     } );
 
     const syncButton = new SyncButton( {
       inputListeners: [ syncListener ],
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      tandem: options.tandem.createTandem( 'syncButton' )
+      tandem: providedOptions.tandem.createTandem( 'syncButton' )
     } );
 
     // We need to wrap the syncButton in a Node so that it does not stretch to the minContentWidth of the VBox.
@@ -77,35 +67,30 @@ export default class SharingControls extends VBox {
       layoutOptions: {
         align: 'left'
       },
-      visible: options.showSyncButton  // Fair Share Screen does not have a SyncButton
+      visible: providedOptions.showSyncButton  // Fair Share Screen does not have a SyncButton
     } );
 
     // Number Spinner
     const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( model.numberOfPlatesProperty, plateNumberOfSelection_mp3 );
-    const numberSpinnerVBox = new NumberSpinnerVBox(
-      model.numberOfPlatesProperty,
-      MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE,
-      MeanShareAndBalanceStrings.numberOfPeopleStringProperty, {
-        tandem: options.tandem,
-        numberSpinnerOptions: {
-          arrowsSoundPlayer: nullSoundPlayer
-        }
-      } );
-
     model.numberOfPlatesProperty.link( () => {
       numberSpinnerSoundPlayer.play();
     } );
 
+    const options = optionize<SharingControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
+      showSyncButton: true,
+      excludeInvisibleChildrenFromBounds: false,
+      vBoxOptions: {},
+      controlsPDOMOrder: [ meanAccordionBox, buttonAlignBox ]
+    }, providedOptions );
 
-    options.children = [ meanAccordionBox, buttonAlignBox, numberSpinnerVBox ];
+    const combinedOptions = combineOptions<VBoxOptions>( {
+      children: [ meanAccordionBox, buttonAlignBox ],
+      minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
+      spacing: 20
+    }, options.vBoxOptions );
+    const vBox = new VBox( combinedOptions );
 
-    super( options );
-
-    this.controlsPDOMOrder = [
-      numberSpinnerVBox,
-      meanAccordionBox,
-      buttonAlignBox
-    ];
+    super( vBox, model.numberOfPlatesProperty, MeanShareAndBalanceStrings.numberOfPeopleStringProperty, options );
   }
 }
 

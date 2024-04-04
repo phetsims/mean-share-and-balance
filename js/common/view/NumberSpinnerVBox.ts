@@ -15,13 +15,14 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 
 type SelfOptions = {
   minContentHeight?: number;
   numberSpinnerOptions?: NumberSpinnerOptions;
 };
 
-type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
+export type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
 
 export default class NumberSpinnerVBox extends VBox {
 
@@ -34,6 +35,7 @@ export default class NumberSpinnerVBox extends VBox {
         layoutOptions: {
           align: 'left'
         },
+        arrowsSoundPlayer: nullSoundPlayer,
         accessibleName: stringProperty,
 
         // phet-io

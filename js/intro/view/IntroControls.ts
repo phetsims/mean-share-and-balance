@@ -10,67 +10,56 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Node, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import IntroOptionsVerticalCheckboxGroup from './IntroOptionsVerticalCheckboxGroup.js';
-import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import PipeSwitch from './PipeSwitch.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
 import glassNumberOfSelection_mp3 from '../../../sounds/glassNumberOfSelection_mp3.js';
-import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
+import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
-type IntroControlPanelOptions = StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
+type SelfOptions = {
+  vBoxOptions?: StrictOmit<VBoxOptions, 'children'>;
+};
+type IntroControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
 
-export default class IntroControls extends VBox {
-
-  public readonly controlsPDOMOrder: Node[];
+export default class IntroControls extends MeanShareAndBalanceControls {
 
   public constructor( tickMarksVisibleProperty: Property<boolean>, predictMeanVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>, arePipesOpenProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
-
-    const options = providedOptions;
-
+    
     // Checkbox Group
     const introOptionsCheckboxGroup = new IntroOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
-      predictMeanVisibleProperty, { tandem: options.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
+      predictMeanVisibleProperty, { tandem: providedOptions.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
 
     // Pipe Switch
-    const pipeSwitch = new PipeSwitch( arePipesOpenProperty, options.tandem.createTandem( 'pipeSwitch' ) );
+    const pipeSwitch = new PipeSwitch( arePipesOpenProperty, providedOptions.tandem.createTandem( 'pipeSwitch' ) );
 
-    // Number Spinner
+    // Hook up Number Spinner callbacks.
     const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( numberOfCupsProperty, glassNumberOfSelection_mp3 );
-    const numberSpinnerVBox = new NumberSpinnerVBox(
-      numberOfCupsProperty,
-      MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE,
-      MeanShareAndBalanceStrings.numberOfCupsStringProperty,
-      {
-        minContentHeight: 140,
-        tandem: options.tandem,
-        numberSpinnerOptions: {
-          arrowsSoundPlayer: nullSoundPlayer
-        }
-      } );
-
     numberOfCupsProperty.link( () => {
       pipeSwitch.interruptSubtreeInput();
       introOptionsCheckboxGroup.interruptSubtreeInput();
       numberSpinnerSoundPlayer.play();
     } );
+    const options = optionize<IntroControlPanelOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
+      controlsPDOMOrder: [ introOptionsCheckboxGroup, pipeSwitch ],
+      vBoxOptions: {}
+    }, providedOptions );
 
-    const combinedOptions = combineOptions<VBoxOptions>( { children: [ introOptionsCheckboxGroup, pipeSwitch, numberSpinnerVBox ] }, providedOptions );
-    super( combinedOptions );
-
-    this.controlsPDOMOrder = [
-      numberSpinnerVBox,
-      introOptionsCheckboxGroup,
-      pipeSwitch
-    ];
+    const combinedOptions = combineOptions<VBoxOptions>( {
+        children: [ introOptionsCheckboxGroup, pipeSwitch ],
+        minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
+        spacing: 20
+      },
+      options.vBoxOptions );
+    const vBox = new VBox( combinedOptions );
+    super( vBox, numberOfCupsProperty, MeanShareAndBalanceStrings.numberOfCupsStringProperty, options );
   }
 }
 

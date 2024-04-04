@@ -7,27 +7,24 @@
  *
  */
 
-import { Text, VBox, VBoxOptions, Node } from '../../../../scenery/js/imports.js';
+import { Text, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from '../model/BalancePointModel.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import NumberSpinnerVBox from '../../common/view/NumberSpinnerVBox.js';
 import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import MovableFulcrumIcon from './MovableFulcrumIcon.js';
 import FixedFulcrumIcon from './FixedFulcrumIcon.js';
+import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
 
 type SelfOptions = EmptySelfOptions;
-type BalancePointControlsOptions = SelfOptions & StrictOmit<VBoxOptions, 'children'> & PickRequired<VBoxOptions, 'tandem'>;
+type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
 
-export default class BalancePointControls extends VBox {
-  public readonly controlsPDOMOrder: Node[];
-  public readonly numberSpinner: Node;
+export default class BalancePointControls extends MeanShareAndBalanceControls {
 
   public constructor( model: BalancePointModel, providedOptions: BalancePointControlsOptions ) {
 
@@ -83,7 +80,7 @@ export default class BalancePointControls extends VBox {
       }
     );
 
-    super( {
+    const vBox = new VBox( {
       children: [
         meanFulcrumRadioButtonGroup,
         checkboxGroup,
@@ -94,26 +91,13 @@ export default class BalancePointControls extends VBox {
       preferredWidth: MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH
     } );
 
+    const options = optionize<BalancePointControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
+      controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup, infoButton ],
+      isSoccerContext: true
+    }, providedOptions );
+
     const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.targetNumberOfBallsProperty;
-    const numberSpinner = new NumberSpinnerVBox(
-      numberOfDataPointsProperty,
-      MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE,
-      MeanShareAndBalanceStrings.numberOfBallsStringProperty,
-      {
-        numberSpinnerOptions: {
-          decrementFunction: value => {
-            this.interruptSubtreeInput();
-            return value - 1;
-          }
-        },
-        tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
-      }
-    );
-
-    this.addChild( numberSpinner );
-
-    this.numberSpinner = numberSpinner;
-    this.controlsPDOMOrder = [ meanFulcrumRadioButtonGroup, checkboxGroup, infoButton ];
+    super( vBox, numberOfDataPointsProperty, MeanShareAndBalanceStrings.numberOfBallsStringProperty, options );
   }
 }
 
