@@ -16,8 +16,7 @@ import { Text } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
 export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxGroup {
-  public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
-                      predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>,
+  public constructor( tickMarksVisibleProperty: Property<boolean>, predictMeanVisibleProperty: Property<boolean>,
                       providedOptions: PickRequired<VerticalCheckboxGroupOptions, 'tandem'> ) {
 
     super( [ {
@@ -32,17 +31,6 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
         // phet-io
         tandemName: 'predictMeanCheckbox'
       }, {
-        createNode: tandem => new Text( MeanShareAndBalanceStrings.meanStringProperty, {
-          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem.createTandem( 'meanText' )
-        } ),
-        property: meanVisibleProperty,
-        options: { accessibleName: MeanShareAndBalanceStrings.meanStringProperty },
-
-        // phet-io
-        tandemName: 'meanCheckbox'
-      }, {
         createNode: tandem => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
           fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
@@ -53,15 +41,6 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
 
         // phet-io
         tandemName: 'tickMarksCheckbox'
-      }, {
-        createNode: tandem => new Text( MeanShareAndBalanceStrings.cupWaterLevelStringProperty, {
-          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem.createTandem( 'cupWaterLevelText' )
-        } ),
-        property: cupWaterLevelVisibleProperty,
-        options: { accessibleName: MeanShareAndBalanceStrings.cupWaterLevelStringProperty },
-        tandemName: 'waterCupLevelCheckbox'
       } ], {
 
         checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,

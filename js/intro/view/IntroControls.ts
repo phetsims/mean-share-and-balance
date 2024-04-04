@@ -31,15 +31,14 @@ export default class IntroControls extends VBox {
 
   public readonly controlsPDOMOrder: Node[];
 
-  public constructor( tickMarksVisibleProperty: Property<boolean>, meanVisibleProperty: Property<boolean>,
-                      predictMeanVisibleProperty: Property<boolean>, cupWaterLevelVisibleProperty: Property<boolean>,
+  public constructor( tickMarksVisibleProperty: Property<boolean>, predictMeanVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>, arePipesOpenProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
 
     const options = providedOptions;
 
     // Checkbox Group
-    const introOptionsCheckboxGroup = new IntroOptionsVerticalCheckboxGroup( tickMarksVisibleProperty, meanVisibleProperty,
-      predictMeanVisibleProperty, cupWaterLevelVisibleProperty, { tandem: options.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
+    const introOptionsCheckboxGroup = new IntroOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
+      predictMeanVisibleProperty, { tandem: options.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
 
     // Pipe Switch
     const pipeSwitch = new PipeSwitch( arePipesOpenProperty, options.tandem.createTandem( 'pipeSwitch' ) );

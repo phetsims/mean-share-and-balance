@@ -43,9 +43,7 @@ export default class IntroModel implements TModel {
 
   // visible properties
   public readonly predictMeanVisibleProperty: Property<boolean>;
-  public readonly meanVisibleProperty: Property<boolean>;
   public readonly tickMarksVisibleProperty: Property<boolean>;
-  public readonly cupLevelVisibleProperty: Property<boolean>;
 
   public constructor( providedOptions: IntroModelOptions ) {
 
@@ -56,17 +54,9 @@ export default class IntroModel implements TModel {
       // phet-io
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
-    this.meanVisibleProperty = new BooleanProperty( false, {
-      // phet-io
-      tandem: options.tandem.createTandem( 'meanVisibleProperty' )
-    } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
       // phet-io
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
-    } );
-    this.cupLevelVisibleProperty = new BooleanProperty( false, {
-      // phet-io
-      tandem: options.tandem.createTandem( 'cupLevelVisibleProperty' )
     } );
 
 
@@ -306,9 +296,7 @@ export default class IntroModel implements TModel {
     this.arePipesOpenProperty.reset();
 
     this.predictMeanVisibleProperty.reset();
-    this.meanVisibleProperty.reset();
     this.tickMarksVisibleProperty.reset();
-    this.cupLevelVisibleProperty.reset();
 
     this.pipeArray.forEach( pipe => pipe.reset() );
     this.tableCups.forEach( tableCup => tableCup.reset() );

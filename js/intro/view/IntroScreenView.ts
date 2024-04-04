@@ -68,7 +68,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const notepadCupNodes: Array<NotepadCupNode> = [];
     model.notepadCups.forEach( ( cupModel, index ) => {
       const cupNode = new NotepadCupNode( cupModel, model.tableCups[ index ], modelViewTransformNotepadCups, model.meanProperty, model.tickMarksVisibleProperty,
-        model.meanVisibleProperty, model.cupLevelVisibleProperty, { tandem: notepadCupsParentTandem.createTandem( `notepadCupNode${cupModel.linePlacement + 1}` ) } );
+        { tandem: notepadCupsParentTandem.createTandem( `notepadCupNode${cupModel.linePlacement + 1}` ) } );
       notepadCupNodes.push( cupNode );
     } );
 
@@ -117,8 +117,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       superOptions );
 
     // Controls on Right side of screen
-    const controls = new IntroControls( model.tickMarksVisibleProperty, model.meanVisibleProperty, model.predictMeanVisibleProperty,
-      model.cupLevelVisibleProperty, model.numberOfCupsProperty, model.arePipesOpenProperty,
+    const controls = new IntroControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
+      model.numberOfCupsProperty, model.arePipesOpenProperty,
       { minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25, spacing: 20, tandem: options.tandem.createTandem( 'controls' ) } );
 
 

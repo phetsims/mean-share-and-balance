@@ -29,8 +29,7 @@ type NotepadCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTra
 export default class NotepadCupNode extends Node {
 
   public constructor( notepadCup: Cup, tableCup: Cup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
-                      isShowingTickMarksProperty: Property<boolean>, isShowingMeanProperty: Property<boolean>,
-                      isShowingCupWaterLevelProperty: Property<boolean>, providedOptions?: NotepadCupNodeOptions ) {
+                      isShowingTickMarksProperty: Property<boolean>, providedOptions?: NotepadCupNodeOptions ) {
     const options = optionize<NotepadCupNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: notepadCup.position.x,
@@ -80,49 +79,9 @@ export default class NotepadCupNode extends Node {
     };
     notepadCup.waterLevelProperty.link( waterLevelListener );
 
-    // Model view transform inverts Y mapping, therefore the mean inverse is needed to place
-    // show mean line accurately in relation to water levels.
-    let meanInverse = 1 - meanProperty.value;
-
-    const meanLine = new Line(
-      0,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
-      MeanShareAndBalanceConstants.CUP_WIDTH,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
-      {
-        stroke: MeanShareAndBalanceColors.showMeanLineStrokeColorProperty,
-        lineWidth: 2,
-        visibleProperty: isShowingMeanProperty
-      } );
-
-    const originalWaterLevelLine = new Line(
-      0,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
-      MeanShareAndBalanceConstants.CUP_WIDTH,
-      MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse,
-      {
-        stroke: MeanShareAndBalanceColors.cupWaterLevelLineColorProperty,
-        lineWidth: 1,
-        visibleProperty: isShowingCupWaterLevelProperty
-      } );
-
-    tableCup.waterLevelProperty.link( wlp => {
-      meanInverse = 1 - wlp;
-      originalWaterLevelLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
-      originalWaterLevelLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
-    } );
-
-    const meanListener = ( mean: number ) => {
-      meanInverse = 1 - mean;
-      meanLine.setY1( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
-      meanLine.setY2( MeanShareAndBalanceConstants.CUP_HEIGHT * meanInverse );
-    };
-
-    meanProperty.link( meanListener );
-
     const combinedOptions = combineOptions<NodeOptions>( {
       children: [ waterCupBackgroundRectangle, waterLevelRectangle,
-        cupStrokeLeft, cupStrokeRight, cupStrokeTop, cupStrokeBottom, meanLine, originalWaterLevelLine, tickMarks ]
+        cupStrokeLeft, cupStrokeRight, cupStrokeTop, cupStrokeBottom, tickMarks ]
     }, options );
     super( combinedOptions );
   }
