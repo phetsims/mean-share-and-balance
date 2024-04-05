@@ -1,7 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * Base class for models where sharing - meaning redistribution of things like snacks - is done.
+ * Base class for models where sharing - meaning redistribution of things like snacks between plates - is done.
  *
  * @author John Blanco (PhET Interactive Simulations)
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -29,7 +29,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = {
 
-  // Controls the number of snacks on the first plate.
+  // Controls the initial number of snacks on the first plate.
   numberOfSnacksOnFirstPlate?: number;
 };
 export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
@@ -46,7 +46,6 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly plates: Plate[];
   public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
-  public readonly snacks: T[];
   public readonly meanProperty: TReadOnlyProperty<number>;
 
   // This ObservableArray is used to keep track of snacks that are not in use and are thus available to be moved to a
@@ -106,8 +105,6 @@ export default class SharingModel<T extends Snack> implements TModel {
       snack.isActiveProperty.value = true;
     } );
 
-    this.snacks = [];
-
     // parent tandem for the snacks that appear on the notepad
     const snacksParentTandem = options.tandem.createTandem( 'notepadSnacks' );
 
@@ -124,7 +121,6 @@ export default class SharingModel<T extends Snack> implements TModel {
       } );
 
       this.unusedSnacks.push( snack );
-      this.snacks.push( snack );
     } );
 
     // Create the set of plates that will hold the snacks.
@@ -174,7 +170,7 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.numberOfPlatesProperty.link( numberOfPlates => {
       const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
       const leftPlateCenterX = -( totalSpan / 2 );
-      this.snacks.forEach( snack => {
+      this.getAllSnacks().forEach( snack => {
         snack.forceAnimationToFinish();
       } );
       this.plates.forEach( ( plate, i ) => {
@@ -204,7 +200,7 @@ export default class SharingModel<T extends Snack> implements TModel {
     return this.plates.filter( plate => plate.isActiveProperty.value );
   }
 
-  protected getAllSnacks(): T[] {
+  public getAllSnacks(): T[] {
     const allSnacks = this.unusedSnacks.getArrayCopy();
     this.plates.forEach( plate => {
       plate.getSnackStack().forEach( snack => allSnacks.push( snack ) );

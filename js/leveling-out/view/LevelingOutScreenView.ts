@@ -144,7 +144,7 @@ export default class LevelingOutScreenView extends SharingScreenView {
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
-    const notepadCandyBarNodes = model.snacks.map( ( candyBar, i ) =>
+    const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
       new NotepadCandyBarNode( model, candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty

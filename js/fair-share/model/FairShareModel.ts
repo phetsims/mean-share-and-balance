@@ -133,7 +133,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
 
         // Take all the apples in the collection and add them to plates.
-        this.plates.forEach( plate => {
+        this.getActivePlates().forEach( plate => {
           _.times( plate.tableSnackNumberProperty.value, () => {
             const apple = this.appleCollection.pop();
             assert && assert( apple, 'there should be enough apples to put on the plates' );
@@ -412,7 +412,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       this.collectToShareAnimationTimerListener( APPLE_FRACTION_DISTRIBUTION_DELAY );
       stepTimer.clearTimeout( this.collectToShareAnimationTimerListener );
     }
-    this.snacks.forEach( snack => snack.forceAnimationToFinish() );
+    this.getAllSnacks().forEach( snack => snack.forceAnimationToFinish() );
   }
 
   /**

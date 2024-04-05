@@ -78,7 +78,7 @@ export default class FairShareScreenView extends SharingScreenView {
 
     // Add the Nodes that graphically represent the apples in the notepad.
     const appleNodesParentTandem = options.tandem.createTandem( 'appleNodes' );
-    model.snacks.forEach( ( apple, i ) => {
+    model.getAllSnacks().forEach( ( apple, i ) => {
       this.notepadSnackLayerNode.addChild( new NotepadAppleNode( apple, modelToNotepadTransform, {
         tandem: appleNodesParentTandem.createTandem( `notepadAppleNode${i + 1}` ),
         visibleProperty: apple.isActiveProperty
