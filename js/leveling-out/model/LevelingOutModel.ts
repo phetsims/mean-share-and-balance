@@ -23,6 +23,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import { SnackOptions } from '../../common/model/Snack.js';
 import SnackStacker from '../../common/SnackStacker.js';
+import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -93,6 +94,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
         const delta = candyBarNumber - oldCandyBarNumber;
 
+        if ( isSettingPhetioStateProperty.value ) {
+
+          // When setting PhET-iO state, we don't want to add or remove snacks from the notepad, since that will be
+          // handled by the observable arrays.
+          return;
+        }
         if ( delta > 0 ) {
 
           // Add notepad snacks to this plate, or to another if this plate is already full.
