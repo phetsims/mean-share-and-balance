@@ -104,8 +104,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
               const plateWithFewestSnacks = this.getPlateWithFewestSnacks();
               assert && assert( plateWithFewestSnacks, 'when here there should always be space for snacks' );
 
-              // REVIEW: Why are we removing a snack here... Shouldn't we be adding one? This looks like a bug.
-              plateWithFewestSnacks!.removeTopSnack();
+              plateWithFewestSnacks!.addASnack();
             }
           } );
         }
