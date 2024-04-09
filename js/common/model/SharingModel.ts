@@ -188,6 +188,10 @@ export default class SharingModel<T extends Snack> implements TModel {
     return this.unusedSnacks.pop() as T || null;
   }
 
+  public getNumberOfActiveSnacksOnPlates(): number {
+    return _.sumBy( this.getActivePlates(), plate => plate.getSnackStack().length );
+  }
+
   /**
    * Release a snack, putting it back on the list of unused ones.  This is generally done when it is taken off a plate
    * and not moved to another plate.
