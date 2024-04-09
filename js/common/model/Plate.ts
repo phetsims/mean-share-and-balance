@@ -36,7 +36,7 @@ type SelfOptions = {
 
 type PlateOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class Plate extends PhetioObject {
+export default class Plate<T extends Snack> extends PhetioObject {
 
   // Whether the plate is enabled in the view and the data calculations.
   public readonly isActiveProperty: Property<boolean>;
@@ -50,7 +50,7 @@ export default class Plate extends PhetioObject {
   // The list of snacks that are on this plate in the notepad.  Depending on what the user has done, this may or may not
   // be in sync with the number on the table.  DO NOT MODIFY THE CONTENTS OF THIS ARRAY OUTSIDE OF THIS CLASS.  It's
   // only public so that clients can get to the length and lengthProperty.
-  public readonly snacksOnPlateInNotepad: ObservableArray<Snack>;
+  public readonly snacksOnPlateInNotepad: ObservableArray<T>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
   public readonly linePlacement: number;
@@ -61,16 +61,16 @@ export default class Plate extends PhetioObject {
   private readonly snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2;
 
   // Functions needed for obtaining and releasing snacks.
-  private readonly getAvailableSnack: () => Snack | null;
-  private readonly releaseSnack: ( snack: Snack ) => void;
+  private readonly getAvailableSnack: () => T | null;
+  private readonly releaseSnack: ( snack: T ) => void;
 
   /**
    * @param getAvailableSnack - a function that can be used to get an available snack from the parent model
    * @param releaseSnack - a function for releasing a snack that is no longer needed by this plate to the parent model
    * @param providedOptions
    */
-  public constructor( getAvailableSnack: () => Snack | null,
-                      releaseSnack: ( snack: Snack ) => void,
+  public constructor( getAvailableSnack: () => T | null,
+                      releaseSnack: ( snack: T ) => void,
                       providedOptions: PlateOptions ) {
 
     const options = optionize<PlateOptions, SelfOptions, PhetioObjectOptions>()( {
@@ -133,7 +133,7 @@ export default class Plate extends PhetioObject {
         }
       };
       snack.isDraggingProperty.lazyLink( updateStackWhenDragging );
-      const snackRemovedListener = ( removedSnack: Snack ) => {
+      const snackRemovedListener = ( removedSnack: T ) => {
         if ( removedSnack === snack ) {
           snack.isDraggingProperty.unlink( updateStackWhenDragging );
           this.snacksOnPlateInNotepad.removeItemRemovedListener( snackRemovedListener );
@@ -155,7 +155,7 @@ export default class Plate extends PhetioObject {
   /**
    * Get the position where the provided snack would go on the stack if added to this plate.
    */
-  public getStackingPositionForSnack( snack: Snack ): Vector2 {
+  public getStackingPositionForSnack( snack: T ): Vector2 {
 
     // Count the number of items on this plate excluding snacks that are dragging and the provided snack, since it is
     // possible that it is already assigned to this plate.
@@ -198,7 +198,7 @@ export default class Plate extends PhetioObject {
    * Return true if the provided snack is on this plate in the notepad.
    * @param snack
    */
-  public hasSnack( snack: Snack ): boolean {
+  public hasSnack( snack: T ): boolean {
     return this.snacksOnPlateInNotepad.includes( snack );
   }
 
@@ -242,7 +242,7 @@ export default class Plate extends PhetioObject {
   /**
    * Add a particular snack instance to the top of this plate's stack.
    */
-  public addSnackToTop( snack: Snack, animate = false ): void {
+  public addSnackToTop( snack: T, animate = false ): void {
     assert && assert( this.snacksOnPlateInNotepad.length < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
     snack.animateToPosition = animate;
     this.snacksOnPlateInNotepad.push( snack );
@@ -252,7 +252,7 @@ export default class Plate extends PhetioObject {
    * Get the snack that is currently on the top of the stack.  This does NOT remove the snack from the plate.  It also
    * excludes dragging snacks.
    */
-  public getTopSnack(): Snack | null {
+  public getTopSnack(): T | null {
 
     // Exclude any snacks that are currently being dragged or are animating.
     const snacksFullyOnPlate = this.snacksOnPlateInNotepad.filter(
@@ -266,7 +266,7 @@ export default class Plate extends PhetioObject {
    * Get the top snack item and remove it from this plate, but DON'T release it back to the list of unused ones or move
    * it.  It becomes the responsibility of the caller to make sure it doesn't get lost.
    */
-  public getTopSnackForTransfer(): Snack | null {
+  public getTopSnackForTransfer(): T | null {
     let snack = null;
 
     if ( this.snacksOnPlateInNotepad.length > 0 ) {
@@ -288,7 +288,7 @@ export default class Plate extends PhetioObject {
    * Remove the snack at top of this plate's stack and add it back to the list of available ones.  This can be thought
    * of as decrementing the number of snacks on the notepad plate by one.
    */
-  public removeTopSnack(): Snack | null {
+  public removeTopSnack(): T | null {
     let removedSnack = null;
 
     if ( this.snacksOnPlateInNotepad.length > 0 ) {
@@ -326,7 +326,7 @@ export default class Plate extends PhetioObject {
   /**
    * Remove the specified snack from those that are stacked on this plate.
    */
-  public removeSnack( snack: Snack ): void {
+  public removeSnack( snack: T ): void {
     assert && assert( this.hasSnack( snack ), 'the snack being removed is not on this plate' );
     this.snacksOnPlateInNotepad.remove( snack );
     this.updateSnackPositions();
@@ -335,7 +335,7 @@ export default class Plate extends PhetioObject {
   /**
    * Get an array containing the snacks that are on currently stacked on this plate, indexed by stacking order.
    */
-  public getSnackStack(): Snack[] {
+  public getSnackStack(): T[] {
     return this.snacksOnPlateInNotepad.getArrayCopy();
   }
 

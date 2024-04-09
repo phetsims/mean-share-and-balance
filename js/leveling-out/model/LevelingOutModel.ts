@@ -70,12 +70,12 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
       // bars on any plate.
       if ( selectedCandyBar !== null && !selectedCandyBar.isActiveProperty.value ) {
         const platesWithSnacks = this.getPlatesWithSnacks();
-        selectedCandyBarProperty.value = platesWithSnacks[ 0 ].getTopSnack() as CandyBar;
+        selectedCandyBarProperty.value = platesWithSnacks[ 0 ].getTopSnack();
       }
       else if ( selectedCandyBar !== null ) {
         const parentPlate = this.getPlateForSnack( selectedCandyBar );
         assert && assert( parentPlate, 'selectedCandyBar has no parent plate, but it should' );
-        selectedCandyBarProperty.value = parentPlate!.getTopSnack() as CandyBar;
+        selectedCandyBarProperty.value = parentPlate!.getTopSnack();
       }
     } );
 
@@ -172,7 +172,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   /**
    * This function returns an array of all active plates that have not reached full capacity.
    */
-  public getPlatesWithSpace(): Array<Plate> {
+  public getPlatesWithSpace(): Array<Plate<CandyBar>> {
     return this.plates.filter( plate =>
       plate.isActiveProperty.value &&
       plate.getNumberOfNotepadSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
@@ -182,7 +182,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   /**
    * This function returns an array of active plates that have at least one candy bar on them.
    */
-  public getPlatesWithSnacks(): Array<Plate> {
+  public getPlatesWithSnacks(): Array<Plate<CandyBar>> {
     return this.plates.filter( plate => plate.isActiveProperty.value && plate.getNumberOfNotepadSnacks() > 0 );
   }
 
@@ -190,7 +190,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   /**
    * Get the plate with the most snacks, null if no plates have any.
    */
-  private getPlateWithMostSnacks(): Plate | null {
+  private getPlateWithMostSnacks(): Plate<CandyBar> | null {
     const sortedPlatesWithSnacks = this.getPlatesWithSnacks().sort(
       ( plateA, plateB ) => plateB.getNumberOfNotepadSnacks() - plateA.getNumberOfNotepadSnacks()
     );
@@ -200,7 +200,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   /**
    * Get the plate with the fewest snacks, null if all plates are full.
    */
-  private getPlateWithFewestSnacks(): Plate | null {
+  private getPlateWithFewestSnacks(): Plate<CandyBar> | null {
     const sortedPlatesWithSpace = this.getPlatesWithSpace().sort(
       ( plateA, plateB ) => plateA.getNumberOfNotepadSnacks() - plateB.getNumberOfNotepadSnacks()
     );

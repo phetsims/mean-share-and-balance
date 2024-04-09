@@ -102,6 +102,13 @@ export default class FairShareModel extends SharingModel<Apple> {
       tandem: options.tandem.createTandem( 'appleCollection' )
     } );
 
+    this.appleCollection.addItemAddedListener( apple => {
+      const index = this.appleCollection.indexOf( apple );
+
+      // TODO: We probably don't need to animate all the time...https://github.com/phetsims/mean-share-and-balance/issues/140
+      apple.moveTo( this.getCollectionPosition( index ), true );
+    } );
+
     // Initialize the plates and set up plate-related behavior that is specific to the Leveling Out screen.
     this.plates.forEach( plate => {
 
@@ -153,9 +160,10 @@ export default class FairShareModel extends SharingModel<Apple> {
         // Move all apples from their current, synced up locations to the collection area.
         this.plates.forEach( plate => {
           while ( plate.getNumberOfNotepadSnacks() > 0 ) {
-            const apple = plate.getTopSnackForTransfer() as Apple;
-            apple.moveTo( this.getCollectionPosition( this.appleCollection.length ), true );
-            this.appleCollection.push( apple );
+            const apple = plate.getTopSnackForTransfer();
+
+            assert && assert( apple, 'there should be enough apples to transfer to the collection' );
+            this.appleCollection.push( apple! );
           }
         } );
       }
@@ -255,9 +263,11 @@ export default class FairShareModel extends SharingModel<Apple> {
             if ( this.appleCollection.length < this.totalSnacksProperty.value ) {
 
               // REVIEW: I think we talked about using generics for this already?
-              const apple = plate.getTopSnackForTransfer() as Apple;
-              apple.moveTo( this.getCollectionPosition( this.appleCollection.length ), true );
-              this.appleCollection.push( apple );
+              const apple = plate.getTopSnackForTransfer();
+
+              assert && assert( apple, 'there should be enough apples to transfer to the collection' );
+              apple!.moveTo( this.getCollectionPosition( this.appleCollection.length ), true );
+              this.appleCollection.push( apple! );
             }
             else {
 
@@ -304,8 +314,11 @@ export default class FairShareModel extends SharingModel<Apple> {
           }
 
           if ( fractionalAmount.value > 0 ) {
-            const topApple = plate.getTopSnack() as Apple;
-            topApple.fractionProperty.value = fractionalAmount;
+            const topApple = plate.getTopSnack();
+
+            assert && assert( topApple || this.totalSnacksProperty.value === 0,
+              'Every plate should have at least one apple unless the total number of snacks is 0.' );
+            topApple!.fractionProperty.value = fractionalAmount;
           }
         } );
       }
@@ -360,8 +373,10 @@ export default class FairShareModel extends SharingModel<Apple> {
 
             // If there is a fractional amount, set it for the top apple.
             if ( fractionalAppleAmount.value > 0 ) {
-              const topApple = plate.getTopSnack() as Apple;
-              topApple.fractionProperty.value = fractionalAppleAmount;
+              const topApple = plate.getTopSnack();
+              assert && assert( topApple || this.totalSnacksProperty.value === 0,
+                'Every plate should have at least one apple unless the total number of snacks is 0.' );
+              topApple!.fractionProperty.value = fractionalAppleAmount;
             }
           }
           else {
