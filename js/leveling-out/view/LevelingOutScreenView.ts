@@ -155,9 +155,9 @@ export default class LevelingOutScreenView extends SharingScreenView {
           const currentIndex = platesWithSnacks.indexOf( plateContainingSnack! );
           const nextPlateIndex = Utils.clamp( currentIndex + delta, 0, platesWithSnacks.length - 1 );
           const topCandyBar = platesWithSnacks[ nextPlateIndex ].getTopSnack();
-          return topCandyBar! as CandyBar;
+          return topCandyBar!;
         },
-        getGroupItemToSelect: () => model.plates[ 0 ].getTopSnack() as CandyBar,
+        getGroupItemToSelect: () => model.plates[ 0 ].getTopSnack(),
         getNodeFromModelItem: candyBar => {
           const node = notepadCandyBarNodes.find( candyBarNode => candyBarNode.candyBar === candyBar );
           assert && assert( node !== undefined, 'A candyBar model must have an associated node' );
