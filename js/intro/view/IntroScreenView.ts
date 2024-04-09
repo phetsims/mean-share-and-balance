@@ -168,7 +168,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       {
         playbackRateRange: new Range( 0.95, 1.05 ),
         fadeTime: 0.1,
-        fadeStartDelay: 0.1
+        fadeStartDelay: 0.1,
+        initialOutputLevel: 0.1
       }
     );
     soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
