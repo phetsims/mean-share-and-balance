@@ -39,7 +39,7 @@
     "license": "contact phethelp@colorado.edu",
     "notes": "created by Ashton Morris (PhET Interactive Simulations)"
   },
-  "grabCandyBar.mp3": {
+  "grabCandyBarV2.mp3": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
     ],
@@ -47,7 +47,7 @@
     "license": "contact phethelp@colorado.edu",
     "notes": "created by Ashton Morris (PhET Interactive Simulations)"
   },
-  "releaseCandyBar.mp3": {
+  "releaseCandyBarV2.mp3": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
     ],
