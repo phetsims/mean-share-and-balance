@@ -15,10 +15,11 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
+import Apple from '../model/Apple.js';
 
 export default class FairShareNotepadPlateNode extends Image {
 
-  public constructor( plate: Plate, mvt: ModelViewTransform2, notepadModeProperty: TReadOnlyProperty<NotepadMode> ) {
+  public constructor( plate: Plate<Apple>, mvt: ModelViewTransform2, notepadModeProperty: TReadOnlyProperty<NotepadMode> ) {
 
     // The visibility of the plate is a function of whether the plate is active and the state of the notepad.
     const plateVisibleProperty = new DerivedProperty(

@@ -21,6 +21,7 @@ import SnackStacker from '../../common/SnackStacker.js';
 import LevelingOutModel from '../model/LevelingOutModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
+import CandyBar from '../model/CandyBar.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
 
@@ -29,7 +30,7 @@ const STROKE_WIDTH = 1;
 
 export default class LevelingOutNotepadPlateNode extends Node {
 
-  public constructor( plate: Plate, mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
+  public constructor( plate: Plate<CandyBar>, mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
 
     const candyBarOutlineNodes: Node[] = [];
     _.times( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE, i => {

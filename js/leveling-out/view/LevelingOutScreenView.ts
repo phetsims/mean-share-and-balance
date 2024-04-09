@@ -35,7 +35,7 @@ type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 const CANDY_BAR_FOCUS_X_MARGIN = 10;
-export default class LevelingOutScreenView extends SharingScreenView {
+export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
   private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
 

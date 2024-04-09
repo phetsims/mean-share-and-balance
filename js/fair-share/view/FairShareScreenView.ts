@@ -22,11 +22,12 @@ import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
 import NotepadAppleNode from './NotepadAppleNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Apple from '../model/Apple.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
-export default class FairShareScreenView extends SharingScreenView {
+export default class FairShareScreenView extends SharingScreenView<Apple> {
 
   public constructor( model: FairShareModel, providedOptions: FairShareScreenViewOptions ) {
 

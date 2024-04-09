@@ -51,7 +51,7 @@ const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, pers
 // Offset for positioning individual people relative to the plate with which each is associated, in screen coordinates.
 const PEOPLE_LAYER_X_OFFSET = -70;
 
-export default class SharingScreenView extends MeanShareAndBalanceScreenView {
+export default class SharingScreenView<T extends Snack> extends MeanShareAndBalanceScreenView {
 
   // Layers upon which other nodes will be placed.
   protected notepadSnackLayerNode: Node;
@@ -61,7 +61,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
   protected readonly tablePlateNodes: Node[];
   private readonly meanCalculationDialog: Dialog;
 
-  public constructor( model: SharingModel<Snack>,
+  public constructor( model: SharingModel<T>,
                       questionBarStringProperty: TReadOnlyProperty<string>,
                       questionBarColor: TColor,
                       notepadNode: NotepadNode,
@@ -120,7 +120,7 @@ export default class SharingScreenView extends MeanShareAndBalanceScreenView {
     const tableCenter = new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.TABLE_PLATE_CENTER_Y );
 
     // Create the visual representation of the plates that sit on the table.
-    const tablePlateNodes = model.plates.map( plate => new TablePlateNode( plate, tableCenter, {
+    const tablePlateNodes = model.plates.map( plate => new TablePlateNode<T>( plate, tableCenter, {
       snackType: providedOptions.snackType,
       tandem: providedOptions.tandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );

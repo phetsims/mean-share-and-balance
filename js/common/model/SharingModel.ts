@@ -51,7 +51,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   // This ObservableArray is used to keep track of snacks that are not in use and are thus available to be moved to a
   // plate or elsewhere. These are generally inactive and not visible in the view.  Removing a snack from this array will
   // cause it to be activated, adding to the array will cause it to be deactivated.
-  protected readonly unusedSnacks: ObservableArray<Snack>;
+  protected readonly unusedSnacks: ObservableArray<T>;
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
@@ -185,7 +185,7 @@ export default class SharingModel<T extends Snack> implements TModel {
    * list of those available, so it must be tracked and added back when the client no longer needs it.
    */
   public getUnusedSnack(): T | null {
-    return this.unusedSnacks.pop() as T || null;
+    return this.unusedSnacks.pop() || null;
   }
 
   public getNumberOfActiveSnacksOnPlates(): number {
@@ -196,7 +196,7 @@ export default class SharingModel<T extends Snack> implements TModel {
    * Release a snack, putting it back on the list of unused ones.  This is generally done when it is taken off a plate
    * and not moved to another plate.
    */
-  public releaseSnack( snack: Snack ): void {
+  public releaseSnack( snack: T ): void {
     this.unusedSnacks.push( snack );
   }
 
@@ -209,7 +209,7 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.plates.forEach( plate => {
       plate.getSnackStack().forEach( snack => allSnacks.push( snack ) );
     } );
-    return allSnacks as T[];
+    return allSnacks;
   }
 
   /**

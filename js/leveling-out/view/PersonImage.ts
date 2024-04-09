@@ -13,6 +13,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import TablePlateNode from '../../common/view/TablePlateNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Snack from '../../common/model/Snack.js';
 
 type SelfOptions = EmptySelfOptions;
 type PersonImageOptions = SelfOptions & PickRequired<ImageOptions, 'tandem'> & ImageOptions;
@@ -21,9 +22,9 @@ type PersonImageOptions = SelfOptions & PickRequired<ImageOptions, 'tandem'> & I
 // this should be taken into account.
 const PEOPLE_SCALE = 0.3;
 
-export default class PersonImage extends Image {
+export default class PersonImage<T extends Snack> extends Image {
 
-  public constructor( image: HTMLImageElement, tablePlateNode: TablePlateNode, providedOptions: PersonImageOptions ) {
+  public constructor( image: HTMLImageElement, tablePlateNode: TablePlateNode<T>, providedOptions: PersonImageOptions ) {
     const options = optionize<PersonImageOptions, SelfOptions, ImageOptions>()( {
       scale: PEOPLE_SCALE,
       centerX: tablePlateNode.centerX,

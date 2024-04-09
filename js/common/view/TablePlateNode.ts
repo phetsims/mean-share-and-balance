@@ -24,6 +24,7 @@ import candyBar_svg from '../../../images/candyBar_svg.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import greenApple_svg from '../../../images/greenApple_svg.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import Snack from '../model/Snack.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -35,9 +36,9 @@ type PersonNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem'>;
 const APPLE_IMAGE_WIDTH = 25; // in screen coords
 const CANDY_BAR_IMAGE_HEIGHT = 25; // in screen coords
 
-export default class TablePlateNode extends Node {
+export default class TablePlateNode<T extends Snack> extends Node {
 
-  public constructor( plate: Plate, tableCenter: Vector2, providedOptions: PersonNodeOptions ) {
+  public constructor( plate: Plate<T>, tableCenter: Vector2, providedOptions: PersonNodeOptions ) {
 
     const options = providedOptions;
 
