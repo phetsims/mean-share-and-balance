@@ -42,7 +42,10 @@ export default class Snack extends PhetioObject {
   // An animation for moving this snack from one location to another in a continuous fashion.
   public travelAnimationProperty: Property<Animation | null> = new Property<Animation | null>( null );
 
-  public isDraggingProperty: BooleanProperty;
+  public isDraggingProperty = new BooleanProperty( false );
+
+  // Whether we want the snack to animate or not when it's position is changed.
+  public animateToPosition = false;
 
   // for debugging
   public readonly instanceID = instanceCount++;
@@ -69,15 +72,8 @@ export default class Snack extends PhetioObject {
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'positionProperty' ),
       phetioReadOnly: true,
-      phetioValueType: Vector2.Vector2IO
-    } );
-
-    // TODO: Consider not instrumenting this at all for phet-io, see https://github.com/phetsims/mean-share-and-balance/issues/193
-    this.isDraggingProperty = new BooleanProperty( false, {
-
-      // phet-io
-      tandem: providedOptions.tandem.createTandem( 'isDraggingProperty' ),
-      phetioReadOnly: true
+      phetioValueType: Vector2.Vector2IO,
+      phetioState: false // We do not want to track the position of the snack while it is animating or dragging.
     } );
   }
 
@@ -140,6 +136,7 @@ export default class Snack extends PhetioObject {
 
   protected finishAnimation(): void {
     this.travelAnimationProperty.value = null;
+    this.animateToPosition = false;
   }
 
   /**

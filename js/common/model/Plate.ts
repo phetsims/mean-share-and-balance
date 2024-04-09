@@ -118,6 +118,8 @@ export default class Plate extends PhetioObject {
     // When snacks are added, make sure they are in the right state and the right place.
     this.snacksOnPlateInNotepad.addItemAddedListener( snack => {
 
+      this.updateSnackPositions();
+
       // This is asserting when setting phet-io state, and I'm a little confused overall. Even if I explicitly set
       // the snack.isActiveProperty to true right before the assertion it still fails... However, when commented out,
       // I see no issues with the simulation in the state wrapper...
@@ -187,7 +189,7 @@ export default class Plate extends PhetioObject {
     // Update the positions of the snacks.
     stackableSnacks.forEach( ( snack, i ) => {
       const position = this.getPositionForStackedItem( i );
-      const animate = !!snack.travelAnimationProperty.value;
+      const animate = !!snack.travelAnimationProperty.value || snack.animateToPosition;
       snack.moveTo( position, animate );
     } );
   }
@@ -234,7 +236,6 @@ export default class Plate extends PhetioObject {
   public addASnack(): void {
     const snackToAdd = this.getAvailableSnack();
     assert && assert( snackToAdd, 'no snacks available to add, this shouldn\'t happen' );
-    snackToAdd!.moveTo( this.getStackingPositionForSnack( snackToAdd! ) );
     this.snacksOnPlateInNotepad.push( snackToAdd! );
   }
 
@@ -243,7 +244,7 @@ export default class Plate extends PhetioObject {
    */
   public addSnackToTop( snack: Snack, animate = false ): void {
     assert && assert( this.snacksOnPlateInNotepad.length < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
-    snack.moveTo( this.getStackingPositionForSnack( snack ), animate );
+    snack.animateToPosition = animate;
     this.snacksOnPlateInNotepad.push( snack );
   }
 

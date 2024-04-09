@@ -27,7 +27,6 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/group-sort/view/GroupSortInteractionView.js';
 import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
-import SnackStacker from '../../common/SnackStacker.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -85,51 +84,32 @@ export default class LevelingOutScreenView extends SharingScreenView {
       const plateHoldingSnack = model.getPlateForSnack( candyBarNode.candyBar );
       assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
 
-      if ( platesWithSpace.length > 0 ) {
+      // Even if there are no plates with space the plate our candy bar came from should always have space for the candy
+      // bar to return.
+      !platesWithSpace.includes( plateHoldingSnack! ) && platesWithSpace.push( plateHoldingSnack! );
 
-        // Find the plate closest to where the candy bar was dropped.
-        const closestPlate = platesWithSpace.reduce(
-          ( previousPlate, thisPlate ) => {
-            const candyBarXPosition = candyBar.positionProperty.value.x;
-            const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
-            const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
-            return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
-          },
-          platesWithSpace[ 0 ]
-        );
+      // Find the plate closest to where the candy bar was dropped.
+      const closestPlate = platesWithSpace.reduce(
+        ( previousPlate, thisPlate ) => {
+          const candyBarXPosition = candyBar.positionProperty.value.x;
+          const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
+          const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
+          return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
+        },
+        platesWithSpace[ 0 ]
+      );
 
-        if ( closestPlate !== plateHoldingSnack ) {
+      if ( closestPlate !== plateHoldingSnack ) {
 
-          // Move the candy bar to the new plate, since it's closer.
-          plateHoldingSnack!.removeSnack( candyBar );
-          closestPlate.addSnackToTop( candyBar, true );
-        }
-        else {
-
-          // Put the candy bar back on the same plate.
-          candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
-        }
+        // Move the candy bar to the new plate, since it's closer.
+        plateHoldingSnack!.removeSnack( candyBar );
+        closestPlate.addSnackToTop( candyBar, true );
       }
       else {
+        assert && assert( plateHoldingSnack.hasSnack( candyBar ), 'this situation should be impossible' );
 
-        // There are no plates with space.  This can only occur when the candy bar is being dropped back on the plate
-        // from whence it came.
-        assert && assert( plateHoldingSnack!.hasSnack( candyBar ), 'this situation should be impossible' );
-
-        // Send the candy bar back to the position on the plate.
-        candyBar.moveTo( plateHoldingSnack!.getStackingPositionForSnack( candyBar ), true );
-      }
-
-      if ( platesWithSpace.length === 0 ) {
-        const parentPlate = model.getPlateForSnack( candyBarNode.candyBar );
-
-        candyBarNode.candyBar.moveTo(
-          SnackStacker.getStackedCandyBarPosition(
-            parentPlate!.xPositionProperty.value,
-            parentPlate!.getNumberOfNotepadSnacks() - 1
-          ),
-          true
-        );
+        // Put the candy bar back on the same plate.
+        candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
       }
     };
 
