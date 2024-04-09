@@ -24,7 +24,11 @@ export default class Apple extends Snack {
   public constructor( providedOptions: AppleOptions ) {
     const options = optionize<AppleOptions, SelfOptions, SnackOptions>()( {}, providedOptions );
     super( options );
-    this.fractionProperty = new Property<Fraction>( Fraction.ONE );
+    this.fractionProperty = new Property<Fraction>( Fraction.ONE, {
+      tandem: options.tandem.createTandem( 'fractionProperty' ),
+      phetioReadOnly: true,
+      phetioValueType: Fraction.FractionIO
+    } );
 
     // Make sure the fraction value isn't incorrectly set.
     this.fractionProperty.lazyLink( fraction => {

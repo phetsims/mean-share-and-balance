@@ -120,6 +120,28 @@ export default class FairShareModel extends SharingModel<Apple> {
           plate.tableSnackNumberProperty.value = plate.startingNumberOfSnacks;
         }
       } );
+
+      plate.snacksOnPlateInNotepad.addItemAddedListener( apple => {
+        const index = plate.snacksOnPlateInNotepad.indexOf( apple );
+
+        // Handle the fraction value of the apples based on the notepad mode.
+        if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
+
+          // Calculate the fractional amount that will be set for the apples being distributed to the plates.
+          const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
+            this.numberOfPlatesProperty.value );
+          const numberOfWholeApples = Math.floor( this.meanProperty.value );
+          if ( index < numberOfWholeApples ) {
+            apple.fractionProperty.value = Fraction.ONE;
+          }
+          else {
+            apple.fractionProperty.value = fractionValue;
+          }
+        }
+        else {
+          apple.fractionProperty.value = Fraction.ONE;
+        }
+      } );
     } );
 
     // Define the area where the apples will be collected when in Collection mode.
@@ -175,31 +197,32 @@ export default class FairShareModel extends SharingModel<Apple> {
         // need to go.
 
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
+        const activePlates = this.getActivePlates();
+        const applesAtTop: Apple[] = [];
+        this.appleCollection.forEach( ( apple, i ) => {
 
-        this.getActivePlates().forEach( plate => {
+          // Move the whole apples to the appropriate plates.
+          if ( i < numberOfWholeApplesPerActivePlate * activePlates.length ) {
+            const plate = activePlates[ i % activePlates.length ];
+            plate.addSnackToTop( apple, true );
+          }
+          else {
 
-          // Move the correct number of whole apples from the collection to this plate.
-          _.times( numberOfWholeApplesPerActivePlate, () => {
-            const apple = this.appleCollection.pop();
-            assert && assert( apple, 'there should be enough apples to transfer to the plates' );
-            plate.addSnackToTop( apple!, true );
-          } );
-        } );
-
-        // If there are apples still in the collection, these move to the top of the screen, and are subsequently turned
-        // into fractional representations and distributed to the plates.
-        if ( this.appleCollection.length > 0 ) {
-
-          // Move the stragglers to the top of the notepad.
-          this.appleCollection.forEach( ( apple, i ) => {
-            apple.moveTo(
-              new Vector2(
+            // The remaining apples are moved to the top of the notepad.
+            applesAtTop.push( apple );
+            apple.moveTo( new Vector2(
                 i * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
                 -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
               ),
-              true
-            );
-          } );
+              true );
+          }
+        } );
+
+        this.appleCollection.length = 0;
+
+        // If there are apples still in the collection, these move to the top of the screen, and are subsequently turned
+        // into fractional representations and distributed to the plates.
+        if ( applesAtTop.length > 0 ) {
 
           // Calculate the fractional amount that will be set for the apples being distributed to the plates.
           const fractionAmount = new Fraction(
@@ -213,12 +236,12 @@ export default class FairShareModel extends SharingModel<Apple> {
           this.collectToShareAnimationTimerListener = stepTimer.setTimeout( () => {
 
             // Verify the state is consistent.
-            assert && assert( fractionAmount.value > 0 && this.appleCollection.length > 0,
+            assert && assert( fractionAmount.value > 0 && applesAtTop.length > 0,
               'invalid state: there must be apples available for fractionalization if the fraction is > zero'
             );
 
             // Get the position of the rightmost apple that's currently waiting for positioning the new ones.
-            const rightmostWaitingApplePosition = this.appleCollection.reduce(
+            const rightmostWaitingApplePosition = applesAtTop.reduce(
               ( previousPosition, apple ) => apple.positionProperty.value.x > previousPosition.x ?
                                              apple.positionProperty.value :
                                              previousPosition,
@@ -227,7 +250,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
             // Add the number of additional apples needed for fractionalization and distribution.
             const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
-                                                   this.appleCollection.length;
+                                                   applesAtTop.length;
             _.times( numberOfAdditionalApplesNeeded, i => {
               const appleToAdd = this.getUnusedSnack();
               assert && assert( appleToAdd, 'there should be unused apples available to add' );
@@ -236,13 +259,12 @@ export default class FairShareModel extends SharingModel<Apple> {
                 rightmostWaitingApplePosition.x + ( i + 1 ) * MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION,
                 rightmostWaitingApplePosition.y
               ) );
-              this.appleCollection.push( appleToAdd! );
+              applesAtTop.push( appleToAdd! );
             } );
 
             // Distribute the fractionalized apples to the plates.
-            _.times( this.appleCollection.length, i => {
-              const apple = this.appleCollection.shift();
-              apple!.fractionProperty.value = fractionAmount;
+            _.times( applesAtTop.length, i => {
+              const apple = applesAtTop.shift();
               this.plates[ i ].addSnackToTop( apple!, true );
             } );
 
@@ -262,11 +284,9 @@ export default class FairShareModel extends SharingModel<Apple> {
           _.times( plate.getNumberOfNotepadSnacks(), () => {
             if ( this.appleCollection.length < this.totalSnacksProperty.value ) {
 
-              // REVIEW: I think we talked about using generics for this already?
               const apple = plate.getTopSnackForTransfer();
-
               assert && assert( apple, 'there should be enough apples to transfer to the collection' );
-              apple!.moveTo( this.getCollectionPosition( this.appleCollection.length ), true );
+
               this.appleCollection.push( apple! );
             }
             else {
