@@ -35,6 +35,8 @@ import person7_png from '../../../images/person7_png.js';
 import NotepadNode from './NotepadNode.js';
 import PartyTableNode from './PartyTableNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
+import plateNumberOfSelection_mp3 from '../../../sounds/plateNumberOfSelection_mp3.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -84,6 +86,13 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       showSyncButton: options.showSyncButton,
       meanAccordionBoxOptions: {
         snackType: providedOptions.snackType
+      },
+      numberSpinnerOptions: {
+        arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
+          model.numberOfPlatesProperty,
+          plateNumberOfSelection_mp3,
+          { initialOutputLevel: 0.5 }
+        )
       }
     } );
 

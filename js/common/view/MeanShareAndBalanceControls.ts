@@ -67,7 +67,8 @@ export default class MeanShareAndBalanceControls extends Node {
       numberOfObjectsProperty,
       range,
       numberOfObjectsStringProperty,
-      numberSpinnerVBoxOptions );
+      numberSpinnerVBoxOptions
+    );
 
     this.numberSpinner = controlsAlignGroup.createBox( numberSpinner, {
       top: 350,

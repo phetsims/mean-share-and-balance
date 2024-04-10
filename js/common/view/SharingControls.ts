@@ -18,8 +18,6 @@ import Property from '../../../../axon/js/Property.js';
 import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
-import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
-import plateNumberOfSelection_mp3 from '../../../sounds/plateNumberOfSelection_mp3.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
 
 type SelfOptions = {
@@ -71,10 +69,10 @@ export default class SharingControls extends MeanShareAndBalanceControls {
     } );
 
     // Number Spinner
-    const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( model.numberOfPlatesProperty, plateNumberOfSelection_mp3 );
-    model.numberOfPlatesProperty.link( () => {
-      numberSpinnerSoundPlayer.play();
-    } );
+    // const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( model.numberOfPlatesProperty, plateNumberOfSelection_mp3 );
+    // model.numberOfPlatesProperty.link( () => {
+    //   numberSpinnerSoundPlayer.play();
+    // } );
 
     const options = optionize<SharingControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       showSyncButton: true,

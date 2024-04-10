@@ -11,16 +11,17 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
 import WrappedAudioBuffer from '../../../../tambo/js/WrappedAudioBuffer.js';
-import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 
 export default class NumberSpinnerSoundPlayer {
   private readonly soundClip: SoundClip;
 
   public constructor( public readonly numberProperty: Property<number>,
-                      sound: WrappedAudioBuffer ) {
-    this.soundClip = new SoundClip( sound );
+                      sound: WrappedAudioBuffer,
+                      soundClipOptions?: SoundClipOptions ) {
 
+    this.soundClip = new SoundClip( sound, soundClipOptions );
     soundManager.addSoundGenerator( this.soundClip );
   }
 

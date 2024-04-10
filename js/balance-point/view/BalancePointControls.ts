@@ -20,6 +20,7 @@ import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import MovableFulcrumIcon from './MovableFulcrumIcon.js';
 import FixedFulcrumIcon from './FixedFulcrumIcon.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
+import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
@@ -93,7 +94,10 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
 
     const options = optionize<BalancePointControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup, infoButton ],
-      isSoccerContext: true
+      isSoccerContext: true,
+      numberSpinnerOptions: {
+        arrowsSoundPlayer: nullSoundPlayer // ball kick sound handled elsewhere by soccer-common
+      }
     }, providedOptions );
 
     const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.targetNumberOfBallsProperty;

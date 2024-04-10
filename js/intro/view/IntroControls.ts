@@ -30,9 +30,12 @@ type IntroControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceCont
 
 export default class IntroControls extends MeanShareAndBalanceControls {
 
-  public constructor( tickMarksVisibleProperty: Property<boolean>, predictMeanVisibleProperty: Property<boolean>,
-                      numberOfCupsProperty: Property<number>, arePipesOpenProperty: Property<boolean>, providedOptions: IntroControlPanelOptions ) {
-    
+  public constructor( tickMarksVisibleProperty: Property<boolean>,
+                      predictMeanVisibleProperty: Property<boolean>,
+                      numberOfCupsProperty: Property<number>,
+                      arePipesOpenProperty: Property<boolean>,
+                      providedOptions: IntroControlPanelOptions ) {
+
     // Checkbox Group
     const introOptionsCheckboxGroup = new IntroOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
       predictMeanVisibleProperty, { tandem: providedOptions.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
@@ -41,13 +44,18 @@ export default class IntroControls extends MeanShareAndBalanceControls {
     const pipeSwitch = new PipeSwitch( arePipesOpenProperty, providedOptions.tandem.createTandem( 'pipeSwitch' ) );
 
     // Hook up Number Spinner callbacks.
-    const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( numberOfCupsProperty, glassNumberOfSelection_mp3 );
     numberOfCupsProperty.link( () => {
       pipeSwitch.interruptSubtreeInput();
       introOptionsCheckboxGroup.interruptSubtreeInput();
-      numberSpinnerSoundPlayer.play();
     } );
     const options = optionize<IntroControlPanelOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
+      numberSpinnerOptions: {
+        arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
+          numberOfCupsProperty,
+          glassNumberOfSelection_mp3,
+          { initialOutputLevel: 0.5 }
+        )
+      },
       controlsPDOMOrder: [ introOptionsCheckboxGroup, pipeSwitch ],
       vBoxOptions: {}
     }, providedOptions );

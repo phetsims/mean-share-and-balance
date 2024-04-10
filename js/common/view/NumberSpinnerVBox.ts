@@ -15,7 +15,6 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 
 type SelfOptions = {
   minContentHeight?: number;
@@ -26,7 +25,10 @@ export type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, '
 
 export default class NumberSpinnerVBox extends VBox {
 
-  public constructor( numberProperty: Property<number>, range: Range, stringProperty: LocalizedStringProperty, providedOptions: NumberSpinnerVBoxOptions ) {
+  public constructor( numberProperty: Property<number>,
+                      range: Range,
+                      stringProperty: LocalizedStringProperty,
+                      providedOptions: NumberSpinnerVBoxOptions ) {
 
     const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {
       minContentHeight: 100,
@@ -35,7 +37,6 @@ export default class NumberSpinnerVBox extends VBox {
         layoutOptions: {
           align: 'left'
         },
-        arrowsSoundPlayer: nullSoundPlayer,
         accessibleName: stringProperty,
 
         // phet-io
