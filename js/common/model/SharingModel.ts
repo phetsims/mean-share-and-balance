@@ -101,9 +101,6 @@ export default class SharingModel<T extends Snack> implements TModel {
       snack.isActiveProperty.value = false;
       snack.positionProperty.value = MeanShareAndBalanceConstants.UNUSED_SNACK_POSITION;
     } );
-    this.unusedSnacks.addItemRemovedListener( snack => {
-      snack.isActiveProperty.value = true;
-    } );
 
     // parent tandem for the snacks that appear on the notepad
     const snacksParentTandem = options.tandem.createTandem( 'notepadSnacks' );

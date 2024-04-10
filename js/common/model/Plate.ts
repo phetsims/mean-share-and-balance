@@ -118,9 +118,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // When snacks are added, make sure they are in the right state and the right place.
     this.snacksOnPlateInNotepad.addItemAddedListener( snack => {
 
-      snack.isActiveProperty.value = true;
-      this.updateSnackPositions();
-      assert && assert( snack.isActiveProperty.value, 'by design, snacks should already be active when added to a plate' );
+      // assert && assert( snack.isActiveProperty.value, 'by design, snacks should already be active when added to a plate' );
 
       // Add a listener that updates the stack when a resident candy bar starts being dragged.  This is done because,
       // by design, snacks stay on a plate when dragging.  See #193 for more information on this.
@@ -146,7 +144,12 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // Monitor the X position and update the positions of any snacks that are on this plate when changes occur.
     this.xPositionProperty.link( this.updateSnackPositions.bind( this ) );
 
+    // At start up we make sure that our notepad plate is in sync with our table plate.
     this.syncNotepadToTable();
+    this.snacksOnPlateInNotepad.forEach( snack => {
+      snack.isActiveProperty.value = true;
+      snack.positionProperty.value = options.snackStackingFunction( this.xPositionProperty.value, 0 );
+    } );
   }
 
   /**
@@ -159,14 +162,13 @@ export default class Plate<T extends Snack> extends PhetioObject {
     const numberOfStackedSnacks = this.snacksOnPlateInNotepad.filter(
       snackOnList => !snackOnList.isDraggingProperty.value && snackOnList !== snack
     ).length;
-
     return this.getPositionForStackedItem( numberOfStackedSnacks );
   }
 
   /**
    * Get the position for the snack at the provided index position in the stack.
    */
-  private getPositionForStackedItem( stackIndex: number ): Vector2 {
+  public getPositionForStackedItem( stackIndex: number ): Vector2 {
 
     // Get the position.
     return this.snackStackingFunction( this.xPositionProperty.value, stackIndex );
@@ -175,7 +177,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   /**
    * Update the positions of the snacks stacked atop this plate.
    */
-  private updateSnackPositions(): void {
+  public updateSnackPositions(): void {
 
     // By design, a snack that is dragging remains on the plate but is excluded from the stacking order.  This works
     // better for conveying state via phet-io, where dragging state information isn't included.  So, an ordered list

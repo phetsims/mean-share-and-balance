@@ -25,11 +25,12 @@ import { TimerListener } from '../../../../axon/js/Timer.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import stepTimer from '../../../../axon/js/stepTimer.js';
 import { SnackOptions } from '../../common/model/Snack.js';
 import createObservableArray, { ObservableArray, ObservableArrayIO } from '../../../../axon/js/createObservableArray.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
+import stepTimer from '../../../../axon/js/stepTimer.js';
+import Plate from '../../common/model/Plate.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -77,21 +78,20 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // A timer listener for the 2nd phase of the animation that distributes apples from the collection area to the plates
   // when there are fractional apples involved (Share mode).
-  private collectToShareAnimationTimerListener: TimerListener | null = null;
+  public collectToShareAnimationTimerListeners: TimerListener[] | null = null;
 
   // The place where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
 
   public constructor( providedOptions: FairShareModelOptions ) {
 
-    const createApple = ( options: SnackOptions ) => new Apple( options );
-
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {
       numberOfSnacksOnFirstPlate: 2
     }, providedOptions );
 
-    super( createApple, SnackStacker.getStackedApplePosition, options );
+    const createApple = ( options: SnackOptions ) => new Apple( options );
 
+    super( createApple, SnackStacker.getStackedApplePosition, options );
     this.notepadModeProperty = new EnumerationProperty( NotepadMode.SYNC, {
       tandem: providedOptions.tandem.createTandem( 'notepadModeProperty' ),
       phetioFeatured: true
@@ -106,13 +106,14 @@ export default class FairShareModel extends SharingModel<Apple> {
       const index = this.appleCollection.indexOf( apple );
 
       // TODO: We probably don't need to animate all the time...https://github.com/phetsims/mean-share-and-balance/issues/140
+      apple.isActiveProperty.value = true;
       apple.moveTo( this.getCollectionPosition( index ), true );
     } );
 
     // Initialize the plates and set up plate-related behavior that is specific to the Leveling Out screen.
     this.plates.forEach( plate => {
 
-      plate.isActiveProperty.lazyLink( isActive => {
+      plate.isActiveProperty.link( isActive => {
         if ( !isActive ) {
           plate.tableSnackNumberProperty.set( 0 );
         }
@@ -122,27 +123,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       } );
 
       plate.snacksOnPlateInNotepad.addItemAddedListener( apple => {
-        const index = plate.snacksOnPlateInNotepad.indexOf( apple );
-
-        // Handle the fraction value of the apples based on the notepad mode.
-        if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
-
-          // Calculate the fractional amount that will be set for the apples being distributed to the plates.
-          const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
-            this.numberOfPlatesProperty.value );
-          const numberOfWholeApples = Math.floor( this.meanProperty.value );
-          if ( index < numberOfWholeApples ) {
-            apple.fractionProperty.value = Fraction.ONE;
-          }
-          else {
-            apple.fractionProperty.value = fractionValue;
-          }
-        }
-        else {
-          apple.fractionProperty.value = Fraction.ONE;
-        }
-
-        // TODO: Add assertion to make sure end state matches expectations. https://github.com/phetsims/mean-share-and-balance/issues/140
+        this.addSnackAddedListener( apple, plate );
       } );
     } );
 
@@ -192,12 +173,6 @@ export default class FairShareModel extends SharingModel<Apple> {
         } );
       }
       else if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SHARE ) {
-
-        // This change is animated, and the animation happens in two phases.  First, all the whole apples go from their
-        // position in the collection to the appropriate position on the plate while the whole pieces that will become
-        // fractional move to the top. After that, the whole ones at the top become fractional and move to where they
-        // need to go.
-
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
         const activePlates = this.getActivePlates();
         const applesAtTop: Apple[] = [];
@@ -213,7 +188,7 @@ export default class FairShareModel extends SharingModel<Apple> {
             // The remaining apples are moved to the top of the notepad.
             applesAtTop.push( apple );
             apple.moveTo( new Vector2(
-                i * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+                ( applesAtTop.length - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
                 -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
               ),
               true );
@@ -226,54 +201,29 @@ export default class FairShareModel extends SharingModel<Apple> {
         // into fractional representations and distributed to the plates.
         if ( applesAtTop.length > 0 ) {
 
-          // Calculate the fractional amount that will be set for the apples being distributed to the plates.
-          const fractionAmount = new Fraction(
-            this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
-            this.numberOfPlatesProperty.value
-          );
+          // Add the number of additional apples needed for fractionalization and distribution.
+          const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
+                                                 applesAtTop.length;
 
           // Set a timer for the 2nd phase of the animation, which is when the whole apples that were moved to the top
           // of the screen are turned into fractions, any needed additional fractional apples are added, and then they
           // are distributed to each of the active plates.
-          this.collectToShareAnimationTimerListener = stepTimer.setTimeout( () => {
+          this.collectToShareAnimationTimerListeners = [];
 
-            // Verify the state is consistent.
-            assert && assert( fractionAmount.value > 0 && applesAtTop.length > 0,
-              'invalid state: there must be apples available for fractionalization if the fraction is > zero'
-            );
+          _.times( numberOfAdditionalApplesNeeded, i => {
+            const appleToAdd = this.getUnusedSnack();
+            assert && assert( appleToAdd, 'there should be unused apples available to add' );
+            applesAtTop.push( appleToAdd! );
+          } );
 
-            // Get the position of the rightmost apple that's currently waiting for positioning the new ones.
-            const rightmostWaitingApplePosition = applesAtTop.reduce(
-              ( previousPosition, apple ) => apple.positionProperty.value.x > previousPosition.x ?
-                                             apple.positionProperty.value :
-                                             previousPosition,
-              new Vector2( Number.NEGATIVE_INFINITY, 0 )
-            );
+          // Distribute the fractionalized apples to the plates.
+          applesAtTop.forEach( ( apple, i ) => {
+            this.plates[ i ].addSnackToTop( apple, true );
+          } );
+          applesAtTop.length = 0;
 
-            // Add the number of additional apples needed for fractionalization and distribution.
-            const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
-                                                   applesAtTop.length;
-            _.times( numberOfAdditionalApplesNeeded, i => {
-              const appleToAdd = this.getUnusedSnack();
-              assert && assert( appleToAdd, 'there should be unused apples available to add' );
-              appleToAdd!.fractionProperty.value = fractionAmount;
-              appleToAdd!.moveTo( new Vector2(
-                rightmostWaitingApplePosition.x + ( i + 1 ) * MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION,
-                rightmostWaitingApplePosition.y
-              ) );
-              applesAtTop.push( appleToAdd! );
-            } );
-
-            // Distribute the fractionalized apples to the plates.
-            _.times( applesAtTop.length, i => {
-              const apple = applesAtTop.shift();
-              this.plates[ i ].addSnackToTop( apple!, true );
-            } );
-
-            // Clear the timer.
-            this.collectToShareAnimationTimerListener = null;
-
-          }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 );
+          this.collectToShareAnimationTimerListeners = null;
+          // TODO: Verify the state is consistent. https://github.com/phetsims/mean-share-and-balance/issues/140
         }
       }
       else if ( previousNotepadMode === NotepadMode.SHARE && notepadMode === NotepadMode.COLLECT ) {
@@ -449,12 +399,16 @@ export default class FairShareModel extends SharingModel<Apple> {
    * in progress when this is called it will have no effect.
    */
   private finishInProgressAnimations(): void {
-    if ( this.collectToShareAnimationTimerListener ) {
+    if ( this.collectToShareAnimationTimerListeners ) {
 
       // Invoke the timer callback now.  This will initiate any movement of the apples, which will then be forced to
       // finish at the end of this method.
-      this.collectToShareAnimationTimerListener( APPLE_FRACTION_DISTRIBUTION_DELAY );
-      stepTimer.clearTimeout( this.collectToShareAnimationTimerListener );
+      this.collectToShareAnimationTimerListeners.forEach( listener => {
+        listener( APPLE_FRACTION_DISTRIBUTION_DELAY );
+        stepTimer.clearTimeout( listener );
+      } );
+
+      this.collectToShareAnimationTimerListeners = null;
     }
     this.getAllSnacks().forEach( snack => snack.forceAnimationToFinish() );
   }
@@ -518,6 +472,72 @@ export default class FairShareModel extends SharingModel<Apple> {
    */
   private updateCollectedApplePositions( animate = false ): void {
     this.appleCollection.forEach( ( apple, i ) => apple.moveTo( this.getCollectionPosition( i ), animate ) );
+  }
+
+  private addSnackAddedListener( apple: Apple, plate: Plate<Apple> ): void {
+    // if ( this.notepadModeProperty.value === NotepadMode.COLLECT ) {
+    //   debugger;
+    // }
+    // assert && assert( this.notepadModeProperty.value !== NotepadMode.COLLECT,
+    //   'apples should not be added to plates in collect mode' );
+
+    const index = plate.snacksOnPlateInNotepad.indexOf( apple );
+
+    // Handle the fraction value of the apples based on the notepad mode.
+    // const notepadMode = this.notepadModeProperty.hasDeferredValue ? this.notepadModeProperty.deferredValue : this.notepadModeProperty.value;
+    if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
+
+      // Calculate the fractional amount that will be set for the apples being distributed to the plates.
+      const numberOfWholeApples = Math.floor( this.meanProperty.value );
+      const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
+        this.numberOfPlatesProperty.value );
+
+      if ( this.collectToShareAnimationTimerListeners ) {
+
+        // This change is animated, and the animation happens in two phases.  First, all the whole apples go from their
+        // position in the collection to the appropriate position on the plate while the whole pieces that will become
+        // fractional move to the top. After that, the whole ones at the top become fractional and move to where they
+        // need to go.
+        this.collectToShareAnimationTimerListeners.push( stepTimer.setTimeout( () => {
+
+          // Verify the state is consistent.
+          // assert && assert( !Number.isInteger( this.meanProperty.value ) && applesAtTop.length > 0,
+          //   'invalid state: there must be apples available for fractionalization if the mean value is not an integer.'
+          // );
+
+          if ( index < numberOfWholeApples ) {
+            apple.fractionProperty.value = Fraction.ONE;
+          }
+          else {
+            apple.moveTo( new Vector2(
+              ( index - numberOfWholeApples ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+              -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y ) ) );
+            apple.fractionProperty.value = fractionValue;
+          }
+          apple.isActiveProperty.value = true;
+          apple.moveTo( plate.getPositionForStackedItem( index ), true );
+
+          this.collectToShareAnimationTimerListeners = null;
+        }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 ) );
+      }
+      else {
+        apple.isActiveProperty.value = true;
+        apple.moveTo( plate.getPositionForStackedItem( index ) );
+        if ( index < numberOfWholeApples ) {
+          apple.fractionProperty.value = Fraction.ONE;
+        }
+        else {
+          apple.fractionProperty.value = fractionValue;
+        }
+      }
+    }
+    else if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
+      apple.isActiveProperty.value = true;
+      apple.fractionProperty.value = Fraction.ONE;
+      apple.moveTo( plate.getPositionForStackedItem( index ) );
+    }
+
+    // TODO: Add assertion to make sure end state matches expectations. https://github.com/phetsims/mean-share-and-balance/issues/140
   }
 
   public override reset(): void {
