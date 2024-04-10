@@ -141,6 +141,8 @@ export default class FairShareModel extends SharingModel<Apple> {
         else {
           apple.fractionProperty.value = Fraction.ONE;
         }
+
+        // TODO: Add assertion to make sure end state matches expectations. https://github.com/phetsims/mean-share-and-balance/issues/140
       } );
     } );
 

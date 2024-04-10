@@ -64,7 +64,8 @@ export default class Snack extends PhetioObject {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),
-      phetioReadOnly: true
+      phetioReadOnly: true,
+      phetioState: false
     } );
 
     this.positionProperty = new Property( options.initialPosition, {
