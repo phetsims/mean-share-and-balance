@@ -39,6 +39,7 @@ import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
 import numberOfPlatesV5_mp3 from '../../../sounds/numberOfPlatesV5_mp3.js';
 import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
 import numberOfPlatesV7_mp3 from '../../../sounds/numberOfPlatesV7_mp3.js';
+import MeanShareAndBalanceQueryParameters from '../MeanShareAndBalanceQueryParameters.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -52,9 +53,8 @@ export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenVi
 // constants
 const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
 
-// TODO: Below are 3 sounds and a selector.  This is for trying out sounds, should eventually be 1.  See https://github.com/phetsims/mean-share-and-balance/issues/172,
+// TODO: The three sounds below are here for comparison, this should eventually just be 1 sound.  See https://github.com/phetsims/mean-share-and-balance/issues/172,
 const PLATE_SOUND_BUFFERS = [ numberOfPlatesV5_mp3, numberOfPlatesV6_mp3, numberOfPlatesV7_mp3 ];
-const PLATE_SOUND_INDEX = 0;
 
 // Offset for positioning individual people relative to the plate with which each is associated, in screen coordinates.
 const PEOPLE_LAYER_X_OFFSET = -70;
@@ -96,7 +96,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           model.numberOfPlatesProperty,
-          PLATE_SOUND_BUFFERS[ PLATE_SOUND_INDEX ],
+          PLATE_SOUND_BUFFERS[ MeanShareAndBalanceQueryParameters.plateSound ],
           { initialOutputLevel: 0.15 }
         )
       }
