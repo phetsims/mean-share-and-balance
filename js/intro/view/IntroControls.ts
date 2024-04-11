@@ -37,8 +37,8 @@ export default class IntroControls extends MeanShareAndBalanceControls {
                       providedOptions: IntroControlPanelOptions ) {
 
     // Checkbox Group
-    const introOptionsCheckboxGroup = new IntroOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
-      predictMeanVisibleProperty, { tandem: providedOptions.tandem.createTandem( 'introOptionsCheckboxGroup' ) } );
+    const checkboxGroup = new IntroOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
+      predictMeanVisibleProperty, { tandem: providedOptions.tandem.createTandem( 'checkboxGroup' ) } );
 
     // Pipe Switch
     const pipeSwitch = new PipeSwitch( arePipesOpenProperty, providedOptions.tandem.createTandem( 'pipeSwitch' ) );
@@ -46,7 +46,7 @@ export default class IntroControls extends MeanShareAndBalanceControls {
     // Hook up Number Spinner callbacks.
     numberOfCupsProperty.link( () => {
       pipeSwitch.interruptSubtreeInput();
-      introOptionsCheckboxGroup.interruptSubtreeInput();
+      checkboxGroup.interruptSubtreeInput();
     } );
     const options = optionize<IntroControlPanelOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       numberSpinnerOptions: {
@@ -56,12 +56,12 @@ export default class IntroControls extends MeanShareAndBalanceControls {
           { initialOutputLevel: 0.5 }
         )
       },
-      controlsPDOMOrder: [ introOptionsCheckboxGroup, pipeSwitch ],
+      controlsPDOMOrder: [ checkboxGroup, pipeSwitch ],
       vBoxOptions: {}
     }, providedOptions );
 
     const combinedOptions = combineOptions<VBoxOptions>( {
-        children: [ introOptionsCheckboxGroup, pipeSwitch ],
+        children: [ checkboxGroup, pipeSwitch ],
         minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
         spacing: 20
       },

@@ -22,6 +22,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -90,6 +91,11 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     this.totalKickDistanceProperty = DerivedProperty.deriveAny( [ ...valueDependencies, ...phaseDependencies, ...positionDependencies ], () => {
       const activeBalls = this.getSortedStackedObjects();
       return activeBalls.length > 0 ? _.sumBy( this.getSortedStackedObjects(), ball => ball.valueProperty.value! ) : 0;
+    }, {
+      tandem: options.tandem.createTandem( 'totalKickDistanceProperty' ),
+      phetioValueType: NumberIO,
+      phetioReadOnly: true,
+      phetioState: false
     } );
 
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {

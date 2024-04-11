@@ -38,7 +38,7 @@ export default class Pipe {
   public readonly position: Vector2;
 
   // Holds the valve node rotation value. Closed is 0, and open is Pi/2
-  public readonly rotationProperty: Property<number>;
+  public readonly rotationProperty = new NumberProperty( 0 );
   public readonly arePipesOpenProperty: Property<boolean>;
 
   public constructor( arePipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
@@ -46,10 +46,6 @@ export default class Pipe {
       isActive: false
     }, providedOptions );
 
-    this.rotationProperty = new NumberProperty( 0, {
-      tandem: options.tandem.createTandem( 'rotationProperty' ),
-      phetioReadOnly: true
-    } );
     this.arePipesOpenProperty = arePipesOpenProperty;
     this.isActiveProperty = new BooleanProperty( options.isActive, {
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
