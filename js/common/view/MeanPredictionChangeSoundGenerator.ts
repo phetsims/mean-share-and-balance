@@ -2,7 +2,8 @@
 
 /**
  * Sound generator used to produce a sound for the movement of the pencil that is used for making mean predictions on
- * the notepad.
+ * the notepad.  This uses filtered noise as the sound source, and changes the volume and filter center frequency based
+ * on the rate and direction of the change of the monitored property.
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
@@ -22,7 +23,7 @@ const VELOCITY_REDUCTION_RATE = 50; // amount per second, empirically determined
 const STILLNESS_TIME = 0.064; // in seconds, if there are no angle updates for this long, the leg is considered still
 const NOISE_CENTER_FREQUENCY = 1300; // Hz
 const DIRECTION_FREQUENCY_DELTA = NOISE_CENTER_FREQUENCY / 8; // max difference for increasing vs decreasing changes
-const MAX_LEG_ANGULAR_VELOCITY = 3 * Math.PI; // in radians/sec, see explanatory note where this is used
+const MAX_CHANGE_RATE = 3 * Math.PI; // in radians/sec, see explanatory note where this is used
 const MIN_SOUND_GAP = 0.05; // in seconds
 const NOISE_START_TIME_CONSTANT = 0.01;
 const NOISE_STOP_TIME_CONSTANT = 0.02;
@@ -31,7 +32,7 @@ const NOISE_OFF_TIME = 0.05; // in seconds
 
 type MotionState = 'unchanging' | 'increasing' | 'decreasing';
 
-class PencilDragSoundGenerator extends NoiseGenerator {
+class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
   private changeRateUpdateTime: number | null = null;
   private soundStartCountdown = 0;
@@ -58,30 +59,29 @@ class PencilDragSoundGenerator extends NoiseGenerator {
     super( options );
 
     // monitor the leg angle and adjust the noise output accordingly
-    meanPredictionProperty.lazyLink( ( newLegAngle, oldLegAngle ) => {
+    meanPredictionProperty.lazyLink( ( newPrediction, oldPrediction ) => {
       const now = this.audioContext.currentTime;
 
-      // update the angular velocity of the leg and determine the motion state
+      // Update the rate of change determine the motion state.
       let newMotionState: MotionState = 'unchanging';
       if ( ResetAllButton.isResettingAllProperty.value ) {
 
         // This case indicates that a reset caused the change, so set the velocity to 0.
         this.predictionChangeRate = 0;
+        this.motionState = 'unchanging';
       }
       else if ( this.changeRateUpdateTime !== null ) {
-
-        // set the angular velocity of the leg, but keep it limited to the max allowed value
         this.predictionChangeRate = Utils.clamp(
-          ( newLegAngle - oldLegAngle ) / ( now - this.changeRateUpdateTime ),
-          -MAX_LEG_ANGULAR_VELOCITY,
-          MAX_LEG_ANGULAR_VELOCITY
+          ( newPrediction - oldPrediction ) / ( now - this.changeRateUpdateTime ),
+          -MAX_CHANGE_RATE,
+          MAX_CHANGE_RATE
         );
 
         // update the motion state
         newMotionState = this.predictionChangeRate > 0 ? 'increasing' : 'decreasing';
       }
 
-      // update the state of sound generation (on or off)
+      // Update the state of sound generation (on or off).
       if ( newMotionState !== 'unchanging' ) {
 
         if ( newMotionState !== this.motionState && this.motionState !== 'unchanging' ) {
@@ -93,14 +93,14 @@ class PencilDragSoundGenerator extends NoiseGenerator {
         else {
           if ( !this.isPlaying ) {
             this.start();
-            this.setOutputLevel( mapVelocityToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
+            this.setOutputLevel( mapChangeRateToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
           }
           else {
-            this.setOutputLevel( mapVelocityToOutputLevel( this.predictionChangeRate ), NOISE_LEVEL_CHANGE_TIME_CONSTANT );
+            this.setOutputLevel( mapChangeRateToOutputLevel( this.predictionChangeRate ), NOISE_LEVEL_CHANGE_TIME_CONSTANT );
           }
 
           // Set the frequency of the drag sound.
-          this.setBandpassFilterCenterFrequency( mapVelocityToFilterFrequency( this.predictionChangeRate, newMotionState ) );
+          this.setBandpassFilterCenterFrequency( mapChangeRateToFilterFrequency( this.predictionChangeRate, newMotionState ) );
         }
       }
       else {
@@ -109,7 +109,7 @@ class PencilDragSoundGenerator extends NoiseGenerator {
         }
       }
 
-      // set the filter value that controls whether the forward or backward dragging sound is heard
+      // Set the filter value that controls whether the sound for increasing or decreasing values is heard.
       if ( this.motionState !== newMotionState ) {
 
         // set the frequency based on the direction
@@ -127,55 +127,58 @@ class PencilDragSoundGenerator extends NoiseGenerator {
       this.motionState = newMotionState;
     } );
 
-    // Hook up the time-dependent behavior to the global stepper.
+    // Hook up the time-dependent behavior to the global step timer.
     stepTimer.addListener( dt => {
       this.step( dt );
     } );
   }
 
   /**
-   * step function that mostly detects when the leg stops moving and helps create the silence intervals when the foot
-   * drag changes direction
+   * The step function mostly detects when the monitored property stops changing and helps create the silence intervals
+   * when the direction changes.
    */
   private step( dt: number ): void {
 
-    // check if the countdown used to keep sounds from running together is going
+    // Check if the countdown used to keep sounds from running together is going.
     if ( this.soundStartCountdown > 0 ) {
       this.soundStartCountdown = Math.max( this.soundStartCountdown - dt, 0 );
       if ( this.soundStartCountdown === 0 && this.motionState !== 'unchanging' ) {
-        this.setOutputLevel( mapVelocityToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
+        this.setOutputLevel( mapChangeRateToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
       }
     }
     else if ( this.changeRateUpdateTime !== null &&
               this.audioContext.currentTime - this.changeRateUpdateTime > STILLNESS_TIME &&
               Math.abs( this.predictionChangeRate ) > 0 ) {
 
-      // The leg angle hasn't changed for a bit, so start to reduce the angular velocity, but don't do it all at once
-      // since that isn't realistic and tends to cause gaps in the sound.
-      const angularVelocityChange = ( this.predictionChangeRate > 0 ? -1 : 1 ) *
-                                    Math.min( dt * VELOCITY_REDUCTION_RATE, Math.abs( this.predictionChangeRate ) );
-      this.predictionChangeRate = this.predictionChangeRate + angularVelocityChange;
+      // The value hasn't changed for a bit, so start to reduce the change rate, but don't do it all at once since that
+      // isn't realistic and tends to cause gaps in the sound.
+      const changeRateChange = ( this.predictionChangeRate > 0 ? -1 : 1 ) *
+                               Math.min( dt * VELOCITY_REDUCTION_RATE, Math.abs( this.predictionChangeRate ) );
+      this.predictionChangeRate = this.predictionChangeRate + changeRateChange;
       if ( this.predictionChangeRate === 0 ) {
         this.motionState = 'unchanging';
         this.stop( this.audioContext.currentTime + NOISE_OFF_TIME );
         this.setOutputLevel( 0, NOISE_STOP_TIME_CONSTANT );
       }
       else {
-        this.setOutputLevel( mapVelocityToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
+        this.setOutputLevel( mapChangeRateToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
       }
     }
   }
-
 }
 
-// helper function to convert the angular velocity of the leg to an output level for the noise generator
-const mapVelocityToOutputLevel = ( angularVelocityOfLeg: number ) => {
-  const multiplier = Math.min( Math.pow( Math.abs( angularVelocityOfLeg ) / MAX_LEG_ANGULAR_VELOCITY, 0.7 ), 1 );
+/**
+ * Helper function to convert the change rate to an output level for the noise generator.
+ */
+const mapChangeRateToOutputLevel = ( changeRate: number ) => {
+  const multiplier = Math.min( Math.pow( Math.abs( changeRate ) / MAX_CHANGE_RATE, 0.7 ), 1 );
   return MAX_DRAG_SOUND_VOLUME * multiplier;
 };
 
-// helper function to convert the angular velocity of the leg to a center frequency values for the noise filter
-const mapVelocityToFilterFrequency = ( angularVelocityOfLeg: number, direction: MotionState ) => {
+/**
+ * Helper function to convert the change rate to a center frequency values for the noise filter.
+ */
+const mapChangeRateToFilterFrequency = ( changeRate: number, direction: MotionState ) => {
   let minFrequency;
   if ( direction === 'increasing' ) {
     minFrequency = NOISE_CENTER_FREQUENCY - DIRECTION_FREQUENCY_DELTA;
@@ -183,10 +186,10 @@ const mapVelocityToFilterFrequency = ( angularVelocityOfLeg: number, direction: 
   else {
     minFrequency = NOISE_CENTER_FREQUENCY + DIRECTION_FREQUENCY_DELTA;
   }
-  const multiplier = Math.abs( angularVelocityOfLeg ) / MAX_LEG_ANGULAR_VELOCITY;
+  const multiplier = Math.abs( changeRate ) / MAX_CHANGE_RATE;
   return minFrequency + 500 * multiplier;
 };
 
-meanShareAndBalance.register( 'PencilDragSoundGenerator', PencilDragSoundGenerator );
+meanShareAndBalance.register( 'MeanPredictionChangeSoundGenerator', MeanPredictionChangeSoundGenerator );
 
-export default PencilDragSoundGenerator;
+export default MeanPredictionChangeSoundGenerator;

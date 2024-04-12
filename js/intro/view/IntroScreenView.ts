@@ -30,7 +30,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
-import PencilDragSoundGenerator from '../../common/view/PencilDragSoundGenerator.js';
+import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
 import SoundGenerator from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 
 
@@ -172,7 +172,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     //   }
     // );
     // soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
-    this.predictMeanSoundGenerator = new PencilDragSoundGenerator( model.meanPredictionProperty );
+    this.predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
     soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
 
     model.numberOfCupsProperty.link( () => {
