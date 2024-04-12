@@ -33,8 +33,6 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import ContinuousPropertySoundClip from '../../../../tambo/js/sound-generators/ContinuousPropertySoundClip.js';
 import predictMeanPencilLoop_mp3 from '../../../sounds/predictMeanPencilLoop_mp3.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -171,8 +169,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
         playbackRateRange: new Range( 0.95, 1.05 ),
         fadeTime: 0.1,
         fadeStartDelay: 0.1,
-        initialOutputLevel: 0.1,
-        enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
+        initialOutputLevel: 0.1
       }
     );
     soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
