@@ -31,6 +31,7 @@ import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import Plate from '../../common/model/Plate.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -389,8 +390,13 @@ export default class FairShareModel extends SharingModel<Apple> {
     // Update the view when the presentation mode changes.
     this.notepadModeProperty.link( handleModeChange );
 
-    // Update the view when the number of active apples changes.
-    this.totalSnacksProperty.link( handleNumberOfSnacksChanged );
+    // Update the view when the number of active apples or plates changes.
+    Multilink.multilinkAny( [
+        this.totalSnacksProperty,
+        ...this.plates.map( plate => plate.isActiveProperty ) ],
+      () => {
+      handleNumberOfSnacksChanged( this.totalSnacksProperty.value );
+    } );
   }
 
   /**
