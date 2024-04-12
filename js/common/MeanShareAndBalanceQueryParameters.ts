@@ -1,4 +1,4 @@
-// Copyright 2022, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * Query parameters supported by the Mean: Share and Balance simulation.
@@ -15,6 +15,13 @@ const SCHEMA_MAP = {
   showAnimation: {
     type: 'boolean',
     defaultValue: true
+  },
+
+  // TODO: Temporary for trying out sounds, see https://github.com/phetsims/mean-share-and-balance/issues/172.
+  plateSound: {
+    type: 'number',
+    defaultValue: 0,
+    validValues: [ 0, 1, 2 ]
   }
 } as const;
 
