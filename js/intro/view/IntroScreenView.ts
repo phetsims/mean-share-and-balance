@@ -11,7 +11,6 @@ import { AlignBox, ManualConstraint, Node } from '../../../../scenery/js/imports
 import IntroModel from '../model/IntroModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Range from '../../../../dot/js/Range.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadCupNode from './NotepadCupNode.js';
@@ -30,9 +29,9 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import ContinuousPropertySoundClip from '../../../../tambo/js/sound-generators/ContinuousPropertySoundClip.js';
-import predictMeanPencilLoop_mp3 from '../../../sounds/predictMeanPencilLoop_mp3.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import PencilDragSoundGenerator from '../../common/view/PencilDragSoundGenerator.js';
+import SoundGenerator from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -40,7 +39,7 @@ type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOp
 export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
   // sound generator for the "predict mean" slider
-  private readonly predictMeanSoundGenerator: ContinuousPropertySoundClip;
+  private readonly predictMeanSoundGenerator: SoundGenerator;
 
   public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -161,17 +160,19 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // Add sound generation for the "predict mean" slider.
-    this.predictMeanSoundGenerator = new ContinuousPropertySoundClip(
-      model.meanPredictionProperty,
-      model.dragRange,
-      predictMeanPencilLoop_mp3,
-      {
-        playbackRateRange: new Range( 0.95, 1.05 ),
-        fadeTime: 0.1,
-        fadeStartDelay: 0.1,
-        initialOutputLevel: 0.1
-      }
-    );
+    // this.predictMeanSoundGenerator = new ContinuousPropertySoundClip(
+    //   model.meanPredictionProperty,
+    //   model.dragRange,
+    //   predictMeanPencilLoop_mp3,
+    //   {
+    //     playbackRateRange: new Range( 0.95, 1.05 ),
+    //     fadeTime: 0.1,
+    //     fadeStartDelay: 0.1,
+    //     initialOutputLevel: 0.1
+    //   }
+    // );
+    // soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
+    this.predictMeanSoundGenerator = new PencilDragSoundGenerator( model.meanPredictionProperty );
     soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
 
     model.numberOfCupsProperty.link( () => {
@@ -179,10 +180,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controls.controlsPDOMOrder );
-  }
-
-  public override step( dt: number ): void {
-    this.predictMeanSoundGenerator.step( dt );
   }
 
   public override reset(): void {
