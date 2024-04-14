@@ -157,15 +157,20 @@ export default class FairShareModel extends SharingModel<Apple> {
       this.finishInProgressAnimations();
 
       if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
+        while ( this.appleCollection.length > 0 ) {
+          this.getActivePlates().forEach( plate => {
 
-        this.getActivePlates().forEach( plate => {
-          _.times( plate.tableSnackNumberProperty.value, () => {
-            const apple = this.appleCollection.pop();
-            assert && assert( apple, 'there should be enough apples to put on the plates' );
-            plate.addSnackToTop( apple!, true );
+            _.times( plate.tableSnackNumberProperty.value, () => {
+              const apple = this.appleCollection.pop();
+              assert && assert( apple, 'there should be enough apples to put on the plates' );
+              plate.addSnackToTop( apple!, true );
+            } );
           } );
-        } );
+        }
         assert && assert( this.appleCollection.length === 0, 'All apples should be on plates.' );
+
+        // Check plate state after all apples in collection have been handled.
+        this.getActivePlates().forEach( plate => this.confirmPlateValues( plate ) );
       }
       else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.COLLECT ) {
 
