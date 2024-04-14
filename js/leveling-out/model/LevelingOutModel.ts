@@ -40,7 +40,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
     const options = optionize<LevelingOutModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
 
-    super( createCandyBar, SnackStacker.getStackedCandyBarPosition, options );
+    super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );
 
     /**
      * Create and define the keyboard interaction for candy bars.

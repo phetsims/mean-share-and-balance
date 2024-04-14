@@ -26,6 +26,7 @@ import createObservableArray, { ObservableArray, ObservableArrayIO } from '../..
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
 type SelfOptions = {
 
@@ -55,6 +56,7 @@ export default class SharingModel<T extends Snack> implements TModel {
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
+                      handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void,
                       providedOptions: SharingModelOptions ) {
 
     const options = combineOptions<SharingModelOptions>( {
@@ -132,6 +134,7 @@ export default class SharingModel<T extends Snack> implements TModel {
           isInitiallyActive: plateIndex < this.numberOfPlatesProperty.value,
           linePlacement: plateIndex,
           startingNumberOfSnacks: plateIndex === 0 ? options.numberOfSnacksOnFirstPlate : 1,
+          handleFraction: handleFraction,
           snackStackingFunction: snackStackingFunction,
 
           // phet-io

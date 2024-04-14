@@ -23,8 +23,9 @@ import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
-type SelfOptions = {
+type SelfOptions<T extends Snack> = {
   isInitiallyActive?: boolean;
   initialXPosition?: number;
   linePlacement: number;
@@ -32,9 +33,12 @@ type SelfOptions = {
 
   // The function used to position the snacks on the snack stack.
   snackStackingFunction?: ( plateXPosition: number, index: number ) => Vector2;
+
+  // Plates that have a snack type that supports a fraction value need to know how to handle it.
+  handleFraction?: ( plate: Plate<T>, fraction: Fraction ) => void;
 };
 
-type PlateOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+type PlateOptions<T extends Snack> = SelfOptions<T> & PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class Plate<T extends Snack> extends PhetioObject {
 
@@ -63,6 +67,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // Functions needed for obtaining and releasing snacks.
   private readonly getAvailableSnack: () => T | null;
   private readonly releaseSnack: ( snack: T ) => void;
+  private readonly handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void;
 
   /**
    * @param getAvailableSnack - a function that can be used to get an available snack from the parent model
@@ -71,14 +76,15 @@ export default class Plate<T extends Snack> extends PhetioObject {
    */
   public constructor( getAvailableSnack: () => T | null,
                       releaseSnack: ( snack: T ) => void,
-                      providedOptions: PlateOptions ) {
+                      providedOptions: PlateOptions<T> ) {
 
-    const options = optionize<PlateOptions, SelfOptions, PhetioObjectOptions>()( {
+    const options = optionize<PlateOptions<T>, SelfOptions<T>, PhetioObjectOptions>()( {
       isInitiallyActive: false,
       initialXPosition: 0,
       phetioState: false,
       startingNumberOfSnacks: 1,
-      snackStackingFunction: SnackStacker.getStackedCandyBarPosition
+      snackStackingFunction: SnackStacker.getStackedCandyBarPosition,
+      handleFraction: _.noop // By default plates _.noop snack fraction values.
     }, providedOptions );
 
     super( options );
@@ -143,6 +149,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
     // Monitor the X position and update the positions of any snacks that are on this plate when changes occur.
     this.xPositionProperty.link( this.updateSnackPositions.bind( this ) );
+    this.handleFraction = options.handleFraction;
 
     // At start up we make sure that our notepad plate is in sync with our table plate.
     this.syncNotepadToTable();
@@ -201,31 +208,42 @@ export default class Plate<T extends Snack> extends PhetioObject {
     return this.snacksOnPlateInNotepad.includes( snack );
   }
 
-  /**
-   * Synchronize the number of snacks on the notepad to the number on the table.
-   */
-  public syncNotepadToTable(): void {
-    if ( this.tableSnackNumberProperty.value > this.snacksOnPlateInNotepad.length ) {
+  public setNotepadSnacksToValue( value: Fraction ): void {
+
+    const numberOfWholeSnacks = Math.floor( value.numerator / value.denominator );
+    const snackFractionValue = new Fraction( value.numerator % value.denominator, value.denominator );
+    const numberOfSnacksOnPlate = numberOfWholeSnacks + ( snackFractionValue.numerator > 0 ? 1 : 0 );
+
+    if ( numberOfSnacksOnPlate > this.snacksOnPlateInNotepad.length ) {
 
       // Add snacks to the notepad list.
-      while ( this.tableSnackNumberProperty.value > this.snacksOnPlateInNotepad.length ) {
+      while ( numberOfSnacksOnPlate > this.snacksOnPlateInNotepad.length ) {
 
         const snackToAdd = this.getAvailableSnack();
         assert && assert( snackToAdd, 'no snacks are available to add' );
         this.snacksOnPlateInNotepad.push( snackToAdd! );
       }
     }
-    else if ( this.tableSnackNumberProperty.value < this.snacksOnPlateInNotepad.length ) {
+    else if ( numberOfSnacksOnPlate < this.snacksOnPlateInNotepad.length ) {
 
       // Remove snacks from the notepad snack list.
-      while ( this.snacksOnPlateInNotepad.length > this.tableSnackNumberProperty.value ) {
+      while ( this.snacksOnPlateInNotepad.length > numberOfSnacksOnPlate ) {
         const snackToRelease = this.snacksOnPlateInNotepad.pop();
         if ( snackToRelease ) {
           this.releaseSnack( snackToRelease );
         }
       }
     }
+
+    this.handleFraction( this, snackFractionValue );
     this.updateSnackPositions();
+  }
+
+  /**
+   * Synchronize the number of snacks on the notepad to the number on the table.
+   */
+  public syncNotepadToTable(): void {
+    this.setNotepadSnacksToValue( new Fraction( this.tableSnackNumberProperty.value, 1 ) );
   }
 
   /**

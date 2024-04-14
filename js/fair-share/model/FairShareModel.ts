@@ -79,7 +79,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // A timer listener for the 2nd phase of the animation that distributes apples from the collection area to the plates
   // when there are fractional apples involved (Share mode).
-  public collectToShareAnimationTimerListeners: TimerListener[] | null = null;
+  public collectToShareAnimationTimerListener: TimerListener | null = null;
 
   // The place where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
@@ -92,7 +92,20 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     const createApple = ( options: SnackOptions ) => new Apple( options );
 
-    super( createApple, SnackStacker.getStackedApplePosition, options );
+    const handleFraction = ( plate: Plate<Apple>, fraction: Fraction ) => {
+
+      // Make sure all of the apples are whole before setting the fraction value on the top apple.
+      plate.snacksOnPlateInNotepad.forEach( apple => {
+        apple.fractionProperty.value = Fraction.ONE;
+      } );
+      if ( fraction.numerator > 0 ) {
+        const topSnack = plate.getTopSnack();
+        assert && assert( topSnack, 'there should be a top snack available to set the fraction value' );
+        topSnack!.fractionProperty.value = fraction;
+      }
+    };
+
+    super( createApple, SnackStacker.getStackedApplePosition, handleFraction, options );
     this.notepadModeProperty = new EnumerationProperty( NotepadMode.SYNC, {
       tandem: providedOptions.tandem.createTandem( 'notepadModeProperty' ),
       phetioFeatured: true
@@ -144,22 +157,15 @@ export default class FairShareModel extends SharingModel<Apple> {
       this.finishInProgressAnimations();
 
       if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
-        if ( this.totalSnacksProperty.value === this.getNumberOfActiveSnacksOnPlates() ) {
 
-          // All the snacks are already distributed to the plates, so there is nothing to do.
-          assert && assert( this.appleCollection.length === 0, 'All apples should be on plates.' );
-        }
-        else {
-
-          // Take all the apples in the collection and add them to plates.
-          this.getActivePlates().forEach( plate => {
-            _.times( plate.tableSnackNumberProperty.value, () => {
-              const apple = this.appleCollection.pop();
-              assert && assert( apple, 'there should be enough apples to put on the plates' );
-              plate.addSnackToTop( apple!, true );
-            } );
+        this.getActivePlates().forEach( plate => {
+          _.times( plate.tableSnackNumberProperty.value, () => {
+            const apple = this.appleCollection.pop();
+            assert && assert( apple, 'there should be enough apples to put on the plates' );
+            plate.addSnackToTop( apple!, true );
           } );
-        }
+        } );
+        assert && assert( this.appleCollection.length === 0, 'All apples should be on plates.' );
       }
       else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.COLLECT ) {
 
@@ -198,18 +204,13 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         this.appleCollection.length = 0;
 
-        // If there are apples still in the collection, these move to the top of the screen, and are subsequently turned
-        // into fractional representations and distributed to the plates.
+        // Any apples that were moved to the top are subsequently turned into fractional representations and
+        // distributed to the plates.
         if ( applesAtTop.length > 0 ) {
 
           // Add the number of additional apples needed for fractionalization and distribution.
           const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
                                                  applesAtTop.length;
-
-          // Set a timer for the 2nd phase of the animation, which is when the whole apples that were moved to the top
-          // of the screen are turned into fractions, any needed additional fractional apples are added, and then they
-          // are distributed to each of the active plates.
-          this.collectToShareAnimationTimerListeners = [];
 
           _.times( numberOfAdditionalApplesNeeded, i => {
             const appleToAdd = this.getUnusedSnack();
@@ -219,18 +220,18 @@ export default class FairShareModel extends SharingModel<Apple> {
 
           // Distribute the fractionalized apples to the plates.
           applesAtTop.forEach( ( apple, i ) => {
+            apple.animateToPosition = true;
             this.plates[ i ].addSnackToTop( apple, true );
           } );
           applesAtTop.length = 0;
-
-          this.collectToShareAnimationTimerListeners = null;
-          // TODO: Verify the state is consistent. https://github.com/phetsims/mean-share-and-balance/issues/140
         }
       }
       else if ( previousNotepadMode === NotepadMode.SHARE && notepadMode === NotepadMode.COLLECT ) {
 
         // Make sure all apples are whole.
-        this.getAllSnacks().forEach( snack => { snack.fractionProperty.reset(); } );
+        this.getAllSnacks().forEach( snack => {
+          snack.fractionProperty.value = Fraction.ONE;
+        } );
 
         // Animate the movement of the apples from the individual plates to the collection area.
         this.getActivePlates().forEach( plate => {
@@ -254,45 +255,15 @@ export default class FairShareModel extends SharingModel<Apple> {
                 notepadMode === NotepadMode.SYNC ) {
 
         // In the Sync mode the number of apples on the notepad plates match those shown on the table plates. There is
-        // no animation needed for this mode change, so a simple way to make this happen is to set all snacks to have
-        // their default parent plates and then activate the appropriate number of apples on each plate.
-
-        // Reset the fraction Property for all snacks.
-        this.getAllSnacks().forEach( snack => { snack.fractionProperty.value = Fraction.ONE; } );
-        this.plates.forEach( plate => plate.syncNotepadToTable() );
+        // no animation needed for this mode change.
+        this.getActivePlates().forEach( plate => plate.syncNotepadToTable() );
       }
       else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.SHARE ) {
 
         // In the Share mode the total number of apples is split up evenly over all active plates, so each one ends up
-        // with the mean value, which could include a fractional part.  There is no animation for this transition.
-
-        const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
-        const fractionalAmount = numberOfWholeApplesPerActivePlate === this.meanProperty.value ?
-                                 Fraction.ZERO :
-                                 new Fraction(
-                                   this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
-                                   this.numberOfPlatesProperty.value
-                                 );
-        const totalActiveApplesPerActivePlate = numberOfWholeApplesPerActivePlate + ( fractionalAmount.value > 0 ? 1 : 0 );
-
+        // with the mean value, which could include a fractional part. There is no animation for this transition.
         this.getActivePlates().forEach( plate => {
-
-          // Add or remove apples to/from those on the notepad plate to get to the correct level.
-          const delta = totalActiveApplesPerActivePlate - plate.getNumberOfNotepadSnacks();
-          if ( delta > 0 ) {
-            _.times( delta, () => plate.addASnack() );
-          }
-          else if ( delta < 0 ) {
-            _.times( Math.abs( delta ), () => plate.removeTopSnack() );
-          }
-
-          if ( fractionalAmount.value > 0 ) {
-            const topApple = plate.getTopSnack();
-
-            assert && assert( topApple || this.totalSnacksProperty.value === 0,
-              'Every plate should have at least one apple unless the total number of snacks is 0.' );
-            topApple!.fractionProperty.value = fractionalAmount;
-          }
+          plate.setNotepadSnacksToValue( new Fraction( this.totalSnacksProperty.value, this.numberOfPlatesProperty.value ) );
         } );
       }
       else {
@@ -317,40 +288,9 @@ export default class FairShareModel extends SharingModel<Apple> {
         } );
       }
       else if ( notepadMode === NotepadMode.SHARE ) {
-
-        // Make all the apples whole to start with.
-        this.getAllSnacks().forEach( snack => { snack.fractionProperty.value = Fraction.ONE; } );
-
-        // Calculate the whole and fractional apples per plate.  Don't use derived values here since that could
-        // introduce an order dependency.
-        const wholeApplesPerPlate = Math.floor( this.totalSnacksProperty.value / this.numberOfPlatesProperty.value );
-        const fractionalAppleAmount = new Fraction(
-          this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
-          this.numberOfPlatesProperty.value
-        );
-        const totalActiveApplesPerPlate = wholeApplesPerPlate + ( fractionalAppleAmount.value > 0 ? 1 : 0 );
-
-        // Add or remove snacks to match the new amount.
         this.plates.forEach( plate => {
-
           if ( plate.isActiveProperty.value ) {
-
-            // Calculate the difference between what is on this plate and what is needed.
-            const delta = totalActiveApplesPerPlate - plate.getNumberOfNotepadSnacks();
-            if ( delta > 0 ) {
-              _.times( delta, () => plate.addASnack() );
-            }
-            else if ( delta < 0 ) {
-              _.times( Math.abs( delta ), () => plate.removeTopSnack() );
-            }
-
-            // If there is a fractional amount, set it for the top apple.
-            if ( fractionalAppleAmount.value > 0 ) {
-              const topApple = plate.getTopSnack();
-              assert && assert( topApple || this.totalSnacksProperty.value === 0,
-                'Every plate should have at least one apple unless the total number of snacks is 0.' );
-              topApple!.fractionProperty.value = fractionalAppleAmount;
-            }
+            plate.setNotepadSnacksToValue( new Fraction( totalSnacks, this.numberOfPlatesProperty.value ) );
           }
           else {
 
@@ -395,8 +335,8 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.totalSnacksProperty,
         ...this.plates.map( plate => plate.isActiveProperty ) ],
       () => {
-      handleNumberOfSnacksChanged( this.totalSnacksProperty.value );
-    } );
+        handleNumberOfSnacksChanged( this.totalSnacksProperty.value );
+      } );
   }
 
   /**
@@ -405,16 +345,12 @@ export default class FairShareModel extends SharingModel<Apple> {
    * in progress when this is called it will have no effect.
    */
   private finishInProgressAnimations(): void {
-    if ( this.collectToShareAnimationTimerListeners ) {
+    if ( this.collectToShareAnimationTimerListener ) {
 
       // Invoke the timer callback now.  This will initiate any movement of the apples, which will then be forced to
       // finish at the end of this method.
-      this.collectToShareAnimationTimerListeners.forEach( listener => {
-        listener( APPLE_FRACTION_DISTRIBUTION_DELAY );
-        stepTimer.clearTimeout( listener );
-      } );
-
-      this.collectToShareAnimationTimerListeners = null;
+      this.collectToShareAnimationTimerListener( APPLE_FRACTION_DISTRIBUTION_DELAY );
+      stepTimer.clearTimeout( this.collectToShareAnimationTimerListener );
     }
     this.getAllSnacks().forEach( snack => snack.forceAnimationToFinish() );
   }
@@ -472,6 +408,34 @@ export default class FairShareModel extends SharingModel<Apple> {
     return new Vector2( x, y );
   }
 
+  private confirmPlateValues( plate: Plate<Apple> ): void {
+    if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
+      assert && assert( plate.snacksOnPlateInNotepad.length === plate.tableSnackNumberProperty.value,
+        'the number of snacks on the plate should match the table snack number' );
+    }
+    else if ( this.notepadModeProperty.value === NotepadMode.COLLECT ) {
+      assert && assert( plate.snacksOnPlateInNotepad.length === 0 && this.appleCollection.length === this.totalSnacksProperty.value,
+        'the plate should have no snacks and the collection should have all of the snacks' );
+    }
+    else if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
+      const numberOfWholeApplesPerActivePlate = Math.floor( this.totalSnacksProperty.value / this.numberOfPlatesProperty.value );
+      const wholeApples = plate.getSnackStack().filter( snack => {
+        return snack.fractionProperty.value.equals( Fraction.ONE );
+      } );
+      assert && assert( wholeApples.length === numberOfWholeApplesPerActivePlate,
+        `each plate should have the correct number of whole apples. Desired: ${numberOfWholeApplesPerActivePlate}, Actual: ${wholeApples.length}` );
+
+      const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
+        this.numberOfPlatesProperty.value );
+
+      // We do not want to use the function plate.getTopSnack() here because it will not include our animating snack
+      // as a possible value.
+      const topSnack = plate.snacksOnPlateInNotepad[ plate.snacksOnPlateInNotepad.length - 1 ];
+      assert && assert( !Number.isInteger( this.meanProperty.value ) &&
+      topSnack.fractionProperty.value.equals( fractionValue ), 'the top snack should be a fraction' );
+    }
+  }
+
   /**
    * Update the positions for all apples in the collection.  It only makes sense to use this when in or going into the
    * Collect mode.
@@ -481,15 +445,10 @@ export default class FairShareModel extends SharingModel<Apple> {
   }
 
   private addSnackAddedListener( apple: Apple, plate: Plate<Apple> ): void {
-    // if ( this.notepadModeProperty.value === NotepadMode.COLLECT ) {
-    //   debugger;
-    // }
-    // assert && assert( this.notepadModeProperty.value !== NotepadMode.COLLECT,
-    //   'apples should not be added to plates in collect mode' );
-
     const index = plate.snacksOnPlateInNotepad.indexOf( apple );
 
-    // Handle the fraction value of the apples based on the notepad mode.
+    // assert && assert( this.notepadModeProperty.value !== NotepadMode.COLLECT,
+    //   'apples should not be added to plates in collect mode' );
     // const notepadMode = this.notepadModeProperty.hasDeferredValue ? this.notepadModeProperty.deferredValue : this.notepadModeProperty.value;
     if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
 
@@ -498,18 +457,21 @@ export default class FairShareModel extends SharingModel<Apple> {
       const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
         this.numberOfPlatesProperty.value );
 
-      if ( this.collectToShareAnimationTimerListeners ) {
+      if ( index < numberOfWholeApples || !apple.animateToPosition ) {
+        apple.isActiveProperty.value = true;
+        apple.fractionProperty.value = index < numberOfWholeApples ? Fraction.ONE : fractionValue;
+        apple.moveTo( plate.getPositionForStackedItem( index ), apple.animateToPosition );
+      }
+      else if ( apple.animateToPosition ) {
 
-        // This change is animated, and the animation happens in two phases.  First, all the whole apples go from their
-        // position in the collection to the appropriate position on the plate while the whole pieces that will become
-        // fractional move to the top. After that, the whole ones at the top become fractional and move to where they
-        // need to go.
-        this.collectToShareAnimationTimerListeners.push( stepTimer.setTimeout( () => {
+        // This timer represents the second phase of the collect => share animation. The whole apples that were moved to
+        // the top of the screen are turned into fractions and animate to their final positions on the plates.
+        this.collectToShareAnimationTimerListener = stepTimer.setTimeout( () => {
 
           // Verify the state is consistent.
-          // assert && assert( !Number.isInteger( this.meanProperty.value ) && applesAtTop.length > 0,
-          //   'invalid state: there must be apples available for fractionalization if the mean value is not an integer.'
-          // );
+          assert && assert( !Number.isInteger( this.meanProperty.value ) && plate.hasSnack( apple ),
+            'invalid state: there must be apples available for fractionalization if the mean value is not an integer.'
+          );
 
           if ( index < numberOfWholeApples ) {
             apple.fractionProperty.value = Fraction.ONE;
@@ -523,18 +485,12 @@ export default class FairShareModel extends SharingModel<Apple> {
           apple.isActiveProperty.value = true;
           apple.moveTo( plate.getPositionForStackedItem( index ), true );
 
-          this.collectToShareAnimationTimerListeners = null;
-        }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 ) );
-      }
-      else {
-        apple.isActiveProperty.value = true;
-        apple.moveTo( plate.getPositionForStackedItem( index ) );
-        if ( index < numberOfWholeApples ) {
-          apple.fractionProperty.value = Fraction.ONE;
-        }
-        else {
-          apple.fractionProperty.value = fractionValue;
-        }
+          apple.travelAnimationProperty.value?.finishEmitter.addListener( () => {
+            this.confirmPlateValues( plate );
+          } );
+
+          this.collectToShareAnimationTimerListener = null;
+        }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 );
       }
     }
     else if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
