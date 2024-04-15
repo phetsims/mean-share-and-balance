@@ -51,8 +51,9 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     // Predict Mean Line that acts as a slider for alternative input.
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
-      model.numberOfCupsProperty, () => model.getActiveNotepadCups(),
-      modelViewTransformNotepadCups, {
+      model.numberOfCupsProperty, model.arePipesOpenProperty, model.meanProperty,
+      () => model.getActiveNotepadCups(), modelViewTransformNotepadCups,
+      {
         visibleProperty: model.predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
 

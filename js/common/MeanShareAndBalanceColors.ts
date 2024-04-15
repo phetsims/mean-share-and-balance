@@ -40,17 +40,14 @@ const meanShareAndBalanceColors = {
   notepadCupBackgroundFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'notepadCupBackgroundFill', {
     default: 'white'
   } ),
-  showMeanLineStrokeColorProperty: new ProfileColorProperty( meanShareAndBalance, 'showMeanLineStroke', {
-    default: '#8500bd'
-  } ),
   predictMeanSliderStrokeColorProperty: new ProfileColorProperty( meanShareAndBalance, 'predictMeanSlider', {
     default: '#666666'
   } ),
+  predictMeanSuccessFillProperty: new ProfileColorProperty( meanShareAndBalance, 'predictMeanSuccessFill', {
+    default: 'yellow'
+  } ),
   waterShadowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterShadowFill', {
     default: '#8EC6DD'
-  } ),
-  cupWaterLevelLineColorProperty: new ProfileColorProperty( meanShareAndBalance, 'cupWaterLevelLine', {
-    default: '#85BBCC'
   } ),
   emptyTableCupColorProperty: new ProfileColorProperty( meanShareAndBalance, 'emptyTableCup', {
     default: new Color( 249, 253, 255, 0.4 )
