@@ -148,9 +148,8 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
 
       tableNode.y = waterCupLayerProxy.bottom - 30;
 
-      // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal
-      // order and they all do the same thing so this highlight indicates that there will only be one stop in the
-      // traversal order.
+      // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal order, and
+      // they all do the same thing so this highlight indicates that there will only be one stop in the traversal order.
       const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value )
         .map( pipe => Shape.bounds( pipe.globalBounds ) );
 
@@ -160,18 +159,6 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     // Add sound generation for the "predict mean" slider.
-    // this.predictMeanSoundGenerator = new ContinuousPropertySoundClip(
-    //   model.meanPredictionProperty,
-    //   model.dragRange,
-    //   predictMeanPencilLoop_mp3,
-    //   {
-    //     playbackRateRange: new Range( 0.95, 1.05 ),
-    //     fadeTime: 0.1,
-    //     fadeStartDelay: 0.1,
-    //     initialOutputLevel: 0.1
-    //   }
-    // );
-    // soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
     this.predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
     soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
 
