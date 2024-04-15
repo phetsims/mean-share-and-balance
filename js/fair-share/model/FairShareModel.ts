@@ -160,17 +160,21 @@ export default class FairShareModel extends SharingModel<Apple> {
       // Make sure any leftover animations from previous mode changes are cleared.
       this.finishInProgressAnimations();
 
+      // Make sure this is initially turned off - it will be set below for the state transitions that need animation.
+      this.animateAddedSnacks = false;
+
       // So that we're in a consistent state, make sure all apples are whole.
       this.getAllSnacks().forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
 
       if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
+        this.animateAddedSnacks = true;
         while ( this.appleCollection.length > 0 ) {
           this.getActivePlates().forEach( plate => {
 
             _.times( plate.tableSnackNumberProperty.value, () => {
               const apple = this.appleCollection.pop();
               assert && assert( apple, 'there should be enough apples to put on the plates' );
-              plate.addSnackToTop( apple!, true );
+              plate.addSnackToTop( apple! );
             } );
           } );
         }
@@ -180,6 +184,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.getActivePlates().forEach( plate => this.confirmPlateValues( plate ) );
       }
       else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.COLLECT ) {
+        this.animateAddedSnacks = true;
 
         // Move all apples from their current, synced up locations to the collection area.
         this.plates.forEach( plate => {
@@ -192,6 +197,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         } );
       }
       else if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SHARE ) {
+        this.animateAddedSnacks = true;
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
         const activePlates = this.getActivePlates();
         const applesAtTop: Apple[] = [];
@@ -200,7 +206,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           // Move the whole apples to the appropriate plates.
           if ( i < numberOfWholeApplesPerActivePlate * activePlates.length ) {
             const plate = activePlates[ i % activePlates.length ];
-            plate.addSnackToTop( apple, true );
+            plate.addSnackToTop( apple );
           }
           else {
 
@@ -237,11 +243,13 @@ export default class FairShareModel extends SharingModel<Apple> {
 
           // Add the soon-to-be fractionalized apples to the plates.
           applesAtTop.forEach( ( apple, i ) => {
-            this.plates[ i ].addSnackToTop( apple, true );
+            this.plates[ i ].addSnackToTop( apple );
           } );
         }
       }
       else if ( previousNotepadMode === NotepadMode.SHARE && notepadMode === NotepadMode.COLLECT ) {
+
+        this.animateAddedSnacks = true;
 
         // Make sure all apples are whole.
         this.getAllSnacks().forEach( snack => {
@@ -284,6 +292,9 @@ export default class FairShareModel extends SharingModel<Apple> {
       else {
         assert && assert( false, `Unhandled state transition - from ${previousNotepadMode} to ${notepadMode}` );
       }
+
+      // Clear the flag that controls whether apple motion is animated - it is set at the start of each state change.
+      this.animateAddedSnacks = false;
     };
 
     // Handler function that is invoked when the total number of active apples changes.  This will activate and position
@@ -479,12 +490,12 @@ export default class FairShareModel extends SharingModel<Apple> {
       const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
         this.numberOfPlatesProperty.value );
 
-      if ( index < numberOfWholeApples || !apple.animateToPosition ) {
+      if ( index < numberOfWholeApples || !this.animateAddedSnacks ) {
         apple.isActiveProperty.value = true;
         apple.fractionProperty.value = index < numberOfWholeApples ? Fraction.ONE : fractionValue;
-        apple.moveTo( plate.getPositionForStackedItem( index ), apple.animateToPosition );
+        apple.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
       }
-      else if ( apple.animateToPosition ) {
+      else if ( this.animateAddedSnacks ) {
 
         // This timer represents the second phase of the collect => share animation. The whole apples that were moved to
         // the top of the screen are turned into fractions and animate to their final positions on the plates.
@@ -509,7 +520,7 @@ export default class FairShareModel extends SharingModel<Apple> {
     else if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
       apple.isActiveProperty.value = true;
       apple.fractionProperty.value = Fraction.ONE;
-      apple.moveTo( plate.getPositionForStackedItem( index ), apple.animateToPosition );
+      apple.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
     }
 
     // TODO: Add assertion to make sure end state matches expectations. https://github.com/phetsims/mean-share-and-balance/issues/140

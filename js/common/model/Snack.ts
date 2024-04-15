@@ -44,9 +44,6 @@ export default class Snack extends PhetioObject {
 
   public isDraggingProperty = new BooleanProperty( false );
 
-  // Whether we want the snack to animate or not when its position is changed.
-  public animateToPosition = false;
-
   // for debugging
   public readonly instanceID = instanceCount++;
 
@@ -137,7 +134,6 @@ export default class Snack extends PhetioObject {
 
   protected finishAnimation(): void {
     this.travelAnimationProperty.value = null;
-    this.animateToPosition = false;
   }
 
   /**

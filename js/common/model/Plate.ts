@@ -62,6 +62,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // The number of snacks this plate should have on it when it becomes active.
   public readonly startingNumberOfSnacks: number;
 
+  // Function used to set the positions of the snacks on this plate to form what looks like a stack.
   private readonly snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2;
 
   // Functions needed for obtaining and releasing snacks.
@@ -124,8 +125,8 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // When snacks are added, make sure they are in the right state and the right place.
     this.snacksOnNotepadPlate.addItemAddedListener( snack => {
 
-      // Add a listener that updates the stack when a resident candy bar starts being dragged.  This is done because,
-      // by design, snacks stay on a plate when dragging.  See #193 for more information on this.
+      // Add a listener that updates the stack when a resident snack starts being dragged.  This is done because, by
+      // design, snacks stay in a plate's array when dragging.  See #193 for more information on this.
       const updateStackWhenDragging = ( isDragging: boolean ) => {
         if ( isDragging ) {
           this.updateSnackPositions();
@@ -193,8 +194,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // Update the positions of the snacks.
     stackableSnacks.forEach( ( snack, i ) => {
       const position = this.getPositionForStackedItem( i );
-      const animate = !!snack.travelAnimationProperty.value || snack.animateToPosition;
-      snack.moveTo( position, animate );
+      snack.moveTo( position );
     } );
   }
 
@@ -261,9 +261,8 @@ export default class Plate<T extends Snack> extends PhetioObject {
   /**
    * Add a particular snack instance to the top of this plate's stack.
    */
-  public addSnackToTop( snack: T, animate = false ): void {
+  public addSnackToTop( snack: T ): void {
     assert && assert( this.snacksOnNotepadPlate.length < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
-    snack.animateToPosition = animate;
     this.snacksOnNotepadPlate.push( snack );
   }
 

@@ -49,6 +49,10 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
+  // A state flag used to control whether the motion of snacks is animated or instantaneous.  This is helpful for
+  // preventing animations during phet-io state setting.
+  public animateAddedSnacks = false;
+
   // This ObservableArray is used to keep track of snacks that are not in use and are thus available to be moved to a
   // plate or elsewhere. These are generally inactive and not visible in the view.  Removing a snack from this array will
   // cause it to be activated, adding to the array will cause it to be deactivated.

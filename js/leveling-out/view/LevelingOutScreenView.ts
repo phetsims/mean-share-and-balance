@@ -84,6 +84,9 @@ export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
       const plateHoldingSnack = model.getPlateForSnack( candyBarNode.candyBar );
       assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
 
+      // Set the flag that will ensure that the candy bars animate to the top of the stacks when dropped.
+      model.animateAddedSnacks = true;
+
       // Even if there are no plates with space the plate our candy bar came from should always have space for the candy
       // bar to return.
       !platesWithSpace.includes( plateHoldingSnack! ) && platesWithSpace.push( plateHoldingSnack! );
@@ -103,7 +106,7 @@ export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
 
         // Move the candy bar to the new plate, since it's closer.
         plateHoldingSnack!.removeSnack( candyBar );
-        closestPlate.addSnackToTop( candyBar, true );
+        closestPlate.addSnackToTop( candyBar );
       }
       else {
         assert && assert( plateHoldingSnack.hasSnack( candyBar ), 'this situation should be impossible' );
@@ -111,6 +114,9 @@ export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
         // Put the candy bar back on the same plate.
         candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
       }
+
+      // Clear the flag for animating added snacks, since any adding due to the drop action should now be complete.
+      model.animateAddedSnacks = false;
     };
 
     // Create the nodes on the notepad that represent the plates in the model.
