@@ -79,7 +79,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // A timer listener for the 2nd phase of the animation that distributes apples from the collection area to the plates
   // when there are fractional apples involved (Share mode).
-  public collectToShareAnimationTimerListener: TimerListener | null = null;
+  private readonly fractionDistributionListenerMap = new Map<Apple, TimerListener>();
 
   // The place where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
@@ -350,13 +350,15 @@ export default class FairShareModel extends SharingModel<Apple> {
    * in progress when this is called it will have no effect.
    */
   private finishInProgressAnimations(): void {
-    if ( this.collectToShareAnimationTimerListener ) {
 
       // Invoke the timer callback now.  This will initiate any movement of the apples, which will then be forced to
       // finish at the end of this method.
-      this.collectToShareAnimationTimerListener( APPLE_FRACTION_DISTRIBUTION_DELAY );
-      stepTimer.clearTimeout( this.collectToShareAnimationTimerListener );
-    }
+    this.fractionDistributionListenerMap.forEach( ( listener, apple ) => {
+      listener( 0 );
+      stepTimer.clearTimeout( listener );
+      this.fractionDistributionListenerMap.delete( apple );
+    } );
+
     this.getAllSnacks().forEach( snack => snack.forceAnimationToFinish() );
   }
 
@@ -471,7 +473,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         // This timer represents the second phase of the collect => share animation. The whole apples that were moved to
         // the top of the screen are turned into fractions and animate to their final positions on the plates.
-        this.collectToShareAnimationTimerListener = stepTimer.setTimeout( () => {
+        this.fractionDistributionListenerMap.set( apple, stepTimer.setTimeout( () => {
 
           // Verify the state is consistent.
           assert && assert( !Number.isInteger( this.meanProperty.value ) && plate.hasSnack( apple ),
@@ -494,8 +496,7 @@ export default class FairShareModel extends SharingModel<Apple> {
             this.confirmPlateValues( plate );
           } );
 
-          this.collectToShareAnimationTimerListener = null;
-        }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 );
+        }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 ) );
       }
     }
     else if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
