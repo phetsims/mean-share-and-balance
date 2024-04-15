@@ -122,7 +122,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       model.meanCalculationDialogVisibleProperty,
       notepadNode.bounds,
       {
-        calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'decimal' : 'mixedFraction',
+        calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'remainder' : 'mixedFraction',
         centerX: this.playAreaCenterX,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         tandem: providedOptions.tandem.createTandem( 'meanCalculationDialog' )

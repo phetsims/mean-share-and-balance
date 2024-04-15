@@ -25,8 +25,9 @@ import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringPrope
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 
-export type MeanDisplayType = 'decimal' | 'mixedFraction';
+export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 
 type SelfOptions = {
 
@@ -173,13 +174,25 @@ export default class MeanCalculationDialog extends Dialog {
         visibleProperty: calculationsVisibleProperty
       } );
 
-      let decimalOrMixedFraction;
+      // The value can be represented as either a decimal, mixed fraction, or a whole number with a remainder.
+      let valueRepresentation;
       if ( options.calculatedMeanDisplayMode === 'decimal' ) {
         const decimalOptions = {
           font: DECIMAL_FONT,
           visibleProperty: calculationsVisibleProperty
         };
-        decimalOrMixedFraction = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
+        valueRepresentation = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
+      }
+      else if ( options.calculatedMeanDisplayMode === 'remainder' ) {
+        const wholeNumber = Math.floor( mean );
+        const patternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.remainderPatternStringProperty, {
+          wholeNumber: wholeNumber,
+          remainder: meanRemainder
+        } );
+        valueRepresentation = new Text( patternStringProperty, {
+          font: DECIMAL_FONT,
+          visibleProperty: calculationsVisibleProperty
+        } );
       }
       else {
 
@@ -191,7 +204,7 @@ export default class MeanCalculationDialog extends Dialog {
         }
 
         // Create a node that represents the mean as a mixed fraction.
-        decimalOrMixedFraction = new MixedFractionNode( {
+        valueRepresentation = new MixedFractionNode( {
           whole: ( meanWholePart > 0 || totalValues === 0 ) ? meanWholePart : null,
           numerator: fraction ? fraction.numerator : null,
           denominator: fraction ? fraction.denominator : null,
@@ -205,7 +218,7 @@ export default class MeanCalculationDialog extends Dialog {
       calculationNode.rows = [
         [ meanEqualsAdditionFractionText, additionFraction ],
         [ meanEqualsUnreducedFractionText, unreducedFraction ],
-        [ meanEqualsDecimalOrMixedFractionText, decimalOrMixedFraction ],
+        [ meanEqualsDecimalOrMixedFractionText, valueRepresentation ],
         zeroDataMessageText ? [ zeroDataMessageText ] : []
       ];
     } );
