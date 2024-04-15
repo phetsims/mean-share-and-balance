@@ -59,4 +59,8 @@ change according to restrictions on space, and calculates mean across the data s
 
 #### Sharing Screens ( Distribute and Fair Share )
 
-TODO: ObservableArrays are in charge of setting the positionProperty, isActiveProperty, and fractionProperty of snacks. numberOfTableSnacksProperty and notepadModeProperty listeners are in charge of assigning snacks to the correct array, and animation.
+TODO: ObservableArrays in the Plate class are in charge of setting the positionProperty, isActiveProperty, and
+fractionProperty of the snacks when they are added. numberOfTableSnacksProperty and notepadModeProperty listeners are in
+charge of assigning snacks to the correct array, and animation.
+
+

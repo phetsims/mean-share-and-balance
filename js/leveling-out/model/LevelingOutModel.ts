@@ -86,7 +86,7 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
     // Initialize the plates and set up plate-related behavior that is specific to the Leveling Out screen.
     this.plates.forEach( plate => {
 
-      plate.snacksOnPlateInNotepad.addItemAddedListener( snack => {
+      plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
         snack.isActiveProperty.value = true;
         snack.moveTo( plate.getStackingPositionForSnack( snack ) );
       } );

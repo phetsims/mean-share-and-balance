@@ -44,7 +44,7 @@ export default class Snack extends PhetioObject {
 
   public isDraggingProperty = new BooleanProperty( false );
 
-  // Whether we want the snack to animate or not when it's position is changed.
+  // Whether we want the snack to animate or not when its position is changed.
   public animateToPosition = false;
 
   // for debugging
