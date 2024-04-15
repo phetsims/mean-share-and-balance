@@ -14,7 +14,6 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import InfoBooleanStickyToggleButton from '../../common/view/InfoBooleanStickyToggleButton.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import MovableFulcrumIcon from './MovableFulcrumIcon.js';
@@ -70,22 +69,10 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );
 
-    const infoButton = new InfoBooleanStickyToggleButton(
-      model.isMeanInfoDialogVisibleProperty,
-      providedOptions.tandem.createTandem( 'infoButton' ),
-      {
-        layoutOptions: {
-          minContentHeight: 140
-        },
-        touchAreaDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION
-      }
-    );
-
     const vBox = new VBox( {
       children: [
         meanFulcrumRadioButtonGroup,
-        checkboxGroup,
-        infoButton
+        checkboxGroup
       ],
       spacing: 20,
       align: 'left',
@@ -93,11 +80,12 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
     } );
 
     const options = optionize<BalancePointControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
-      controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup, infoButton ],
+      controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup ],
       isSoccerContext: true,
       numberSpinnerOptions: {
         arrowsSoundPlayer: nullSoundPlayer // ball kick sound handled elsewhere by soccer-common
-      }
+      },
+      dialogVisibleProperty: model.isMeanInfoDialogVisibleProperty
     }, providedOptions );
 
     const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.targetNumberOfBallsProperty;

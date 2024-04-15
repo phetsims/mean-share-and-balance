@@ -90,9 +90,6 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
-      meanAccordionBoxOptions: {
-        snackType: providedOptions.snackType
-      },
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           model.numberOfPlatesProperty,

@@ -19,11 +19,13 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
 
 type SelfOptions = {
   numberSpinnerOptions?: NumberSpinnerOptions;
   controlsPDOMOrder: Node[];
   isSoccerContext?: boolean;
+  dialogVisibleProperty?: Property<boolean> | null;
 };
 
 export type MeanShareAndBalanceControlsOptions = SelfOptions & StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
@@ -42,6 +44,7 @@ export default class MeanShareAndBalanceControls extends Node {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
       isSoccerContext: false,
+      dialogVisibleProperty: null,
       numberSpinnerOptions: {}
     }, providedOptions );
     const controlsAlignGroup = new AlignGroup( { matchVertical: false } );
@@ -49,6 +52,16 @@ export default class MeanShareAndBalanceControls extends Node {
     const vBoxAlignBox = controlsAlignGroup.createBox( controlsVBox, { xAlign: 'left' } );
 
     super( { children: [ vBoxAlignBox ] } );
+
+    if ( options.dialogVisibleProperty ) {
+      const infoButton = new InfoBooleanStickyToggleButton( options.dialogVisibleProperty, {
+        centerY: 200,
+        left: vBoxAlignBox.left,
+        tandem: options.tandem.createTandem( 'infoButton' )
+      } );
+      this.addChild( infoButton );
+    }
+
 
     const numberSpinnerOptions = combineOptions<NumberSpinnerOptions>( {
       decrementFunction: value => {

@@ -15,13 +15,11 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { AlignBox, FireListener, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
-import MeanAccordionBox, { MeanAccordionBoxOptions } from './MeanAccordionBox.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
 
 type SelfOptions = {
-  meanAccordionBoxOptions: StrictOmit<MeanAccordionBoxOptions, 'tandem'>;
   showSyncButton?: boolean;
   vBoxOptions?: StrictOmit<VBoxOptions, 'children' | 'align'>;
 };
@@ -30,22 +28,11 @@ type SharingControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceContro
 export default class SharingControls extends MeanShareAndBalanceControls {
 
   public constructor( model: Pick<SharingModel<Snack>,
-                        'isMeanAccordionExpandedProperty' |
                         'numberOfPlatesProperty' |
                         'totalSnacksProperty' |
                         'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>,
                       providedOptions: SharingControlsOptions ) {
-
-    const meanAccordionBoxOptions = combineOptions<MeanAccordionBoxOptions>( providedOptions.meanAccordionBoxOptions,
-      { tandem: providedOptions.tandem } );
-    const meanAccordionBox = new MeanAccordionBox(
-      model.totalSnacksProperty,
-      model.numberOfPlatesProperty,
-      meanCalculationDialogVisibleProperty,
-      model.isMeanAccordionExpandedProperty,
-      meanAccordionBoxOptions
-    );
 
     const syncListener = new FireListener( {
       fire: () => model.syncData(),
@@ -68,25 +55,20 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       visible: providedOptions.showSyncButton  // Fair Share Screen does not have a SyncButton
     } );
 
-    // Number Spinner
-    // const numberSpinnerSoundPlayer = new NumberSpinnerSoundPlayer( model.numberOfPlatesProperty, plateNumberOfSelection_mp3 );
-    // model.numberOfPlatesProperty.link( () => {
-    //   numberSpinnerSoundPlayer.play();
-    // } );
-
     const options = optionize<SharingControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       showSyncButton: true,
       excludeInvisibleChildrenFromBounds: false,
       vBoxOptions: {},
-      controlsPDOMOrder: [ meanAccordionBox, buttonAlignBox ]
+      controlsPDOMOrder: [ buttonAlignBox ],
+      dialogVisibleProperty: meanCalculationDialogVisibleProperty
     }, providedOptions );
 
-    const combinedOptions = combineOptions<VBoxOptions>( {
-      children: [ meanAccordionBox, buttonAlignBox ],
+    const vBoxOptions = combineOptions<VBoxOptions>( {
+      children: [ buttonAlignBox ],
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20
     }, options.vBoxOptions );
-    const vBox = new VBox( combinedOptions );
+    const vBox = new VBox( vBoxOptions );
 
     super( vBox, model.numberOfPlatesProperty, MeanShareAndBalanceStrings.numberOfPeopleStringProperty, options );
   }

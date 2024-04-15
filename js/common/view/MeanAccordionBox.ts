@@ -9,7 +9,6 @@
 import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { HBox, Image, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
-import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
@@ -45,7 +44,6 @@ export default class MeanAccordionBox extends AccordionBox {
 
   public constructor( totalProperty: TReadOnlyProperty<number>,
                       divisorProperty: TReadOnlyProperty<number>,
-                      meanCalculationDialogVisibleProperty: Property<boolean>,
                       isMeanAccordionExpandedProperty: Property<boolean>,
                       providedOptions: MeanAccordionBoxOptions ) {
 
@@ -155,10 +153,8 @@ export default class MeanAccordionBox extends AccordionBox {
       }
     );
 
-    const infoButton = new InfoBooleanStickyToggleButton( meanCalculationDialogVisibleProperty, providedOptions.tandem );
-
     const meanContentNode = new HBox( {
-      children: [ meanSnacksGraphicNode, infoButton ],
+      children: [ meanSnacksGraphicNode ],
       align: 'bottom',
       justify: 'spaceEvenly',
       spacing: 25
