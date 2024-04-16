@@ -128,7 +128,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       apple.moveTo( this.getCollectionPosition( index ), true );
     } );
 
-    // Initialize the plates and set up plate-related behavior that is specific to the Leveling Out screen.
+    // Initialize the plates and set up plate-related behavior that is specific to the Fair Share screen.
     this.plates.forEach( plate => {
 
       plate.isActiveProperty.link( isActive => {

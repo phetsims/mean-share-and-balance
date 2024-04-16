@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the Leveling Out Screen which includes people, candy bars, visual mean snackType, and a numerical
+ * Model for the Distribute Screen which includes people, candy bars, visual mean snackType, and a numerical
  * mean snackType.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -26,7 +26,7 @@ import SnackStacker from '../../common/SnackStacker.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 
 type SelfOptions = EmptySelfOptions;
-type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
+type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
 //TODO: Does this now need to extend PhetioObject to work with GroupSortInteractionModel?, see: https://github.com/phetsims/mean-share-and-balance/issues/137
 export default class DistributeModel extends SharingModel<CandyBar> {
@@ -34,11 +34,11 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   public groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public sortingRangeProperty: TReadOnlyProperty<Range>;
 
-  public constructor( providedOptions?: LevelingOutModelOptions ) {
+  public constructor( providedOptions?: DistributeModelOptions ) {
 
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
 
-    const options = optionize<LevelingOutModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
+    const options = optionize<DistributeModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
 
     super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );
 
@@ -83,7 +83,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     // Fire the stackChangedEmitter when the number of plates changes since this could cause the selected item to disappear.
     this.numberOfPlatesProperty.lazyLink( () => stackChangedEmitter.emit() );
 
-    // Initialize the plates and set up plate-related behavior that is specific to the Leveling Out screen.
+    // Initialize the plates and set up plate-related behavior that is specific to the Distribute screen.
     this.plates.forEach( plate => {
 
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {

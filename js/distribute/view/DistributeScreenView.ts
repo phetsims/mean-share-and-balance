@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Representation for the Leveling Out Screen. Contains a table with people, each of whom have a plate with candy bars
+ * Representation for the Distribute Screen. Contains a table with people, each of whom have a plate with candy bars
  * on them.  It also includes a notepad that also show plates and candy bars that can be dragged and 'leveled out'.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -32,16 +32,16 @@ import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
-type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
+type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 const CANDY_BAR_FOCUS_X_MARGIN = 10;
 export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
   private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
 
-  public constructor( model: DistributeModel, providedOptions: LevelingOutScreenViewOptions ) {
+  public constructor( model: DistributeModel, providedOptions: DistributeScreenViewOptions ) {
 
-    const options = optionize<LevelingOutScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
+    const options = optionize<DistributeScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
       snackType: 'candyBars'
     }, providedOptions );
 
@@ -63,7 +63,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     super(
       model,
       MeanShareAndBalanceStrings.levelingOutQuestionStringProperty,
-      MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty,
+      MeanShareAndBalanceColors.distributeQuestionBarColorProperty,
       notepadNode,
       options
     );

@@ -35,7 +35,7 @@ export default class Snack extends PhetioObject {
   // Subclass handles reset.
   public readonly isActiveProperty: Property<boolean>;
 
-  // For the Leveling Out screen the positionProperty is set by the parentPlateProperty and the drag handler.
+  // For the Distribute screen the positionProperty is set by the parentPlateProperty and the drag handler.
   // Subclass handles reset.
   public readonly positionProperty: Property<Vector2>;
 

@@ -22,7 +22,7 @@ const meanShareAndBalanceColors = {
   introScreenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'introScreenBackground', {
     default: '#FFF9F0'
   } ),
-  levelingOutScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutScreenBackground', {
+  distributeScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'distributeScreenBackground', {
     default: '#DEEDFC'
   } ),
   fairShareScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'fairShareScreenBackground', {
@@ -64,7 +64,7 @@ const meanShareAndBalanceColors = {
   pipeGradientDarkColorProperty: new ProfileColorProperty( meanShareAndBalance, 'pipeGradientDark', {
     default: '#4d4d4d'
   } ),
-  levelingOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutQuestionBar', {
+  distributeQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'distributeQuestionBar', {
     default: '#78C4F7'
   } ),
   fairShareQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'fairShareQuestionBar', {

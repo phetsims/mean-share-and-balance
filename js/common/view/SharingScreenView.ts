@@ -1,6 +1,6 @@
 // Copyright 2024, University of Colorado Boulder
 /**
- * The base screen view for the Leveling Out Screen and the Fair Share Screen.
+ * The base screen view for the Distribute Screen and the Fair Share Screen.
  * Both screens have:
  * - A table with people, each of whom have a plate with a snack on them.
  * - A notepad that also shows plates and snacks
