@@ -96,7 +96,7 @@ export default class FairShareModel extends SharingModel<Apple> {
     // value.  This will have no effect on apples that are NOT the top one on a plate.
     const handleFraction = ( plate: Plate<Apple>, fraction: Fraction ) => {
 
-      assert && assert( fraction.value > 0 && fraction.value < 1, 'this function only handles fractions less than 1' );
+      assert && assert( fraction.value > 0 && fraction.value <= 1, 'invalid fraction value for this handler' );
 
       // Make sure all apples are whole before setting the fraction value on the top apple.
       plate.snacksOnNotepadPlate.forEach( apple => {

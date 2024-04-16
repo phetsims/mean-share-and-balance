@@ -216,6 +216,16 @@ export default class Plate<T extends Snack> extends PhetioObject {
     const snackFractionValue = new Fraction( value.numerator % value.denominator, value.denominator );
     const numberOfSnacksOnPlate = numberOfWholeSnacks + ( snackFractionValue.value > 0 ? 1 : 0 );
 
+    // Determine the fractional value of the top snack.
+    let topSnackFractionValue;
+    if ( value.value > 0 ) {
+      topSnackFractionValue = snackFractionValue.value > 0 ? snackFractionValue : Fraction.ONE;
+    }
+    else {
+      topSnackFractionValue = Fraction.ZERO;
+    }
+
+    // Add or remove snacks as needed to match the target.
     if ( numberOfSnacksOnPlate > this.snacksOnNotepadPlate.length ) {
 
       // Add snacks to the notepad list.
@@ -237,7 +247,9 @@ export default class Plate<T extends Snack> extends PhetioObject {
       }
     }
 
-    snackFractionValue.value > 0 && this.handleFraction( this, snackFractionValue );
+    // If there is at least one snack on this plate, set the top one to the appropriate fractional value, which may be 1.
+    value.value > 0 && this.handleFraction( this, topSnackFractionValue );
+
     this.updateSnackPositions();
   }
 
