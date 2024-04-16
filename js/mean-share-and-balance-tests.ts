@@ -7,8 +7,8 @@
  */
 
 import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
-import IntroModel from './intro/model/IntroModel.js';
-import Cup from './intro/model/Cup.js';
+import IntroModel from './leveling-out/model/IntroModel.js';
+import Cup from './leveling-out/model/Cup.js';
 import MeanShareAndBalanceConstants from './common/MeanShareAndBalanceConstants.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import Tandem from '../../tandem/js/Tandem.js';

@@ -12,7 +12,7 @@ import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import LevelingOutModel from '../leveling-out/model/LevelingOutModel.js';
+import LevelingOutModel from '../distribute/model/LevelingOutModel.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined

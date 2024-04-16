@@ -23,7 +23,7 @@ import Bounds2 from '../../../../dot/js/Bounds2.js';
 import SharingControls from './SharingControls.js';
 import MeanCalculationDialog from './MeanCalculationDialog.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import PersonImage from '../../leveling-out/view/PersonImage.js';
+import PersonImage from '../../distribute/view/PersonImage.js';
 import TablePlateNode from './TablePlateNode.js';
 import person1_png from '../../../images/person1_png.js';
 import person2_png from '../../../images/person2_png.js';

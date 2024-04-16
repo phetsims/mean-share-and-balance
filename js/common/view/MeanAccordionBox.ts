@@ -22,12 +22,12 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
-import LevelingOutModel from '../../leveling-out/model/LevelingOutModel.js';
+import LevelingOutModel from '../../distribute/model/LevelingOutModel.js';
 import Plate from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import NotepadAppleNode from '../../fair-share/view/NotepadAppleNode.js';
-import NotepadCandyBarNode from '../../leveling-out/view/NotepadCandyBarNode.js';
+import NotepadCandyBarNode from '../../distribute/view/NotepadCandyBarNode.js';
 
 type SelfOptions = {
   snackType: SnackType;

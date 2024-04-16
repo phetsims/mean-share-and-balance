@@ -11,8 +11,8 @@ import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import MeanShareAndBalanceStrings from './MeanShareAndBalanceStrings.js';
-import IntroScreen from './intro/IntroScreen.js';
-import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
+import IntroScreen from './leveling-out/IntroScreen.js';
+import DistributeScreen from './distribute/DistributeScreen.js';
 import FairShareScreen from './fair-share/FairShareScreen.js';
 import BalancePointScreen from './balance-point/BalancePointScreen.js';
 
@@ -34,7 +34,7 @@ const simOptions: SimOptions = {
 simLauncher.launch( () => {
   const sim = new Sim( MeanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleStringProperty, [
     new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } ),
-    new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
+    new DistributeScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
     new FairShareScreen( { tandem: Tandem.ROOT.createTandem( 'fairShareScreen' ) } ),
     new BalancePointScreen(
       { tandem: Tandem.ROOT.createTandem( 'balancePointScreen' ) } )

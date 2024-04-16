@@ -21,7 +21,7 @@ type SelfOptions = EmptySelfOptions;
 
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-export default class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
+export default class DistributeScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
@@ -36,4 +36,4 @@ export default class LevelingOutScreen extends Screen<LevelingOutModel, Leveling
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutScreen', LevelingOutScreen );
+meanShareAndBalance.register( 'DistributeScreen', DistributeScreen );
