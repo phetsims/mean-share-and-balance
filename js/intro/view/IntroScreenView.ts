@@ -32,6 +32,8 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
 import SoundGenerator from '../../../../tambo/js/sound-generators/SoundGenerator.js';
+import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
+import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -70,7 +72,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
 
-    // Add all cup nodes to the view
+    // Add all cup nodes to the view.
     const notepadCupNodes: Array<NotepadCupNode> = [];
     model.notepadCups.forEach( ( cupModel, index ) => {
       const cupNode = new NotepadCupNode( cupModel, model.tableCups[ index ], modelViewTransformNotepadCups, model.meanProperty, model.tickMarksVisibleProperty,
@@ -103,6 +105,15 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
       excludeInvisibleChildrenFromBounds: true,
       children: [ ...notepadCupNodes, ...tableCupNodes, ...pipeNodes ]
     } );
+
+    // Add sound generation for the water cup levels.
+    // TODO: Temporary experimental sound generation, see https://github.com/phetsims/mean-share-and-balance/issues/171.
+    const waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(
+      model.meanProperty,
+      model.notepadCups[ 0 ].waterLevelProperty,
+      waterBalanceFluteChordLoop_mp3
+    );
+    soundManager.addSoundGenerator( waterBalanceSoundGenerator );
 
     const notepadNode = new NotepadNode( {
       tandem: options.tandem.createTandem( 'notepadNode' )
