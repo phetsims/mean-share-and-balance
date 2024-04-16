@@ -18,7 +18,7 @@ import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
-import IntroModel from '../model/IntroModel.js';
+import LevelingOutModel from '../model/LevelingOutModel.js';
 
 type SelfOptions = {
 
@@ -33,7 +33,7 @@ type TableCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTrans
 export default class TableCupNode extends Node {
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
-                      model: Pick<IntroModel, 'changeWaterLevel'>,
+                      model: Pick<LevelingOutModel, 'changeWaterLevel'>,
                       waterCup: Cup, modelViewTransform: ModelViewTransform2,
                       providedOptions?: TableCupNodeOptions ) {
 

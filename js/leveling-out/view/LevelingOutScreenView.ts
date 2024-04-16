@@ -8,7 +8,7 @@
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import { AlignBox, ManualConstraint, Node } from '../../../../scenery/js/imports.js';
-import IntroModel from '../model/IntroModel.js';
+import LevelingOutModel from '../model/LevelingOutModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -20,7 +20,7 @@ import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import IntroControls from './IntroControls.js';
+import LevelingOutControls from './LevelingOutControls.js';
 import LabTableNode from '../../common/view/LabTableNode.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -38,12 +38,12 @@ import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
-export default class IntroScreenView extends MeanShareAndBalanceScreenView {
+export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
   // sound generator for the "predict mean" slider
   private readonly predictMeanSoundGenerator: SoundGenerator;
 
-  public constructor( model: IntroModel, providedOptions: LevelingOutScreenViewOptions ) {
+  public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = providedOptions;
 
@@ -135,7 +135,7 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
     );
 
     // Controls on Right side of screen
-    const controls = new IntroControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
+    const controls = new LevelingOutControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
       model.numberOfCupsProperty, model.arePipesOpenProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
@@ -186,4 +186,4 @@ export default class IntroScreenView extends MeanShareAndBalanceScreenView {
   }
 }
 
-meanShareAndBalance.register( 'IntroScreenView', IntroScreenView );
+meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );

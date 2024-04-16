@@ -15,7 +15,7 @@ import Property from '../../../../axon/js/Property.js';
 import { Text } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 
-export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxGroup {
+export default class LevelingOutOptionsVerticalCheckboxGroup extends VerticalCheckboxGroup {
   public constructor( tickMarksVisibleProperty: Property<boolean>, predictMeanVisibleProperty: Property<boolean>,
                       providedOptions: PickRequired<VerticalCheckboxGroupOptions, 'tandem'> ) {
 
@@ -52,4 +52,4 @@ export default class IntroOptionsVerticalCheckboxGroup extends VerticalCheckboxG
   }
 }
 
-meanShareAndBalance.register( 'IntroOptionsVerticalCheckboxGroup', IntroOptionsVerticalCheckboxGroup );
+meanShareAndBalance.register( 'LevelingOutOptionsVerticalCheckboxGroup', LevelingOutOptionsVerticalCheckboxGroup );

@@ -7,13 +7,13 @@
  */
 
 import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
-import IntroModel from './leveling-out/model/IntroModel.js';
+import LevelingOutModel from './leveling-out/model/LevelingOutModel.js';
 import Cup from './leveling-out/model/Cup.js';
 import MeanShareAndBalanceConstants from './common/MeanShareAndBalanceConstants.js';
 import Vector2 from '../../dot/js/Vector2.js';
 import Tandem from '../../tandem/js/Tandem.js';
 
-const introModel = new IntroModel( { tandem: Tandem.OPT_OUT } );
+const introModel = new LevelingOutModel( { tandem: Tandem.OPT_OUT } );
 const position = new Vector2( 50, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
 
 function testApproximatelyEquals( actual: number[], expected: number[], tolerance: number, assert: Assert, message: string ): void {
