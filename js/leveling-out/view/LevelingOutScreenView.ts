@@ -1,6 +1,6 @@
 // Copyright 2022-2024, University of Colorado Boulder
 /**
- * Representation for the Intro Screen, displaying table/notepad water cups, pipes, and various interactive options.
+ * Representation for the Leveling Out Screen, displaying table/notepad water cups, pipes, and various interactive options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -129,7 +129,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     super(
       model,
       MeanShareAndBalanceStrings.introQuestionStringProperty,
-      MeanShareAndBalanceColors.introQuestionBarColorProperty,
+      MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty,
       notepadNode,
       superOptions
     );

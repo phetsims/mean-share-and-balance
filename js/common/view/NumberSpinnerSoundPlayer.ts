@@ -1,7 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * NumberSpinnerSoundPlayer plays customs sounds for the intro and sharing screens number spinners.
+ * NumberSpinnerSoundPlayer plays customs sounds for the leveling out and sharing screens number spinners.
  * The pitch of the sound is determined by the value of the number spinner.
  *
  * @author Marla Schulz (PhET Interactive Simulations)

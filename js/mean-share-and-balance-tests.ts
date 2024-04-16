@@ -13,7 +13,7 @@ import MeanShareAndBalanceConstants from './common/MeanShareAndBalanceConstants.
 import Vector2 from '../../dot/js/Vector2.js';
 import Tandem from '../../tandem/js/Tandem.js';
 
-const introModel = new LevelingOutModel( { tandem: Tandem.OPT_OUT } );
+const levelingOutModel = new LevelingOutModel( { tandem: Tandem.OPT_OUT } );
 const position = new Vector2( 50, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
 
 function testApproximatelyEquals( actual: number[], expected: number[], tolerance: number, assert: Assert, message: string ): void {
@@ -41,7 +41,7 @@ QUnit.test( 'distribute ripple', assert => {
         isTableCup: false
       } );
     } );
-    introModel[ 'distributeWaterRipple' ]( connectedCups, connectedCups[ 2 ], waterDelta );
+    levelingOutModel[ 'distributeWaterRipple' ]( connectedCups, connectedCups[ 2 ], waterDelta );
 
     const actual = connectedCups.map( cup => cup.waterLevelProperty.value );
     testApproximatelyEquals( actual, expectedLevels, 1E-8, assert, message );

@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Instantiates Intro Model and Screen View.
+ * Instantiates Leveling Out Model and Screen View.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -19,13 +19,13 @@ import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-p
 
 type SelfOptions = EmptySelfOptions;
 
-type IntroScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
+type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
 export default class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
-  public constructor( providedOptions: IntroScreenOptions ) {
-    const options = optionize<IntroScreenOptions, SelfOptions, ScreenOptions>()( {
+  public constructor( providedOptions: LevelingOutScreenOptions ) {
+    const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.introStringProperty,
-      backgroundColorProperty: MeanShareAndBalanceColors.introScreenBackgroundColorProperty,
+      backgroundColorProperty: MeanShareAndBalanceColors.levelingOutScreenBackgroundColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(

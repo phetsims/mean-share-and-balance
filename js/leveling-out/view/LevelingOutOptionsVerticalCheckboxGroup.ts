@@ -46,7 +46,7 @@ export default class LevelingOutOptionsVerticalCheckboxGroup extends VerticalChe
         checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
         align: 'left',
         layoutOptions: { align: 'left' },
-        tandem: providedOptions.tandem.createTandem( 'introOptionsCheckboxGroup' )
+        tandem: providedOptions.tandem.createTandem( 'CheckboxGroup' )
       }
     );
   }
