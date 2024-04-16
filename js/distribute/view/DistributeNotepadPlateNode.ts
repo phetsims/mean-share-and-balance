@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * LevelingOutNotepadPlateNode displays the plate and the outlined candy bars in the notepad for the Leveling Out
+ * DistributeNotepadPlateNode displays the plate and the outlined candy bars in the notepad for the Leveling Out
  * screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
@@ -18,7 +18,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import Plate from '../../common/model/Plate.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import LevelingOutModel from '../model/LevelingOutModel.js';
+import DistributeModel from '../model/DistributeModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import CandyBar from '../model/CandyBar.js';
@@ -28,7 +28,7 @@ type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequire
 // constants
 const STROKE_WIDTH = 1;
 
-export default class LevelingOutNotepadPlateNode extends Node {
+export default class DistributeNotepadPlateNode extends Node {
 
   public constructor( plate: Plate<CandyBar>, mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
 
@@ -37,8 +37,8 @@ export default class LevelingOutNotepadPlateNode extends Node {
       const candyBarOutlineNode = new Rectangle(
         0,
         0,
-        LevelingOutModel.CANDY_BAR_WIDTH - STROKE_WIDTH,
-        LevelingOutModel.CANDY_BAR_HEIGHT - STROKE_WIDTH,
+        DistributeModel.CANDY_BAR_WIDTH - STROKE_WIDTH,
+        DistributeModel.CANDY_BAR_HEIGHT - STROKE_WIDTH,
         {
           stroke: MeanShareAndBalanceColors.candyBarColorProperty,
           lineDash: [ 1, 2 ]
@@ -77,4 +77,4 @@ export default class LevelingOutNotepadPlateNode extends Node {
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutNotepadPlateNode', LevelingOutNotepadPlateNode );
+meanShareAndBalance.register( 'DistributeNotepadPlateNode', DistributeNotepadPlateNode );

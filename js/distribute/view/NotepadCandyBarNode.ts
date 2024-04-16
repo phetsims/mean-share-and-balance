@@ -11,7 +11,7 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { DragListener, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import LevelingOutModel from '../model/LevelingOutModel.js';
+import DistributeModel from '../model/DistributeModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
@@ -36,14 +36,14 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   public readonly dragListener: DragListener;
   public readonly candyBar: CandyBar;
 
-  public constructor( model: Pick<LevelingOutModel, 'getPlateForSnack'>,
+  public constructor( model: Pick<DistributeModel, 'getPlateForSnack'>,
                       candyBar: CandyBar,
                       modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,
                       providedOptions: NotepadCandyBarNodeOptions ) {
 
-    const candyBarRectangle = new Rectangle( 0, 0, LevelingOutModel.CANDY_BAR_WIDTH, LevelingOutModel.CANDY_BAR_HEIGHT, {
+    const candyBarRectangle = new Rectangle( 0, 0, DistributeModel.CANDY_BAR_WIDTH, DistributeModel.CANDY_BAR_HEIGHT, {
       fill: MeanShareAndBalanceColors.candyBarColorProperty,
       children: NotepadCandyBarNode.getSketchOutline()
     } );
@@ -122,7 +122,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
    *
    * When creating partial candy bars the width and rightYTranslation may need to adjust accordingly.
    */
-  public static getSketchOutline( candyBarWidth = LevelingOutModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
+  public static getSketchOutline( candyBarWidth = DistributeModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
     const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
       Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
     );
@@ -146,13 +146,13 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       ) );
 
     const candyBarStrokeLeft = new Line(
-      0, 0, 0, LevelingOutModel.CANDY_BAR_HEIGHT,
+      0, 0, 0, DistributeModel.CANDY_BAR_HEIGHT,
       {
         lineWidth: 1.95,
         stroke: leftStrokePattern
       } );
     const candyBarStrokeRight = new Line(
-      candyBarWidth, 0, candyBarWidth, LevelingOutModel.CANDY_BAR_HEIGHT,
+      candyBarWidth, 0, candyBarWidth, DistributeModel.CANDY_BAR_HEIGHT,
       {
         lineWidth: 1.95,
         stroke: rightStrokePattern
@@ -164,7 +164,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         stroke: horizontalStrokePattern
       } );
     const candyBarStrokeBottom = new Line(
-      0, LevelingOutModel.CANDY_BAR_HEIGHT, candyBarWidth, LevelingOutModel.CANDY_BAR_HEIGHT,
+      0, DistributeModel.CANDY_BAR_HEIGHT, candyBarWidth, DistributeModel.CANDY_BAR_HEIGHT,
       {
         lineWidth: 1.95,
         stroke: horizontalStrokePattern

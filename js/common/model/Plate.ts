@@ -100,7 +100,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
       // phet-io
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
 
-      // Takes its value from LevelingOutModel.numberOfPeopleProperty, so cannot be independently adjusted.
+      // Takes its value from DistributeModel.numberOfPeopleProperty, so cannot be independently adjusted.
       phetioReadOnly: true
     } );
 

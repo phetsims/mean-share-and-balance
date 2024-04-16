@@ -34,7 +34,7 @@ const simOptions: SimOptions = {
 simLauncher.launch( () => {
   const sim = new Sim( MeanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleStringProperty, [
     new IntroScreen( { tandem: Tandem.ROOT.createTandem( 'introScreen' ) } ),
-    new DistributeScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
+    new DistributeScreen( { tandem: Tandem.ROOT.createTandem( 'distributeScreen' ) } ),
     new FairShareScreen( { tandem: Tandem.ROOT.createTandem( 'fairShareScreen' ) } ),
     new BalancePointScreen(
       { tandem: Tandem.ROOT.createTandem( 'balancePointScreen' ) } )

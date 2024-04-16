@@ -12,7 +12,7 @@ import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import LevelingOutModel from '../distribute/model/LevelingOutModel.js';
+import DistributeModel from '../distribute/model/DistributeModel.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined
@@ -51,10 +51,10 @@ class SnackStacker {
     if ( snackType === 'candyBars' ) {
 
       // The candy bar graphic Nodes are stacked in a single column with a little space between each.
-      snackNode.centerX = LevelingOutModel.CANDY_BAR_WIDTH / 2;
+      snackNode.centerX = DistributeModel.CANDY_BAR_WIDTH / 2;
       snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
-                             LevelingOutModel.CANDY_BAR_HEIGHT / 2 +
-                             positionInStack * ( LevelingOutModel.CANDY_BAR_HEIGHT +
+                             DistributeModel.CANDY_BAR_HEIGHT / 2 +
+                             positionInStack * ( DistributeModel.CANDY_BAR_HEIGHT +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     }
     else {
@@ -83,7 +83,7 @@ class SnackStacker {
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
                          1 +
-                         ( positionInStack + 1 ) * ( LevelingOutModel.CANDY_BAR_HEIGHT +
+                         ( positionInStack + 1 ) * ( DistributeModel.CANDY_BAR_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     return new Vector2( xPosition, yPosition );
   }

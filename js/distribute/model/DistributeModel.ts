@@ -29,7 +29,7 @@ type SelfOptions = EmptySelfOptions;
 type LevelingOutModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
 //TODO: Does this now need to extend PhetioObject to work with GroupSortInteractionModel?, see: https://github.com/phetsims/mean-share-and-balance/issues/137
-export default class LevelingOutModel extends SharingModel<CandyBar> {
+export default class DistributeModel extends SharingModel<CandyBar> {
 
   public groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public sortingRangeProperty: TReadOnlyProperty<Range>;
@@ -228,4 +228,4 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
   public static readonly CANDY_BAR_HEIGHT = 12;
 }
 
-meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );
+meanShareAndBalance.register( 'DistributeModel', DistributeModel );

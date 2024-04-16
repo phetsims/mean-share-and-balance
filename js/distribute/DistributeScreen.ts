@@ -12,8 +12,8 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
-import LevelingOutModel from './model/LevelingOutModel.js';
-import LevelingOutScreenView from './view/LevelingOutScreenView.js';
+import DistributeModel from './model/DistributeModel.js';
+import DistributeScreenView from './view/DistributeScreenView.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 
@@ -21,7 +21,7 @@ type SelfOptions = EmptySelfOptions;
 
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-export default class DistributeScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
+export default class DistributeScreen extends Screen<DistributeModel, DistributeScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
@@ -29,8 +29,8 @@ export default class DistributeScreen extends Screen<LevelingOutModel, LevelingO
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(
-      () => new LevelingOutModel( { tandem: options.tandem.createTandem( 'model' ) } ),
-      model => new LevelingOutScreenView( model, { tandem: options.tandem.createTandem( 'view' ) } ),
+      () => new DistributeModel( { tandem: options.tandem.createTandem( 'model' ) } ),
+      model => new DistributeScreenView( model, { tandem: options.tandem.createTandem( 'view' ) } ),
       options
     );
   }

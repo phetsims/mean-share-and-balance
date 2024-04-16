@@ -10,11 +10,11 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import LevelingOutModel from '../model/LevelingOutModel.js';
+import DistributeModel from '../model/DistributeModel.js';
 import { InteractiveHighlightingNode } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import LevelingOutNotepadPlateNode from './LevelingOutNotepadPlateNode.js';
+import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -35,11 +35,11 @@ type SelfOptions = EmptySelfOptions;
 type LevelingOutScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 const CANDY_BAR_FOCUS_X_MARGIN = 10;
-export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
+export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
   private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
 
-  public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
+  public constructor( model: DistributeModel, providedOptions: LevelingOutScreenViewOptions ) {
 
     const options = optionize<LevelingOutScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
       snackType: 'candyBars'
@@ -71,9 +71,9 @@ export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
     // Calculate the bounds for constraining the dragging of the candy bars in the notepad.
     this.notepadBoundsProperty = new Property( new Bounds2(
       -this.notepad.bounds.width / 2,
-      -this.notepad.height + this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_BOTTOM_Y,
+      -this.notepad.height + this.notepad.bounds.maxY - DistributeModel.NOTEPAD_PLATE_BOTTOM_Y,
       this.notepad.width / 2,
-      this.notepad.bounds.maxY - LevelingOutModel.NOTEPAD_PLATE_BOTTOM_Y
+      this.notepad.bounds.maxY - DistributeModel.NOTEPAD_PLATE_BOTTOM_Y
     ) );
 
     // function for what candy bars should do at the end of their drag
@@ -121,10 +121,10 @@ export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
 
     // Create the nodes on the notepad that represent the plates in the model.
     const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
-      new Vector2( this.playAreaCenterX, LevelingOutModel.NOTEPAD_PLATE_BOTTOM_Y ),
+      new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y ),
       1
     );
-    const notepadPlateNodes = model.plates.map( plate => new LevelingOutNotepadPlateNode( plate, modelToNotepadTransform, {
+    const notepadPlateNodes = model.plates.map( plate => new DistributeNotepadPlateNode( plate, modelToNotepadTransform, {
       tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
     } ) );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
@@ -200,4 +200,4 @@ export default class LevelingOutScreenView extends SharingScreenView<CandyBar> {
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutScreenView', LevelingOutScreenView );
+meanShareAndBalance.register( 'DistributeScreenView', DistributeScreenView );
