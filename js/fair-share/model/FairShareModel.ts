@@ -201,6 +201,14 @@ export default class FairShareModel extends SharingModel<Apple> {
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
         const activePlates = this.getActivePlates();
         const applesAtTop: Apple[] = [];
+
+        // We want to identify the index of the middle apple traveling to the top of the collection area, so that
+        // the apples at top are centered.
+        const numberOfRemainingApples = this.appleCollection.length -
+                                        ( numberOfWholeApplesPerActivePlate * this.numberOfPlatesProperty.value );
+        const middleAppleIndex = Math.floor( numberOfRemainingApples / 2 );
+
+        // Iterate over the apples in the collection, moving them to the appropriate plates or to the top of the notepad.
         this.appleCollection.forEach( ( apple, i ) => {
 
           // Move the whole apples to the appropriate plates.
@@ -213,14 +221,13 @@ export default class FairShareModel extends SharingModel<Apple> {
             // The remaining apples are moved in an animation to the top of the notepad.
             applesAtTop.push( apple );
             apple.moveTo( new Vector2(
-                ( applesAtTop.length - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+                ( applesAtTop.length - middleAppleIndex - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
                 -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
               ),
               true
             );
           }
         } );
-
         this.appleCollection.length = 0;
 
         // Any apples that were moved to the top are subsequently turned into fractional representations and
@@ -231,11 +238,12 @@ export default class FairShareModel extends SharingModel<Apple> {
           const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
                                                  applesAtTop.length;
 
+          const rightmostAppleAtTop = applesAtTop.length - middleAppleIndex - 1;
           _.times( numberOfAdditionalApplesNeeded, i => {
             const appleToAdd = this.getUnusedSnack();
             assert && assert( appleToAdd, 'there should be unused apples available to add' );
             appleToAdd!.moveTo( new Vector2(
-              ( applesAtTop.length + i - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+              ( rightmostAppleAtTop + i ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
               -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
             ) );
             applesAtTop.push( appleToAdd! );
