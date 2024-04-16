@@ -88,7 +88,8 @@ export default class LevelingOutModel extends SharingModel<CandyBar> {
 
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
         snack.isActiveProperty.value = true;
-        snack.moveTo( plate.getStackingPositionForSnack( snack ), this.animateAddedSnacks );
+        const index = plate.snacksOnNotepadPlate.indexOf( snack );
+        snack.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
       } );
 
       // Start off with the table and notepad quantities in sync.
