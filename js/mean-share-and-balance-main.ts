@@ -11,7 +11,7 @@ import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import MeanShareAndBalanceStrings from './MeanShareAndBalanceStrings.js';
-import LevelingOutScreen from './level-out/LevelingOutScreen.js';
+import LevelOutScreen from './level-out/LevelOutScreen.js';
 import DistributeScreen from './distribute/DistributeScreen.js';
 import FairShareScreen from './fair-share/FairShareScreen.js';
 import BalancePointScreen from './balance-point/BalancePointScreen.js';
@@ -33,7 +33,7 @@ const simOptions: SimOptions = {
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
   const sim = new Sim( MeanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleStringProperty, [
-    new LevelingOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
+    new LevelOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
     new DistributeScreen( { tandem: Tandem.ROOT.createTandem( 'distributeScreen' ) } ),
     new FairShareScreen( { tandem: Tandem.ROOT.createTandem( 'fairShareScreen' ) } ),
     new BalancePointScreen(

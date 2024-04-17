@@ -44,13 +44,13 @@ Currently, this sim is a single screen.
 
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
-As a single screen, the central model is LevelingOutModel. LevelingOutModel tracks water levels across cups, ensures water levels
+As a single screen, the central model is LevelOutModel. LevelOutModel tracks water levels across cups, ensures water levels
 change according to restrictions on space, and calculates mean across the data set.
 
 ### View
 
 - In
-  [LevelingOutScreenView](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/IntroScreenView.ts), `waterCupLayerNode`
+  [LevelOutScreenView](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/IntroScreenView.ts), `waterCupLayerNode`
   holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also
   centers cups and pipes as they are activated/ deactivated by the numberSpinner.
 - [NotepadCupNode](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/WaterCup2DNode.ts)

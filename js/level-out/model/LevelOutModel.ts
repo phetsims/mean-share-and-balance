@@ -28,7 +28,7 @@ import dotRandom from '../../../../dot/js/dotRandom.js';
 
 type LevelingOutModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
 
-export default class LevelingOutModel implements TModel {
+export default class LevelOutModel implements TModel {
 
   public readonly numberOfCupsRange = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
@@ -348,4 +348,4 @@ function calculateMean( values: number[] ): number {
   return _.mean( values );
 }
 
-meanShareAndBalance.register( 'LevelingOutModel', LevelingOutModel );
+meanShareAndBalance.register( 'LevelOutModel', LevelOutModel );

@@ -9,8 +9,8 @@
 
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import LevelingOutModel from './model/LevelingOutModel.js';
-import LevelingOutScreenView from './view/LevelingOutScreenView.js';
+import LevelOutModel from './model/LevelOutModel.js';
+import LevelOutScreenView from './view/LevelOutScreenView.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
@@ -21,7 +21,7 @@ type SelfOptions = EmptySelfOptions;
 
 type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem'>;
 
-export default class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
+export default class LevelOutScreen extends Screen<LevelOutModel, LevelOutScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
@@ -29,11 +29,11 @@ export default class LevelingOutScreen extends Screen<LevelingOutModel, Leveling
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
     super(
-      () => new LevelingOutModel( { tandem: options.tandem.createTandem( 'model' ) } ),
-      model => new LevelingOutScreenView( model, { tandem: options.tandem.createTandem( 'view' ) } ),
+      () => new LevelOutModel( { tandem: options.tandem.createTandem( 'model' ) } ),
+      model => new LevelOutScreenView( model, { tandem: options.tandem.createTandem( 'view' ) } ),
       options
     );
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutScreen', LevelingOutScreen );
+meanShareAndBalance.register( 'LevelOutScreen', LevelOutScreen );

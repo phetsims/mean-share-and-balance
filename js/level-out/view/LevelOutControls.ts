@@ -15,7 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import LevelingOutOptionsVerticalCheckboxGroup from './LevelingOutOptionsVerticalCheckboxGroup.js';
+import LevelOutOptionsVerticalCheckboxGroup from './LevelOutOptionsVerticalCheckboxGroup.js';
 import PipeSwitch from './PipeSwitch.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
@@ -28,7 +28,7 @@ type SelfOptions = {
 };
 type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
 
-export default class LevelingOutControls extends MeanShareAndBalanceControls {
+export default class LevelOutControls extends MeanShareAndBalanceControls {
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
                       predictMeanVisibleProperty: Property<boolean>,
@@ -37,7 +37,7 @@ export default class LevelingOutControls extends MeanShareAndBalanceControls {
                       providedOptions: LevelingOutControlPanelOptions ) {
 
     // Checkbox Group
-    const checkboxGroup = new LevelingOutOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
+    const checkboxGroup = new LevelOutOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
       predictMeanVisibleProperty, { tandem: providedOptions.tandem.createTandem( 'checkboxGroup' ) } );
 
     // Pipe Switch
@@ -71,4 +71,4 @@ export default class LevelingOutControls extends MeanShareAndBalanceControls {
   }
 }
 
-meanShareAndBalance.register( 'LevelingOutControls', LevelingOutControls );
+meanShareAndBalance.register( 'LevelOutControls', LevelOutControls );
