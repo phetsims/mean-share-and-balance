@@ -33,7 +33,7 @@ const simOptions: SimOptions = {
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
   const sim = new Sim( MeanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleStringProperty, [
-    new LevelOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelingOutScreen' ) } ),
+    new LevelOutScreen( { tandem: Tandem.ROOT.createTandem( 'levelOutScreen' ) } ),
     new DistributeScreen( { tandem: Tandem.ROOT.createTandem( 'distributeScreen' ) } ),
     new FairShareScreen( { tandem: Tandem.ROOT.createTandem( 'fairShareScreen' ) } ),
     new BalancePointScreen(

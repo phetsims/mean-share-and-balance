@@ -1,6 +1,6 @@
 // Copyright 2022-2024, University of Colorado Boulder
 /**
- * Representation for the Leveling Out Screen, displaying table/notepad water cups, pipes, and various interactive options.
+ * Representation for the Level Out Screen, displaying table/notepad water cups, pipes, and various interactive options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -33,14 +33,14 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 
-type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
+type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
 export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
   // sound generator for the deviation between the water levels and the mean
   private readonly waterBalanceSoundGenerator: WaterBalanceSoundGenerator;
 
-  public constructor( model: LevelOutModel, providedOptions: LevelingOutScreenViewOptions ) {
+  public constructor( model: LevelOutModel, providedOptions: LevelOutScreenViewOptions ) {
 
     const options = providedOptions;
 
@@ -118,7 +118,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     super(
       model,
       MeanShareAndBalanceStrings.introQuestionStringProperty,
-      MeanShareAndBalanceColors.levelingOutQuestionBarColorProperty,
+      MeanShareAndBalanceColors.levelOutQuestionBarColorProperty,
       notepadNode,
       superOptions
     );

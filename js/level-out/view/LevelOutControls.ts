@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Control panel for the leveling out screen that contains:
+ * Control panel for the level out screen that contains:
  *   - a checkbox group with visibility toggling for: predictMean, mean, and tickMarks
  *   - an AB switch to toggle between the pipe open/closed states
  *   - a number spinner connected to the numberOfCups per snackType on the screen
@@ -26,7 +26,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 type SelfOptions = {
   vBoxOptions?: StrictOmit<VBoxOptions, 'children'>;
 };
-type LevelingOutControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
+type LevelOutControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
 
 export default class LevelOutControls extends MeanShareAndBalanceControls {
 
@@ -34,7 +34,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
                       predictMeanVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>,
                       arePipesOpenProperty: Property<boolean>,
-                      providedOptions: LevelingOutControlPanelOptions ) {
+                      providedOptions: LevelOutControlPanelOptions ) {
 
     // Checkbox Group
     const checkboxGroup = new LevelOutOptionsVerticalCheckboxGroup( tickMarksVisibleProperty,
@@ -48,7 +48,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       pipeSwitch.interruptSubtreeInput();
       checkboxGroup.interruptSubtreeInput();
     } );
-    const options = optionize<LevelingOutControlPanelOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
+    const options = optionize<LevelOutControlPanelOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           numberOfCupsProperty,

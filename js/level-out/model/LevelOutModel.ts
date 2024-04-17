@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the LevelingOut screen, which includes tableCups, notepadCups, connecting pipes, and view options.
+ * Model for the LevelOut screen, which includes tableCups, notepadCups, connecting pipes, and view options.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -26,7 +26,7 @@ import TModel from '../../../../joist/js/TModel.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 
-type LevelingOutModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
+type LevelOutModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
 
 export default class LevelOutModel implements TModel {
 
@@ -47,7 +47,7 @@ export default class LevelOutModel implements TModel {
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly tickMarksVisibleProperty: Property<boolean>;
 
-  public constructor( providedOptions: LevelingOutModelOptions ) {
+  public constructor( providedOptions: LevelOutModelOptions ) {
 
     const options = providedOptions;
 

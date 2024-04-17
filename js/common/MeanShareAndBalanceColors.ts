@@ -19,7 +19,7 @@ import { Color, ProfileColorProperty } from '../../../scenery/js/imports.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 
 const meanShareAndBalanceColors = {
-  levelingOutScreenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutScreenBackground', {
+  levelOutScreenBackgroundColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelOutScreenBackground', {
     default: '#FFF9F0'
   } ),
   distributeScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'distributeScreenBackground', {
@@ -31,7 +31,7 @@ const meanShareAndBalanceColors = {
   balancePointScreenColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balancePointScreenBackground', {
     default: '#BEDBF2'
   } ),
-  levelingOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelingOutQuestionBar', {
+  levelOutQuestionBarColorProperty: new ProfileColorProperty( meanShareAndBalance, 'levelOutQuestionBar', {
     default: '#2496D6'
   } ),
   waterFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'tableCupWaterSideFill', {
