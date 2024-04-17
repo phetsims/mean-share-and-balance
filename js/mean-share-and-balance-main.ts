@@ -11,7 +11,7 @@ import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import MeanShareAndBalanceStrings from './MeanShareAndBalanceStrings.js';
-import LevelingOutScreen from './leveling-out/LevelingOutScreen.js';
+import LevelingOutScreen from './level-out/LevelingOutScreen.js';
 import DistributeScreen from './distribute/DistributeScreen.js';
 import FairShareScreen from './fair-share/FairShareScreen.js';
 import BalancePointScreen from './balance-point/BalancePointScreen.js';
