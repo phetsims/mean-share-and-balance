@@ -92,7 +92,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     Multilink.multilink( [ arePipesOpenProperty, meanPredictionProperty, meanValueProperty, doWaterLevelsMatchMeanProperty ],
       ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean ) => {
-        const meanTolerance = 0.1;
+        const meanTolerance = 0.05;
         const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
         const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
         const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
