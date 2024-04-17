@@ -124,14 +124,16 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y ),
       1
     );
-    const notepadPlateNodes = model.plates.map( plate => new DistributeNotepadPlateNode( plate, modelToNotepadTransform, {
-      tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
-    } ) );
+    const notepadPlateNodes = model.plates.map( plate => new DistributeNotepadPlateNode(
+      model.groupSortInteractionModel.hasGroupItemBeenSortedProperty, plate, modelToNotepadTransform, {
+        tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
+      } ) );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
     const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
-      new NotepadCandyBarNode( model, candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
+      new NotepadCandyBarNode( model.groupSortInteractionModel.hasMouseSortedGroupItemProperty,
+        candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }

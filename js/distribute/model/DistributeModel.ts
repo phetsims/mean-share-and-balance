@@ -31,8 +31,8 @@ type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 't
 //TODO: Does this now need to extend PhetioObject to work with GroupSortInteractionModel?, see: https://github.com/phetsims/mean-share-and-balance/issues/137
 export default class DistributeModel extends SharingModel<CandyBar> {
 
-  public groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
-  public sortingRangeProperty: TReadOnlyProperty<Range>;
+  public readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
+  public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 
