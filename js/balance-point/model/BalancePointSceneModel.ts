@@ -23,6 +23,7 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -30,7 +31,8 @@ const X_AXIS_RANGE = new Range(
   MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min - 1,
   MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.max + 1
 );
-export const FULCRUM_HEIGHT = 0.7;
+export const FULCRUM_HEIGHT = 0.7; // in meters
+const PARTIAL_TILT_SPAN = 1; // in meters, distance from fulcrum to mean where beam tilts partially, not completely
 
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
@@ -155,16 +157,29 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         }
         else {
 
+          // convenience variables
+          const xMin = X_AXIS_RANGE.min;
+          const xMax = X_AXIS_RANGE.max;
           const tiltedToLeft = mean < fulcrumValue;
 
-          if ( tiltedToLeft ) {
-            this.leftBalanceBeamYValueProperty.value = 0;
-            this.rightBalanceBeamYValueProperty.value = 12 * FULCRUM_HEIGHT / ( fulcrumValue + 1 );
+          // Create a linear function for the line that represents where the beam is in model space.
+          let linearFunctionForBeam;
+          const distanceFromFulcrumToMean = Math.abs( fulcrumValue - mean );
+          if ( distanceFromFulcrumToMean < PARTIAL_TILT_SPAN ) {
+            const lowerEdgeHeight = ( 1 - distanceFromFulcrumToMean / PARTIAL_TILT_SPAN ) * FULCRUM_HEIGHT;
+            linearFunctionForBeam = tiltedToLeft ?
+                                    new LinearFunction( xMin, fulcrumValue, lowerEdgeHeight, FULCRUM_HEIGHT ) :
+                                    new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, lowerEdgeHeight );
           }
           else {
-            this.leftBalanceBeamYValueProperty.value = 12 * FULCRUM_HEIGHT / ( 12 - ( fulcrumValue + 1 ) );
-            this.rightBalanceBeamYValueProperty.value = 0;
+            linearFunctionForBeam = tiltedToLeft ?
+                                    new LinearFunction( xMin, fulcrumValue, 0, FULCRUM_HEIGHT ) :
+                                    new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, 0 );
           }
+
+          // Use the linear function to set the Y values of the beam's end points.
+          this.leftBalanceBeamYValueProperty.value = linearFunctionForBeam.evaluate( xMin );
+          this.rightBalanceBeamYValueProperty.value = linearFunctionForBeam.evaluate( xMax );
         }
       }
     );
