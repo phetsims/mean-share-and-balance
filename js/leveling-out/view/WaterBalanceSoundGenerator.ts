@@ -1,10 +1,11 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * TODO: Add docs, see https://github.com/phetsims/mean-share-and-balance/issues/171.
+ * Sound generator for the water cup levels.  The pitch of the tone is scaled based on the mean value of all the cups,
+ * and a lowpass filter is applied that passes more frequencies as the cups get closer to the mean value and less as
+ * they get further away.
  *
  * @author John Blanco (PhET Interactive Simulations)
- * @author Sam Reid (PhET Interactive Simulations)
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
@@ -68,7 +69,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
       'loop option should be supplied by WaterBalanceSoundGenerator'
     );
 
-    // Create the filter whose frequency will be adjusted based on the overall distance of the cup levels from the mean.
+    // Create the filter whose frequency will be adjusted based on the max deviation of the cup levels from the mean.
     const lowPassFilter = new BiquadFilterNode( phetAudioContext, {
       type: 'lowpass',
       Q: 1,
@@ -89,16 +90,17 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     super( waterBalanceFluteChordLoop_mp3, options );
 
+    // Initialize the variable that will be used to fade the sound in and out.
     this.fadeStartDelay = options.fadeStartDelay;
     this.fadeTime = options.fadeTime;
     this.delayBeforeStop = options.delayBeforeStop;
     this.nonFadedOutputLevel = options.initialOutputLevel === undefined ? 1 : options.initialOutputLevel;
     this.remainingFadeTime = 0;
 
-    // start with the output level at zero so that the initial sound generation has a bit of fade in
+    // Start with the output level at zero so that the initial sound can fade in.
     this.setOutputLevel( 0, 0 );
 
-    // Adjust the pitch based on the mean.
+    // Adjust the pitch of the underlying sound based on the mean.
     const meanChangeListener = ( mean: number ) => {
       const normalizedValue = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE.getNormalizedValue( mean );
       const playbackRate = PLAYBACK_PITCH_RANGE.expandNormalizedValue( normalizedValue );
@@ -106,17 +108,17 @@ class WaterBalanceSoundGenerator extends SoundClip {
     };
     meanProperty.link( meanChangeListener );
 
-    // A listener that starts the sound when the level of one or more of the water glasses change.
+    // Define a listener that starts or continues the sound based on changes to the max deviation from the mean.
     const maxDeviationFromMeanChangeListener = ( deviation: number, oldDeviation: number | null ) => {
 
       // parameter checking
-      assert && assert( deviation >= 0 && deviation <= 1, 'wait, how can this happen?' );
+      assert && assert( deviation >= 0 && deviation <= 1, 'invalid max deviation value' );
 
       const delta = deviation - ( oldDeviation === null ? 0 : oldDeviation );
 
       if ( this.fullyEnabled && Math.abs( delta ) > CHANGE_THRESHOLD ) {
 
-        // If we are already playing sound when this change occurred, continue it.  If we aren't but the change occured
+        // If we are already playing sound when this change occurred, continue it.  If we aren't but the change occurred
         // with the pipes open, start producing sound.
         if ( this.isPlaying || arePipesOpenProperty.value ) {
           this.startOrContinueSoundProduction();
@@ -130,6 +132,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
       }
     };
 
+    // Create a derived property that calculates the max deviation of a cup from the mean value.
     const maxDeviationFromMeanProperty: TReadOnlyProperty<number> = DerivedProperty.deriveAny(
       [
         ...cups.map( cup => cup.waterLevelProperty ),
@@ -148,6 +151,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
       }
     );
 
+    // Handle changes to the max deviation value.
     maxDeviationFromMeanProperty.lazyLink( maxDeviationFromMeanChangeListener );
 
     // Initiate sound production any time the pipes are opened or closed.
@@ -168,9 +172,8 @@ class WaterBalanceSoundGenerator extends SoundClip {
   }
 
   /**
-   * Start the sound production if it's not already happening, or cause it to continue it by resetting the amount of
-   * remaining time.  The sound will be faded out by the stepping behavior after some amount of time with no changes to
-   * the monitored properties.
+   * Start the sound production if it's not already happening, or cause it to continue if already playing by resetting
+   * the amount of remaining fade time.
    */
   private startOrContinueSoundProduction(): void {
     this.setOutputLevel( this.nonFadedOutputLevel );
@@ -178,12 +181,12 @@ class WaterBalanceSoundGenerator extends SoundClip {
       this.play();
     }
 
-    // Reset the fade countdown.
+    // Reset the fade countdown to its max value.
     this.remainingFadeTime = this.fadeStartDelay + this.fadeTime + this.delayBeforeStop;
   }
 
   /**
-   * Step this sound generator, used for fading out the sound in the absence of change.
+   * Step this sound generator, which will fade out the sound over time if remainingFadeTime isn't increased.
    * @param dt - change in time (i.e. delta time) in seconds
    */
   private step( dt: number ): void {
@@ -193,12 +196,12 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
       if ( ( this.remainingFadeTime < this.fadeTime + this.delayBeforeStop ) && this.outputLevel > 0 ) {
 
-        // the sound is fading out, adjust the output level
+        // The sound is fading out, so adjust the output level downwards.
         const outputLevel = Math.max( ( this.remainingFadeTime - this.delayBeforeStop ) / this.fadeTime, 0 );
         this.setOutputLevel( outputLevel * this.nonFadedOutputLevel );
       }
 
-      // fade out complete, stop playback
+      // Fade out complete, stop playback.
       if ( this.remainingFadeTime === 0 && this.isPlaying ) {
         this.stop( 0 );
       }
