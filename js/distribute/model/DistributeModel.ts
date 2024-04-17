@@ -28,6 +28,8 @@ import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioS
 type SelfOptions = EmptySelfOptions;
 type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
+const INITIAL_PLATE_VALUES = [ 3, 1, 5, 3, 8, 10, 5 ];
+
 //TODO: Does this now need to extend PhetioObject to work with GroupSortInteractionModel?, see: https://github.com/phetsims/mean-share-and-balance/issues/137
 export default class DistributeModel extends SharingModel<CandyBar> {
 
@@ -38,7 +40,9 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
 
-    const options = optionize<DistributeModelOptions, SelfOptions, SharingModelOptions>()( {}, providedOptions );
+    const options = optionize<DistributeModelOptions, SelfOptions, SharingModelOptions>()( {
+      initialPlateValues: INITIAL_PLATE_VALUES
+    }, providedOptions );
 
     super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );
 

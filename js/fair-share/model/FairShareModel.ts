@@ -43,6 +43,7 @@ const HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION = 5; // in screen coords, em
 const INTER_STACKED_GROUP_SPACING = 20;
 const COLLECTION_BOTTOM_Y = 10; // in screen coords, empirically determined
 const APPLE_FRACTION_DISTRIBUTION_DELAY = 0.75; // in seconds
+const INITIAL_PLATE_VALUES = [ 2, 1, 6, 2, 10, 5, 8 ];
 
 // Size of the collection area, empirically determined. Could be derived from other constants, but didn't seem worth it.
 const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
@@ -87,7 +88,7 @@ export default class FairShareModel extends SharingModel<Apple> {
   public constructor( providedOptions: FairShareModelOptions ) {
 
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {
-      numberOfSnacksOnFirstPlate: 2
+      initialPlateValues: INITIAL_PLATE_VALUES
     }, providedOptions );
 
     const createApple = ( options: SnackOptions ) => new Apple( options );

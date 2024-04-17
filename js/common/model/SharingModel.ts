@@ -31,7 +31,7 @@ import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 type SelfOptions = {
 
   // Controls the initial number of snacks on the first plate.
-  numberOfSnacksOnFirstPlate?: number;
+  initialPlateValues: number[];
 };
 export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
 
@@ -63,9 +63,7 @@ export default class SharingModel<T extends Snack> implements TModel {
                       handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void,
                       providedOptions: SharingModelOptions ) {
 
-    const options = combineOptions<SharingModelOptions>( {
-      numberOfSnacksOnFirstPlate: 3
-    }, providedOptions );
+    const options = combineOptions<SharingModelOptions>( {}, providedOptions );
 
     this.numberOfPlatesRangeProperty = new Property<Range>(
       new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
@@ -137,7 +135,7 @@ export default class SharingModel<T extends Snack> implements TModel {
           initialXPosition: initialXPosition,
           isInitiallyActive: plateIndex < this.numberOfPlatesProperty.value,
           linePlacement: plateIndex,
-          startingNumberOfSnacks: plateIndex === 0 ? options.numberOfSnacksOnFirstPlate : 1,
+          startingNumberOfSnacks: options.initialPlateValues[ plateIndex ],
           handleFraction: handleFraction,
           snackStackingFunction: snackStackingFunction,
 
