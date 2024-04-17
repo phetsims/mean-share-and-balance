@@ -495,7 +495,8 @@ export default class FairShareModel extends SharingModel<Apple> {
     if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
 
       // Calculate the fractional amount that will be set for the apples being distributed to the plates.
-      const numberOfWholeApples = Math.floor( this.meanProperty.value );
+      // Do not used derived Properties to avoid listener dependencies.
+      const numberOfWholeApples = Math.floor( this.totalSnacksProperty.value / this.numberOfPlatesProperty.value );
       const fractionValue = new Fraction( this.totalSnacksProperty.value % this.numberOfPlatesProperty.value,
         this.numberOfPlatesProperty.value );
 
