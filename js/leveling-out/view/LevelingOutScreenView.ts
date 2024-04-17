@@ -108,10 +108,9 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     // Add sound generation for the water cup levels.
-    // TODO: Temporary experimental sound generation, see https://github.com/phetsims/mean-share-and-balance/issues/171.
     const waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(
       model.meanProperty,
-      model.notepadCups[ 0 ].waterLevelProperty,
+      model.notepadCups,
       waterBalanceFluteChordLoop_mp3
     );
     soundManager.addSoundGenerator( waterBalanceSoundGenerator );

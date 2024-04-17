@@ -20,6 +20,7 @@ import soundConstants from '../../../../tambo/js/soundConstants.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
+import Cup from '../model/Cup.js';
 
 type SelfOptions = {
 
@@ -60,7 +61,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
   private readonly disposeWaterBalanceSoundGenerator: () => void;
 
   public constructor( meanProperty: TReadOnlyProperty<number>,
-                      cupLevelProperty: TReadOnlyProperty<number>,
+                      cups: Cup[],
                       sound: WrappedAudioBuffer,
                       providedOptions?: WaterBalanceSoundGeneratorOptions ) {
 
@@ -101,11 +102,12 @@ class WaterBalanceSoundGenerator extends SoundClip {
     this.setOutputLevel( 0, 0 );
 
     // Adjust the pitch based on the mean.
-    meanProperty.link( mean => {
+    const meanChangeListener = ( mean: number ) => {
       const normalizedValue = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE.getNormalizedValue( mean );
       const playbackRate = PLAYBACK_PITCH_RANGE.expandNormalizedValue( normalizedValue );
       this.setPlaybackRate( playbackRate );
-    } );
+    };
+    meanProperty.link( meanChangeListener );
 
     // A listener that starts the sound when the level of one or more of the water glasses change.
     const levelChangeListener = ( value: number, oldValue: number | null ) => {
@@ -133,7 +135,26 @@ class WaterBalanceSoundGenerator extends SoundClip {
         lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
       }
     };
-    cupLevelProperty.lazyLink( levelChangeListener );
+
+    const maxDeviationFromMeanProperty: TReadOnlyProperty<number> = DerivedProperty.deriveAny(
+      [
+        ...cups.map( cup => cup.waterLevelProperty ),
+        ...cups.map( cup => cup.isActiveProperty ),
+        meanProperty
+      ],
+      () => {
+        const activeCups = cups.filter( cup => cup.isActiveProperty.value );
+        return activeCups.reduce(
+          ( previousMax, currentCup ) => Math.max(
+            previousMax,
+            Math.abs( currentCup.waterLevelProperty.value - meanProperty.value )
+          ),
+          0
+        );
+      }
+    );
+
+    maxDeviationFromMeanProperty.lazyLink( levelChangeListener );
 
     if ( options.stopOnDisabled ) {
       this.fullyEnabledProperty.lazyLink( enabled => {
@@ -146,7 +167,8 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     // dispose function
     this.disposeWaterBalanceSoundGenerator = () => {
-      meanProperty.unlink( levelChangeListener );
+      meanProperty.unlink( meanChangeListener );
+      maxDeviationFromMeanProperty.unlink( levelChangeListener );
       stepTimer.removeListener( stepListener );
     };
   }
