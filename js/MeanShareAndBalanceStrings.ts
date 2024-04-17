@@ -13,7 +13,7 @@ type StringsType = {
     'titleStringProperty': LocalizedStringProperty;
   };
   'screen': {
-    'levelingOutStringProperty': LocalizedStringProperty;
+    'levelOutStringProperty': LocalizedStringProperty;
     'distributeStringProperty': LocalizedStringProperty;
     'fairShareStringProperty': LocalizedStringProperty;
     'balancePointStringProperty': LocalizedStringProperty;
