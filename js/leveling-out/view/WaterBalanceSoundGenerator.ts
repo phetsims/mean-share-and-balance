@@ -107,9 +107,12 @@ class WaterBalanceSoundGenerator extends SoundClip {
     meanProperty.link( meanChangeListener );
 
     // A listener that starts the sound when the level of one or more of the water glasses change.
-    const maxDeviationFromMeanChangeListener = ( value: number, oldValue: number | null ) => {
+    const maxDeviationFromMeanChangeListener = ( deviation: number, oldDeviation: number | null ) => {
 
-      const delta = value - ( oldValue === null ? 0 : oldValue );
+      // parameter checking
+      assert && assert( deviation >= 0 && deviation <= 1, 'wait, how can this happen?' );
+
+      const delta = deviation - ( oldDeviation === null ? 0 : oldDeviation );
 
       if ( this.fullyEnabled && Math.abs( delta ) > CHANGE_THRESHOLD ) {
 
@@ -119,11 +122,9 @@ class WaterBalanceSoundGenerator extends SoundClip {
           this.startOrContinueSoundProduction();
         }
 
-        // Set the filter frequency based on how far the cups are from the mean.  The frequency range and calculation
+        // Set the filter frequency based on the max deviation are from the mean.  The frequency range and calculation
         // used here were empirically determined and can be adjusted if needed.
-        const distanceFromMean = Math.abs( value - meanProperty.value );
-        assert && assert( distanceFromMean >= 0 && distanceFromMean <= 1, 'wait, how can this happen?' );
-        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - distanceFromMean, 8 ) );
+        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - deviation, 8 ) );
         lowPassFilter.frequency.cancelScheduledValues( 0 );
         lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
       }
