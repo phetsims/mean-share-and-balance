@@ -13,8 +13,8 @@ type StringsType = {
     'titleStringProperty': LocalizedStringProperty;
   };
   'screen': {
-    'introStringProperty': LocalizedStringProperty;
     'levelingOutStringProperty': LocalizedStringProperty;
+    'distributeStringProperty': LocalizedStringProperty;
     'fairShareStringProperty': LocalizedStringProperty;
     'balancePointStringProperty': LocalizedStringProperty;
   };
@@ -27,7 +27,7 @@ type StringsType = {
   'shareStringProperty': LocalizedStringProperty;
   'numberOfCupsStringProperty': LocalizedStringProperty;
   'introQuestionStringProperty': LocalizedStringProperty;
-  'levelingOutQuestionStringProperty': LocalizedStringProperty;
+  'distributeQuestionStringProperty': LocalizedStringProperty;
   'fairShareQuestionStringProperty': LocalizedStringProperty;
   'numberOfPeopleStringProperty': LocalizedStringProperty;
   'meanEqualsStringProperty': LocalizedStringProperty;

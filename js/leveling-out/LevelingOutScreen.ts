@@ -24,7 +24,7 @@ type LevelingOutScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tande
 export default class LevelingOutScreen extends Screen<LevelingOutModel, LevelingOutScreenView> {
   public constructor( providedOptions: LevelingOutScreenOptions ) {
     const options = optionize<LevelingOutScreenOptions, SelfOptions, ScreenOptions>()( {
-      name: MeanShareAndBalanceStrings.screen.introStringProperty,
+      name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.levelingOutScreenBackgroundColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );

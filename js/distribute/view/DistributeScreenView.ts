@@ -62,7 +62,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     super(
       model,
-      MeanShareAndBalanceStrings.levelingOutQuestionStringProperty,
+      MeanShareAndBalanceStrings.distributeQuestionStringProperty,
       MeanShareAndBalanceColors.distributeQuestionBarColorProperty,
       notepadNode,
       options

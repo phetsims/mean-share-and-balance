@@ -24,7 +24,7 @@ type DistributeScreenOptions = SelfOptions & PickRequired<ScreenOptions, 'tandem
 export default class DistributeScreen extends Screen<DistributeModel, DistributeScreenView> {
   public constructor( providedOptions: DistributeScreenOptions ) {
     const options = optionize<DistributeScreenOptions, SelfOptions, ScreenOptions>()( {
-      name: MeanShareAndBalanceStrings.screen.levelingOutStringProperty,
+      name: MeanShareAndBalanceStrings.screen.distributeStringProperty,
       backgroundColorProperty: MeanShareAndBalanceColors.distributeScreenColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );
