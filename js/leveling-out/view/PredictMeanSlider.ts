@@ -43,6 +43,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfCupsProperty: Property<number>,
                       arePipesOpenProperty: Property<boolean>, meanValueProperty: TReadOnlyProperty<number>,
+                      doWaterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>,
                       getActiveNotepadCups: () => Array<Cup>, modelViewTransform: ModelViewTransform2,
                       providedOptions: PredictMeanNodeOptions ) {
 
@@ -89,19 +90,19 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       this.centerY = modelViewTransform.modelToViewY( prediction );
     } );
 
-    Multilink.multilink( [ arePipesOpenProperty, meanPredictionProperty, meanValueProperty ],
-      ( arePipesOpen, meanPrediction, meanValue ) => {
+    Multilink.multilink( [ arePipesOpenProperty, meanPredictionProperty, meanValueProperty, doWaterLevelsMatchMeanProperty ],
+      ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean ) => {
         const meanTolerance = 0.1;
         const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
         const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
         const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
 
-        if ( arePipesOpen && roundedPrediction === roundedMean ) {
+        if ( arePipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
           predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
           predictMeanSuccessRectangle.visible = false;
         }
         else {
-          predictMeanSuccessRectangle.visible = arePipesOpen && closeToMean;
+          predictMeanSuccessRectangle.visible = arePipesOpen && doWaterLevelsMatchMean && closeToMean;
           predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
         }
 

@@ -53,7 +53,8 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     // Predict Mean Line that acts as a slider for alternative input.
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
-      model.numberOfCupsProperty, model.arePipesOpenProperty, model.meanProperty,
+      model.numberOfCupsProperty, model.arePipesOpenProperty,
+      model.meanProperty, model.doWaterLevelsMatchMeanProperty,
       () => model.getActiveNotepadCups(), modelViewTransformNotepadCups,
       {
         visibleProperty: model.predictMeanVisibleProperty,

@@ -41,6 +41,7 @@ export default class LevelingOutModel implements TModel {
   public readonly notepadCups: Cup[];
   public readonly pipeArray: Pipe[];
   public readonly arePipesOpenProperty: Property<boolean>;
+  public readonly doWaterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>;
 
   // visible properties
   public readonly predictMeanVisibleProperty: Property<boolean>;
@@ -166,6 +167,17 @@ export default class LevelingOutModel implements TModel {
       }
 
       this.assertConsistentState();
+    } );
+
+    const waterLevelDependencies = this.notepadCups.map( waterCup => waterCup.waterLevelProperty );
+    const activeCupsDependencies = this.notepadCups.map( waterCup => waterCup.isActiveProperty );
+    this.doWaterLevelsMatchMeanProperty = DerivedProperty.deriveAny( [
+      ...waterLevelDependencies,
+      ...activeCupsDependencies,
+      this.meanProperty
+    ], () => {
+      return _.every( this.getActiveNotepadCups(), notepadCup =>
+        Utils.roundToInterval( notepadCup.waterLevelProperty.value, 0.1 ) === Utils.roundToInterval( this.meanProperty.value, 0.1 ) );
     } );
   }
 
