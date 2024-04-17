@@ -31,7 +31,6 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
-import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
@@ -169,7 +168,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       model.meanProperty,
       model.notepadCups,
       model.arePipesOpenProperty,
-      waterBalanceFluteChordLoop_mp3
+      { initialOutputLevel: 0.2 }
     );
     soundManager.addSoundGenerator( this.waterBalanceSoundGenerator );
 

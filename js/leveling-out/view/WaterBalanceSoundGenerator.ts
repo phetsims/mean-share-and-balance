@@ -10,7 +10,6 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import WrappedAudioBuffer from '../../../../tambo/js/WrappedAudioBuffer.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import Range from '../../../../dot/js/Range.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
@@ -20,6 +19,7 @@ import stepTimer from '../../../../axon/js/stepTimer.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
 import Cup from '../model/Cup.js';
+import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
 
 type SelfOptions = {
 
@@ -36,7 +36,7 @@ export type WaterBalanceSoundGeneratorOptions = SelfOptions & SoundClipOptions;
 
 // constants
 const CHANGE_THRESHOLD = 0.001;
-const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1 ); // 1 octave
+const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get desired behavior
 const FILTER_FREQUENCY_RANGE = new Range( 200, 10000 );
 
 class WaterBalanceSoundGenerator extends SoundClip {
@@ -61,7 +61,6 @@ class WaterBalanceSoundGenerator extends SoundClip {
   public constructor( meanProperty: TReadOnlyProperty<number>,
                       cups: Cup[],
                       arePipesOpenProperty: TReadOnlyProperty<boolean>,
-                      sound: WrappedAudioBuffer,
                       providedOptions?: WaterBalanceSoundGeneratorOptions ) {
 
     assert && assert(
@@ -77,11 +76,10 @@ class WaterBalanceSoundGenerator extends SoundClip {
     } );
 
     const options = optionize<WaterBalanceSoundGeneratorOptions, SelfOptions, SoundClipOptions>()( {
-      initialOutputLevel: 0.1,
       loop: true,
       trimSilence: true,
-      fadeStartDelay: 0.2,
-      fadeTime: 0.15,
+      fadeStartDelay: 0.1,
+      fadeTime: 0.1,
       delayBeforeStop: 0.1,
       additionalAudioNodes: [ lowPassFilter ],
 
@@ -89,7 +87,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
       enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
     }, providedOptions );
 
-    super( sound, options );
+    super( waterBalanceFluteChordLoop_mp3, options );
 
     this.fadeStartDelay = options.fadeStartDelay;
     this.fadeTime = options.fadeTime;
@@ -125,7 +123,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
         // used here were empirically determined and can be adjusted if needed.
         const distanceFromMean = Math.abs( value - meanProperty.value );
         assert && assert( distanceFromMean >= 0 && distanceFromMean <= 1, 'wait, how can this happen?' );
-        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - distanceFromMean, 10 ) );
+        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - distanceFromMean, 8 ) );
         lowPassFilter.frequency.cancelScheduledValues( 0 );
         lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
       }
