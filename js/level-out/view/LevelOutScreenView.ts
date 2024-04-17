@@ -117,6 +117,10 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     // Instantiate Parent
     super(
       model,
+
+      // It was decided that updating the key for "introQuestionStringProperty" was not worth the effort of
+      // retaining all the translations from the prototype publication. Therefore, the key no longer matches the
+      // screen name. https://github.com/phetsims/mean-share-and-balance/issues/197
       MeanShareAndBalanceStrings.introQuestionStringProperty,
       MeanShareAndBalanceColors.levelOutQuestionBarColorProperty,
       notepadNode,
