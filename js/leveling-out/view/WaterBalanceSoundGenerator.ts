@@ -16,7 +16,6 @@ import Range from '../../../../dot/js/Range.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
-import soundConstants from '../../../../tambo/js/soundConstants.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
@@ -32,22 +31,21 @@ type SelfOptions = {
 
   // amount of time in seconds from full fade to stop of sound, done to avoid sonic glitches
   delayBeforeStop?: number;
-
-  // If true, we will stop() when the sound is disabled. The stop uses the DEFAULT_LINEAR_GAIN_CHANGE_TIME as its delay
-  // to match the fullyEnabledProperty link logic in SoundGenerator.
-  stopOnDisabled?: boolean;
 };
 export type WaterBalanceSoundGeneratorOptions = SelfOptions & SoundClipOptions;
 
 // constants
 const CHANGE_THRESHOLD = 0.001;
 const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1 ); // 1 octave
-const FILTER_FREQUENCY_RANGE = new Range( 100, 10000 );
+const FILTER_FREQUENCY_RANGE = new Range( 200, 10000 );
 
 class WaterBalanceSoundGenerator extends SoundClip {
 
   // duration of inactivity fade out
   private readonly fadeTime: number;
+
+  // see docs in options type declaration
+  private readonly fadeStartDelay: number;
 
   // see docs in options type declaration
   private readonly delayBeforeStop: number;
@@ -62,6 +60,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
   public constructor( meanProperty: TReadOnlyProperty<number>,
                       cups: Cup[],
+                      arePipesOpenProperty: TReadOnlyProperty<boolean>,
                       sound: WrappedAudioBuffer,
                       providedOptions?: WaterBalanceSoundGeneratorOptions ) {
 
@@ -84,7 +83,6 @@ class WaterBalanceSoundGenerator extends SoundClip {
       fadeStartDelay: 0.2,
       fadeTime: 0.15,
       delayBeforeStop: 0.1,
-      stopOnDisabled: false,
       additionalAudioNodes: [ lowPassFilter ],
 
       // By default, sound production is disabled during "reset all" operations.
@@ -93,6 +91,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     super( sound, options );
 
+    this.fadeStartDelay = options.fadeStartDelay;
     this.fadeTime = options.fadeTime;
     this.delayBeforeStop = options.delayBeforeStop;
     this.nonFadedOutputLevel = options.initialOutputLevel === undefined ? 1 : options.initialOutputLevel;
@@ -110,21 +109,17 @@ class WaterBalanceSoundGenerator extends SoundClip {
     meanProperty.link( meanChangeListener );
 
     // A listener that starts the sound when the level of one or more of the water glasses change.
-    const levelChangeListener = ( value: number, oldValue: number | null ) => {
+    const maxDeviationFromMeanChangeListener = ( value: number, oldValue: number | null ) => {
 
       const delta = value - ( oldValue === null ? 0 : oldValue );
 
-      // Update the sound generation when the value changes, but only if we enabled. This prevents the play() from
-      // occurring at all.
       if ( this.fullyEnabled && Math.abs( delta ) > CHANGE_THRESHOLD ) {
 
-        this.setOutputLevel( this.nonFadedOutputLevel );
-        if ( !this.isPlaying && !isSettingPhetioStateProperty.value ) {
-          this.play();
+        // If we are already playing sound when this change occurred, continue it.  If we aren't but the change occured
+        // with the pipes open, start producing sound.
+        if ( this.isPlaying || arePipesOpenProperty.value ) {
+          this.startOrContinueSoundProduction();
         }
-
-        // Reset the fade countdown.
-        this.remainingFadeTime = options.fadeStartDelay + options.fadeTime + this.delayBeforeStop;
 
         // Set the filter frequency based on how far the cups are from the mean.  The frequency range and calculation
         // used here were empirically determined and can be adjusted if needed.
@@ -154,28 +149,38 @@ class WaterBalanceSoundGenerator extends SoundClip {
       }
     );
 
-    maxDeviationFromMeanProperty.lazyLink( levelChangeListener );
+    maxDeviationFromMeanProperty.lazyLink( maxDeviationFromMeanChangeListener );
 
-    if ( options.stopOnDisabled ) {
-      this.fullyEnabledProperty.lazyLink( enabled => {
-        !enabled && this.stop( soundConstants.DEFAULT_LINEAR_GAIN_CHANGE_TIME );
-      } );
-    }
+    // Initiate sound production any time the pipes are opened or closed.
+    arePipesOpenProperty.lazyLink( () => {
+      this.startOrContinueSoundProduction();
+    } );
 
+    // Hook up the step listener that will fade out the sound after a certain amount of inactivity.
     const stepListener = ( dt: number ) => this.step( dt );
     stepTimer.addListener( stepListener );
 
     // dispose function
     this.disposeWaterBalanceSoundGenerator = () => {
       meanProperty.unlink( meanChangeListener );
-      maxDeviationFromMeanProperty.unlink( levelChangeListener );
+      maxDeviationFromMeanProperty.unlink( maxDeviationFromMeanChangeListener );
       stepTimer.removeListener( stepListener );
     };
   }
 
-  public override dispose(): void {
-    this.disposeWaterBalanceSoundGenerator();
-    super.dispose();
+  /**
+   * Start the sound production if it's not already happening, or cause it to continue it by resetting the amount of
+   * remaining time.  The sound will be faded out by the stepping behavior after some amount of time with no changes to
+   * the monitored properties.
+   */
+  private startOrContinueSoundProduction(): void {
+    this.setOutputLevel( this.nonFadedOutputLevel );
+    if ( !this.isPlaying && !isSettingPhetioStateProperty.value ) {
+      this.play();
+    }
+
+    // Reset the fade countdown.
+    this.remainingFadeTime = this.fadeStartDelay + this.fadeTime + this.delayBeforeStop;
   }
 
   /**
@@ -202,11 +207,19 @@ class WaterBalanceSoundGenerator extends SoundClip {
   }
 
   /**
-   * stop any in-progress sound generation
+   * Stop any in-progress sound generation.
    */
   public reset(): void {
     this.stop( 0 );
     this.remainingFadeTime = 0;
+  }
+
+  /**
+   * Release any potentially leak-inducing references.
+   */
+  public override dispose(): void {
+    this.disposeWaterBalanceSoundGenerator();
+    super.dispose();
   }
 }
 

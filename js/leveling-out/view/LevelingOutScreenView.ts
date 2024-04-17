@@ -31,17 +31,15 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
-import SoundGenerator from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
-
 
 type LevelingOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
 export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView {
 
-  // sound generator for the "predict mean" slider
-  private readonly predictMeanSoundGenerator: SoundGenerator;
+  // sound generator for the deviation between the water levels and the mean
+  private readonly waterBalanceSoundGenerator: WaterBalanceSoundGenerator;
 
   public constructor( model: LevelingOutModel, providedOptions: LevelingOutScreenViewOptions ) {
 
@@ -107,14 +105,6 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
       children: [ ...notepadCupNodes, ...tableCupNodes, ...pipeNodes ]
     } );
 
-    // Add sound generation for the water cup levels.
-    const waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(
-      model.meanProperty,
-      model.notepadCups,
-      waterBalanceFluteChordLoop_mp3
-    );
-    soundManager.addSoundGenerator( waterBalanceSoundGenerator );
-
     const notepadNode = new NotepadNode( {
       tandem: options.tandem.createTandem( 'notepadNode' )
     } );
@@ -171,8 +161,17 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
     } );
 
     // Add sound generation for the "predict mean" slider.
-    this.predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
-    soundManager.addSoundGenerator( this.predictMeanSoundGenerator );
+    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
+    soundManager.addSoundGenerator( predictMeanSoundGenerator );
+
+    // Add sound generation for the water cup levels.
+    this.waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(
+      model.meanProperty,
+      model.notepadCups,
+      model.arePipesOpenProperty,
+      waterBalanceFluteChordLoop_mp3
+    );
+    soundManager.addSoundGenerator( this.waterBalanceSoundGenerator );
 
     model.numberOfCupsProperty.link( () => {
       this.interruptSubtreeInput();
@@ -182,6 +181,7 @@ export default class LevelingOutScreenView extends MeanShareAndBalanceScreenView
   }
 
   public override reset(): void {
+    this.waterBalanceSoundGenerator.reset();
     super.reset();
   }
 }
