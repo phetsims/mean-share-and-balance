@@ -45,7 +45,6 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly numberOfPlatesProperty: Property<number>;
   public readonly totalSnacksProperty: TReadOnlyProperty<number>;
   public readonly plates: Plate<T>[];
-  public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
   public readonly totalVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
@@ -82,12 +81,6 @@ export default class SharingModel<T extends Snack> implements TModel {
 
       // phet-io
       tandem: options.tandem.createTandem( 'numberOfPlatesProperty' )
-    } );
-
-    this.isMeanAccordionExpandedProperty = new BooleanProperty( false, {
-
-      // phet-io
-      tandem: options.tandem.createTandem( 'isMeanAccordionExpandedProperty' )
     } );
 
     this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, {
@@ -246,8 +239,8 @@ export default class SharingModel<T extends Snack> implements TModel {
    * Restore initial state.
    */
   public reset(): void {
-    this.isMeanAccordionExpandedProperty.reset();
     this.meanCalculationDialogVisibleProperty.reset();
+    this.totalVisibleProperty.reset();
 
     this.numberOfPlatesProperty.reset();
 

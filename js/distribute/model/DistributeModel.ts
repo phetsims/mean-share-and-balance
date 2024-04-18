@@ -226,6 +226,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   }
 
   public override reset(): void {
+    this.predictMeanVisibleProperty.reset();
 
     // Make sure that the number of snacks on the table and the notepad are in sync.
     this.syncData();
