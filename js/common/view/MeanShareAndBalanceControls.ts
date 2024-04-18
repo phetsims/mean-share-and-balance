@@ -55,7 +55,7 @@ export default class MeanShareAndBalanceControls extends Node {
 
     if ( options.dialogVisibleProperty ) {
       const infoButton = new InfoBooleanStickyToggleButton( options.dialogVisibleProperty, {
-        centerY: 200,
+        centerY: 230,
         left: vBoxAlignBox.left,
         tandem: options.tandem.createTandem( 'infoButton' )
       } );
