@@ -22,7 +22,6 @@ type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<Ba
 export default class BalancePointModel extends SoccerModel<BalancePointSceneModel> {
   public readonly isMeanFulcrumFixedProperty: Property<boolean>;
   public readonly areTickMarksVisibleProperty: Property<boolean>;
-  public readonly isMeanVisibleProperty: Property<boolean>;
   public readonly isMeanInfoDialogVisibleProperty: Property<boolean>;
   public readonly isTotalVisibleProperty: Property<boolean>;
 
@@ -65,9 +64,6 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     this.areTickMarksVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'areTickMarksVisibleProperty' )
     } );
-    this.isMeanVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isMeanVisibleProperty' )
-    } );
     this.isMeanInfoDialogVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isMeanInfoDialogVisibleProperty' )
     } );
@@ -80,7 +76,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public override reset(): void {
     super.reset();
     this.isMeanFulcrumFixedProperty.reset();
-    this.isMeanVisibleProperty.reset();
+    this.isTotalVisibleProperty.reset();
     this.areTickMarksVisibleProperty.reset();
     this.isMeanInfoDialogVisibleProperty.reset();
     this.fulcrumWasDraggedProperty.reset();

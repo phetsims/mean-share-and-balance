@@ -8,14 +8,13 @@
  */
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, Node, Text, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import createValueReadoutStringProperty from '../../../../soccer-common/js/model/createValueReadoutStringProperty.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import BalanceBeamNode from './BalanceBeamNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -42,7 +41,6 @@ export default class BalancePointNotepadNode extends NotepadNode {
     playAreaNumberLineNode: NumberLineNode,
     fulcrumWasDraggedProperty: Property<boolean>,
     areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
-    isMeanVisibleProperty: TReadOnlyProperty<boolean>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalancePointNotepadNodeOptions
   ) {
@@ -55,19 +53,6 @@ export default class BalancePointNotepadNode extends NotepadNode {
       readoutPatternStringProperty: totalDistancePatternStringProperty
     }, providedOptions );
     super( options );
-
-    // Create the mean readout text.
-    const meanReadoutStringProperty = createValueReadoutStringProperty(
-      sceneModel.meanValueProperty,
-      MeanShareAndBalanceStrings.meanEqualsPatternStringProperty,
-      MeanShareAndBalanceStrings.meanEqualsUnknownStringProperty,
-      1
-    );
-    const meanReadoutText = new Text( meanReadoutStringProperty, {
-      font: new PhetFont( 16 ),
-      fill: MeanShareAndBalanceColors.meanColorProperty,
-      visibleProperty: isMeanVisibleProperty
-    } );
 
     // Create the check push button. The color and text switches depending on if the supports are present or not.
     const buttonTextMaxWidth = 80;
@@ -97,21 +82,13 @@ export default class BalancePointNotepadNode extends NotepadNode {
       checkButton.baseColor = supportsPresent ? MeanShareAndBalanceColors.checkButtonColorProperty : 'white';
     } );
 
-    const vBoxSpacing = 30;
-
-    const vBox = new VBox( {
-      children: [ meanReadoutText, checkButton ],
-      excludeInvisibleChildrenFromBounds: false,
-      align: 'right',
-      spacing: vBoxSpacing
-    } );
-
     // The meanReadoutText should be vertically centered in the notepad node.
-    const alignBounds = this.paperStackBounds.withOffsets( 0, -( vBoxSpacing + meanReadoutText.bounds.height ), 0, 0 );
-    const alignBox = new AlignBox( vBox, {
-      alignBounds: alignBounds,
+    const alignBox = new AlignBox( checkButton, {
+      alignBounds: this.paperStackBounds,
       xAlign: 'right',
-      xMargin: 10
+      yAlign: 'bottom',
+      xMargin: 10,
+      bottomMargin: 50
     } );
     this.addChild( alignBox );
 
