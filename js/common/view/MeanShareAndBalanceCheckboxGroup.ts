@@ -10,7 +10,7 @@
 import VerticalCheckboxGroup, { VerticalCheckboxGroupOptions } from '../../../../sun/js/VerticalCheckboxGroup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
 import { Text } from '../../../../scenery/js/imports.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
