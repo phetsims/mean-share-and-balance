@@ -37,8 +37,11 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
                       providedOptions: LevelOutControlPanelOptions ) {
 
     // Checkbox Group
-    const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( tickMarksVisibleProperty,
-      predictMeanVisibleProperty, { tandem: providedOptions.tandem.createTandem( 'checkboxGroup' ) } );
+    const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
+      tickMarksVisibleProperty: tickMarksVisibleProperty,
+      predictMeanVisibleProperty: predictMeanVisibleProperty,
+      tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
+    } );
 
     // Pipe Switch
     const pipeSwitch = new PipeSwitch( arePipesOpenProperty, providedOptions.tandem.createTandem( 'pipeSwitch' ) );

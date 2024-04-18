@@ -24,6 +24,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public readonly areTickMarksVisibleProperty: Property<boolean>;
   public readonly isMeanVisibleProperty: Property<boolean>;
   public readonly isMeanInfoDialogVisibleProperty: Property<boolean>;
+  public readonly isTotalVisibleProperty: Property<boolean>;
 
   // A Property that tracks whether the fulcrum has been dragged.
   public readonly fulcrumWasDraggedProperty: Property<boolean>;
@@ -69,6 +70,10 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     } );
     this.isMeanInfoDialogVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isMeanInfoDialogVisibleProperty' )
+    } );
+
+    this.isTotalVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isTotalVisibleProperty' )
     } );
   }
 

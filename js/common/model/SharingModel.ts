@@ -47,6 +47,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly plates: Plate<T>[];
   public readonly isMeanAccordionExpandedProperty: Property<boolean>;
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
+  public readonly totalVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
   // A state flag used to control whether the motion of snacks is animated or instantaneous.  This is helpful for
@@ -94,6 +95,12 @@ export default class SharingModel<T extends Snack> implements TModel {
       // phet-io
       tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
     } );
+
+    this.totalVisibleProperty = new BooleanProperty( false, {
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'totalVisibleProperty' )
+      } );
 
     this.unusedSnacks = createObservableArray( {
       phetioType: ObservableArrayIO( ReferenceIO( IOType.ObjectIO ) ),

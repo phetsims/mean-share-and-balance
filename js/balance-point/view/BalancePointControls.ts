@@ -7,7 +7,7 @@
  *
  */
 
-import { Text, VBox } from '../../../../scenery/js/imports.js';
+import { VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -15,11 +15,11 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
-import VerticalCheckboxGroup from '../../../../sun/js/VerticalCheckboxGroup.js';
 import MovableFulcrumIcon from './MovableFulcrumIcon.js';
 import FixedFulcrumIcon from './FixedFulcrumIcon.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
+import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
@@ -47,24 +47,9 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       }
     } );
 
-    const checkboxGroup = new VerticalCheckboxGroup( [
-      {
-        createNode: () => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
-          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
-        } ),
-        property: model.areTickMarksVisibleProperty,
-        tandemName: 'tickMarksCheckbox'
-      },
-      {
-        createNode: () => new Text( MeanShareAndBalanceStrings.meanStringProperty, {
-          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
-        } ),
-        property: model.isMeanVisibleProperty,
-        tandemName: 'meanCheckbox'
-      }
-    ], {
+    const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
+      tickMarksVisibleProperty: model.areTickMarksVisibleProperty,
+      totalVisibleProperty: model.isTotalVisibleProperty,
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );

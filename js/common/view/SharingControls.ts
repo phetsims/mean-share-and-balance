@@ -18,9 +18,11 @@ import Property from '../../../../axon/js/Property.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
+import MeanShareAndBalanceCheckboxGroup from './MeanShareAndBalanceCheckboxGroup.js';
 
 type SelfOptions = {
   showSyncButton?: boolean;
+  predictMeanVisibleProperty?: Property<boolean> | null;
   vBoxOptions?: StrictOmit<VBoxOptions, 'children' | 'align'>;
 };
 type SharingControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
@@ -29,10 +31,25 @@ export default class SharingControls extends MeanShareAndBalanceControls {
 
   public constructor( model: Pick<SharingModel<Snack>,
                         'numberOfPlatesProperty' |
-                        'totalSnacksProperty' |
+                        'totalVisibleProperty' |
                         'syncData'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>,
                       providedOptions: SharingControlsOptions ) {
+
+    const options = optionize<SharingControlsOptions, SelfOptions,
+      StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>>()( {
+      showSyncButton: true,
+      excludeInvisibleChildrenFromBounds: false,
+      vBoxOptions: {},
+      predictMeanVisibleProperty: null,
+      dialogVisibleProperty: meanCalculationDialogVisibleProperty
+    }, providedOptions );
+
+    const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
+      totalVisibleProperty: model.totalVisibleProperty,
+      predictMeanVisibleProperty: options.predictMeanVisibleProperty,
+      tandem: options.tandem.createTandem( 'checkboxGroup' )
+    } );
 
     const syncListener = new FireListener( {
       fire: () => model.syncData(),
@@ -43,7 +60,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       inputListeners: [ syncListener ],
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      tandem: providedOptions.tandem.createTandem( 'syncButton' )
+      tandem: options.tandem.createTandem( 'syncButton' )
     } );
 
     // We need to wrap the syncButton in a Node so that it does not stretch to the minContentWidth of the VBox.
@@ -52,25 +69,21 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       layoutOptions: {
         align: 'left'
       },
-      visible: providedOptions.showSyncButton  // Fair Share Screen does not have a SyncButton
+      visible: options.showSyncButton  // Fair Share Screen does not have a SyncButton
     } );
 
-    const options = optionize<SharingControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
-      showSyncButton: true,
-      excludeInvisibleChildrenFromBounds: false,
-      vBoxOptions: {},
-      controlsPDOMOrder: [ buttonAlignBox ],
-      dialogVisibleProperty: meanCalculationDialogVisibleProperty
-    }, providedOptions );
-
     const vBoxOptions = combineOptions<VBoxOptions>( {
-      children: [ buttonAlignBox ],
+      children: [ checkboxGroup, buttonAlignBox ],
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20
     }, options.vBoxOptions );
     const vBox = new VBox( vBoxOptions );
 
-    super( vBox, model.numberOfPlatesProperty, MeanShareAndBalanceStrings.numberOfPeopleStringProperty, options );
+    const superOptions = combineOptions<MeanShareAndBalanceControlsOptions>( {
+      controlsPDOMOrder: [ checkboxGroup, buttonAlignBox ]
+    }, options );
+
+    super( vBox, model.numberOfPlatesProperty, MeanShareAndBalanceStrings.numberOfPeopleStringProperty, superOptions );
   }
 }
 

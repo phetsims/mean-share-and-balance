@@ -56,6 +56,7 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
     // Create the notepad Node where the graphical representations of the snacks will be displayed.
     const notepadNode = new FairShareNotepadNode( model.notepadModeProperty, {
       readoutPatternStringProperty: totalApplesPatternStringProperty,
+      totalVisibleProperty: model.totalVisibleProperty,
       tandem: options.tandem.createTandem( 'notepadNode' )
     } );
 

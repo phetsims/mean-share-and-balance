@@ -21,18 +21,21 @@ import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import notepadRing_svg from '../../../images/notepadRing_svg.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Property from '../../../../axon/js/Property.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{
     total: TReadOnlyProperty<number>;
     measurement: UnknownDerivedProperty<string>;
   }> | null;
+  totalVisibleProperty?: Property<boolean> | null;
 };
 
 export type NotepadNodeOptions = SelfOptions &
   StrictOmit<NodeOptions, 'children' | 'centerY'> &
   PickRequired<PhetioObjectOptions, 'tandem'>;
 
+// Constants
 const NOTEPAD_RING_BOTTOM = 33.5;
 const PAPER_PAGE_SIZE = new Dimension2( 720, 240 );
 const LABEL_MARGIN = 15;
@@ -52,7 +55,8 @@ export default class NotepadNode extends Node {
   public constructor( providedOptions: NotepadNodeOptions ) {
 
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
-      readoutPatternStringProperty: null
+      readoutPatternStringProperty: null,
+      totalVisibleProperty: null
     }, providedOptions );
 
     const paperStackNode = new Node();
@@ -113,16 +117,15 @@ export default class NotepadNode extends Node {
 
       const readoutAlignBox = new AlignBox( readoutBackground, {
         alignBounds: this.paperStackBounds.dilatedX( -LABEL_MARGIN ),
-        xAlign: 'right',
+        xAlign: 'center',
         yAlign: 'top',
-        yMargin: NOTEPAD_RING_BOTTOM + 5
+        yMargin: NOTEPAD_RING_BOTTOM + 5,
+        visibleProperty: options.totalVisibleProperty
       } );
       this.addChild( readoutAlignBox );
       this.readoutNode = readoutAlignBox;
     }
   }
-
-  public static readonly PAPER_PAGE_SIZE = PAPER_PAGE_SIZE;
 }
 
 meanShareAndBalance.register( 'NotepadNode', NotepadNode );

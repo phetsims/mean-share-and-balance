@@ -37,12 +37,14 @@ import PartyTableNode from './PartyTableNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
 import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
+import Property from '../../../../axon/js/Property.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
 type SelfOptions = {
   snackType: SnackType;
   showSyncButton?: boolean;
+  predictMeanVisibleProperty?: Property<boolean> | null;
 };
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
@@ -69,8 +71,10 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
                       notepadNode: NotepadNode,
                       providedOptions: SharingScreenViewOptions ) {
 
-    const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()(
-      { showSyncButton: true },
+    const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {
+        showSyncButton: true,
+        predictMeanVisibleProperty: null
+      },
       providedOptions
     );
 
@@ -84,6 +88,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
+      predictMeanVisibleProperty: options.predictMeanVisibleProperty,
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           model.numberOfPlatesProperty,

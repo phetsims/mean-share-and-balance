@@ -24,6 +24,8 @@ import Emitter from '../../../../axon/js/Emitter.js';
 import { SnackOptions } from '../../common/model/Snack.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -35,6 +37,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
   public readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
+  public readonly predictMeanVisibleProperty: Property<boolean>;
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 
@@ -61,6 +64,10 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       [ this.numberOfPlatesProperty ],
       numberOfPlates => new Range( 0, numberOfPlates - 1 )
     );
+
+    this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
+    } );
 
     // This emitter is used to update the keyboard focus when stack changes on a plate.  It is meant to be fired each
     // time something changes about the way things are stacked, since this could affect the selected item in the group.

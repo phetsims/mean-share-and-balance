@@ -7,48 +7,78 @@
  *
  */
 
-import VerticalCheckboxGroup, { VerticalCheckboxGroupOptions } from '../../../../sun/js/VerticalCheckboxGroup.js';
+import VerticalCheckboxGroup, { VerticalCheckboxGroupItem, VerticalCheckboxGroupOptions } from '../../../../sun/js/VerticalCheckboxGroup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
 import { Text } from '../../../../scenery/js/imports.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+
+type SelfOptions = {
+  totalVisibleProperty?: Property<boolean> | null;
+  predictMeanVisibleProperty?: Property<boolean> | null;
+  tickMarksVisibleProperty?: Property<boolean> | null;
+};
+type MeanShareAndBalanceCheckboxGroupOptions = SelfOptions & WithRequired<VerticalCheckboxGroupOptions, 'tandem'>;
 
 export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGroup {
-  public constructor( tickMarksVisibleProperty: Property<boolean>, predictMeanVisibleProperty: Property<boolean>,
-                      providedOptions: PickRequired<VerticalCheckboxGroupOptions, 'tandem'> ) {
+  public constructor( providedOptions: MeanShareAndBalanceCheckboxGroupOptions ) {
 
-    super( [ {
-        createNode: tandem => new Text( MeanShareAndBalanceStrings.predictMeanStringProperty, {
+    const options = optionize<MeanShareAndBalanceCheckboxGroupOptions, SelfOptions, VerticalCheckboxGroupOptions>()( {
+      totalVisibleProperty: null,
+      predictMeanVisibleProperty: null,
+      tickMarksVisibleProperty: null,
+      checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
+      align: 'left',
+      layoutOptions: { align: 'left' }
+    }, providedOptions );
+
+    const checkboxItems: VerticalCheckboxGroupItem[] = [];
+
+    if ( options.predictMeanVisibleProperty ) {
+      checkboxItems.push( {
+        createNode: () => new Text( MeanShareAndBalanceStrings.predictMeanStringProperty, {
           fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem.createTandem( 'predictMeanText' )
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
         } ),
-        property: predictMeanVisibleProperty,
+        property: options.predictMeanVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.predictMeanStringProperty },
 
         // phet-io
         tandemName: 'predictMeanCheckbox'
-      }, {
-        createNode: tandem => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
+      } );
+    }
+    if ( options.tickMarksVisibleProperty ) {
+      checkboxItems.push( {
+        createNode: () => new Text( MeanShareAndBalanceStrings.tickMarksStringProperty, {
           fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
-          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH,
-          tandem: tandem.createTandem( 'tickMarksText' )
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
         } ),
-        property: tickMarksVisibleProperty,
+        property: options.tickMarksVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.tickMarksStringProperty },
 
         // phet-io
         tandemName: 'tickMarksCheckbox'
-      } ], {
+      } );
+    }
 
-        checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
-        align: 'left',
-        layoutOptions: { align: 'left' },
-        tandem: providedOptions.tandem.createTandem( 'CheckboxGroup' )
-      }
-    );
+    if ( options.totalVisibleProperty ) {
+      checkboxItems.push( {
+        createNode: () => new Text( MeanShareAndBalanceStrings.totalStringProperty, {
+          fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
+          maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
+        } ),
+        property: options.totalVisibleProperty,
+        options: { accessibleName: MeanShareAndBalanceStrings.totalStringProperty },
+
+        // phet-io
+        tandemName: 'totalCheckbox'
+      } );
+    }
+
+    super( checkboxItems, options );
   }
 }
 

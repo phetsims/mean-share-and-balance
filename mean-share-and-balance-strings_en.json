@@ -100,5 +100,8 @@
   },
   "remainderPattern": {
     "value": "{{wholeNumber}}, remainder {{remainder}}"
+  },
+  "total": {
+    "value": "Total"
   }
 }

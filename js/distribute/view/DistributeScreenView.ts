@@ -42,7 +42,8 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   public constructor( model: DistributeModel, providedOptions: DistributeScreenViewOptions ) {
 
     const options = optionize<DistributeScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
-      snackType: 'candyBars'
+      snackType: 'candyBars',
+      predictMeanVisibleProperty: model.predictMeanVisibleProperty
     }, providedOptions );
 
     const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
@@ -57,6 +58,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     const notepadNode = new NotepadNode( {
       readoutPatternStringProperty: totalCandyBarsPatternStringProperty,
+      totalVisibleProperty: model.totalVisibleProperty,
       tandem: options.tandem.createTandem( 'notepadNode' )
     } );
 
