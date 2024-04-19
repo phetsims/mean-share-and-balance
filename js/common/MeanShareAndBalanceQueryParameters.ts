@@ -15,7 +15,15 @@ const SCHEMA_MAP = {
   showAnimation: {
     type: 'boolean',
     defaultValue: true
+  },
+
+  // TODO: Temporary for trying out sounds, see https://github.com/phetsims/mean-share-and-balance/issues/203.
+  snackSound: {
+    type: 'number',
+    defaultValue: 0,
+    validValues: [ 0, 1, 2 ]
   }
+
 } as const;
 
 const MeanShareAndBalanceQueryParameters = QueryStringMachine.getAll( SCHEMA_MAP );
