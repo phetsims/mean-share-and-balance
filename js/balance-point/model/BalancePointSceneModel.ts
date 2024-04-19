@@ -32,7 +32,7 @@ const X_AXIS_RANGE = new Range(
   MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.max + 1
 );
 export const FULCRUM_HEIGHT = 0.7; // in meters
-const PARTIAL_TILT_SPAN = 1; // in meters, distance from fulcrum to mean where beam tilts partially, not completely
+const PARTIAL_TILT_SPAN = 0.5; // in meters, distance from fulcrum to mean where beam tilts partially, not completely
 
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
