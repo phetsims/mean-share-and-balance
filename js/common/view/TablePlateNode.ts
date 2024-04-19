@@ -25,6 +25,8 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import greenApple_svg from '../../../images/greenApple_svg.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import Snack from '../model/Snack.js';
+import SnackQuantitySoundPlayer from './SnackQuantitySoundPlayer.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
 
 type SelfOptions = {
   snackType: SnackType;
@@ -46,6 +48,15 @@ export default class TablePlateNode<T extends Snack> extends Node {
       maxWidth: Plate.WIDTH * 1.3 // Tweaked a little for a better look, adjust as needed.
     } );
 
+    // Create the sound generator for the quantity of snacks on the plate.
+    const snackQuantitySoundPlayer = new SnackQuantitySoundPlayer(
+      options.snackType,
+      plate.tableSnackNumberProperty,
+      plate.linePlacement,
+      { initialOutputLevel: 0.2 }
+    );
+    soundManager.addSoundGenerator( snackQuantitySoundPlayer );
+
     // Create the number picker and position it relative to the plate image.
     const numberPickerRange = new Range(
       MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE,
@@ -57,6 +68,8 @@ export default class TablePlateNode<T extends Snack> extends Node {
       {
         centerTop: new Vector2( plateImage.centerBottom.x, 30 ),
         color: MeanShareAndBalanceColors.numberPickerColorProperty,
+        valueChangedSoundPlayer: snackQuantitySoundPlayer,
+        boundarySoundPlayer: snackQuantitySoundPlayer,
         tandem: options.tandem.createTandem( 'numberPicker' )
       }
     );
