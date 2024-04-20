@@ -2,8 +2,8 @@
 
 /**
  * Sound generator used to produce a sound for the movement of the pencil that is used for making mean predictions on
- * the notepad.  This uses filtered noise as the sound source, and changes the volume and filter center frequency based
- * on the rate and direction of the change of the monitored property.
+ * the notepad.  This uses filtered noise as the sound source, and changes the volume and center frequency of the filter
+ * based on the rate and direction of the pencil's movement, which represents the mean prediction value.
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
@@ -17,20 +17,20 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 
+type MotionState = 'unchanging' | 'increasing' | 'decreasing';
+
 // constants
-const MAX_DRAG_SOUND_VOLUME = 2; // can be greater than 1 because filtering tends to reduce output a lot
-const VELOCITY_REDUCTION_RATE = 50; // amount per second, empirically determined for best sound
+const MAX_DRAG_SOUND_VOLUME = 0.5; // can be greater than 1 because filtering tends to reduce output a lot
+const VELOCITY_REDUCTION_RATE = 20; // proportion per second, empirically determined for best sound
 const STILLNESS_TIME = 0.064; // in seconds, if there are no angle updates for this long, the leg is considered still
-const NOISE_CENTER_FREQUENCY = 1300; // Hz
-const DIRECTION_FREQUENCY_DELTA = NOISE_CENTER_FREQUENCY / 8; // max difference for increasing vs decreasing changes
-const MAX_CHANGE_RATE = 3 * Math.PI; // in radians/sec, see explanatory note where this is used
+const NOISE_CENTER_FREQUENCY = 1500; // Hz
+const DIRECTION_FREQUENCY_DELTA = NOISE_CENTER_FREQUENCY * 0.1; // in Hz, difference for increasing vs decreasing changes
+const MAX_CHANGE_RATE = 1; // in proportion/sec, see explanatory note where this is used
 const MIN_SOUND_GAP = 0.05; // in seconds
 const NOISE_START_TIME_CONSTANT = 0.01;
 const NOISE_STOP_TIME_CONSTANT = 0.02;
 const NOISE_LEVEL_CHANGE_TIME_CONSTANT = 0.1;
 const NOISE_OFF_TIME = 0.05; // in seconds
-
-type MotionState = 'unchanging' | 'increasing' | 'decreasing';
 
 class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
@@ -58,15 +58,15 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
     super( options );
 
-    // monitor the leg angle and adjust the noise output accordingly
+    // Monitor the prediction value and update the noise output accordingly.
     meanPredictionProperty.lazyLink( ( newPrediction, oldPrediction ) => {
       const now = this.audioContext.currentTime;
 
-      // Update the rate of change determine the motion state.
+      // Update the rate of change and determine the motion state.
       let newMotionState: MotionState = 'unchanging';
       if ( ResetAllButton.isResettingAllProperty.value ) {
 
-        // This case indicates that a reset caused the change, so set the velocity to 0.
+        // This case indicates that a reset caused the change, so set the change rate to 0.
         this.predictionChangeRate = 0;
         this.motionState = 'unchanging';
       }
@@ -77,7 +77,6 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
           MAX_CHANGE_RATE
         );
 
-        // update the motion state
         newMotionState = this.predictionChangeRate > 0 ? 'increasing' : 'decreasing';
       }
 
@@ -86,7 +85,7 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
         if ( newMotionState !== this.motionState && this.motionState !== 'unchanging' ) {
 
-          // the leg switched directions without stopping in between, so set a countdown that will create a sound gap
+          // The motion changed directions without stopping in between, so set a countdown that will create a sound gap.
           this.setOutputLevel( 0, NOISE_STOP_TIME_CONSTANT );
           this.soundStartCountdown = MIN_SOUND_GAP;
         }
@@ -112,17 +111,17 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
       // Set the filter value that controls whether the sound for increasing or decreasing values is heard.
       if ( this.motionState !== newMotionState ) {
 
-        // set the frequency based on the direction
+        // Set the frequency based on the direction.
         let frequencyDelta = newMotionState === 'increasing' ? DIRECTION_FREQUENCY_DELTA : -DIRECTION_FREQUENCY_DELTA;
 
-        // add some randomization to the frequency delta so that back-and-forth motion sounds less repetitive
+        // Add some randomization to the frequency delta so that back-and-forth motion sounds less repetitive.
         frequencyDelta = frequencyDelta * ( 1 - dotRandom.nextDouble() / 2 );
 
-        // set the filter value that controls whether the forward or backward dragging sound is heard
+        // Set the filter value that controls whether the upward or downward dragging sound is heard.
         this.setBandpassFilterCenterFrequency( NOISE_CENTER_FREQUENCY + frequencyDelta, 0.01 );
       }
 
-      // update state variable for the timer to use and for next time through this method
+      // Update state variable for the timer to use and for next time through this function.
       this.changeRateUpdateTime = now;
       this.motionState = newMotionState;
     } );
