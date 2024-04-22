@@ -34,7 +34,9 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
+// constants
 const CANDY_BAR_FOCUS_X_MARGIN = 10;
+
 export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
   private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
@@ -186,7 +188,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     this.notepadSnackLayerNode.boundsProperty.link( () => {
       const focusRect = Shape.rect(
-        this.notepadSnackLayerNode.localBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
+        this.notepadSnackLayerNode.visibleLocalBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
 
         // Empirically determined to sit below the total readout, but have enough vertical space for 10 candy bars.
         this.notepad.boundsProperty.value.y + 80,
