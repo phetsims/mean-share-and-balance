@@ -120,10 +120,10 @@ export default class Snack extends PhetioObject {
         this.finishAnimation();
       } );
 
-      // Kick off the animation.
-      travelAnimation.start();
-
       this.travelAnimationProperty.value = travelAnimation;
+
+      // Kick off the animation.
+      this.travelAnimationProperty.value.start();
     }
     else {
 
