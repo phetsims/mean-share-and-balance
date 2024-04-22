@@ -15,6 +15,10 @@ import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 import FairShareModel from './model/FairShareModel.js';
+import { Image } from '../../../scenery/js/imports.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
+import fairShareHomeScreenIcon_svg from '../../images/fairShareHomeScreenIcon_svg.js';
+import fairShareNavBarIcon_svg from '../../images/fairShareNavBarIcon_svg.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -24,6 +28,14 @@ export default class FairShareScreen extends Screen<FairShareModel, FairShareScr
   public constructor( providedOptions: FairShareScreenOptions ) {
     const options = optionize<FairShareScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.fairShareStringProperty,
+      homeScreenIcon: new ScreenIcon( new Image( fairShareHomeScreenIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
+      navigationBarIcon: new ScreenIcon( new Image( fairShareNavBarIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
       backgroundColorProperty: MeanShareAndBalanceColors.fairShareScreenColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );

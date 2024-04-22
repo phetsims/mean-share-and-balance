@@ -19,6 +19,7 @@ import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-p
 import { Image } from '../../../scenery/js/imports.js';
 import levelOutHomeScreenIcon_svg from '../../images/levelOutHomeScreenIcon_svg.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
+import levelOutNavBarIcon_svg from '../../images/levelOutNavBarIcon_svg.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -29,6 +30,10 @@ export default class LevelOutScreen extends Screen<LevelOutModel, LevelOutScreen
     const options = optionize<LevelOutScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.levelOutStringProperty,
       homeScreenIcon: new ScreenIcon( new Image( levelOutHomeScreenIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
+      navigationBarIcon: new ScreenIcon( new Image( levelOutNavBarIcon_svg ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1
       } ),

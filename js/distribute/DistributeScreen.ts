@@ -16,6 +16,10 @@ import DistributeModel from './model/DistributeModel.js';
 import DistributeScreenView from './view/DistributeScreenView.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
+import { Image } from '../../../scenery/js/imports.js';
+import distributeHomeScreenIcon_svg from '../../images/distributeHomeScreenIcon_svg.js';
+import distributeNavBarIcon_svg from '../../images/distributeNavBarIcon_svg.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -25,6 +29,14 @@ export default class DistributeScreen extends Screen<DistributeModel, Distribute
   public constructor( providedOptions: DistributeScreenOptions ) {
     const options = optionize<DistributeScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.distributeStringProperty,
+      homeScreenIcon: new ScreenIcon( new Image( distributeHomeScreenIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
+      navigationBarIcon: new ScreenIcon( new Image( distributeNavBarIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
       backgroundColorProperty: MeanShareAndBalanceColors.distributeScreenColorProperty,
       createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
     }, providedOptions );

@@ -1,4 +1,20 @@
 {
+  "balancePointHomeScreenIcon.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
+  "balancePointNavBarIcon.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
   "candyBar.svg": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
@@ -8,6 +24,38 @@
     "notes": "created by Mariah Hermsmeyer"
   },
   "collectionArea.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
+  "distributeHomeScreenIcon.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
+  "distributeNavBarIcon.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
+  "fairShareHomeScreenIcon.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
+  "fairShareNavBarIcon.svg": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
     ],
@@ -48,6 +96,14 @@
     "notes": "created by Mariah Hermsmeyer"
   },
   "levelOutHomeScreenIcon.svg": {
+    "text": [
+      "Copyright 2024 University of Colorado Boulder"
+    ],
+    "projectURL": "https://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu",
+    "notes": "created by Amanda McGarry"
+  },
+  "levelOutNavBarIcon.svg": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
     ],

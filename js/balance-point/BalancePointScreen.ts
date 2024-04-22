@@ -16,7 +16,10 @@ import BalancePointScreenView from './view/BalancePointScreenView.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import BalancePointModel from './model/BalancePointModel.js';
 import BasicActionsKeyboardHelpSection from '../../../scenery-phet/js/keyboard/help/BasicActionsKeyboardHelpSection.js';
-
+import { Image } from '../../../scenery/js/imports.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
+import balancePointHomeScreenIcon_svg from '../../images/balancePointHomeScreenIcon_svg.js';
+import balancePointNavBarIcon_svg from '../../images/balancePointNavBarIcon_svg.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -26,6 +29,14 @@ export default class BalancePointScreen extends Screen<BalancePointModel, Balanc
   public constructor( providedOptions: BalancePointScreenOptions ) {
     const options = optionize<BalancePointScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.balancePointStringProperty,
+      homeScreenIcon: new ScreenIcon( new Image( balancePointHomeScreenIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
+      navigationBarIcon: new ScreenIcon( new Image( balancePointNavBarIcon_svg ), {
+        maxIconWidthProportion: 1,
+        maxIconHeightProportion: 1
+      } ),
       backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty,
       createKeyboardHelpNode: () => new BasicActionsKeyboardHelpSection()
     }, providedOptions );
