@@ -93,8 +93,8 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     const createApple = ( options: SnackOptions ) => new Apple( options );
 
-    // Set the top value on a plate to the provided fraction value.  If that value is 1, it will be set to a whole
-    // value.  This will have no effect on apples that are NOT the top one on a plate.
+    // Set the top apple on a plate to the provided fraction value.  If that value is 1, it will be set to a whole
+    // value. This will have no effect on apples that are NOT the top one on a plate.
     const handleFraction = ( plate: Plate<Apple>, fraction: Fraction ) => {
 
       assert && assert( fraction.value > 0 && fraction.value <= 1, 'invalid fraction value for this handler' );
