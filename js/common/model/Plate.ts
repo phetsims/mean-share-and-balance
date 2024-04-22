@@ -1,7 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * The model element that represents the container for candy bars or cookies.
+ * The model element that represents the container for candy bars or apples.  This keeps track of the number of snacks
+ * on the table plates as well as the specific snacks that are on the notepad plates.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
@@ -48,7 +49,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // The X position of the center of this plate relative to the center of the table.
   public readonly xPositionProperty: TProperty<number>;
 
-  // The number of snacks (candy bars or apples) on this plate.
+  // The number of snacks (candy bars or apples) on that table representation of this plate.
   public readonly tableSnackNumberProperty: Property<number>;
 
   // The list of snacks that are on this plate in the notepad.  Depending on what the user has done, this may or may not
@@ -62,7 +63,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // The number of snacks this plate should have on it when it becomes active.
   public readonly startingNumberOfSnacks: number;
 
-  // Function used to set the positions of the snacks on this plate to form what looks like a stack.
+  // The function used to set the positions of the snacks on this plate to form what looks like a stack.
   private readonly snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2;
 
   // Functions needed for obtaining and releasing snacks.
@@ -186,8 +187,8 @@ export default class Plate<T extends Snack> extends PhetioObject {
   public updateSnackPositions(): void {
 
     // By design, a snack that is dragging remains on the plate but is excluded from the stacking order.  This works
-    // better for conveying state via phet-io, where dragging state information isn't included.  So, an ordered list
-    // of the snacks is needed here, excluding any that are dragging.  For more information on this, see
+    // better for conveying state via phet-io, where dragging state information isn't included.  An ordered list of the
+    // snacks is needed here, excluding any that are dragging.  For more information on this, see
     // https://github.com/phetsims/mean-share-and-balance/issues/193.
     const stackableSnacks = this.snacksOnNotepadPlate.filter( snack => !snack.isDraggingProperty.value );
 
@@ -208,17 +209,18 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
   /**
    * Set the number of snacks on this plate to the provided value.
-   * @param value - the number of snacks, which can include both whole and fractional snacks, e.g. 3/2 or 15/7
+   * @param targetValue - The number of snacks to have on the notepad plate. This can be a whole, fractional, or mixed
+   *                      number, e.g. 2, 3/2, or 15/7.
    */
-  public setNotepadSnacksToValue( value: Fraction ): void {
+  public setNotepadSnacksToValue( targetValue: Fraction ): void {
 
-    const numberOfWholeSnacks = Math.floor( value.numerator / value.denominator );
-    const snackFractionValue = new Fraction( value.numerator % value.denominator, value.denominator );
+    const numberOfWholeSnacks = Math.floor( targetValue.numerator / targetValue.denominator );
+    const snackFractionValue = new Fraction( targetValue.numerator % targetValue.denominator, targetValue.denominator );
     const numberOfSnacksOnPlate = numberOfWholeSnacks + ( snackFractionValue.value > 0 ? 1 : 0 );
 
     // Determine the fractional value of the top snack.
     let topSnackFractionValue;
-    if ( value.value > 0 ) {
+    if ( targetValue.value > 0 ) {
       topSnackFractionValue = snackFractionValue.value > 0 ? snackFractionValue : Fraction.ONE;
     }
     else {
@@ -248,7 +250,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     }
 
     // If there is at least one snack on this plate, set the top one to the appropriate fractional value, which may be 1.
-    value.value > 0 && this.handleFraction( this, topSnackFractionValue );
+    targetValue.value > 0 && this.handleFraction( this, topSnackFractionValue );
 
     this.updateSnackPositions();
   }

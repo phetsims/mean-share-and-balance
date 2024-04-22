@@ -1,8 +1,9 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * Model for the "Fair Share" Screen which includes people, cookies, visual mean snackType, and a numerical
- * mean snackType.
+ * Model for the "Fair Share" Screen.  This models a variable number of plates on a table and another set of plates on a
+ * notepad where the distribution of apples on the notepad plates can be distributed evenly ("Share" mode), collected
+ * together ("Collect" mode), or synchronized with the amounts on each of the table plates ("Sync" mode).
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
@@ -23,7 +24,6 @@ import SnackStacker from '../../common/SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import { TimerListener } from '../../../../axon/js/Timer.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { SnackOptions } from '../../common/model/Snack.js';
 import createObservableArray, { ObservableArray, ObservableArrayIO } from '../../../../axon/js/createObservableArray.js';
@@ -48,18 +48,19 @@ const INITIAL_PLATE_VALUES = [ 2, 1, 6, 2, 10, 5, 8 ];
 // Size of the collection area, empirically determined. Could be derived from other constants, but didn't seem worth it.
 const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
 
+// Enum that defines the states that the notepad can be in.
 export class NotepadMode extends EnumerationValue {
 
-  // The information is displayed such that it is in sync with what is on the plates on the table.
+  // The plates on the notepad are in sync with those on the table, meaning they contain the same number of apples.
   public static readonly SYNC = new NotepadMode( MeanShareAndBalanceStrings.syncStringProperty );
 
-  // The snacks are collected into a single display that doesn't show the plates.
+  // The snacks are collected into a single collection area that doesn't involve the plates.
   public static readonly COLLECT = new NotepadMode( MeanShareAndBalanceStrings.collectStringProperty );
 
   // The total amount of snacks on the table are shared evenly between the plates in the notepad.
   public static readonly SHARE = new NotepadMode( MeanShareAndBalanceStrings.shareStringProperty );
 
-  // Gets a list of keys, values and mapping between them.  For use in EnumerationProperty and PhET-iO
+  // Gets a list of keys, values and mapping between them.  For use in EnumerationProperty and PhET-iO.
   public static readonly enumeration = new Enumeration( NotepadMode, {
     phetioDocumentation: 'Describes the way in which the information in the notepad is displayed.'
   } );
@@ -72,17 +73,14 @@ export class NotepadMode extends EnumerationValue {
 export default class FairShareModel extends SharingModel<Apple> {
 
   // An enumeration property that controls the way in which the quantity of snacks on the table are displayed on the
-  // notepad.  See the enumeration for more information on the possible modes.
+  // notepad.  See the enumeration for more information about the possible modes.
   public readonly notepadModeProperty: EnumerationProperty<NotepadMode>;
-
-  // The area in coordinate space where the Apple instances will be placed and organized when in Collection mode.
-  public readonly collectionArea: Bounds2;
 
   // A timer listener for the 2nd phase of the animation that distributes apples from the collection area to the plates
   // when there are fractional apples involved (Share mode).
   private readonly fractionDistributionListenerMap = new Map<Apple, TimerListener>();
 
-  // The place where the apples reside when they are in the collection, since they can't be on plates.
+  // The array where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
 
   public constructor( providedOptions: FairShareModelOptions ) {
@@ -129,7 +127,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       apple.moveTo( this.getCollectionPosition( index ), true );
     } );
 
-    // Initialize the plates and set up plate-related behavior that is specific to the Fair Share screen.
+    // Set up plate-related behavior that is specific to the Fair Share screen.
     this.plates.forEach( plate => {
 
       plate.isActiveProperty.link( isActive => {
@@ -146,29 +144,25 @@ export default class FairShareModel extends SharingModel<Apple> {
       } );
     } );
 
-    // Define the area where the apples will be collected when in Collection mode.
-    this.collectionArea = new Bounds2(
-      0,
-      MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y - 100,
-      100,
-      MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y + 100
-    );
-
-    // Handle a change in the mode setting for the notepad.  This is a complex process that can trigger animations and
-    // moves the apples around between plates and the collection area.
+    // Handle a change in the mode setting for the notepad.  This is a complex process that moves apples around between
+    // plates and the collection area, and some of this motion is animated.
     const handleModeChange = ( notepadMode: NotepadMode, previousNotepadMode: NotepadMode | null ): void => {
 
       // Make sure any leftover animations from previous mode changes are cleared.
       this.finishInProgressAnimations();
 
-      // Make sure this is initially turned off - it will be set below for the state transitions that need animation.
+      // Make sure animation is initially turned off. It will be set below for the state transitions that need it.
       this.animateAddedSnacks = false;
 
       // So that we're in a consistent state, make sure all apples are whole.
       this.getAllSnacks().forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
 
+      // Handle each of the six possible start transitions.
       if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
         this.animateAddedSnacks = true;
+
+        // Move each of the apples in the collection area to a notepad plate based on how many are on the associated
+        // table plate.
         while ( this.appleCollection.length > 0 ) {
           this.getActivePlates().forEach( plate => {
 
@@ -203,7 +197,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         const activePlates = this.getActivePlates();
         const applesAtTop: Apple[] = [];
 
-        // We want to identify the index of the middle apple traveling to the top of the collection area, so that
+        // We want to identify the index of the middle apple traveling to the top of the collection area so that
         // the apples at top are centered.
         const numberOfRemainingApples = this.appleCollection.length -
                                         ( numberOfWholeApplesPerActivePlate * this.numberOfPlatesProperty.value );
@@ -231,8 +225,8 @@ export default class FairShareModel extends SharingModel<Apple> {
         } );
         this.appleCollection.length = 0;
 
-        // Any apples that were moved to the top are subsequently turned into fractional representations and
-        // distributed to the plates.
+        // Any apples that were moved to the top are subsequently turned into fractional representations and distributed
+        // to the plates.
         if ( applesAtTop.length > 0 ) {
 
           // Add the number of additional apples needed for fractionalization and distribution.
@@ -292,7 +286,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.SHARE ) {
 
-        // In the Share mode the total number of apples is split up evenly over all active plates, so each one ends up
+        // In the Share mode the total number of apples is split evenly over all active plates, so each plate ends up
         // with the mean value, which could include a fractional part. There is no animation for this transition.
         this.getActivePlates().forEach( plate => {
           plate.setNotepadSnacksToValue( new Fraction( this.totalSnacksProperty.value, this.numberOfPlatesProperty.value ) );
@@ -317,7 +311,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       const notepadMode = this.notepadModeProperty.value;
       if ( notepadMode === NotepadMode.SYNC ) {
 
-        // Make sure the appropriate number of snacks is active on each plate.
+        // Sync up the notepad plates with the table plates.
         this.plates.forEach( plate => {
           plate.syncNotepadToTable();
         } );
@@ -362,10 +356,10 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
     };
 
-    // Update the view when the presentation mode changes.
+    // Hook up the handler for changes to the notepad mode.
     this.notepadModeProperty.link( handleModeChange );
 
-    // Update the view when the number of active apples or plates changes.
+    // Hook up the handler for changes to the number of apples that are on the table.
     Multilink.multilinkAny( [
         this.totalSnacksProperty,
         ...this.plates.map( plate => plate.isActiveProperty ) ],
@@ -375,13 +369,13 @@ export default class FairShareModel extends SharingModel<Apple> {
   }
 
   /**
-   * Finish any in-progress animations of snacks moving on the notepad.  This puts the model into a stable state where
+   * Finish any in-progress animations of apples moving on the notepad.  This puts the model into a stable state where
    * it is ready for changes to the notepad mode, number of snacks, number of plates, etc.  If there are no animations
    * in progress when this is called it will have no effect.
    */
   private finishInProgressAnimations(): void {
 
-    // Invoke the timer callback now.  This will initiate any movement of the apples, which will then be forced to
+    // Invoke any timer callbacks now.  This will initiate any movement of the apples, which will then be forced to
     // finish at the end of this method.
     this.fractionDistributionListenerMap.forEach( ( listener, apple ) => {
       listener( 0 );
@@ -445,6 +439,10 @@ export default class FairShareModel extends SharingModel<Apple> {
     return new Vector2( x, y );
   }
 
+  /**
+   * Check that the number of apples on the notepad plates is correct based on the notepad mode and the number of apples
+   * on the table plates.
+   */
   private confirmPlateValues( plate: Plate<Apple> ): void {
     if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
       assert && assert( plate.snacksOnNotepadPlate.length === plate.tableSnackNumberProperty.value,
@@ -475,7 +473,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   /**
    * Update the positions for all apples in the collection.  It only makes sense to use this when in or going into the
-   * Collect mode.
+   * "Collect" mode.
    */
   private updateCollectedApplePositions( animate = false ): void {
     this.appleCollection.forEach( ( apple, i ) => apple.moveTo( this.getCollectionPosition( i ), animate ) );
@@ -483,7 +481,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   /**
    * This listener is fired when a snack is added to a plate.  It takes care of setting the state of the apple,
-   * including its positionProperty, isActiveProperty, and fractionProperty based on the current state of the model.
+   * including its positionProperty, isActiveProperty, and fractionProperty, based on the current state of the model.
    */
   private snackAddedToPlateListener( apple: Apple, plate: Plate<Apple> ): void {
     const index = plate.snacksOnNotepadPlate.indexOf( apple );
@@ -507,8 +505,8 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( this.animateAddedSnacks ) {
 
-        // This timer represents the second phase of the collect => share animation. The whole apples that were moved to
-        // the top of the screen are turned into fractions and animate to their final positions on the plates.
+        // This timer represents the second phase of the Collect => Share animation. The whole apples that were moved to
+        // the top of the screen are turned into fractions and animated to their final positions on the plates.
         this.fractionDistributionListenerMap.set( apple, stepTimer.setTimeout( () => {
 
           // Verify the state is consistent.
