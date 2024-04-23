@@ -23,7 +23,7 @@ import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import DistributeModel from '../../distribute/model/DistributeModel.js';
-import Plate from '../model/Plate.js';
+import { PLATE_WIDTH } from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import NotepadAppleNode from '../../fair-share/view/NotepadAppleNode.js';
@@ -63,7 +63,7 @@ export default class MeanAccordionBox extends AccordionBox {
 
         // Add the plate first, which is just a line.
         const plateNode = new Image( notepadPlateSketch_svg, {
-          maxWidth: Plate.WIDTH
+          maxWidth: PLATE_WIDTH
         } );
         meanSnacksGraphicNode.addChild( plateNode );
 

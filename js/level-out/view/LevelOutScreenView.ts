@@ -73,8 +73,8 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     };
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
-      model.numberOfCupsProperty, createSuccessIndicatorMultilink,
-      () => model.getActiveNotepadCups(), modelViewTransformNotepadCups,
+      createSuccessIndicatorMultilink,
+      modelViewTransformNotepadCups,
       {
         visibleProperty: model.predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
@@ -87,6 +87,14 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
+
+    // Update line length and dilation based on the number of objects.
+    model.numberOfCupsProperty.link( () => {
+      const activeNotepadCups = model.getActiveNotepadCups();
+      const firstCup = activeNotepadCups[ 0 ];
+      const lastCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
+      predictMeanSlider.updateLine( firstCup.position.x, lastCup.position.x + 80 );
+    } );
 
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );

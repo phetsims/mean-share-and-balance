@@ -41,6 +41,14 @@ type SelfOptions<T extends Snack> = {
 
 type PlateOptions<T extends Snack> = SelfOptions<T> & PickRequired<PhetioObjectOptions, 'tandem'>;
 
+// constants
+// Width of the plate (aka diameter) in screen coordinates.
+export const PLATE_WIDTH = 45;
+export const PLATE_HEIGHT = 5; // TODO: Why can't I get the height from the Image below?, https://github.com/phetsims/mean-share-and-balance/issues/199
+// export const PLATE_HEIGHT = new Image( notepadPlateSketch_svg, {
+//   maxWidth: PLATE_WIDTH
+// } ).bounds.height;
+
 export default class Plate<T extends Snack> extends PhetioObject {
 
   // Whether the plate is enabled in the view and the data calculations.
@@ -385,9 +393,6 @@ export default class Plate<T extends Snack> extends PhetioObject {
     this.tableSnackNumberProperty.reset();
     this.syncNotepadToTable();
   }
-
-  // Width of the plate (aka diameter) in screen coordinates.
-  public static readonly WIDTH = 45;
 }
 
 meanShareAndBalance.register( 'Plate', Plate );

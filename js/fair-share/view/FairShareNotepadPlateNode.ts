@@ -9,7 +9,7 @@
 
 import { Image } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../../common/model/Plate.js';
+import Plate, { PLATE_WIDTH } from '../../common/model/Plate.js';
 import { NotepadMode } from '../model/FairShareModel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
@@ -28,7 +28,7 @@ export default class FairShareNotepadPlateNode extends Image {
     );
 
     super( notepadPlateSketch_svg, {
-      maxWidth: Plate.WIDTH,
+      maxWidth: PLATE_WIDTH,
       visibleProperty: plateVisibleProperty
     } );
 

@@ -10,7 +10,7 @@
 
 import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../model/Plate.js';
+import Plate, { PLATE_WIDTH } from '../model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
@@ -45,7 +45,7 @@ export default class TablePlateNode<T extends Snack> extends Node {
     const options = providedOptions;
 
     const plateImage = new Image( plate_svg, {
-      maxWidth: Plate.WIDTH * 1.3 // Tweaked a little for a better look, adjust as needed.
+      maxWidth: PLATE_WIDTH * 1.3 // Tweaked a little for a better look, adjust as needed.
     } );
 
     // Create the sound generator for the quantity of snacks on the plate.

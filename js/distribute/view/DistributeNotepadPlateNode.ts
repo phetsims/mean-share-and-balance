@@ -14,7 +14,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import { Color, Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import Plate from '../../common/model/Plate.js';
+import Plate, { PLATE_WIDTH } from '../../common/model/Plate.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import CandyBar from '../model/CandyBar.js';
@@ -45,7 +45,7 @@ export default class DistributeNotepadPlateNode extends Node {
                       mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
 
     const plateNode = new Image( notepadPlateSketch_svg, {
-      maxWidth: Plate.WIDTH
+      maxWidth: PLATE_WIDTH
     } );
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {

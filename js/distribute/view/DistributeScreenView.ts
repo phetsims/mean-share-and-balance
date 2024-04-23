@@ -11,7 +11,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import DistributeModel from '../model/DistributeModel.js';
-import { InteractiveHighlightingNode } from '../../../../scenery/js/imports.js';
+import { InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -27,9 +27,14 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/group-sort/view/GroupSortInteractionView.js';
 import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
+import ShredUtils from '../../../../shred/js/Utils.js'; // eslint-disable-line default-import-match-filename
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import Multilink from '../../../../axon/js/Multilink.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
+import { PLATE_HEIGHT, PLATE_WIDTH } from '../../common/model/Plate.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -203,6 +208,55 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         focusRect.bounds.minY
       );
     } );
+
+    // Predict Mean Line that acts as a slider for alternative input.
+    const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      new Vector2( 0, 0 ),
+      new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y - PLATE_HEIGHT - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
+      DistributeModel.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
+    );
+    const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
+      Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty ],
+        ( meanPrediction, meanValue ) => {
+          const meanTolerance = 0.5;
+          const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
+          const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
+          const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
+
+          predictMeanLine.stroke = roundedPrediction === roundedMean ? MeanShareAndBalanceColors.meanColorProperty :
+                                   MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+          successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
+
+        } );
+    };
+
+    const predictMeanSlider = new PredictMeanSlider(
+      model.meanPredictionProperty, model.predictMeanDragRange,
+      createSuccessIndicatorMultilink,
+      predictMeanModelViewTransform,
+      {
+        visibleProperty: model.predictMeanVisibleProperty,
+        valueProperty: model.meanPredictionProperty,
+
+        // Constant range
+        enabledRangeProperty: new Property( model.predictMeanDragRange ),
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'predictMeanSlider' ),
+        phetioDocumentation: 'Line user can drag to predict water level mean.'
+      }
+    );
+
+    // Update line length and dilation based on the number of objects.
+    model.numberOfPlatesProperty.link( () => {
+      const activePlates = model.getActivePlates();
+      const firstPlate = activePlates[ 0 ];
+      const lastPlate = activePlates[ activePlates.length - 1 ];
+      predictMeanSlider.updateLine( firstPlate.xPositionProperty.value - PLATE_WIDTH / 2,
+        lastPlate.xPositionProperty.value + 80 );
+    } );
+
+    this.addChild( predictMeanSlider );
   }
 }
 

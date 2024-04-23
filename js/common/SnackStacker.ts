@@ -10,7 +10,7 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import { Image, Node } from '../../../scenery/js/imports.js';
 import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
-import Plate from './model/Plate.js';
+import { PLATE_WIDTH } from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import DistributeModel from '../distribute/model/DistributeModel.js';
 
@@ -61,8 +61,8 @@ class SnackStacker {
 
       // The apples are stacked in two columns with some space between them in both the x and y dimensions.
       snackNode.centerX = positionInStack % 2 === 0 ?
-                          Plate.WIDTH / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
-                          Plate.WIDTH / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
+                          PLATE_WIDTH / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
+                          PLATE_WIDTH / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
       snackNode.bottom = -Math.floor( positionInStack / 2 ) * ( snackNode.width + VERTICAL_SPACE_BETWEEN_APPLES ) -
                          VERTICAL_SPACE_BETWEEN_APPLES;
     }
@@ -77,7 +77,7 @@ class SnackStacker {
    */
   public static getStackedCandyBarPosition( plateXPosition: number, positionInStack: number ): Vector2 {
 
-    const xPosition = plateXPosition - Plate.WIDTH / 2;
+    const xPosition = plateXPosition - PLATE_WIDTH / 2;
 
     // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +

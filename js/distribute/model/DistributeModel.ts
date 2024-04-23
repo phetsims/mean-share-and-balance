@@ -13,7 +13,7 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Plate from '../../common/model/Plate.js';
+import Plate, { PLATE_WIDTH } from '../../common/model/Plate.js';
 import CandyBar from './CandyBar.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
@@ -40,6 +40,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly meanPredictionProperty: Property<number>;
+  public readonly predictMeanDragRange = new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 
@@ -72,7 +73,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     } );
 
     this.meanPredictionProperty = new NumberProperty( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE / 2, {
-      range: new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ),
+      range: this.predictMeanDragRange,
       tandem: options.tandem.createTandem( 'meanPredictionProperty' )
     } );
 
@@ -243,7 +244,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   }
 
   public static readonly NOTEPAD_PLATE_BOTTOM_Y = 330;
-  public static readonly CANDY_BAR_WIDTH = Plate.WIDTH;
+  public static readonly CANDY_BAR_WIDTH = PLATE_WIDTH;
   public static readonly CANDY_BAR_HEIGHT = 12;
 }
 

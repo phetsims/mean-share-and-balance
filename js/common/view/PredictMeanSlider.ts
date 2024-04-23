@@ -19,7 +19,6 @@ import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optio
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Cup from '../../level-out/model/Cup.js';
 import Property from '../../../../axon/js/Property.js';
 import pencil_png from '../../../images/pencil_png.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
@@ -37,9 +36,9 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanHandle: Node;
   private readonly predictMeanGlow: Rectangle;
 
-  public constructor( meanPredictionProperty: Property<number>, dragRange: Range, numberOfObjectsProperty: Property<number>,
+  public constructor( meanPredictionProperty: Property<number>, dragRange: Range,
                       createSuccessIndicatorMultilink: ( predictMeanLine: Path, successRectangle: Node ) => void,
-                      getActiveNotepadObjects: () => Array<Cup>, modelViewTransform: ModelViewTransform2,
+                      modelViewTransform: ModelViewTransform2,
                       providedOptions: PredictMeanNodeOptions ) {
 
     const options = providedOptions;
@@ -92,15 +91,9 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanHandle = predictMeanHandle;
     this.predictMeanGlow = predictMeanSuccessRectangle;
 
-    // Update line length and dilation based on the number of objects.
-    numberOfObjectsProperty.link( () => {
-      const activeNotepadCups = getActiveNotepadObjects();
-      const notepadCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
-      this.updateLine( notepadCup.position.x + 80 );
-    } );
-
     this.setPointerAreas();
     this.centerY = modelViewTransform.modelToViewY( 0 );
+    this.centerX = modelViewTransform.modelToViewX( 0 );
   }
 
   private setPointerAreas(): void {
@@ -110,9 +103,11 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
   }
 
-  private updateLine( lineEnd: number ): void {
+  public updateLine( lineStart: number, lineEnd: number ): void {
+    this.predictMeanLine.x1 = lineStart;
     this.predictMeanLine.x2 = lineEnd;
-    this.predictMeanGlow.setRectWidth( lineEnd - this.predictMeanGlow.x );
+    this.predictMeanGlow.setRectX( lineStart );
+    this.predictMeanGlow.setRectWidth( lineEnd - lineStart );
     this.predictMeanHandle.leftCenter = this.predictMeanLine.rightCenter;
     this.setPointerAreas();
   }
