@@ -17,7 +17,6 @@ import Property from '../../../../axon/js/Property.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
-import multiSelectionSoundPlayerFactory from '../../../../tambo/js/multiSelectionSoundPlayerFactory.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
@@ -26,6 +25,7 @@ import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
+import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
 export default class FairShareNotepadNode extends NotepadNode {
@@ -48,6 +48,8 @@ export default class FairShareNotepadNode extends NotepadNode {
     );
 
     // sound generation
+    const syncSoundClip = new SoundClip( erase_mp3, { initialOutputLevel: 0.3 } );
+    soundManager.addSoundGenerator( syncSoundClip );
     const collectSoundClip = new SoundClip( collectSound_mp3, { initialOutputLevel: 0.3 } );
     soundManager.addSoundGenerator( collectSoundClip );
     const shareSoundGenerator = new ShareModeSoundPlayer( { initialOutputLevel: 0.3 } );
@@ -59,11 +61,7 @@ export default class FairShareNotepadNode extends NotepadNode {
       {
         orientation: 'horizontal',
         spacing: 5,
-        soundPlayers: [
-          multiSelectionSoundPlayerFactory.getSelectionSoundPlayer( 0 ),
-          collectSoundClip,
-          shareSoundGenerator
-        ],
+        soundPlayers: [ syncSoundClip, collectSoundClip, shareSoundGenerator ],
         tandem: providedOptions.tandem.createTandem( 'notepadModeRadioButtonGroup' )
       }
     );
