@@ -87,8 +87,7 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
       glassLevelSoundB_mp3,
       ( plateIndex + 1 ) / MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS,
       {
-        // Set this to the full output level since it will be going through another gain stage that is locally set.
-        initialOutputLevel: 1
+        initialOutputLevel: 0.5 // lower relative to the sound effect
       }
     );
     this.crossFadeSoundClip.connect( this.mainGainNode );
