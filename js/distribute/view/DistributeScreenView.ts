@@ -183,6 +183,15 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           return node!;
         },
         sortingRangeProperty: model.sortingRangeProperty,
+        sortingRangeListener: range => {
+          const selectedGroupItem = model.groupSortInteractionModel.selectedGroupItemProperty.value;
+          if ( selectedGroupItem ) {
+            const currentValue = model.groupSortInteractionModel.getGroupItemValue( selectedGroupItem );
+            if ( !currentValue || !range.contains( currentValue ) ) {
+              model.groupSortInteractionModel.selectedGroupItemProperty.value = model.plates[ 0 ].getTopSnack();
+            }
+          }
+        },
         sortGroupItem: ( candyBar, newPlateIndex ) => {
           const currentPlate = model.getPlateForSnack( candyBar );
           const newPlate = model.plates[ newPlateIndex ];

@@ -58,8 +58,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
       getGroupItemValue: candyBar => {
         const plate = this.getPlateForSnack( candyBar );
-        assert && assert( plate, 'candyBar is not assigned to a plate' );
-        return plate!.linePlacement;
+        return plate ? plate.linePlacement : null;
       },
       tandem: options.tandem.createTandem( 'groupSortInteractionModel' )
     } );
