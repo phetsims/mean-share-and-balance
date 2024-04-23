@@ -26,6 +26,7 @@ import SnackStacker from '../../common/SnackStacker.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -38,6 +39,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   public readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
   public readonly predictMeanVisibleProperty: Property<boolean>;
+  public readonly meanPredictionProperty: Property<number>;
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 
@@ -67,6 +69,11 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
+    } );
+
+    this.meanPredictionProperty = new NumberProperty( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE / 2, {
+      range: new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ),
+      tandem: options.tandem.createTandem( 'meanPredictionProperty' )
     } );
 
     // This emitter is used to update the keyboard focus when stack changes on a plate.  It is meant to be fired each

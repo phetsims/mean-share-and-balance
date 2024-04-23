@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, ManualConstraint, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, ManualConstraint, Node, Path } from '../../../../scenery/js/imports.js';
 import LevelOutModel from '../model/LevelOutModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -15,7 +15,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadCupNode from './NotepadCupNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import PredictMeanSlider from './PredictMeanSlider.js';
+import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
 import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -32,6 +32,9 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
+import Multilink from '../../../../axon/js/Multilink.js';
+import Utils from '../../../../dot/js/Utils.js';
+import ShredUtils from '../../../../shred/js/Utils.js'; // eslint-disable-line default-import-match-filename
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
@@ -48,10 +51,29 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
     // Predict Mean Line that acts as a slider for alternative input.
+    const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
+      Multilink.multilink( [ model.arePipesOpenProperty, model.meanPredictionProperty,
+          model.meanProperty, model.doWaterLevelsMatchMeanProperty ],
+        ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean ) => {
+          const meanTolerance = 0.05;
+          const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
+          const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
+          const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
+
+          if ( arePipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
+            predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
+            successRectangle.visible = false;
+          }
+          else {
+            successRectangle.visible = arePipesOpen && doWaterLevelsMatchMean && closeToMean;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+          }
+
+        } );
+    };
     const predictMeanSlider = new PredictMeanSlider(
       model.meanPredictionProperty, model.dragRange,
-      model.numberOfCupsProperty, model.arePipesOpenProperty,
-      model.meanProperty, model.doWaterLevelsMatchMeanProperty,
+      model.numberOfCupsProperty, createSuccessIndicatorMultilink,
       () => model.getActiveNotepadCups(), modelViewTransformNotepadCups,
       {
         visibleProperty: model.predictMeanVisibleProperty,
