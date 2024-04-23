@@ -126,7 +126,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
         // Set the filter frequency based on the max deviation are from the mean.  The frequency range and calculation
         // used here were empirically determined and can be adjusted if needed.
-        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - deviation, 8 ) );
+        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - deviation, 4 ) );
         lowPassFilter.frequency.cancelScheduledValues( 0 );
         lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
       }
