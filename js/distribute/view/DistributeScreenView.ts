@@ -174,6 +174,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           const currentIndex = platesWithSnacks.indexOf( plateContainingSnack! );
           const nextPlateIndex = Utils.clamp( currentIndex + delta, 0, platesWithSnacks.length - 1 );
           const topCandyBar = platesWithSnacks[ nextPlateIndex ].getTopSnack();
+          assert && assert( topCandyBar, 'If a plate has a snack, there must be a top candy bar' );
           return topCandyBar!;
         },
         getGroupItemToSelect: () => model.plates[ 0 ].getTopSnack(),
@@ -195,9 +196,15 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         sortGroupItem: ( candyBar, newPlateIndex ) => {
           const currentPlate = model.getPlateForSnack( candyBar );
           const newPlate = model.plates[ newPlateIndex ];
-          const topCandyBar = currentPlate?.removeTopSnack();
-          assert && assert( topCandyBar === candyBar, 'the selected candy bar should be the top one' );
-          newPlate.addSnackToTop( topCandyBar! );
+
+          if ( assert ) {
+            const topCandyBar = currentPlate!.getTopSnack();
+            assert && assert( topCandyBar === candyBar, 'the selected candy bar should be the top one' );
+          }
+
+          // Remove the candy bar from the current plate and add it to the top of the new plate.
+          currentPlate!.removeSnack( candyBar );
+          newPlate.addSnackToTop( candyBar );
         }
       }
     );
