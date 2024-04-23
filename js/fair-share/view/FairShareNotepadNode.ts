@@ -17,6 +17,15 @@ import Property from '../../../../axon/js/Property.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
+import multiSelectionSoundPlayerFactory from '../../../../tambo/js/multiSelectionSoundPlayerFactory.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import shareCompleteSound_mp3 from '../../../sounds/shareCompleteSound_mp3.js';
+import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
+import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
+import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
+import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
 export default class FairShareNotepadNode extends NotepadNode {
@@ -37,12 +46,24 @@ export default class FairShareNotepadNode extends NotepadNode {
         };
       }
     );
+
+    // sound generation
+    const collectSoundClip = new SoundClip( collectSound_mp3, { initialOutputLevel: 0.3 } );
+    soundManager.addSoundGenerator( collectSoundClip );
+    const shareSoundGenerator = new ShareModeSoundPlayer( { initialOutputLevel: 0.3 } );
+    soundManager.addSoundGenerator( shareSoundGenerator );
+
     const notepadModeRadioButtonGroup = new RectangularRadioButtonGroup<NotepadMode>(
       notepadModeProperty,
       notepadModeItems,
       {
         orientation: 'horizontal',
         spacing: 5,
+        soundPlayers: [
+          multiSelectionSoundPlayerFactory.getSelectionSoundPlayer( 0 ),
+          collectSoundClip,
+          shareSoundGenerator
+        ],
         tandem: providedOptions.tandem.createTandem( 'notepadModeRadioButtonGroup' )
       }
     );
@@ -69,6 +90,37 @@ export default class FairShareNotepadNode extends NotepadNode {
       yMargin: 18
     } );
     this.addChild( radioButtonGroupAlignBox );
+  }
+}
+
+class ShareModeSoundPlayer extends SoundGenerator implements TSoundPlayer {
+
+  private readonly whooshSoundClip: SoundClip;
+  private readonly shareCompleteSoundClip: SoundClip;
+  private readonly shareFractionalizeSoundClip: SoundClip;
+
+  public constructor( options?: SoundGeneratorOptions ) {
+
+    super( options );
+
+    this.whooshSoundClip = new SoundClip( shareWhooshSound_mp3 );
+    this.whooshSoundClip.connect( this.mainGainNode );
+    this.shareCompleteSoundClip = new SoundClip( shareCompleteSound_mp3 );
+    this.shareCompleteSoundClip.connect( this.mainGainNode );
+    this.shareFractionalizeSoundClip = new SoundClip( shareFractionalizeSound_mp3 );
+    this.shareFractionalizeSoundClip.connect( this.mainGainNode );
+  }
+
+  public play(): void {
+    this.whooshSoundClip.play();
+    this.shareFractionalizeSoundClip.play( 0.55 );
+    this.shareCompleteSoundClip.play( 1.25 );
+  }
+
+  public stop(): void {
+    this.whooshSoundClip.stop();
+    this.shareFractionalizeSoundClip.stop();
+    this.shareCompleteSoundClip.stop();
   }
 }
 
