@@ -35,6 +35,8 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
 import { PLATE_HEIGHT, PLATE_WIDTH } from '../../common/model/Plate.js';
+import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -246,6 +248,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
+
+    // Add sound generation for the "predict mean" slider.
+    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
+    soundManager.addSoundGenerator( predictMeanSoundGenerator );
 
     // Update line length and dilation based on the number of objects.
     model.numberOfPlatesProperty.link( () => {
