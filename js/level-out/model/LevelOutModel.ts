@@ -24,9 +24,11 @@ import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 import TModel from '../../../../joist/js/TModel.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import dotRandom from '../../../../dot/js/dotRandom.js';
 
 type LevelOutModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
+
+// constants
+const INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
 
 export default class LevelOutModel implements TModel {
 
@@ -95,7 +97,7 @@ export default class LevelOutModel implements TModel {
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS; i++ ) {
       const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
       const tableCupPosition = new Vector2( x, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
-      const waterLevel = i === 0 ? 0.75 : Utils.roundToInterval( dotRandom.nextDouble(), 0.01 );
+      const waterLevel = INITIAL_WATER_LEVELS[ i ];
       this.tableCups.push( new Cup( tableCupsParentTandem.createTandem( `tableCup${i + 1}` ), {
         waterLevel: waterLevel,
         position: tableCupPosition,
