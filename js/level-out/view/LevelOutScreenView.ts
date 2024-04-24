@@ -210,7 +210,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       this.interruptSubtreeInput();
     } );
 
-    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider ], controls.controlsPDOMOrder );
+    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider, controls.numberSpinner ], controls.controlsPDOMOrder );
   }
 
   public override reset(): void {
