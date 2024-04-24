@@ -60,6 +60,7 @@ export default class MeanShareAndBalanceControls extends Node {
         tandem: options.tandem.createTandem( 'infoButton' )
       } );
       this.addChild( infoButton );
+      options.controlsPDOMOrder.push( infoButton );
     }
 
 

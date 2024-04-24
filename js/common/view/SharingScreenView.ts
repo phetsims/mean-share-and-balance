@@ -193,7 +193,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     children.forEach( childNode => { this.addChild( childNode ); } );
 
     // Set the PDOM navigation order.
-    this.msabSetPDOMOrder( [ notepadSnackLayerNode ], this.tablePlateNodes, controls.controlsPDOMOrder );
+    this.msabSetPDOMOrder( [ notepadSnackLayerNode ], [ ...this.tablePlateNodes, controls.numberSpinner ], controls.controlsPDOMOrder );
   }
 }
 
