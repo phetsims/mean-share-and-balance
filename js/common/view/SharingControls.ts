@@ -13,12 +13,14 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, FireListener, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import { AlignBox, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
 import MeanShareAndBalanceCheckboxGroup from './MeanShareAndBalanceCheckboxGroup.js';
+import SoundClipPlayer from '../../../../tambo/js/sound-generators/SoundClipPlayer.js';
+import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 
 type SelfOptions = {
   showSyncButton?: boolean;
@@ -51,15 +53,13 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       tandem: options.tandem.createTandem( 'checkboxGroup' )
     } );
 
-    const syncListener = new FireListener( {
-      fire: () => model.syncData(),
-      tandem: providedOptions.tandem.createTandem( 'syncListener' )
-    } );
-
     const syncButton = new SyncButton( {
-      inputListeners: [ syncListener ],
+      listener: () => model.syncData(),
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+      soundPlayer: new SoundClipPlayer( erase_mp3, {
+        soundClipOptions: { initialOutputLevel: 0.22 }
+      } ),
       tandem: options.tandem.createTandem( 'syncButton' )
     } );
 
