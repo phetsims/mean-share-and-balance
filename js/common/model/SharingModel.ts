@@ -48,6 +48,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
   public readonly totalVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
+  public readonly areAllActivePlatesInSyncProperty: TReadOnlyProperty<boolean>;
 
   // A state flag used to control whether the motion of snacks is animated or instantaneous.  This is helpful for
   // preventing animations during phet-io state setting.
@@ -91,9 +92,9 @@ export default class SharingModel<T extends Snack> implements TModel {
 
     this.totalVisibleProperty = new BooleanProperty( false, {
 
-        // phet-io
-        tandem: options.tandem.createTandem( 'totalVisibleProperty' )
-      } );
+      // phet-io
+      tandem: options.tandem.createTandem( 'totalVisibleProperty' )
+    } );
 
     this.unusedSnacks = createObservableArray( {
       phetioType: ObservableArrayIO( ReferenceIO( IOType.ObjectIO ) ),
@@ -145,6 +146,13 @@ export default class SharingModel<T extends Snack> implements TModel {
       );
       this.plates.push( plate );
     } );
+
+    const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
+    const plateSyncDependencies = this.plates.map( plate => plate.areSnacksInSyncProperty );
+    this.areAllActivePlatesInSyncProperty = DerivedProperty.deriveAny( [ ...activePlateDependencies, ...plateSyncDependencies ],
+      () => {
+        return this.plates.every( plate => plate.isActiveProperty.value ? plate.areSnacksInSyncProperty.value : true );
+      } );
 
     // Tracks the total number of snacks based on the "ground truth" numbers for each plate.
     this.totalSnacksProperty = DerivedProperty.deriveAny(

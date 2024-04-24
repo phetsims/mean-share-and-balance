@@ -25,6 +25,8 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions<T extends Snack> = {
   isInitiallyActive?: boolean;
@@ -64,6 +66,8 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // be in sync with the number on the table.  DO NOT MODIFY THE CONTENTS OF THIS ARRAY OUTSIDE OF THIS CLASS.  It's
   // only public so that clients can get to the length and lengthProperty.
   public readonly snacksOnNotepadPlate: ObservableArray<T>;
+
+  public readonly areSnacksInSyncProperty: TReadOnlyProperty<boolean>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
   public readonly linePlacement: number;
@@ -152,6 +156,10 @@ export default class Plate<T extends Snack> extends PhetioObject {
       // REVIEW: Do we not need a listener here to set the isActiveProperty to false when the snack is removed?
       this.snacksOnNotepadPlate.addItemRemovedListener( snackRemovedListener );
     } );
+
+    this.areSnacksInSyncProperty = new DerivedProperty(
+      [ this.tableSnackNumberProperty, this.snacksOnNotepadPlate.lengthProperty ],
+      ( tableSnackNumber, notepadSnackNumber ) => tableSnackNumber === notepadSnackNumber );
 
     this.linePlacement = options.linePlacement;
 

@@ -21,6 +21,7 @@ import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from 
 import MeanShareAndBalanceCheckboxGroup from './MeanShareAndBalanceCheckboxGroup.js';
 import SoundClipPlayer from '../../../../tambo/js/sound-generators/SoundClipPlayer.js';
 import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions = {
   showSyncButton?: boolean;
@@ -34,7 +35,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
   public constructor( model: Pick<SharingModel<Snack>,
                         'numberOfPlatesProperty' |
                         'totalVisibleProperty' |
-                        'syncData'>,
+                        'syncData' | 'areAllActivePlatesInSyncProperty'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>,
                       providedOptions: SharingControlsOptions ) {
 
@@ -55,6 +56,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
 
     const syncButton = new SyncButton( {
       listener: () => model.syncData(),
+      enabledProperty: DerivedProperty.not( model.areAllActivePlatesInSyncProperty ),
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       soundPlayer: new SoundClipPlayer( erase_mp3, {
