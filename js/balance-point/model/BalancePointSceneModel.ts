@@ -33,16 +33,17 @@ const X_AXIS_RANGE = new Range(
 );
 export const FULCRUM_HEIGHT = 0.7; // in meters
 const PARTIAL_TILT_SPAN = 0.5; // in meters, distance from fulcrum to mean where beam tilts partially, not completely
+const ENDPOINT_ANIMATION_MOVEMENT_SPEED = 1.75; // in meters/sec, empirically determined to look reasonably good
 
 export default class BalancePointSceneModel extends SoccerSceneModel {
-
-  // Controls whether the column supports for the beam are present or not, fixing the beam in a horizontal position
-  // when present, and allowing the beam to tilt when not.
-  public readonly beamSupportsPresentProperty: BooleanProperty;
 
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
   public readonly targetNumberOfBallsProperty: Property<number>;
   public readonly fulcrumValueProperty: Property<number>;
+
+  // Controls whether the column supports for the beam are present or not, fixing the beam in a horizontal position
+  // when present, and allowing the beam to tilt when not.
+  public readonly beamSupportsPresentProperty: BooleanProperty;
 
   // The position of the balance beam is determined by the x and y values of the left and right end points of the line.
   // The x values never vary.
@@ -50,6 +51,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public readonly leftBalanceBeamXValue = X_AXIS_RANGE.min;
   public readonly rightBalanceBeamYValueProperty: Property<number>;
   public readonly rightBalanceBeamXValue = X_AXIS_RANGE.max;
+
+  // The target value for the left balance beam Y position.  This is used in the step function to animate the motion
+  // of the beam in some situations.
+  private targetLeftBalanceBeamYValue = FULCRUM_HEIGHT;
 
   public constructor( isMeanFulcrumFixedProperty: BooleanProperty,
                       options: BalancePointSceneModelOptions ) {
@@ -147,15 +152,12 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       ],
       ( supportsPresent, fulcrumValue, mean, isFulcrumFixed ) => {
 
-        const roundedMean = mean === null ?
-                            null :
-                            Utils.roundToInterval( mean, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
-
-        // If the supports are present, if nothing is on the beam, or if the fulcrum is at the fixed mean position then
+        // If the supports are present, if nothing is on the beam, or if the fulcrum is at the fixed mean state, then
         // the beam is horizontal.
-        if ( supportsPresent || mean === null || isFulcrumFixed || fulcrumValue === roundedMean ) {
+        if ( supportsPresent || mean === null || isFulcrumFixed ) {
           this.leftBalanceBeamYValueProperty.value = FULCRUM_HEIGHT;
           this.rightBalanceBeamYValueProperty.value = FULCRUM_HEIGHT;
+          this.targetLeftBalanceBeamYValue = FULCRUM_HEIGHT;
         }
         else {
 
@@ -164,24 +166,51 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
           const xMax = X_AXIS_RANGE.max;
           const tiltedToLeft = mean < fulcrumValue;
 
-          // Create a linear function for the line that represents where the beam is in model space.
-          let linearFunctionForBeam;
+          // Create a linear function for the line as it is before making any changes.
+          const linearFunctionForPreviousBeamPosition = new LinearFunction(
+            xMin,
+            xMax,
+            this.leftBalanceBeamYValueProperty.value,
+            this.rightBalanceBeamYValueProperty.value
+          );
+
+          // Determine whether the top of the fulcrum is still in contact with the beam.  If it is, that means the beam
+          // line can be rotated to the new position, which means it can be animated.
+          const fulcrumTipInContactWithOldBeamLine = Utils.equalsEpsilon(
+            linearFunctionForPreviousBeamPosition.evaluate( fulcrumValue ),
+            FULCRUM_HEIGHT,
+            1E-8
+          );
+
+          // Create a linear function for the line that represents where the beam should be in model space.  This
+          // calculation is for the final position based on the items on the beam and whether the fulcrum is close to
+          // the balance point.
+          let linearFunctionForNewBeamPosition;
           const distanceFromFulcrumToMean = Math.abs( fulcrumValue - mean );
           if ( distanceFromFulcrumToMean < PARTIAL_TILT_SPAN ) {
             const lowerEdgeHeight = ( 1 - distanceFromFulcrumToMean / PARTIAL_TILT_SPAN ) * FULCRUM_HEIGHT;
-            linearFunctionForBeam = tiltedToLeft ?
-                                    new LinearFunction( xMin, fulcrumValue, lowerEdgeHeight, FULCRUM_HEIGHT ) :
-                                    new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, lowerEdgeHeight );
+            linearFunctionForNewBeamPosition = tiltedToLeft ?
+                                               new LinearFunction( xMin, fulcrumValue, lowerEdgeHeight, FULCRUM_HEIGHT ) :
+                                               new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, lowerEdgeHeight );
           }
           else {
-            linearFunctionForBeam = tiltedToLeft ?
-                                    new LinearFunction( xMin, fulcrumValue, 0, FULCRUM_HEIGHT ) :
-                                    new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, 0 );
+            linearFunctionForNewBeamPosition = tiltedToLeft ?
+                                               new LinearFunction( xMin, fulcrumValue, 0, FULCRUM_HEIGHT ) :
+                                               new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, 0 );
           }
 
-          // Use the linear function to set the Y values of the beam's end points.
-          this.leftBalanceBeamYValueProperty.value = linearFunctionForBeam.evaluate( xMin );
-          this.rightBalanceBeamYValueProperty.value = linearFunctionForBeam.evaluate( xMax );
+          // Use the linear function to figure out where the ends of the beam should be.
+          this.targetLeftBalanceBeamYValue = linearFunctionForNewBeamPosition.evaluate( xMin );
+
+          // Determine whether to move instantly to the new position or let the step function move there more gradually
+          // in order to animate the tilting motion.
+          if ( !fulcrumTipInContactWithOldBeamLine ) {
+
+            // The new fulcrum position is not in contact with the old beam, so we can't rotate the beam into the new
+            // position.  In this case, we set the new position values right away.
+            this.leftBalanceBeamYValueProperty.value = linearFunctionForNewBeamPosition.evaluate( xMin );
+            this.rightBalanceBeamYValueProperty.value = linearFunctionForNewBeamPosition.evaluate( xMax );
+          }
         }
       }
     );
@@ -239,6 +268,38 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         ball.soccerBallPhaseProperty.value = SoccerBallPhase.INACTIVE;
       } );
     }
+  }
+
+  public override step( dt: number ): void {
+
+    // If the balance beam isn't at the target position, move it toward the target.
+    if ( this.leftBalanceBeamYValueProperty.value !== this.targetLeftBalanceBeamYValue ) {
+      const delta = ( this.targetLeftBalanceBeamYValue - this.leftBalanceBeamYValueProperty.value );
+      const endpointMovementThisStep = ENDPOINT_ANIMATION_MOVEMENT_SPEED * dt;
+      let newLeftBalanceBeamYValue;
+      if ( Math.abs( delta ) <= endpointMovementThisStep ) {
+        newLeftBalanceBeamYValue = this.targetLeftBalanceBeamYValue;
+      }
+      else if ( delta > 0 ) {
+        newLeftBalanceBeamYValue = this.leftBalanceBeamYValueProperty.value + endpointMovementThisStep;
+      }
+      else {
+        newLeftBalanceBeamYValue = this.leftBalanceBeamYValueProperty.value - endpointMovementThisStep;
+      }
+
+      // Create a linear function that reflects the new beam position.
+      const newBeamPositionLinearFunction = new LinearFunction(
+        X_AXIS_RANGE.min,
+        this.fulcrumValueProperty.value,
+        newLeftBalanceBeamYValue,
+        FULCRUM_HEIGHT
+      );
+
+      // Set the externally visible Property values that represent the beam's position.
+      this.leftBalanceBeamYValueProperty.value = newLeftBalanceBeamYValue;
+      this.rightBalanceBeamYValueProperty.value = newBeamPositionLinearFunction.evaluate( X_AXIS_RANGE.max );
+    }
+    super.step( dt );
   }
 
   /**
