@@ -24,6 +24,7 @@ import Utils from '../../../../dot/js/Utils.js';
 import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -33,7 +34,7 @@ const X_AXIS_RANGE = new Range(
 );
 export const FULCRUM_HEIGHT = 0.7; // in meters
 const PARTIAL_TILT_SPAN = 0.5; // in meters, distance from fulcrum to mean where beam tilts partially, not completely
-const ENDPOINT_ANIMATION_MOVEMENT_SPEED = 1.75; // in meters/sec, empirically determined to look reasonably good
+const BEAM_ROTATION_RATE = Math.PI / 4; // in radians/sec, empirically determined to look reasonably good
 
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
@@ -273,31 +274,40 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public override step( dt: number ): void {
 
     // If the balance beam isn't at the target position, move it toward the target.
-    if ( this.leftBalanceBeamYValueProperty.value !== this.targetLeftBalanceBeamYValue ) {
-      const delta = ( this.targetLeftBalanceBeamYValue - this.leftBalanceBeamYValueProperty.value );
-      const endpointMovementThisStep = ENDPOINT_ANIMATION_MOVEMENT_SPEED * dt;
-      let newLeftBalanceBeamYValue;
-      if ( Math.abs( delta ) <= endpointMovementThisStep ) {
-        newLeftBalanceBeamYValue = this.targetLeftBalanceBeamYValue;
-      }
-      else if ( delta > 0 ) {
-        newLeftBalanceBeamYValue = this.leftBalanceBeamYValueProperty.value + endpointMovementThisStep;
-      }
-      else {
-        newLeftBalanceBeamYValue = this.leftBalanceBeamYValueProperty.value - endpointMovementThisStep;
-      }
-
-      // Create a linear function that reflects the new beam position.
-      const newBeamPositionLinearFunction = new LinearFunction(
-        X_AXIS_RANGE.min,
+    const leftEdgeDistanceFromTarget = this.leftBalanceBeamYValueProperty.value - this.targetLeftBalanceBeamYValue;
+    if ( leftEdgeDistanceFromTarget !== 0 ) {
+      const rotationSign = leftEdgeDistanceFromTarget > 0 ? 1 : -1;
+      const leftEdgePoint = new Vector2( X_AXIS_RANGE.min, this.leftBalanceBeamYValueProperty.value );
+      const fulcrumTipPoint = new Vector2( this.fulcrumValueProperty.value, FULCRUM_HEIGHT );
+      const rotatedLeftEdgePoint = leftEdgePoint.rotatedAboutPoint(
+        fulcrumTipPoint,
+        rotationSign * BEAM_ROTATION_RATE * dt
+      );
+      const rotatedBeamLineFunction = new LinearFunction(
+        rotatedLeftEdgePoint.x,
         this.fulcrumValueProperty.value,
-        newLeftBalanceBeamYValue,
+        rotatedLeftEdgePoint.y,
         FULCRUM_HEIGHT
       );
+      if ( rotationSign > 0 && rotatedBeamLineFunction.evaluate( X_AXIS_RANGE.min ) < this.targetLeftBalanceBeamYValue ||
+           rotationSign < 0 && rotatedBeamLineFunction.evaluate( X_AXIS_RANGE.min ) > this.targetLeftBalanceBeamYValue ) {
 
-      // Set the externally visible Property values that represent the beam's position.
-      this.leftBalanceBeamYValueProperty.value = newLeftBalanceBeamYValue;
-      this.rightBalanceBeamYValueProperty.value = newBeamPositionLinearFunction.evaluate( X_AXIS_RANGE.max );
+        // Rotating by the full amount per step would go past the target value, so just go directly to the target.
+        this.leftBalanceBeamYValueProperty.value = this.targetLeftBalanceBeamYValue;
+        const linearFunctionForTargetValue = new LinearFunction(
+          X_AXIS_RANGE.min,
+          this.fulcrumValueProperty.value,
+          this.targetLeftBalanceBeamYValue,
+          FULCRUM_HEIGHT
+        );
+        this.rightBalanceBeamYValueProperty.value = linearFunctionForTargetValue.evaluate( X_AXIS_RANGE.max );
+      }
+      else {
+
+        // Rotate the end points by the full amount of rotation for this step.
+        this.leftBalanceBeamYValueProperty.value = rotatedBeamLineFunction.evaluate( X_AXIS_RANGE.min );
+        this.rightBalanceBeamYValueProperty.value = rotatedBeamLineFunction.evaluate( X_AXIS_RANGE.max );
+      }
     }
     super.step( dt );
   }
