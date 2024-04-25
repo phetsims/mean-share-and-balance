@@ -122,7 +122,7 @@ export default class BalanceBeamNode extends Node {
       if ( isFulcrumFixed ) {
 
         // Position the fulcrum at the mean when in the "fixed" mode.
-        fixedFulcrum.centerX = meanValue ?
+        fixedFulcrum.centerX = meanValue !== null ?
                                BALANCE_BEAM_TRANSFORM.modelToViewX( Utils.roundToInterval( meanValue, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ) ) :
                                BALANCE_BEAM_TRANSFORM.modelToViewX( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() );
 
