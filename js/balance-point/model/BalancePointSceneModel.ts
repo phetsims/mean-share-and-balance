@@ -55,6 +55,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
                       options: BalancePointSceneModelOptions ) {
 
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+      range: new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
     } );
 
@@ -101,6 +102,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
+      range: MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE_PROPERTY,
       phetioReadOnly: true,
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );
@@ -188,6 +190,11 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       soccerBall.toneEmitter.addListener( value => {
         NumberTone.playValue( value );
       } );
+    } );
+
+    maxKicksProperty.link( maxKicks => {
+      this.reset();
+      MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE_PROPERTY.value.max = maxKicks;
     } );
   }
 

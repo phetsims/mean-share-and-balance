@@ -26,7 +26,7 @@ export type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, '
 export default class NumberSpinnerVBox extends VBox {
 
   public constructor( numberProperty: Property<number>,
-                      range: Range,
+                      rangeProperty: Property<Range>,
                       stringProperty: LocalizedStringProperty,
                       providedOptions: NumberSpinnerVBoxOptions ) {
 
@@ -51,7 +51,7 @@ export default class NumberSpinnerVBox extends VBox {
 
     const numberSpinner = new NumberSpinner(
       numberProperty,
-      new Property( range ),
+      rangeProperty,
       options.numberSpinnerOptions
     );
 

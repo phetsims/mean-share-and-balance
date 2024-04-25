@@ -75,11 +75,11 @@ export default class MeanShareAndBalanceControls extends Node {
       numberSpinnerOptions: numberSpinnerOptions
     };
 
-    const range = options.isSoccerContext ? MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE :
-                  MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE;
+    const rangeProperty = options.isSoccerContext ? MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE_PROPERTY :
+                  new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE );
     const numberSpinner = new NumberSpinnerVBox(
       numberOfObjectsProperty,
-      range,
+      rangeProperty,
       numberOfObjectsStringProperty,
       numberSpinnerVBoxOptions
     );
