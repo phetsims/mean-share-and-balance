@@ -28,6 +28,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
+// The range for the beam extends one meter beyond that of the soccer balls in both directions.
 const X_AXIS_RANGE = new Range(
   MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.min - 1,
   MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.max + 1
