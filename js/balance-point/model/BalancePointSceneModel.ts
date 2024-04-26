@@ -163,10 +163,14 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         }
         else {
 
+          // The fulcrum is accurate to one tenth of a meter. Round the fulcrum and mean values to that precision.
+          const roundedFulcrumValue = Utils.roundToInterval( fulcrumValue, 0.1 );
+          const roundedMeanValue = Utils.roundToInterval( mean, 0.1 );
+
           // convenience variables
           const xMin = X_AXIS_RANGE.min;
           const xMax = X_AXIS_RANGE.max;
-          const tiltedToLeft = mean < fulcrumValue;
+          const tiltedToLeft = roundedMeanValue < roundedFulcrumValue;
 
           // Create a linear function for the line as it is before making any changes.
           const linearFunctionForPreviousBeamPosition = new LinearFunction(
@@ -179,7 +183,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
           // Determine whether the top of the fulcrum is still in contact with the beam.  If it is, that means the beam
           // line can be rotated to the new position, which means it can be animated.
           const fulcrumTipInContactWithOldBeamLine = Utils.equalsEpsilon(
-            linearFunctionForPreviousBeamPosition.evaluate( fulcrumValue ),
+            linearFunctionForPreviousBeamPosition.evaluate( roundedFulcrumValue ),
             FULCRUM_HEIGHT,
             1E-8
           );
@@ -188,17 +192,17 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
           // calculation is for the final position based on the items on the beam and whether the fulcrum is close to
           // the balance point.
           let linearFunctionForNewBeamPosition;
-          const distanceFromFulcrumToMean = Math.abs( fulcrumValue - mean );
+          const distanceFromFulcrumToMean = Math.abs( roundedFulcrumValue - roundedMeanValue );
           if ( distanceFromFulcrumToMean < PARTIAL_TILT_SPAN ) {
             const lowerEdgeHeight = ( 1 - distanceFromFulcrumToMean / PARTIAL_TILT_SPAN ) * FULCRUM_HEIGHT;
             linearFunctionForNewBeamPosition = tiltedToLeft ?
-                                               new LinearFunction( xMin, fulcrumValue, lowerEdgeHeight, FULCRUM_HEIGHT ) :
-                                               new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, lowerEdgeHeight );
+                                               new LinearFunction( xMin, roundedFulcrumValue, lowerEdgeHeight, FULCRUM_HEIGHT ) :
+                                               new LinearFunction( roundedFulcrumValue, xMax, FULCRUM_HEIGHT, lowerEdgeHeight );
           }
           else {
             linearFunctionForNewBeamPosition = tiltedToLeft ?
-                                               new LinearFunction( xMin, fulcrumValue, 0, FULCRUM_HEIGHT ) :
-                                               new LinearFunction( fulcrumValue, xMax, FULCRUM_HEIGHT, 0 );
+                                               new LinearFunction( xMin, roundedFulcrumValue, 0, FULCRUM_HEIGHT ) :
+                                               new LinearFunction( roundedFulcrumValue, xMax, FULCRUM_HEIGHT, 0 );
           }
 
           // Use the linear function to figure out where the ends of the beam should be.
