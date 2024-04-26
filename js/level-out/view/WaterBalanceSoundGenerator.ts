@@ -43,7 +43,7 @@ const FILTER_FREQUENCY_RANGE = new Range( 200, 10000 );
 class WaterBalanceSoundGenerator extends SoundClip {
 
   // duration of inactivity fade out
-  private readonly fadeTime: number;
+  private readonly fadeOutTime: number;
 
   // see docs in options type declaration
   private readonly fadeStartDelay: number;
@@ -55,7 +55,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
   private readonly nonFadedOutputLevel: number;
 
   // countdown time used for fade out
-  private remainingFadeTime: number;
+  private remainingFadeOutTime: number;
 
   private readonly disposeWaterBalanceSoundGenerator: () => void;
 
@@ -92,10 +92,10 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     // Initialize the variable that will be used to fade the sound in and out.
     this.fadeStartDelay = options.fadeStartDelay;
-    this.fadeTime = options.fadeTime;
+    this.fadeOutTime = options.fadeTime;
     this.delayBeforeStop = options.delayBeforeStop;
     this.nonFadedOutputLevel = options.initialOutputLevel === undefined ? 1 : options.initialOutputLevel;
-    this.remainingFadeTime = 0;
+    this.remainingFadeOutTime = 0;
 
     // Start with the output level at zero so that the initial sound can fade in.
     this.setOutputLevel( 0, 0 );
@@ -182,27 +182,27 @@ class WaterBalanceSoundGenerator extends SoundClip {
     }
 
     // Reset the fade countdown to its max value.
-    this.remainingFadeTime = this.fadeStartDelay + this.fadeTime + this.delayBeforeStop;
+    this.remainingFadeOutTime = this.fadeStartDelay + this.fadeOutTime + this.delayBeforeStop;
   }
 
   /**
-   * Step this sound generator, which will fade out the sound over time if remainingFadeTime isn't increased.
+   * Step this sound generator, which will fade out the sound over time if remainingFadeOutTime isn't increased.
    * @param dt - change in time (i.e. delta time) in seconds
    */
   private step( dt: number ): void {
 
-    if ( this.remainingFadeTime > 0 ) {
-      this.remainingFadeTime = Math.max( this.remainingFadeTime - dt, 0 );
+    if ( this.remainingFadeOutTime > 0 ) {
+      this.remainingFadeOutTime = Math.max( this.remainingFadeOutTime - dt, 0 );
 
-      if ( ( this.remainingFadeTime < this.fadeTime + this.delayBeforeStop ) && this.outputLevel > 0 ) {
+      if ( ( this.remainingFadeOutTime < this.fadeOutTime + this.delayBeforeStop ) && this.outputLevel > 0 ) {
 
-        // The sound is fading out, so adjust the output level downwards.
-        const outputLevel = Math.max( ( this.remainingFadeTime - this.delayBeforeStop ) / this.fadeTime, 0 );
+        // The sound is fading out - adjust the output level downwards.
+        const outputLevel = Math.max( ( this.remainingFadeOutTime - this.delayBeforeStop ) / this.fadeOutTime, 0 );
         this.setOutputLevel( outputLevel * this.nonFadedOutputLevel );
       }
 
       // Fade out complete, stop playback.
-      if ( this.remainingFadeTime === 0 && this.isPlaying ) {
+      if ( this.remainingFadeOutTime === 0 && this.isPlaying ) {
         this.stop( 0 );
       }
     }
@@ -213,7 +213,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
    */
   public reset(): void {
     this.stop( 0 );
-    this.remainingFadeTime = 0;
+    this.remainingFadeOutTime = 0;
   }
 
   /**
