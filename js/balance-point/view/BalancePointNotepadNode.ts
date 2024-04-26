@@ -24,6 +24,11 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import pillarCheckButton_mp3 from '../../../sounds/pillarCheckButton_mp3.js';
+import pillarResetButton_mp3 from '../../../sounds/pillarResetButton_mp3.js';
+import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -66,11 +71,14 @@ export default class BalancePointNotepadNode extends NotepadNode {
       visibleProperty: DerivedProperty.not( sceneModel.beamSupportsPresentProperty ),
       maxWidth: buttonTextMaxWidth
     } );
+
+    const checkButtonSoundPlayer = new PillarSoundPlayer( sceneModel.beamSupportsPresentProperty );
     const checkButton = new RectangularPushButton( {
 
       // The check button is not visible when the fulcrum is fixed.
       visibleProperty: DerivedProperty.not( isMeanFulcrumFixedProperty ),
       content: new Node( { children: [ checkText, resetText ] } ),
+      soundPlayer: checkButtonSoundPlayer,
       listener: () => {
         sceneModel.beamSupportsPresentProperty.toggle();
       },
@@ -121,6 +129,34 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
   public reset(): void {
     this.balanceBeamNode.reset();
+  }
+}
+
+class PillarSoundPlayer implements TSoundPlayer {
+
+  private readonly checkButtonSoundClip = new SoundClip( pillarCheckButton_mp3, { initialOutputLevel: 0.6 } );
+  private readonly resetButtonSoundClip = new SoundClip( pillarResetButton_mp3, { initialOutputLevel: 0.5 } );
+  public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean> ) {
+    soundManager.addSoundGenerator( this.checkButtonSoundClip );
+    soundManager.addSoundGenerator( this.resetButtonSoundClip );
+  }
+
+  public play(): void {
+    if ( this.beamSupportsPresentProperty.value ) {
+
+      // Play the sound that is associated with the check button.
+      this.checkButtonSoundClip.play();
+    }
+    else {
+
+      // Play the sound that is associated with the reset button.
+      this.resetButtonSoundClip.play();
+    }
+  }
+
+  public stop(): void {
+    this.checkButtonSoundClip.stop();
+    this.resetButtonSoundClip.stop();
   }
 }
 
