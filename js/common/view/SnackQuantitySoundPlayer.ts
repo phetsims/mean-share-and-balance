@@ -61,6 +61,9 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
 
   private readonly soundEffectsWithHiddenTone: SoundClip[];
 
+  // A record of the most recently played sound clip.
+  private mostRecentlyPlayedSoundClip: SoundClip | null = null;
+
   public constructor( snackType: SnackType,
                       snackQuantityProperty: TReadOnlyProperty<number>,
                       plateIndex: number,
@@ -138,25 +141,40 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
   public play(): void {
     if ( this.soundGenerationMode === 'baseToneWithSoundEffect' ) {
       this.crossFadeSoundClip.play();
-      const soundEffect = dotRandom.sample( this.soundEffects );
-      soundEffect && soundEffect.play();
+      const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
+                                    _.without( this.soundEffects, this.mostRecentlyPlayedSoundClip ) :
+                                    this.soundEffects;
+      const soundEffect = dotRandom.sample( availableSoundEffects );
+      if ( soundEffect ) {
+        soundEffect.play();
+        this.mostRecentlyPlayedSoundClip = soundEffect;
+      }
     }
     else if ( this.soundGenerationMode === 'pitchedBasicSoundEffect' ) {
-      const soundEffect = dotRandom.sample( this.soundEffects );
+      const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
+                                    _.without( this.soundEffects, this.mostRecentlyPlayedSoundClip ) :
+                                    this.soundEffects;
+      const soundEffect = dotRandom.sample( availableSoundEffects );
       if ( soundEffect ) {
         soundEffect.setPlaybackRate(
           SnackQuantitySoundPlayer.getPlaybackRateForQuantity( this.snackQuantityProperty.value )
         );
         soundEffect.play();
+        this.mostRecentlyPlayedSoundClip = soundEffect;
       }
     }
     else if ( this.soundGenerationMode === 'pitchedSoundEffectWithTone' ) {
-      const soundEffectWithHiddenTone = dotRandom.sample( this.soundEffectsWithHiddenTone );
+      const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
+                                    _.without( this.soundEffectsWithHiddenTone, this.mostRecentlyPlayedSoundClip ) :
+                                    this.soundEffects;
+      const soundEffectWithHiddenTone = dotRandom.sample( availableSoundEffects );
+
       if ( soundEffectWithHiddenTone ) {
         soundEffectWithHiddenTone.setPlaybackRate(
           SnackQuantitySoundPlayer.getPlaybackRateForQuantity( this.snackQuantityProperty.value )
         );
         soundEffectWithHiddenTone.play();
+        this.mostRecentlyPlayedSoundClip = soundEffectWithHiddenTone;
       }
     }
   }
