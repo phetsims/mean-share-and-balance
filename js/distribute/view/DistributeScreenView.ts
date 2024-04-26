@@ -11,7 +11,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import DistributeModel from '../model/DistributeModel.js';
-import { InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
+import { Color, InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -37,12 +37,24 @@ import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
 import { PLATE_HEIGHT, PLATE_WIDTH } from '../../common/model/Plate.js';
 import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import ArrowNode, { ArrowNodeOptions } from '../../../../scenery-phet/js/ArrowNode.js';
+import SnackStacker from '../../common/SnackStacker.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 // constants
 const CANDY_BAR_FOCUS_X_MARGIN = 10;
+const CUEING_ARROW_LENGTH = 24;
+const CUEING_ARROW_OPTIONS: ArrowNodeOptions = {
+  fill: MeanShareAndBalanceColors.arrowFillColorProperty,
+  stroke: Color.BLACK,
+  lineWidth: 1,
+  tailWidth: DistributeModel.CANDY_BAR_HEIGHT * 0.6,
+  headWidth: DistributeModel.CANDY_BAR_HEIGHT * 1.2,
+  lineJoin: 'round'
+};
+const CUEING_ARROW_MARGIN = 2;
 
 export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
@@ -135,10 +147,42 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y ),
       1
     );
-    const notepadPlateNodes = model.plates.map( plate => new DistributeNotepadPlateNode(
-      model.groupSortInteractionModel.hasGroupItemBeenSortedProperty, plate, modelToNotepadTransform, {
-        tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
-      } ) );
+
+    const leftCueingArrow = new ArrowNode( 0, 0, -CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
+    const rightCueingArrow = new ArrowNode( 0, 0, CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
+    const cueingArrowNode = new Node( {
+      children: [ leftCueingArrow, rightCueingArrow ]
+    } );
+    leftCueingArrow.left = 0;
+    rightCueingArrow.left = leftCueingArrow.right + PLATE_WIDTH + CUEING_ARROW_MARGIN * 2;
+
+    const updateCueingArrow = () => {
+      if ( !model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
+        const plate = model.plates.find( plate => plate.isActiveProperty.value && plate.snacksOnNotepadPlate.length > 0 );
+        if ( plate ) {
+          cueingArrowNode.visible = true;
+          cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition( SnackStacker.getStackedCandyBarPosition(
+            plate.xPositionProperty.value, plate.snacksOnNotepadPlate.length - 1 )
+            .plusXY( PLATE_WIDTH / 2 - CUEING_ARROW_MARGIN / 2, PLATE_HEIGHT ) );
+        }
+        else {
+          cueingArrowNode.visible = false;
+        }
+      }
+      if ( model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
+        cueingArrowNode.visible = false;
+      }
+    };
+    this.notepadSnackLayerNode.addChild( cueingArrowNode );
+    model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.link( updateCueingArrow );
+
+    const notepadPlateNodes = model.plates.map( plate => {
+      plate.snacksOnNotepadPlate.lengthProperty.link( updateCueingArrow );
+      return new DistributeNotepadPlateNode( plate, modelToNotepadTransform,
+        {
+          tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
+        } );
+    } );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
