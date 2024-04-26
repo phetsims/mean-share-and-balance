@@ -32,9 +32,11 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
+export type ApplesAnimationState = [ 'split' ] | [ 'land' ];
 
 // constants
 const APPLES_PER_COLLECTION_GROUP = 10;
@@ -82,6 +84,8 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // The array where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
+
+  public readonly applesAnimationStateEmitter = new TinyEmitter<ApplesAnimationState>();
 
   public constructor( providedOptions: FairShareModelOptions ) {
 
@@ -505,6 +509,8 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( this.animateAddedSnacks ) {
 
+        const isFirstApple = this.fractionDistributionListenerMap.size < 1;
+
         // This timer represents the second phase of the Collect => Share animation. The whole apples that were moved to
         // the top of the screen are turned into fractions and animated to their final positions on the plates.
         this.fractionDistributionListenerMap.set( apple, stepTimer.setTimeout( () => {
@@ -514,12 +520,19 @@ export default class FairShareModel extends SharingModel<Apple> {
             'invalid state: there must be apples available for fractionalization if the mean value is not an integer.'
           );
 
+          // If this is the first apple to be fractionalized, fire the emitter for our "split" sound.
+          isFirstApple && this.applesAnimationStateEmitter.emit( 'split' );
+
           apple.fractionProperty.value = fractionValue;
           apple.isActiveProperty.value = true;
           apple.moveTo( plate.getPositionForStackedItem( index ), true );
 
           apple.travelAnimationProperty.value?.finishEmitter.addListener( () => {
             this.confirmPlateValues( plate );
+
+            // Once the last apple has finished animating, fire emitter for our "landing" sound.
+            this.fractionDistributionListenerMap.size === 1 && this.applesAnimationStateEmitter.emit( 'land' );
+            this.fractionDistributionListenerMap.delete( apple );
           } );
 
         }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 ) );

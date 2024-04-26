@@ -9,7 +9,7 @@
 
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import FairShareModel, { NotepadMode } from '../model/FairShareModel.js';
+import FairShareModel, { ApplesAnimationState, NotepadMode } from '../model/FairShareModel.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import { AlignBox, Image, Text } from '../../../../scenery/js/imports.js';
@@ -22,15 +22,14 @@ import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import shareCompleteSound_mp3 from '../../../sounds/shareCompleteSound_mp3.js';
 import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
-import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
-import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
 import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
+import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
 export default class FairShareNotepadNode extends NotepadNode {
 
-  public constructor( notepadModeProperty: Property<NotepadMode>, providedOptions: FairShareNotepadNodeOptions ) {
+  public constructor( notepadModeProperty: Property<NotepadMode>, applesAnimationStateEmitter: TinyEmitter<ApplesAnimationState>, providedOptions: FairShareNotepadNodeOptions ) {
 
     super( providedOptions );
 
@@ -52,8 +51,24 @@ export default class FairShareNotepadNode extends NotepadNode {
     soundManager.addSoundGenerator( syncSoundClip );
     const collectSoundClip = new SoundClip( collectSound_mp3, { initialOutputLevel: 0.3 } );
     soundManager.addSoundGenerator( collectSoundClip );
-    const shareSoundGenerator = new ShareModeSoundPlayer( { initialOutputLevel: 0.3 } );
-    soundManager.addSoundGenerator( shareSoundGenerator );
+
+    // TODO: jbphet I'm not sure what to do about the mainGainNode... https://github.com/phetsims/mean-share-and-balance/issues/206
+    const whooshSoundClip = new SoundClip( shareWhooshSound_mp3, { initialOutputLevel: 0.3 } );
+    // whooshSoundClip.connect( this.mainGainNode );
+    soundManager.addSoundGenerator( whooshSoundClip );
+
+    const shareCompleteSoundClip = new SoundClip( shareCompleteSound_mp3, { initialOutputLevel: 0.3 } );
+    // shareCompleteSoundClip.connect( this.mainGainNode );
+    soundManager.addSoundGenerator( shareCompleteSoundClip );
+    const shareFractionalizeSoundClip = new SoundClip( shareFractionalizeSound_mp3, { initialOutputLevel: 0.3 } );
+    // shareFractionalizeSoundClip.connect( this.mainGainNode )
+    soundManager.addSoundGenerator( shareFractionalizeSoundClip );
+
+    // Play the appropriate sounds as the apples animate to their different positions.
+    applesAnimationStateEmitter.addListener( applesAnimationState => {
+      applesAnimationState === 'split' && shareFractionalizeSoundClip.play();
+      applesAnimationState === 'land' && shareCompleteSoundClip.play();
+    } );
 
     const notepadModeRadioButtonGroup = new RectangularRadioButtonGroup<NotepadMode>(
       notepadModeProperty,
@@ -61,7 +76,7 @@ export default class FairShareNotepadNode extends NotepadNode {
       {
         orientation: 'horizontal',
         spacing: 5,
-        soundPlayers: [ syncSoundClip, collectSoundClip, shareSoundGenerator ],
+        soundPlayers: [ syncSoundClip, collectSoundClip, whooshSoundClip ],
         tandem: providedOptions.tandem.createTandem( 'notepadModeRadioButtonGroup' )
       }
     );
@@ -88,37 +103,6 @@ export default class FairShareNotepadNode extends NotepadNode {
       yMargin: 18
     } );
     this.addChild( radioButtonGroupAlignBox );
-  }
-}
-
-class ShareModeSoundPlayer extends SoundGenerator implements TSoundPlayer {
-
-  private readonly whooshSoundClip: SoundClip;
-  private readonly shareCompleteSoundClip: SoundClip;
-  private readonly shareFractionalizeSoundClip: SoundClip;
-
-  public constructor( options?: SoundGeneratorOptions ) {
-
-    super( options );
-
-    this.whooshSoundClip = new SoundClip( shareWhooshSound_mp3 );
-    this.whooshSoundClip.connect( this.mainGainNode );
-    this.shareCompleteSoundClip = new SoundClip( shareCompleteSound_mp3 );
-    this.shareCompleteSoundClip.connect( this.mainGainNode );
-    this.shareFractionalizeSoundClip = new SoundClip( shareFractionalizeSound_mp3 );
-    this.shareFractionalizeSoundClip.connect( this.mainGainNode );
-  }
-
-  public play(): void {
-    this.whooshSoundClip.play();
-    this.shareFractionalizeSoundClip.play( 0.55 );
-    this.shareCompleteSoundClip.play( 1.25 );
-  }
-
-  public stop(): void {
-    this.whooshSoundClip.stop();
-    this.shareFractionalizeSoundClip.stop();
-    this.shareCompleteSoundClip.stop();
   }
 }
 
