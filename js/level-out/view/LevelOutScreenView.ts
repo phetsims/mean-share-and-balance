@@ -34,7 +34,9 @@ import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPrediction
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
-import ShredUtils from '../../../../shred/js/Utils.js'; // eslint-disable-line default-import-match-filename
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import switchToLeftSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToLeftSoundPlayer.js';
+import switchToRightSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToRightSoundPlayer.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
@@ -58,7 +60,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           const meanTolerance = 0.05;
           const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
           const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
-          const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
+          const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
 
           if ( arePipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
             predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
@@ -205,6 +207,13 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       { initialOutputLevel: 0.1 }
     );
     soundManager.addSoundGenerator( this.waterBalanceSoundGenerator );
+
+    // Add sound generation for the pipes opening and closing.
+    model.arePipesOpenProperty.lazyLink( pipesOpen => {
+      if ( !ResetAllButton.isResettingAllProperty.value ) {
+        pipesOpen ? switchToRightSoundPlayer.play() : switchToLeftSoundPlayer.play();
+      }
+    } );
 
     model.numberOfCupsProperty.link( () => {
       this.interruptSubtreeInput();

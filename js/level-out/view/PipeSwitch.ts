@@ -15,6 +15,7 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 
 export default class PipeSwitch extends ABSwitch<boolean> {
 
@@ -22,7 +23,11 @@ export default class PipeSwitch extends ABSwitch<boolean> {
 
     const options = {
       toggleSwitchOptions: {
-        size: new Dimension2( 40, 20 )
+        size: new Dimension2( 40, 20 ),
+
+        // Turn off default sound production for switch - sounds for the pipes changing are handled elsewhere.
+        switchToLeftSoundPlayer: nullSoundPlayer,
+        switchToRightSoundPlayer: nullSoundPlayer
       },
       tandem: tandem
     };
