@@ -71,6 +71,10 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     this.isTotalVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isTotalVisibleProperty' )
     } );
+
+    sceneModel.targetNumberOfBallsProperty.link( ( ) => {
+      this.groupSortInteractionModel.updateSelectedGroupItem( sceneModel );
+    } );
   }
 
   public override reset(): void {
