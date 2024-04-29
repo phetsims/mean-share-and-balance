@@ -52,7 +52,6 @@ export default class TablePlateNode<T extends Snack> extends Node {
     const snackQuantitySoundPlayer = new SnackQuantitySoundPlayer(
       options.snackType,
       plate.tableSnackNumberProperty,
-      plate.linePlacement,
       { initialOutputLevel: 0.2 }
     );
     soundManager.addSoundGenerator( snackQuantitySoundPlayer );
