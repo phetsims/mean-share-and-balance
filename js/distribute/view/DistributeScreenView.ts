@@ -158,7 +158,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     const updateCueingArrow = () => {
       if ( !model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
-        const plate = model.plates.find( plate => plate.isActiveProperty.value && plate.snacksOnNotepadPlate.length > 0 );
+        const plate = model.getPlateWithMostSnacks();
         if ( plate ) {
           cueingArrowNode.visible = true;
           cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition( SnackStacker.getStackedCandyBarPosition(
@@ -178,6 +178,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     const notepadPlateNodes = model.plates.map( plate => {
       plate.snacksOnNotepadPlate.lengthProperty.link( updateCueingArrow );
+      plate.xPositionProperty.link( updateCueingArrow );
       return new DistributeNotepadPlateNode( plate, modelToNotepadTransform,
         {
           tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )

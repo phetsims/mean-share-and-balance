@@ -209,7 +209,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   /**
    * Get the plate with the most snacks, null if no plates have any.
    */
-  private getPlateWithMostSnacks(): Plate<CandyBar> | null {
+  public getPlateWithMostSnacks(): Plate<CandyBar> | null {
     const sortedPlatesWithSnacks = this.getPlatesWithSnacks().sort(
       ( plateA, plateB ) => plateB.getNumberOfNotepadSnacks() - plateA.getNumberOfNotepadSnacks()
     );
