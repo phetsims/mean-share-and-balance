@@ -21,7 +21,7 @@ import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from 
 import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import cannonballTone_mp3 from '../../../sounds/cannonballTone_mp3.js';
+import release_mp3 from '../../../../tambo/sounds/release_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 
@@ -85,8 +85,7 @@ class NumberSpinnerSoundPlayer implements TSoundPlayer {
   private previousValue: number;
   private currentValue: number;
 
-  // TODO: If we're using a PDL sound, once we have confirmed it we should make it common, https://github.com/phetsims/mean-share-and-balance/issues/217
-  private readonly decrementSoundClip = new SoundClip( cannonballTone_mp3, { initialOutputLevel: 0.2 } );
+  private readonly decrementSoundClip = new SoundClip( release_mp3, { initialOutputLevel: 0.2 } );
 
   public constructor( numberOfDataPointsProperty: TReadOnlyProperty<number> ) {
     this.previousValue = numberOfDataPointsProperty.value;
