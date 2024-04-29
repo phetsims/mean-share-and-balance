@@ -16,13 +16,20 @@ import { ApplesAnimationState, NotepadMode } from '../model/FairShareModel.js';
 import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
 import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
-import shareCompleteSound_mp3 from '../../../sounds/shareCompleteSound_mp3.js';
 import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
+import shareCompleteLargeAmount_mp3 from '../../../sounds/shareCompleteLargeAmount_mp3.js';
+import shareCompleteMediumAmount_mp3 from '../../../sounds/shareCompleteMediumAmount_mp3.js';
+import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmount_mp3.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributionModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
+
+// constants
+const MAX_APPLES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS *
+                   MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
 
 class DistributionModeSoundGenerator extends SoundGenerator {
 
@@ -45,10 +52,28 @@ class DistributionModeSoundGenerator extends SoundGenerator {
     syncSoundClip.connect( this.mainGainNode );
     const whooshSoundClip = new SoundClip( shareWhooshSound_mp3 );
     whooshSoundClip.connect( this.mainGainNode );
-    const shareCompleteSoundClip = new SoundClip( shareCompleteSound_mp3 );
-    shareCompleteSoundClip.connect( this.mainGainNode );
+    const shareCompleteLargeAmountSoundClip = new SoundClip( shareCompleteLargeAmount_mp3 );
+    shareCompleteLargeAmountSoundClip.connect( this.mainGainNode );
+    const shareCompleteMediumAmountSoundClip = new SoundClip( shareCompleteMediumAmount_mp3 );
+    shareCompleteMediumAmountSoundClip.connect( this.mainGainNode );
+    const shareCompleteSmallAmoungSoundClip = new SoundClip( shareCompleteSmallAmount_mp3 );
+    shareCompleteSmallAmoungSoundClip.connect( this.mainGainNode );
     const shareFractionalizeSoundClip = new SoundClip( shareFractionalizeSound_mp3 );
     shareFractionalizeSoundClip.connect( this.mainGainNode );
+
+    // Create a function for playing the "share complete" sound.  We use a different sound depending upon how many
+    // apples are being shared.
+    const playShareCompleteSound = () => {
+      if ( totalApplesProperty.value < MAX_APPLES / 3 ) {
+        shareCompleteSmallAmoungSoundClip.play();
+      }
+      else if ( totalApplesProperty.value < 2 * MAX_APPLES / 3 ) {
+        shareCompleteMediumAmountSoundClip.play();
+      }
+      else {
+        shareCompleteLargeAmountSoundClip.play();
+      }
+    };
 
     // Play the sounds that occur immediately upon a mode change.
     distributionModeProperty.lazyLink( ( mode, previousMode ) => {
@@ -61,13 +86,14 @@ class DistributionModeSoundGenerator extends SoundGenerator {
         }
         else if ( mode === NotepadMode.SHARE ) {
           if ( previousMode === NotepadMode.SYNC ) {
-            shareCompleteSoundClip.play();
+            playShareCompleteSound();
           }
           else {
+
             // If the number of apples divides evenly over the number of plates, the 'complete' sound is played.
             // Otherwise, an initial sound is played and other sounds are played as the animation progresses.
             if ( totalApplesProperty.value % numberOfActivePlatesProperty.value === 0 ) {
-              shareCompleteSoundClip.play();
+              playShareCompleteSound();
             }
             else {
               whooshSoundClip.play();
@@ -80,7 +106,7 @@ class DistributionModeSoundGenerator extends SoundGenerator {
     // Play the appropriate sounds as the apples animate to their different positions when going into the SHARE state.
     applesAnimationStateEmitter.addListener( applesAnimationState => {
       applesAnimationState === 'split' && shareFractionalizeSoundClip.play();
-      applesAnimationState === 'land' && shareCompleteSoundClip.play();
+      applesAnimationState === 'land' && playShareCompleteSound();
     } );
   }
 }
