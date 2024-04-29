@@ -134,11 +134,11 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
 class PillarSoundPlayer implements TSoundPlayer {
 
-  private readonly checkButtonSoundClip = new SoundClip( pillarCheckButton_mp3, { initialOutputLevel: 0.6 } );
-  private readonly resetButtonSoundClip = new SoundClip( pillarResetButton_mp3, { initialOutputLevel: 0.5 } );
+  private readonly resetButtonSoundClip = new SoundClip( pillarResetButton_mp3, { initialOutputLevel: 0.6 } );
+  private readonly checkButtonSoundClip = new SoundClip( pillarCheckButton_mp3, { initialOutputLevel: 0.5 } );
   public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean> ) {
-    soundManager.addSoundGenerator( this.checkButtonSoundClip );
     soundManager.addSoundGenerator( this.resetButtonSoundClip );
+    soundManager.addSoundGenerator( this.checkButtonSoundClip );
   }
 
   public play(): void {
@@ -155,8 +155,8 @@ class PillarSoundPlayer implements TSoundPlayer {
   }
 
   public stop(): void {
-    this.checkButtonSoundClip.stop();
     this.resetButtonSoundClip.stop();
+    this.checkButtonSoundClip.stop();
   }
 }
 
