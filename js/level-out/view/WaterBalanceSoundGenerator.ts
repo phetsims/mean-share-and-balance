@@ -21,6 +21,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
 import Cup from '../model/Cup.js';
 import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 
 type SelfOptions = {
 
@@ -36,9 +37,12 @@ type SelfOptions = {
 export type WaterBalanceSoundGeneratorOptions = SelfOptions & SoundClipOptions;
 
 // constants
-const CHANGE_THRESHOLD = 0.001;
+const MEAN_DEVIATION_CHANGE_THRESHOLD = 0.001; // empirically determined
 const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get desired behavior
-const FILTER_FREQUENCY_RANGE = new Range( 200, 10000 );
+
+// The NOMINAL_CENTER_FREQUENCY value is used to set the value of the cutoff filter, and should be the frequency where
+// the most energy is present in the supplied sound.  This will need adjustment if the underlying sound is changed.
+const NOMINAL_CENTER_FREQUENCY = 800;
 
 class WaterBalanceSoundGenerator extends SoundClip {
 
@@ -72,8 +76,8 @@ class WaterBalanceSoundGenerator extends SoundClip {
     // Create the filter whose frequency will be adjusted based on the max deviation of the cup levels from the mean.
     const lowPassFilter = new BiquadFilterNode( phetAudioContext, {
       type: 'lowpass',
-      Q: 1,
-      frequency: 100
+      Q: 5,
+      frequency: 100 // arbitrary initial value - this is adjusted as water levels change
     } );
 
     const options = optionize<WaterBalanceSoundGeneratorOptions, SelfOptions, SoundClipOptions>()( {
@@ -100,59 +104,66 @@ class WaterBalanceSoundGenerator extends SoundClip {
     // Start with the output level at zero so that the initial sound can fade in.
     this.setOutputLevel( 0, 0 );
 
-    // Adjust the pitch of the underlying sound based on the mean.
-    const meanChangeListener = ( mean: number ) => {
-      const normalizedValue = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE.getNormalizedValue( mean );
-      const playbackRate = PLAYBACK_PITCH_RANGE.expandNormalizedValue( normalizedValue );
-      this.setPlaybackRate( playbackRate );
-    };
-    meanProperty.link( meanChangeListener );
+    let previousMaxDeviationFromMean = 0;
 
-    // Define a listener that starts or continues the sound based on changes to the max deviation from the mean.
-    const maxDeviationFromMeanChangeListener = ( deviation: number, oldDeviation: number | null ) => {
-
-      // parameter checking
-      assert && assert( deviation >= 0 && deviation <= 1, 'invalid max deviation value' );
-
-      const delta = deviation - ( oldDeviation === null ? 0 : oldDeviation );
-
-      if ( this.fullyEnabled && Math.abs( delta ) > CHANGE_THRESHOLD ) {
-
-        // If we are already playing sound when this change occurred, continue it.  If we aren't but the change occurred
-        // with the pipes open, start producing sound.
-        if ( this.isPlaying || arePipesOpenProperty.value ) {
-          this.startOrContinueSoundProduction();
-        }
-
-        // Set the filter frequency based on the max deviation are from the mean.  The frequency range and calculation
-        // used here were empirically determined and can be adjusted if needed.
-        const filterFrequency = FILTER_FREQUENCY_RANGE.expandNormalizedValue( Math.pow( 1 - deviation, 4 ) );
-        lowPassFilter.frequency.cancelScheduledValues( 0 );
-        lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
-      }
-    };
-
-    // Create a derived property that calculates the max deviation of a cup from the mean value.
-    const maxDeviationFromMeanProperty: TReadOnlyProperty<number> = DerivedProperty.deriveAny(
+    const multilink = Multilink.multilinkAny(
       [
         ...cups.map( cup => cup.waterLevelProperty ),
         ...cups.map( cup => cup.isActiveProperty ),
         meanProperty
       ],
       () => {
+
+        // Adjust the playback rate, and thus the pitch, of the underlying sound based on the mean value.
+        const normalizedValue = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE.getNormalizedValue( meanProperty.value );
+        const playbackRate = PLAYBACK_PITCH_RANGE.expandNormalizedValue( normalizedValue );
+        if ( this.playbackRate !== playbackRate ) {
+          this.setPlaybackRate( playbackRate );
+        }
+
+        // Determine which cup is most different from the mean and what the amount of that difference is.
         const activeCups = cups.filter( cup => cup.isActiveProperty.value );
-        return activeCups.reduce(
+        const maxDeviationFromMean = activeCups.reduce(
           ( previousMax, currentCup ) => Math.max(
             previousMax,
             Math.abs( currentCup.waterLevelProperty.value - meanProperty.value )
           ),
           0
         );
+
+        const deltaMaxDeviationFromMean = maxDeviationFromMean - previousMaxDeviationFromMean;
+
+        if ( this.fullyEnabled && Math.abs( deltaMaxDeviationFromMean ) > MEAN_DEVIATION_CHANGE_THRESHOLD ) {
+
+          // If we are already playing sound when this change occurred, continue it.  If we aren't but the change
+          // occurred with the pipes open, start producing sound.
+          if ( this.isPlaying || arePipesOpenProperty.value ) {
+            this.startOrContinueSoundProduction();
+          }
+
+          // Set the cutoff frequency of the lowpass filter based on the mean and the max deviation from it.  The intent
+          // here is to produce a more filtered sound when far from the mean, and less filtered when all cups are close
+          // to it.
+
+          const filterFrequencyRange = new Range(
+            playbackRate * NOMINAL_CENTER_FREQUENCY / 2,
+            10000
+          );
+          const filterFrequency = filterFrequencyRange.expandNormalizedValue(
+
+            // The exponent in the calculation below was empirically determined.  Higher values make the effect of the
+            // filter more obvious more quickly, so audible differences can be heard for smaller deviations from the
+            // mean.  Smaller values of the exponent spread the audible change out over the range more evenly.
+            Math.pow( 1 - maxDeviationFromMean, 10 )
+          );
+          lowPassFilter.frequency.cancelScheduledValues( 0 );
+          lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
+        }
+
+        // Update the history for the next pass.
+        previousMaxDeviationFromMean = maxDeviationFromMean;
       }
     );
-
-    // Handle changes to the max deviation value.
-    maxDeviationFromMeanProperty.lazyLink( maxDeviationFromMeanChangeListener );
 
     // Initiate sound production any time the pipes are opened or closed.
     arePipesOpenProperty.lazyLink( () => {
@@ -165,8 +176,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     // dispose function
     this.disposeWaterBalanceSoundGenerator = () => {
-      meanProperty.unlink( meanChangeListener );
-      maxDeviationFromMeanProperty.unlink( maxDeviationFromMeanChangeListener );
+      multilink.dispose();
       stepTimer.removeListener( stepListener );
     };
   }
