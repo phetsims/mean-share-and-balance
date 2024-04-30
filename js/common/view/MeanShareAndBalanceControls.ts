@@ -6,7 +6,6 @@
  * horizontally.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import { AlignGroup, Node, NodeOptions } from '../../../../scenery/js/imports.js';
@@ -62,7 +61,6 @@ export default class MeanShareAndBalanceControls extends Node {
       this.addChild( infoButton );
       options.controlsPDOMOrder.push( infoButton );
     }
-
 
     const numberSpinnerOptions = combineOptions<NumberSpinnerOptions>( {
       decrementFunction: value => {

@@ -1,10 +1,9 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A vertical checkbox group that controls visibility for predictMean, Mean, tickMarks, and cupWaterLevel
+ * A vertical checkbox group that controls visibility for predictMean, Mean, tickMarks, and cupWaterLevel.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import VerticalCheckboxGroup, { VerticalCheckboxGroupItem, VerticalCheckboxGroupOptions } from '../../../../sun/js/VerticalCheckboxGroup.js';

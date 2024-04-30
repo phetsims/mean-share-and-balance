@@ -61,7 +61,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     } );
     createSuccessIndicatorMultilink( predictMeanLine, predictMeanSuccessRectangle );
 
-    // track predictMeanLine drag position
+    // Track predictMeanLine drag position.
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
     predictMeanPositionProperty.link( predictMeanPosition => {
       meanPredictionProperty.value = dragRange.constrainValue( predictMeanPosition.y );
@@ -80,7 +80,6 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       cursor: 'ns-resize'
     }, options );
     super( combinedOptions );
-
 
     meanPredictionProperty.link( prediction => {
       this.centerY = modelViewTransform.modelToViewY( prediction );

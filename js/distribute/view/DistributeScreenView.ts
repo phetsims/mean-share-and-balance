@@ -319,8 +319,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       const activePlates = model.getActivePlates();
       const firstPlate = activePlates[ 0 ];
       const lastPlate = activePlates[ activePlates.length - 1 ];
-      predictMeanSlider.updateLine( firstPlate.xPositionProperty.value - PLATE_WIDTH / 2,
-        lastPlate.xPositionProperty.value + 80 );
+      predictMeanSlider.updateLine(
+        firstPlate.xPositionProperty.value - PLATE_WIDTH / 2,
+        lastPlate.xPositionProperty.value + 80
+      );
     } );
 
     this.addChild( predictMeanSlider );

@@ -30,7 +30,7 @@ import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 
 type SelfOptions = {
 
-  // Controls the initial number of snacks on the first plate.
+  // Controls the initial number of snacks on each plate.
   initialPlateValues: number[];
 };
 export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
@@ -196,10 +196,6 @@ export default class SharingModel<T extends Snack> implements TModel {
    */
   public getUnusedSnack(): T | null {
     return this.unusedSnacks.pop() || null;
-  }
-
-  public getNumberOfActiveSnacksOnPlates(): number {
-    return _.sumBy( this.getActivePlates(), plate => plate.getSnackStack().length );
   }
 
   /**
