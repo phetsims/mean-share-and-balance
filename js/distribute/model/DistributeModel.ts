@@ -52,9 +52,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
     super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );
 
-    /**
-     * Create and define the keyboard interaction for candy bars.
-     */
+    // Create and define the keyboard interaction for candy bars.
     this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
       getGroupItemValue: candyBar => {
         const plate = this.getPlateForSnack( candyBar );
