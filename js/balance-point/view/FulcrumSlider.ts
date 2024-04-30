@@ -85,6 +85,9 @@ export default class FulcrumSlider extends HSlider {
       shiftKeyboardStep: MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL,
       visibleProperty: DerivedProperty.not( isMeanFulcrumFixedProperty ),
       constrainValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
+      valueChangeSoundGeneratorOptions: {
+        numberOfMiddleThresholds: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength() * 2 - 1
+      },
 
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
       a11yMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
