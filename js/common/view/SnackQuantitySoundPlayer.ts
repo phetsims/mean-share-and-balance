@@ -24,7 +24,7 @@ import appleBeingSliced03_mp3 from '../../../sounds/appleBeingSliced03_mp3.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Range from '../../../../dot/js/Range.js';
 import MeanShareAndBalanceQueryParameters from '../MeanShareAndBalanceQueryParameters.js';
-import projectileTypePumpkin_mp3 from '../../../sounds/projectileTypePumpkin_mp3.js';
+import hollowThud_mp3 from '../../../../tambo/sounds/hollowThud_mp3.js';
 
 type SelfOptions = EmptySelfOptions;
 type SnackQuantitySoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
@@ -69,9 +69,9 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
         new SoundClip( appleBeingSliced03_mp3, SOUND_EFFECT_OPTIONS )
       ] :
       [
-        new SoundClip( projectileTypePumpkin_mp3, PDL_APPLE_EFFECT_OPTIONS ),
-        new SoundClip( projectileTypePumpkin_mp3, PDL_APPLE_EFFECT_OPTIONS ),
-        new SoundClip( projectileTypePumpkin_mp3, PDL_APPLE_EFFECT_OPTIONS )
+        new SoundClip( hollowThud_mp3, PDL_APPLE_EFFECT_OPTIONS ),
+        new SoundClip( hollowThud_mp3, PDL_APPLE_EFFECT_OPTIONS ),
+        new SoundClip( hollowThud_mp3, PDL_APPLE_EFFECT_OPTIONS )
       ];
 
     this.soundEffects = snackType === 'candyBars' ?
