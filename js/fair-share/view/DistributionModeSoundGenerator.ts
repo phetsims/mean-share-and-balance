@@ -23,6 +23,9 @@ import shareCompleteLargeAmount_mp3 from '../../../sounds/shareCompleteLargeAmou
 import shareCompleteMediumAmount_mp3 from '../../../sounds/shareCompleteMediumAmount_mp3.js';
 import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmount_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import { TimerListener } from '../../../../axon/js/Timer.js';
+import stepTimer from '../../../../axon/js/stepTimer.js';
+import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributionModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
@@ -30,6 +33,18 @@ type DistributionModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
 // constants
 const MAX_APPLES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS *
                    MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
+
+// This linear function is used when transitioning into SHARE mode to determine the amount of time between the playing
+// of the "break into fractions" sound and the "share complete" sound.  It maps the number of active plates to a time
+// value in milliseconds.  It is needed because using an emitter for the end of the share animations felt late, see
+// https://github.com/phetsims/mean-share-and-balance/issues/206#issuecomment-2086595364.  The time values were
+// empirically determined.
+const SHARE_COMPLETE_DELAY_FUNCTION = new LinearFunction(
+  MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE.min,
+  MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE.max,
+  180,
+  500
+);
 
 class DistributionModeSoundGenerator extends SoundGenerator {
 
@@ -61,9 +76,13 @@ class DistributionModeSoundGenerator extends SoundGenerator {
     const shareFractionalizeSoundClip = new SoundClip( shareFractionalizeSound_mp3 );
     shareFractionalizeSoundClip.connect( this.mainGainNode );
 
+    let shareCompletedSoundTimer: TimerListener | null = null;
+
     // Create a function for playing the "share complete" sound.  We use a different sound depending upon how many
     // apples are being shared.
     const playShareCompleteSound = () => {
+
+
       if ( totalApplesProperty.value < MAX_APPLES / 3 ) {
         shareCompleteSmallAmoungSoundClip.play();
       }
@@ -77,6 +96,13 @@ class DistributionModeSoundGenerator extends SoundGenerator {
 
     // Play the sounds that occur immediately upon a mode change.
     distributionModeProperty.lazyLink( ( mode, previousMode ) => {
+
+      // If a timer was running when the mode changed, cancel it.
+      if ( shareCompletedSoundTimer ) {
+        stepTimer.clearTimeout( shareCompletedSoundTimer );
+        shareCompletedSoundTimer = null;
+      }
+
       if ( !ResetAllButton.isResettingAllProperty.value ) {
         if ( mode === NotepadMode.SYNC ) {
           syncSoundClip.play();
@@ -105,8 +131,13 @@ class DistributionModeSoundGenerator extends SoundGenerator {
 
     // Play the appropriate sounds as the apples animate to their different positions when going into the SHARE state.
     applesAnimationStateEmitter.addListener( applesAnimationState => {
-      applesAnimationState === 'split' && shareFractionalizeSoundClip.play();
-      applesAnimationState === 'land' && playShareCompleteSound();
+      if ( applesAnimationState === 'split' ) {
+        shareFractionalizeSoundClip.play();
+        shareCompletedSoundTimer = stepTimer.setTimeout(
+          () => playShareCompleteSound(),
+          SHARE_COMPLETE_DELAY_FUNCTION.evaluate( numberOfActivePlatesProperty.value )
+        );
+      }
     } );
   }
 }
