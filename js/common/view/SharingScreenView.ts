@@ -138,7 +138,6 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );
 
     // Create the images of the people that stand near the plates.
-    // TODO: Do the people images need to be instrumented? https://github.com/phetsims/mean-share-and-balance/issues/140
     const people: Node[] = tablePlateNodes.map( ( plate, i ) => {
       const selectedImage = PEOPLE_IMAGES[ i ];
       assert && assert( selectedImage, `No corresponding image for index: ${i}` );

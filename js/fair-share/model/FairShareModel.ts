@@ -126,9 +126,8 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.appleCollection.addItemAddedListener( apple => {
       const index = this.appleCollection.indexOf( apple );
 
-      // TODO: We probably don't need to animate all the time...https://github.com/phetsims/mean-share-and-balance/issues/140
       apple.isActiveProperty.value = true;
-      apple.moveTo( this.getCollectionPosition( index ), true );
+      apple.moveTo( this.getCollectionPosition( index ), this.animateAddedSnacks );
     } );
 
     // Set up plate-related behavior that is specific to the Fair Share screen.
@@ -543,8 +542,6 @@ export default class FairShareModel extends SharingModel<Apple> {
       apple.fractionProperty.value = Fraction.ONE;
       apple.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
     }
-
-    // TODO: Add assertion to make sure end state matches expectations. https://github.com/phetsims/mean-share-and-balance/issues/140
   }
 
   public override reset(): void {
