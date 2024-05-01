@@ -489,10 +489,9 @@ export default class FairShareModel extends SharingModel<Apple> {
   private snackAddedToPlateListener( apple: Apple, plate: Plate<Apple> ): void {
     const index = plate.snacksOnNotepadPlate.indexOf( apple );
 
-    // TODO: The commented out code just below is for debugging observable array listeners in phet-io, see https://github.com/phetsims/phet-io/issues/1661.
-    // assert && assert( this.notepadModeProperty.value !== NotepadMode.COLLECT,
-    //   'apples should not be added to plates in collect mode' );
-    // const notepadMode = this.notepadModeProperty.hasDeferredValue ? this.notepadModeProperty.deferredValue : this.notepadModeProperty.value;
+    assert && assert( this.notepadModeProperty.value !== NotepadMode.COLLECT,
+      'apples should not be added to plates in collect mode' );
+
     if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
 
       // Calculate the fractional amount that will be set for the apples being distributed to the plates.
