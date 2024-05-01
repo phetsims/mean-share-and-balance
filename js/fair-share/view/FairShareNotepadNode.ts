@@ -19,7 +19,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
-import DistributionModeSoundGenerator from './DistributionModeSoundGenerator.js';
+import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 
@@ -78,7 +78,7 @@ export default class FairShareNotepadNode extends NotepadNode {
     this.addChild( radioButtonGroupAlignBox );
 
     // Add sound generator for the movement of the apples as the notepad mode changes.
-    soundManager.addSoundGenerator( new DistributionModeSoundGenerator(
+    soundManager.addSoundGenerator( new AllocationModeSoundGenerator(
       notepadModeProperty,
       applesAnimationStateEmitter,
       totalApplesProperty,

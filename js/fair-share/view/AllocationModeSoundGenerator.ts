@@ -1,7 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * DistributionModeSoundPlayer is a sound generator that produces sounds when the distribution mode of the Fair Share
+ * AllocationModeSoundPlayer is a sound generator that produces sounds when the allocation mode of the Fair Share
  * notepad changes.
  *
  * @author John Blanco (PhET Interactive Simulations)
@@ -28,7 +28,7 @@ import stepTimer from '../../../../axon/js/stepTimer.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 type SelfOptions = EmptySelfOptions;
-type DistributionModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
+type AllocationModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
 
 // constants
 const MAX_APPLES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS *
@@ -46,15 +46,15 @@ const SHARE_COMPLETE_DELAY_FUNCTION = new LinearFunction(
   500
 );
 
-class DistributionModeSoundGenerator extends SoundGenerator {
+class AllocationModeSoundGenerator extends SoundGenerator {
 
-  public constructor( distributionModeProperty: TReadOnlyProperty<NotepadMode>,
+  public constructor( allocationModeProperty: TReadOnlyProperty<NotepadMode>,
                       applesAnimationStateEmitter: TinyEmitter<ApplesAnimationState>,
                       totalApplesProperty: TReadOnlyProperty<number>,
                       numberOfActivePlatesProperty: TReadOnlyProperty<number>,
-                      providedOptions?: DistributionModeSoundPlayerOptions ) {
+                      providedOptions?: AllocationModeSoundPlayerOptions ) {
 
-    const options = optionize<DistributionModeSoundPlayerOptions, SelfOptions, SoundGeneratorOptions>()(
+    const options = optionize<AllocationModeSoundPlayerOptions, SelfOptions, SoundGeneratorOptions>()(
       {},
       providedOptions
     );
@@ -95,7 +95,7 @@ class DistributionModeSoundGenerator extends SoundGenerator {
     };
 
     // Play the sounds that occur immediately upon a mode change.
-    distributionModeProperty.lazyLink( ( mode, previousMode ) => {
+    allocationModeProperty.lazyLink( ( mode, previousMode ) => {
 
       // If a timer was running when the mode changed, cancel it.
       if ( shareCompletedSoundTimer ) {
@@ -142,6 +142,6 @@ class DistributionModeSoundGenerator extends SoundGenerator {
   }
 }
 
-meanShareAndBalance.register( 'DistributionModeSoundGenerator', DistributionModeSoundGenerator );
+meanShareAndBalance.register( 'AllocationModeSoundGenerator', AllocationModeSoundGenerator );
 
-export default DistributionModeSoundGenerator;
+export default AllocationModeSoundGenerator;
