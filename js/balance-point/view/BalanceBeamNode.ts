@@ -31,6 +31,9 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import Utils from '../../../../dot/js/Utils.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -315,6 +318,20 @@ export default class BalanceBeamNode extends Node {
       messageProxy.centerY = BALANCE_BEAM_TRANSFORM.modelToViewY( 2.1 ); // Y pos empirically determined
     } );
     this.addChild( needAtLeastOneKickMessage );
+
+    // sound generation
+    const pillarsRemovedWhenFulcrumAtMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
+      initialOutputLevel: 0.3
+    } );
+    soundManager.addSoundGenerator( pillarsRemovedWhenFulcrumAtMeanSoundClip );
+    supportColumnsVisibleProperty.lazyLink( columnsVisible => {
+      if ( !columnsVisible &&
+           sceneModel.fulcrumValueProperty.value === sceneModel.meanValueProperty.value &&
+           !isMeanFulcrumFixedProperty.value ) {
+
+        pillarsRemovedWhenFulcrumAtMeanSoundClip.play();
+      }
+    } );
   }
 
   public reset(): void {
