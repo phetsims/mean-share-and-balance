@@ -17,6 +17,8 @@ import brightMarimbaShort_mp3 from '../../../../tambo/sounds/brightMarimbaShort_
 import soundManager from '../../../../tambo/js/soundManager.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
+import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
+import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 
 type SelfOptions = EmptySelfOptions;
 type FulcrumSliderSoundPlayerOptions = SelfOptions & ValueChangeSoundPlayerOptions;
@@ -46,10 +48,18 @@ class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
 
     // Create a sound clip to use for movement of the fulcrum when the pillars are off and one or more balls are present
     // on the beam.
-    this.soundClip = new SoundClip( brightMarimbaShort_mp3, {
-      initialOutputLevel: 0.5,
-      rateChangesAffectPlayingSounds: false
-    } );
+    if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 0 ) {
+      this.soundClip = new SoundClip( brightMarimbaShort_mp3, {
+        initialOutputLevel: 0.1,
+        rateChangesAffectPlayingSounds: false
+      } );
+    }
+    else {
+      this.soundClip = new SoundClip( boundaryReached_mp3, {
+        initialOutputLevel: 0.4,
+        rateChangesAffectPlayingSounds: false
+      } );
+    }
 
     // Add the sound clip to sound manager ourself.
     soundManager.addSoundGenerator( this.soundClip );
@@ -60,35 +70,36 @@ class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
    */
   public override playSoundIfThresholdReached( newValue: number, oldValue: number ): void {
 
-    // Only play the sounds when the column supports are present and/or when there are no balls on the beam.
+    // Use the default sound production method when the beams are present or if there are no balls on the beam.
     if ( this.beamSupportsPresentProperty.value || this.meanValueProperty.value === null ) {
       super.playSoundIfThresholdReached( newValue, oldValue );
     }
     else if ( this.meanValueProperty ) {
 
-      // convenience var
+      // convenience variable
       const mean = this.meanValueProperty.value;
 
-      if ( newValue !== oldValue && phet.joist.elapsedTime > this.timeOfLastPlay + MIN_TIME_BETWEEN_SOUNDS * 1000 ) {
+      // Play the "success" sound whenever the mean is reached or crossed regardless of the timing.
+      if ( this.valueAtLastPlay < mean && newValue >= mean || this.valueAtLastPlay > mean && newValue <= mean ) {
+        this.soundClip.setPlaybackRate( 2, 0 );
+        this.soundClip.play();
+        this.timeOfLastPlay = phet.joist.elapsedTime;
+        this.valueAtLastPlay = newValue;
+      }
+      else if ( newValue !== this.valueAtLastPlay &&
+                phet.joist.elapsedTime > this.timeOfLastPlay + MIN_TIME_BETWEEN_SOUNDS * 1000 ) {
 
-        // If the mean value has been reached or crossed since the last play, play the "mean reached" sound.
-        if ( this.valueAtLastPlay < mean && newValue >= mean || this.valueAtLastPlay > mean && newValue <= mean ) {
-          this.soundClip.setPlaybackRate( 2, 0 );
-          this.soundClip.play();
+        const normalizedDistanceFromMean = Math.abs( this.fulcrumValueProperty.value - this.meanValueProperty.value ) /
+                                           MAX_POSSIBLE_DISTANCE_FROM_MEAN;
+        let playbackRate;
+        if ( Utils.equalsEpsilon( normalizedDistanceFromMean, 0, 0.005 ) ) {
+          playbackRate = 2;
         }
         else {
-          const normalizedDistanceFromMean = Math.abs( this.fulcrumValueProperty.value - this.meanValueProperty.value ) /
-                                             MAX_POSSIBLE_DISTANCE_FROM_MEAN;
-          let playbackRate;
-          if ( Utils.equalsEpsilon( normalizedDistanceFromMean, 0, 0.005 ) ) {
-            playbackRate = 2;
-          }
-          else {
-            playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( 1 - normalizedDistanceFromMean );
-          }
-          this.soundClip.setPlaybackRate( playbackRate, 0 );
-          this.soundClip.play();
+          playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( 1 - normalizedDistanceFromMean );
         }
+        this.soundClip.setPlaybackRate( playbackRate, 0 );
+        this.soundClip.play();
         this.timeOfLastPlay = phet.joist.elapsedTime;
         this.valueAtLastPlay = newValue;
       }
