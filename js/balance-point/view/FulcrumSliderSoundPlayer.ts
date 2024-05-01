@@ -27,6 +27,9 @@ const MIN_TIME_BETWEEN_SOUNDS = 0.08; // in seconds
 const MAX_POSSIBLE_DISTANCE_FROM_MEAN = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
 const PITCH_VARIATION_RANGE = new Range( 1, 1.5 );
 
+// TODO: If we use PARTIAL_TILT_SPAN it should be made available from BalancePointSceneModel, see https://github.com/phetsims/mean-share-and-balance/issues/216.
+const PARTIAL_TILT_SPAN = 0.5;
+
 class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
 
   private readonly soundClip: SoundClip;
@@ -48,7 +51,7 @@ class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
 
     // Create a sound clip to use for movement of the fulcrum when the pillars are off and one or more balls are present
     // on the beam.
-    if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 0 ) {
+    if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 0 || MeanShareAndBalanceQueryParameters.beamSoundMode === 1 ) {
       this.soundClip = new SoundClip( brightMarimbaShort_mp3, {
         initialOutputLevel: 0.1,
         rateChangesAffectPlayingSounds: false
@@ -89,17 +92,38 @@ class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
       else if ( newValue !== this.valueAtLastPlay &&
                 phet.joist.elapsedTime > this.timeOfLastPlay + MIN_TIME_BETWEEN_SOUNDS * 1000 ) {
 
-        const normalizedDistanceFromMean = Math.abs( this.fulcrumValueProperty.value - this.meanValueProperty.value ) /
-                                           MAX_POSSIBLE_DISTANCE_FROM_MEAN;
-        let playbackRate;
-        if ( Utils.equalsEpsilon( normalizedDistanceFromMean, 0, 0.005 ) ) {
-          playbackRate = 2;
+        if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 0 ||
+             MeanShareAndBalanceQueryParameters.beamSoundMode === 2 ) {
+
+          // Adjust the pitch in a linear fashion based on distance from the mean.
+          const normalizedDistanceFromMean = Math.abs( this.fulcrumValueProperty.value - this.meanValueProperty.value ) /
+                                             MAX_POSSIBLE_DISTANCE_FROM_MEAN;
+          let playbackRate;
+          if ( Utils.equalsEpsilon( normalizedDistanceFromMean, 0, 0.005 ) ) {
+            playbackRate = 2;
+          }
+          else {
+            playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( 1 - normalizedDistanceFromMean );
+          }
+          this.soundClip.setPlaybackRate( playbackRate, 0 );
+          this.soundClip.play();
         }
         else {
-          playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( 1 - normalizedDistanceFromMean );
+
+          // Play the nominal pitch outside the partial tilt span, then higher pitches within this span, with the
+          // highest in the middle.
+          let playbackRate;
+          const distanceFromMean = Math.abs( this.fulcrumValueProperty.value - this.meanValueProperty.value );
+          if ( distanceFromMean > PARTIAL_TILT_SPAN ) {
+            playbackRate = 1;
+          }
+          else {
+            playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( 1 - ( distanceFromMean / PARTIAL_TILT_SPAN ) );
+          }
+          this.soundClip.setPlaybackRate( playbackRate, 0 );
+          this.soundClip.play();
         }
-        this.soundClip.setPlaybackRate( playbackRate, 0 );
-        this.soundClip.play();
+
         this.timeOfLastPlay = phet.joist.elapsedTime;
         this.valueAtLastPlay = newValue;
       }
