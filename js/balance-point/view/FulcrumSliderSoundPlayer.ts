@@ -77,7 +77,9 @@ class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
     if ( this.beamSupportsPresentProperty.value || this.meanValueProperty.value === null ) {
       super.playSoundIfThresholdReached( newValue, oldValue );
     }
-    else if ( this.meanValueProperty && newValue !== oldValue ) {
+    else if ( MeanShareAndBalanceQueryParameters.beamSoundMode <= 3 &&
+              this.meanValueProperty &&
+              newValue !== oldValue ) {
 
       // convenience variable
       const mean = this.meanValueProperty.value;
