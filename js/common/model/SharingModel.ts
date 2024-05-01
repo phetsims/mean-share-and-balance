@@ -126,6 +126,7 @@ export default class SharingModel<T extends Snack> implements TModel {
     } );
 
     // Create the set of plates that will hold the snacks.
+    assert && assert( options.initialPlateValues.length === MAX_PLATES, 'initialPlateValues must have the same length as the number of plates' );
     this.plates = [];
     _.times( MAX_PLATES, plateIndex => {
       const initialXPosition = plateIndex * INTER_PLATE_DISTANCE;

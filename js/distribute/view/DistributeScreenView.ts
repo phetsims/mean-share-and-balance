@@ -34,11 +34,10 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
-import { PLATE_HEIGHT, PLATE_WIDTH } from '../../common/model/Plate.js';
-import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
-import soundManager from '../../../../tambo/js/soundManager.js';
+import { PLATE_WIDTH } from '../../common/model/Plate.js';
 import ArrowNode, { ArrowNodeOptions } from '../../../../scenery-phet/js/ArrowNode.js';
 import SnackStacker from '../../common/SnackStacker.js';
+import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -66,6 +65,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       snackType: 'candyBars',
       predictMeanVisibleProperty: model.predictMeanVisibleProperty
     }, providedOptions );
+
+    const plateHeight = new Image( notepadPlateSketch_svg, {
+      maxWidth: PLATE_WIDTH
+    } ).bounds.height;
 
     const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
         MeanShareAndBalanceStrings.barStringProperty,
@@ -163,7 +166,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           cueingArrowNode.visible = true;
           cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition( SnackStacker.getStackedCandyBarPosition(
             plate.xPositionProperty.value, plate.snacksOnNotepadPlate.length - 1 )
-            .plusXY( PLATE_WIDTH / 2 - CUEING_ARROW_MARGIN / 2, PLATE_HEIGHT ) );
+            .plusXY( PLATE_WIDTH / 2 - CUEING_ARROW_MARGIN / 2, plateHeight ) );
         }
         else {
           cueingArrowNode.visible = false;
@@ -275,7 +278,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     // Predict Mean Line that acts as a slider for alternative input.
     const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
-      new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y - PLATE_HEIGHT - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
+      new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y - plateHeight - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
       DistributeModel.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
