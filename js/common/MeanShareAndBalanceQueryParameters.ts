@@ -28,7 +28,7 @@ const SCHEMA_MAP = {
   beamSoundMode: {
     type: 'number',
     defaultValue: 0,
-    validValues: [ 0, 1, 2, 3, 4 ]
+    validValues: [ 0, 1, 2, 3, 4, 5 ]
   }
 
 } as const;

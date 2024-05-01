@@ -34,6 +34,8 @@ import Utils from '../../../../dot/js/Utils.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
+import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
+import BeamTiltSoundGenerator from './BeamTiltSoundGenerator.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -332,6 +334,18 @@ export default class BalanceBeamNode extends Node {
         pillarsRemovedWhenFulcrumAtMeanSoundClip.play();
       }
     } );
+
+    if ( MeanShareAndBalanceQueryParameters.beamSoundMode >= 4 ) {
+      const beamAngleProperty = new DerivedProperty(
+        [ sceneModel.leftBalanceBeamYValueProperty, sceneModel.rightBalanceBeamYValueProperty ],
+        ( leftEdgeY, rightEdgeY ) => {
+          const leftPoint = new Vector2( sceneModel.leftBalanceBeamXValue, leftEdgeY );
+          const rightPoint = new Vector2( sceneModel.rightBalanceBeamXValue, rightEdgeY );
+          return Vector2.getAngleBetweenVectors( leftPoint, rightPoint );
+        }
+      );
+      soundManager.addSoundGenerator( new BeamTiltSoundGenerator( beamAngleProperty, { initialOutputLevel: 0.2 } ) );
+    }
   }
 
   public reset(): void {
