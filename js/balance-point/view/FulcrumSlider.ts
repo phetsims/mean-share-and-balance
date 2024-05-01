@@ -20,6 +20,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import { Color, HBox } from '../../../../scenery/js/imports.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import FulcrumSliderSoundPlayer from './FulcrumSliderSoundPlayer.js';
 
 type SelfOptions = {
   fulcrumHeight: number; // in screen coordinates
@@ -48,6 +49,7 @@ export default class FulcrumSlider extends HSlider {
     fulcrumWasDraggedProperty: Property<boolean>,
     meanValueProperty: TReadOnlyProperty<number | null>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
+    beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamFulcrumOptions
   ) {
 
@@ -74,6 +76,11 @@ export default class FulcrumSlider extends HSlider {
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
 
+    const sliderSoundGenerator = new FulcrumSliderSoundPlayer( fulcrumValueProperty,
+      beamSupportsPresentProperty,
+      meanValueProperty );
+
+    // combing provided and default options
     const options = optionize<BalanceBeamFulcrumOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
       thumbYOffset: providedOptions.fulcrumHeight / 2,
@@ -85,9 +92,7 @@ export default class FulcrumSlider extends HSlider {
       shiftKeyboardStep: MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL,
       visibleProperty: DerivedProperty.not( isMeanFulcrumFixedProperty ),
       constrainValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
-      valueChangeSoundGeneratorOptions: {
-        numberOfMiddleThresholds: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength() * 2 - 1
-      },
+      soundGenerator: sliderSoundGenerator,
 
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
       a11yMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),

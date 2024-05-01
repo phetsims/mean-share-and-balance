@@ -1,0 +1,101 @@
+// Copyright 2024, University of Colorado Boulder
+
+/**
+ * FulcrumSliderSoundPlayer is used to produce sounds when the fulcrum beneath the balance beam is moved by the user.
+ *
+ * @author John Blanco (PhET Interactive Simulations)
+ */
+
+import ValueChangeSoundPlayer, { ValueChangeSoundPlayerOptions } from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Property from '../../../../axon/js/Property.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import brightMarimbaShort_mp3 from '../../../../tambo/sounds/brightMarimbaShort_mp3.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
+
+type SelfOptions = EmptySelfOptions;
+type FulcrumSliderSoundPlayerOptions = SelfOptions & ValueChangeSoundPlayerOptions;
+
+const MIN_TIME_BETWEEN_SOUNDS = 0.08; // in seconds
+const MAX_POSSIBLE_DISTANCE_FROM_MEAN = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
+const PITCH_VARIATION_RANGE = new Range( 1, 1.5 );
+
+class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
+
+  private readonly soundClip: SoundClip;
+  private timeOfLastPlay = Number.NEGATIVE_INFINITY;
+  private valueAtLastPlay;
+
+  public constructor( private readonly fulcrumValueProperty: Property<number>,
+                      private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
+                      private readonly meanValueProperty: TReadOnlyProperty<number | null>,
+                      providedOptions?: ValueChangeSoundPlayerOptions ) {
+
+    const options = optionize<FulcrumSliderSoundPlayerOptions, SelfOptions, ValueChangeSoundPlayerOptions>()( {
+      numberOfMiddleThresholds: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength() * 2 - 1
+    }, providedOptions );
+
+    super( new Property( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE ), options );
+
+    this.valueAtLastPlay = fulcrumValueProperty.value;
+
+    // Create a sound clip to use for movement of the fulcrum when the pillars are off and one or more balls are present
+    // on the beam.
+    this.soundClip = new SoundClip( brightMarimbaShort_mp3, {
+      initialOutputLevel: 0.5,
+      rateChangesAffectPlayingSounds: false
+    } );
+
+    // Add the sound clip to sound manager ourself.
+    soundManager.addSoundGenerator( this.soundClip );
+  }
+
+  /**
+   * Override the playSoundIfThresholdReached method so that different sounds can be produced when pillars are gone.
+   */
+  public override playSoundIfThresholdReached( newValue: number, oldValue: number ): void {
+
+    // Only play the sounds when the column supports are present and/or when there are no balls on the beam.
+    if ( this.beamSupportsPresentProperty.value || this.meanValueProperty.value === null ) {
+      super.playSoundIfThresholdReached( newValue, oldValue );
+    }
+    else if ( this.meanValueProperty ) {
+
+      // convenience var
+      const mean = this.meanValueProperty.value;
+
+      if ( newValue !== oldValue && phet.joist.elapsedTime > this.timeOfLastPlay + MIN_TIME_BETWEEN_SOUNDS * 1000 ) {
+
+        // If the mean value has been reached or crossed since the last play, play the "mean reached" sound.
+        if ( this.valueAtLastPlay < mean && newValue >= mean || this.valueAtLastPlay > mean && newValue <= mean ) {
+          this.soundClip.setPlaybackRate( 2, 0 );
+          this.soundClip.play();
+        }
+        else {
+          const normalizedDistanceFromMean = Math.abs( this.fulcrumValueProperty.value - this.meanValueProperty.value ) /
+                                             MAX_POSSIBLE_DISTANCE_FROM_MEAN;
+          let playbackRate;
+          if ( Utils.equalsEpsilon( normalizedDistanceFromMean, 0, 0.005 ) ) {
+            playbackRate = 2;
+          }
+          else {
+            playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( 1 - normalizedDistanceFromMean );
+          }
+          this.soundClip.setPlaybackRate( playbackRate, 0 );
+          this.soundClip.play();
+        }
+        this.timeOfLastPlay = phet.joist.elapsedTime;
+        this.valueAtLastPlay = newValue;
+      }
+    }
+  }
+}
+
+meanShareAndBalance.register( 'FulcrumSliderSoundPlayer', FulcrumSliderSoundPlayer );
+
+export default FulcrumSliderSoundPlayer;

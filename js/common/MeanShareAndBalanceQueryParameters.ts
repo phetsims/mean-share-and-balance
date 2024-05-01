@@ -22,6 +22,13 @@ const SCHEMA_MAP = {
     type: 'number',
     defaultValue: 0,
     validValues: [ 0, 1, 2 ]
+  },
+
+  // TODO: Temporary for trying out sound design options, see https://github.com/phetsims/mean-share-and-balance/issues/216.
+  beamSoundMode: {
+    type: 'number',
+    defaultValue: 0,
+    validValues: [ 0, 1, 2 ]
   }
 
 } as const;

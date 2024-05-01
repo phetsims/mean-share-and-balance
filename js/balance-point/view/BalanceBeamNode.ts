@@ -96,6 +96,7 @@ export default class BalanceBeamNode extends Node {
       fulcrumWasDraggedProperty,
       sceneModel.meanValueProperty,
       isMeanFulcrumFixedProperty,
+      sceneModel.beamSupportsPresentProperty,
       {
         fulcrumHeight: triangleHeight,
         fulcrumWidth: triangleWidth,
