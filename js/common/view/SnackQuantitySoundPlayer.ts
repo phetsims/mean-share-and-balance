@@ -18,28 +18,24 @@ import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generato
 import candyBarWrapper01_mp3 from '../../../sounds/candyBarWrapper01_mp3.js';
 import candyBarWrapper03_mp3 from '../../../sounds/candyBarWrapper03_mp3.js';
 import candyBarWrapper02_mp3 from '../../../sounds/candyBarWrapper02_mp3.js';
-import appleBeingSliced01_mp3 from '../../../sounds/appleBeingSliced01_mp3.js';
-import appleBeingSliced02_mp3 from '../../../sounds/appleBeingSliced02_mp3.js';
-import appleBeingSliced03_mp3 from '../../../sounds/appleBeingSliced03_mp3.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Range from '../../../../dot/js/Range.js';
-import MeanShareAndBalanceQueryParameters from '../MeanShareAndBalanceQueryParameters.js';
 import hollowThud_mp3 from '../../../../tambo/sounds/hollowThud_mp3.js';
 
 type SelfOptions = EmptySelfOptions;
 type SnackQuantitySoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
 
+// Constants
 const SOUND_EFFECT_PLAYBACK_RATE_RANGE = new Range( 0.7071, 1.414 );
-const SOUND_EFFECT_OPTIONS: SoundClipOptions = {
+const CANDY_BAR_SOUND_EFFECT_OPTIONS: SoundClipOptions = {
   initialOutputLevel: 0.7,
   rateChangesAffectPlayingSounds: false
 };
-
-// TODO: Consolidate options once apple sound is picked. https://github.com/phetsims/mean-share-and-balance/issues/203
-const PDL_APPLE_EFFECT_OPTIONS: SoundClipOptions = {
+const APPLE_SOUND_EFFECT_OPTIONS: SoundClipOptions = {
   initialOutputLevel: 0.8,
   rateChangesAffectPlayingSounds: false
 };
+
 class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
 
   // The quantity of snacks on the plate, used to adjust the pitch of the generated sound.
@@ -61,25 +57,12 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
 
     super( options );
 
-    // TODO: Move projectileTypePumpkin_mp3 to common code if that sound is picked, https://github.com/phetsims/mean-share-and-balance/issues/203
-    const appleSoundClips = MeanShareAndBalanceQueryParameters.snackSound === 0 ?
-      [
-        new SoundClip( appleBeingSliced01_mp3, SOUND_EFFECT_OPTIONS ),
-        new SoundClip( appleBeingSliced02_mp3, SOUND_EFFECT_OPTIONS ),
-        new SoundClip( appleBeingSliced03_mp3, SOUND_EFFECT_OPTIONS )
-      ] :
-      [
-        new SoundClip( hollowThud_mp3, PDL_APPLE_EFFECT_OPTIONS ),
-        new SoundClip( hollowThud_mp3, PDL_APPLE_EFFECT_OPTIONS ),
-        new SoundClip( hollowThud_mp3, PDL_APPLE_EFFECT_OPTIONS )
-      ];
-
     this.soundEffects = snackType === 'candyBars' ?
       [
-        new SoundClip( candyBarWrapper01_mp3, SOUND_EFFECT_OPTIONS ),
-        new SoundClip( candyBarWrapper02_mp3, SOUND_EFFECT_OPTIONS ),
-        new SoundClip( candyBarWrapper03_mp3, SOUND_EFFECT_OPTIONS )
-      ] : appleSoundClips;
+        new SoundClip( candyBarWrapper01_mp3, CANDY_BAR_SOUND_EFFECT_OPTIONS ),
+        new SoundClip( candyBarWrapper02_mp3, CANDY_BAR_SOUND_EFFECT_OPTIONS ),
+        new SoundClip( candyBarWrapper03_mp3, CANDY_BAR_SOUND_EFFECT_OPTIONS )
+      ] : [ new SoundClip( hollowThud_mp3, APPLE_SOUND_EFFECT_OPTIONS ) ];
 
     for ( const soundClip of this.soundEffects ) {
       soundClip.connect( this.mainGainNode );
@@ -90,17 +73,20 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
   }
 
   public play(): void {
-    const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
-                                  _.without( this.soundEffects, this.mostRecentlyPlayedSoundClip ) :
-                                  this.soundEffects;
-    const soundEffect = dotRandom.sample( availableSoundEffects );
-    if ( soundEffect ) {
-      soundEffect.setPlaybackRate(
-        SnackQuantitySoundPlayer.getPlaybackRateForQuantity( this.snackQuantityProperty.value )
-      );
-      soundEffect.play();
-      this.mostRecentlyPlayedSoundClip = soundEffect;
+
+    let soundEffect = this.soundEffects[ 0 ];
+    if ( this.soundEffects.length > 1 ) {
+      const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
+                                    _.without( this.soundEffects, this.mostRecentlyPlayedSoundClip ) :
+                                    this.soundEffects;
+      soundEffect = dotRandom.sample( availableSoundEffects );
     }
+
+    soundEffect.setPlaybackRate(
+      SnackQuantitySoundPlayer.getPlaybackRateForQuantity( this.snackQuantityProperty.value )
+    );
+    soundEffect.play();
+    this.mostRecentlyPlayedSoundClip = soundEffect;
   }
 
   public stop(): void {
