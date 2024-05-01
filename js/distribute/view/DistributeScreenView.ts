@@ -11,7 +11,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import DistributeModel from '../model/DistributeModel.js';
-import { Color, InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
+import { Color, Image, InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -309,10 +309,6 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
-
-    // Add sound generation for the "predict mean" slider.
-    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
-    soundManager.addSoundGenerator( predictMeanSoundGenerator );
 
     // Update line length and dilation based on the number of objects.
     model.numberOfPlatesProperty.link( () => {
