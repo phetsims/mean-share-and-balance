@@ -322,18 +322,21 @@ export default class BalanceBeamNode extends Node {
     this.addChild( needAtLeastOneKickMessage );
 
     // sound generation
-    const pillarsRemovedWhenFulcrumAtMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
-      initialOutputLevel: 0.3
+    const happyAtMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
+      initialOutputLevel: 0.1
     } );
-    soundManager.addSoundGenerator( pillarsRemovedWhenFulcrumAtMeanSoundClip );
-    supportColumnsVisibleProperty.lazyLink( columnsVisible => {
-      if ( !columnsVisible &&
-           sceneModel.fulcrumValueProperty.value === sceneModel.meanValueProperty.value &&
-           !isMeanFulcrumFixedProperty.value ) {
+    soundManager.addSoundGenerator( happyAtMeanSoundClip );
 
-        pillarsRemovedWhenFulcrumAtMeanSoundClip.play();
+    Multilink.multilink(
+      [ supportColumnsVisibleProperty, sceneModel.fulcrumValueProperty ],
+      () => {
+        if ( !supportColumnsVisibleProperty.value &&
+             sceneModel.fulcrumValueProperty.value === sceneModel.meanValueProperty.value &&
+             !isMeanFulcrumFixedProperty.value ) {
+          happyAtMeanSoundClip.play();
+        }
       }
-    } );
+    );
 
     if ( MeanShareAndBalanceQueryParameters.beamSoundMode >= 4 ) {
       const beamAngleProperty = new DerivedProperty(

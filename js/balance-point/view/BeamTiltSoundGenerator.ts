@@ -14,8 +14,8 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
 import Range from '../../../../dot/js/Range.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
-import generalSoftClick_mp3 from '../../../../tambo/sounds/generalSoftClick_mp3.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import brightMarimbaShort_mp3 from '../../../../tambo/sounds/brightMarimbaShort_mp3.js';
 
 type SelfOptions = EmptySelfOptions;
 type BeamTiltSoundGeneratorOptions = SoundGeneratorOptions & SelfOptions;
@@ -28,11 +28,11 @@ class BeamTiltSoundGenerator extends SoundGenerator {
     super( providedOptions );
 
     let audioBuffer;
-    if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 4 ) {
-      audioBuffer = boundaryReached_mp3;
+    if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 4 || MeanShareAndBalanceQueryParameters.beamSoundMode === 5 ) {
+      audioBuffer = brightMarimbaShort_mp3;
     }
     else {
-      audioBuffer = generalSoftClick_mp3;
+      audioBuffer = boundaryReached_mp3;
     }
     const soundClip = new SoundClip( audioBuffer, { rateChangesAffectPlayingSounds: false } );
     soundClip.connect( this.mainGainNode );
@@ -45,7 +45,9 @@ class BeamTiltSoundGenerator extends SoundGenerator {
            phet.joist.elapsedTime > timeOfLastPlay + minTimeBetweenPlays ) {
 
         const normalizedAngle = expectedAngleRange.getNormalizedValue( Math.abs( tiltAngle ) );
-        const playbackRate = pitchVariationRange.expandNormalizedValue( normalizedAngle );
+        const playbackRate = MeanShareAndBalanceQueryParameters.beamSoundMode % 2 === 0 ?
+                             pitchVariationRange.expandNormalizedValue( 1 - normalizedAngle ) :
+                             pitchVariationRange.expandNormalizedValue( normalizedAngle );
         soundClip.setPlaybackRate( playbackRate, 0 );
         soundClip.play();
         timeOfLastPlay = phet.joist.elapsedTime;

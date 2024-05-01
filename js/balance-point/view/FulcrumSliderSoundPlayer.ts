@@ -23,7 +23,7 @@ import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalance
 type SelfOptions = EmptySelfOptions;
 type FulcrumSliderSoundPlayerOptions = SelfOptions & ValueChangeSoundPlayerOptions;
 
-const MIN_TIME_BETWEEN_SOUNDS = 0.08; // in seconds
+const MIN_TIME_BETWEEN_SOUNDS = 0.05; // in seconds
 const MAX_POSSIBLE_DISTANCE_FROM_MEAN = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
 const PITCH_VARIATION_RANGE = new Range( 1, 1.5 );
 
