@@ -11,7 +11,6 @@
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { DragListener, Image, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import DistributeModel from '../model/DistributeModel.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
@@ -28,6 +27,7 @@ import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import Property from '../../../../axon/js/Property.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -46,18 +46,20 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
 
     const candyBarNode = new Image( sketchedCandyBarFill_svg, {
-      maxWidth: DistributeModel.CANDY_BAR_WIDTH,
+      maxWidth: MeanShareAndBalanceConstants.CANDY_BAR_WIDTH,
       children: NotepadCandyBarNode.getSketchOutline()
     } );
 
-    const candyBarShadowRectangle = new Rectangle( 0, 0, DistributeModel.CANDY_BAR_WIDTH, DistributeModel.CANDY_BAR_HEIGHT, {
-      fill: 'black',
-      opacity: 0.2,
-      cornerRadius: 1,
-      visibleProperty: candyBar.isDraggingProperty,
-      x: 4,
-      y: 4
-    } );
+    const candyBarShadowRectangle = new Rectangle( 0, 0,
+      MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
+      {
+        fill: 'black',
+        opacity: 0.2,
+        cornerRadius: 1,
+        visibleProperty: candyBar.isDraggingProperty,
+        x: 4,
+        y: 4
+      } );
 
     const children: Array<Node> = [ candyBarShadowRectangle, candyBarNode ];
 
@@ -125,7 +127,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
    *
    * When creating partial candy bars the width and rightYTranslation may need to adjust accordingly.
    */
-  public static getSketchOutline( candyBarWidth = DistributeModel.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
+  public static getSketchOutline( candyBarWidth = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
     const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
       Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
     );
@@ -149,13 +151,13 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       ) );
 
     const candyBarStrokeLeft = new Line(
-      0, 0, 0, DistributeModel.CANDY_BAR_HEIGHT,
+      0, 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
       {
         lineWidth: 1.95,
         stroke: leftStrokePattern
       } );
     const candyBarStrokeRight = new Line(
-      candyBarWidth, 0, candyBarWidth, DistributeModel.CANDY_BAR_HEIGHT,
+      candyBarWidth, 0, candyBarWidth, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
       {
         lineWidth: 1.95,
         stroke: rightStrokePattern
@@ -167,7 +169,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         stroke: horizontalStrokePattern
       } );
     const candyBarStrokeBottom = new Line(
-      0, DistributeModel.CANDY_BAR_HEIGHT, candyBarWidth, DistributeModel.CANDY_BAR_HEIGHT,
+      0, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT, candyBarWidth, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
       {
         lineWidth: 1.95,
         stroke: horizontalStrokePattern

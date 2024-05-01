@@ -13,7 +13,7 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Plate, { PLATE_WIDTH } from '../../common/model/Plate.js';
+import Plate from '../../common/model/Plate.js';
 import CandyBar from './CandyBar.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
@@ -32,8 +32,8 @@ type SelfOptions = EmptySelfOptions;
 type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
 
 const INITIAL_PLATE_VALUES = [ 3, 1, 5, 3, 8, 10, 5 ];
+export const NOTEPAD_PLATE_BOTTOM_Y = 330;
 
-//TODO: Does this now need to extend PhetioObject to work with GroupSortInteractionModel?, see: https://github.com/phetsims/mean-share-and-balance/issues/137
 export default class DistributeModel extends SharingModel<CandyBar> {
 
   public readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
@@ -87,7 +87,8 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       // bars on any plate.
       if ( selectedCandyBar !== null && !selectedCandyBar.isActiveProperty.value ) {
         const platesWithSnacks = this.getPlatesWithSnacks();
-        selectedCandyBarProperty.value = platesWithSnacks[ 0 ].getTopSnack();
+        platesWithSnacks.length > 0 ? selectedCandyBarProperty.set( platesWithSnacks[ 0 ].getTopSnack() ) :
+          selectedCandyBarProperty.set( null );
       }
       else if ( selectedCandyBar !== null ) {
         const parentPlate = this.getPlateForSnack( selectedCandyBar );
@@ -154,6 +155,8 @@ export default class DistributeModel extends SharingModel<CandyBar> {
             }
           } );
         }
+
+        stackChangedEmitter.emit();
       } );
 
       // Monitor the isActiveProperty for each plate and do any redistribution of candy bars that is necessary when
@@ -233,10 +236,6 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     super.reset();
     this.groupSortInteractionModel.reset();
   }
-
-  public static readonly NOTEPAD_PLATE_BOTTOM_Y = 330;
-  public static readonly CANDY_BAR_WIDTH = PLATE_WIDTH;
-  public static readonly CANDY_BAR_HEIGHT = 12;
 }
 
 meanShareAndBalance.register( 'DistributeModel', DistributeModel );

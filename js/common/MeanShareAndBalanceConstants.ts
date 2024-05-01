@@ -23,6 +23,9 @@ const CONTROLS_PREFERRED_WIDTH = CONTROLS_MAX_TEXT_WIDTH + 25;
 const NUMBER_LINE_LEFT_X_MARGIN = 135;
 const NUMBER_LINE_RIGHT_X_MARGIN = 215;
 
+// Width of the plate (aka diameter) in screen coordinates.
+const PLATE_WIDTH = 45;
+
 const MeanShareAndBalanceConstants = {
 
   // The interval to which the mean value is rounded when shown to the user.  For example, 5.666667 would be 5.7.
@@ -63,6 +66,11 @@ const MeanShareAndBalanceConstants = {
   CHECKBOX_OPTIONS: {
     boxWidth: 16
   },
+
+  PLATE_WIDTH: PLATE_WIDTH,
+
+  CANDY_BAR_HEIGHT: 12,
+  CANDY_BAR_WIDTH: PLATE_WIDTH,
 
   APPLE_GRAPHIC_RADIUS: 8,
   TABLE_CANDY_BAR_VERTICAL_SPACING: 1.5,

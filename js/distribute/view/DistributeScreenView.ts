@@ -10,7 +10,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import DistributeModel from '../model/DistributeModel.js';
+import DistributeModel, { NOTEPAD_PLATE_BOTTOM_Y } from '../model/DistributeModel.js';
 import { Color, Image, InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
@@ -34,7 +34,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
-import { PLATE_WIDTH } from '../../common/model/Plate.js';
 import ArrowNode, { ArrowNodeOptions } from '../../../../scenery-phet/js/ArrowNode.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
@@ -43,17 +42,17 @@ type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 // constants
-const CANDY_BAR_FOCUS_X_MARGIN = 10;
-const CUEING_ARROW_LENGTH = 24;
+const CANDY_BAR_FOCUS_X_MARGIN = 10; // in screen coords, empirically determined
+export const CUEING_ARROW_LENGTH = 24; // in screen coords, empirically determined
+export const CUEING_ARROW_MARGIN = 2; // in screen coords, empirically determined
 const CUEING_ARROW_OPTIONS: ArrowNodeOptions = {
   fill: MeanShareAndBalanceColors.arrowFillColorProperty,
   stroke: Color.BLACK,
   lineWidth: 1,
-  tailWidth: DistributeModel.CANDY_BAR_HEIGHT * 0.6,
-  headWidth: DistributeModel.CANDY_BAR_HEIGHT * 1.2,
+  tailWidth: MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT * 0.6,
+  headWidth: MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT * 1.2,
   lineJoin: 'round'
 };
-const CUEING_ARROW_MARGIN = 2;
 
 export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
@@ -67,7 +66,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     }, providedOptions );
 
     const plateHeight = new Image( notepadPlateSketch_svg, {
-      maxWidth: PLATE_WIDTH
+      maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH
     } ).bounds.height;
 
     const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
@@ -97,9 +96,9 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     // Calculate the bounds for constraining the dragging of the candy bars in the notepad.
     this.notepadBoundsProperty = new Property( new Bounds2(
       -this.notepad.bounds.width / 2,
-      -this.notepad.height + this.notepad.bounds.maxY - DistributeModel.NOTEPAD_PLATE_BOTTOM_Y,
+      -this.notepad.height + this.notepad.bounds.maxY - NOTEPAD_PLATE_BOTTOM_Y,
       this.notepad.width / 2,
-      this.notepad.bounds.maxY - DistributeModel.NOTEPAD_PLATE_BOTTOM_Y
+      this.notepad.bounds.maxY - NOTEPAD_PLATE_BOTTOM_Y
     ) );
 
     // function for what candy bars should do at the end of their drag
@@ -147,7 +146,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     // Create the nodes on the notepad that represent the plates in the model.
     const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
-      new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y ),
+      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y ),
       1
     );
 
@@ -157,30 +156,40 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       children: [ leftCueingArrow, rightCueingArrow ]
     } );
     leftCueingArrow.left = 0;
-    rightCueingArrow.left = leftCueingArrow.right + PLATE_WIDTH + CUEING_ARROW_MARGIN * 2;
+    rightCueingArrow.left = leftCueingArrow.right + MeanShareAndBalanceConstants.PLATE_WIDTH + CUEING_ARROW_MARGIN * 2;
 
     const updateCueingArrow = () => {
-      if ( !model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
+      if ( model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
+        cueingArrowNode.visible = false;
+      }
+      else if ( model.groupSortInteractionModel.selectedGroupItemProperty.value === null ) {
         const plate = model.getPlateWithMostSnacks();
         if ( plate ) {
           cueingArrowNode.visible = true;
-          cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition( SnackStacker.getStackedCandyBarPosition(
-            plate.xPositionProperty.value, plate.snacksOnNotepadPlate.length - 1 )
-            .plusXY( PLATE_WIDTH / 2 - CUEING_ARROW_MARGIN / 2, plateHeight ) );
+          cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition(
+            SnackStacker.getCueingArrowPosition( plate, plateHeight )
+          );
         }
         else {
           cueingArrowNode.visible = false;
         }
       }
-      if ( model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
-        cueingArrowNode.visible = false;
+      else {
+        const selectedCandyBar = model.groupSortInteractionModel.selectedGroupItemProperty.value;
+        const plate = model.getPlateForSnack( selectedCandyBar );
+        assert && assert( plate, 'selected candy bar must be on a plate' );
+        cueingArrowNode.visible = true;
+        cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition(
+          SnackStacker.getCueingArrowPosition( plate!, plateHeight )
+        );
       }
+
     };
     this.notepadSnackLayerNode.addChild( cueingArrowNode );
     model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.link( updateCueingArrow );
+    model.groupSortInteractionModel.selectedGroupItemProperty.link( updateCueingArrow );
 
     const notepadPlateNodes = model.plates.map( plate => {
-      plate.snacksOnNotepadPlate.lengthProperty.link( updateCueingArrow );
       plate.xPositionProperty.link( updateCueingArrow );
       return new DistributeNotepadPlateNode( plate, modelToNotepadTransform,
         {
@@ -256,6 +265,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         }
       }
     );
+    this.groupSortInteractionView.positionSortCueNodeEmitter.addListener( updateCueingArrow );
 
     this.notepadSnackLayerNode.boundsProperty.link( () => {
       const focusRect = Shape.rect(
@@ -278,8 +288,8 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     // Predict Mean Line that acts as a slider for alternative input.
     const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
-      new Vector2( this.playAreaCenterX, DistributeModel.NOTEPAD_PLATE_BOTTOM_Y - plateHeight - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
-      DistributeModel.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
+      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y - plateHeight - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
+      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
       Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty ],
@@ -319,7 +329,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       const firstPlate = activePlates[ 0 ];
       const lastPlate = activePlates[ activePlates.length - 1 ];
       predictMeanSlider.updateLine(
-        firstPlate.xPositionProperty.value - PLATE_WIDTH / 2,
+        firstPlate.xPositionProperty.value - MeanShareAndBalanceConstants.PLATE_WIDTH / 2,
         lastPlate.xPositionProperty.value + 80
       );
     } );

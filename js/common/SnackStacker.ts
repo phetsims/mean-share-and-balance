@@ -10,9 +10,10 @@ import meanShareAndBalance from '../meanShareAndBalance.js';
 import { Image, Node } from '../../../scenery/js/imports.js';
 import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
-import { PLATE_WIDTH } from './model/Plate.js';
+import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import DistributeModel from '../distribute/model/DistributeModel.js';
+import { CUEING_ARROW_MARGIN } from '../distribute/view/DistributeScreenView.js';
+import CandyBar from '../distribute/model/CandyBar.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined
@@ -51,18 +52,18 @@ class SnackStacker {
     if ( snackType === 'candyBars' ) {
 
       // The candy bar graphic Nodes are stacked in a single column with a little space between each.
-      snackNode.centerX = DistributeModel.CANDY_BAR_WIDTH / 2;
+      snackNode.centerX = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH / 2;
       snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
-                             DistributeModel.CANDY_BAR_HEIGHT / 2 +
-                             positionInStack * ( DistributeModel.CANDY_BAR_HEIGHT +
+                             MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT / 2 +
+                             positionInStack * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     }
     else {
 
       // The apples are stacked in two columns with some space between them in both the x and y dimensions.
       snackNode.centerX = positionInStack % 2 === 0 ?
-                          PLATE_WIDTH / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
-                          PLATE_WIDTH / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
+                          MeanShareAndBalanceConstants.PLATE_WIDTH / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
+                          MeanShareAndBalanceConstants.PLATE_WIDTH / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
       snackNode.bottom = -Math.floor( positionInStack / 2 ) * ( snackNode.width + VERTICAL_SPACE_BETWEEN_APPLES ) -
                          VERTICAL_SPACE_BETWEEN_APPLES;
     }
@@ -77,13 +78,13 @@ class SnackStacker {
    */
   public static getStackedCandyBarPosition( plateXPosition: number, positionInStack: number ): Vector2 {
 
-    const xPosition = plateXPosition - PLATE_WIDTH / 2;
+    const xPosition = plateXPosition - MeanShareAndBalanceConstants.PLATE_WIDTH / 2;
 
     // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
                          1 +
-                         ( positionInStack + 1 ) * ( DistributeModel.CANDY_BAR_HEIGHT +
+                         ( positionInStack + 1 ) * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
     return new Vector2( xPosition, yPosition );
   }
@@ -107,6 +108,13 @@ class SnackStacker {
                       Math.floor( positionInStack / 2 ) *
                       ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + VERTICAL_SPACE_BETWEEN_APPLES );
     return new Vector2( xPosition, yPosition );
+  }
+
+  public static getCueingArrowPosition( plate: Plate<CandyBar>, plateHeight: number ): Vector2 {
+    const topSnackIndex = plate.snacksOnNotepadPlate.length - 1;
+    const plateXPosition = plate.xPositionProperty.value;
+    return SnackStacker.getStackedCandyBarPosition( plateXPosition, topSnackIndex )
+      .plusXY( MeanShareAndBalanceConstants.PLATE_WIDTH / 2 - CUEING_ARROW_MARGIN / 2, plateHeight );
   }
 }
 

@@ -9,13 +9,14 @@
 
 import { Image } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate, { PLATE_WIDTH } from '../../common/model/Plate.js';
+import Plate from '../../common/model/Plate.js';
 import { NotepadMode } from '../model/FairShareModel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import Apple from '../model/Apple.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 export default class FairShareNotepadPlateNode extends Image {
 
@@ -28,7 +29,7 @@ export default class FairShareNotepadPlateNode extends Image {
     );
 
     super( notepadPlateSketch_svg, {
-      maxWidth: PLATE_WIDTH,
+      maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH,
       visibleProperty: plateVisibleProperty
     } );
 

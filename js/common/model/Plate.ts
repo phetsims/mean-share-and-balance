@@ -43,10 +43,6 @@ type SelfOptions<T extends Snack> = {
 
 type PlateOptions<T extends Snack> = SelfOptions<T> & PickRequired<PhetioObjectOptions, 'tandem'>;
 
-// constants
-// Width of the plate (aka diameter) in screen coordinates.
-export const PLATE_WIDTH = 45;
-
 export default class Plate<T extends Snack> extends PhetioObject {
 
   // Whether the plate is enabled in the view and the data calculations.

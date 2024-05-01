@@ -22,8 +22,6 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
-import DistributeModel from '../../distribute/model/DistributeModel.js';
-import { PLATE_WIDTH } from '../model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import NotepadAppleNode from '../../fair-share/view/NotepadAppleNode.js';
@@ -38,7 +36,8 @@ export type MeanAccordionBoxOptions = SelfOptions & WithRequired<AccordionBoxOpt
 const ACCORDION_BOX_MARGIN = 8;
 
 // just for the dimensions
-const CANDY_BAR_BOUNDS = new Bounds2( 0, 0, DistributeModel.CANDY_BAR_WIDTH, DistributeModel.CANDY_BAR_HEIGHT );
+const CANDY_BAR_BOUNDS = new Bounds2( 0, 0,
+  MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT );
 
 export default class MeanAccordionBox extends AccordionBox {
 
@@ -63,7 +62,7 @@ export default class MeanAccordionBox extends AccordionBox {
 
         // Add the plate first, which is just a line.
         const plateNode = new Image( notepadPlateSketch_svg, {
-          maxWidth: PLATE_WIDTH
+          maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH
         } );
         meanSnacksGraphicNode.addChild( plateNode );
 
