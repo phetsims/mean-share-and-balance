@@ -25,14 +25,9 @@ import hollowThud_mp3 from '../../../../tambo/sounds/hollowThud_mp3.js';
 type SelfOptions = EmptySelfOptions;
 type SnackQuantitySoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
 
-// Constants
+// constants
 const SOUND_EFFECT_PLAYBACK_RATE_RANGE = new Range( 0.7071, 1.414 );
-const CANDY_BAR_SOUND_EFFECT_OPTIONS: SoundClipOptions = {
-  initialOutputLevel: 0.7,
-  rateChangesAffectPlayingSounds: false
-};
-const APPLE_SOUND_EFFECT_OPTIONS: SoundClipOptions = {
-  initialOutputLevel: 0.8,
+const SOUND_EFFECT_OPTIONS: SoundClipOptions = {
   rateChangesAffectPlayingSounds: false
 };
 
@@ -59,10 +54,13 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
 
     this.soundEffects = snackType === 'candyBars' ?
       [
-        new SoundClip( candyBarWrapper01_mp3, CANDY_BAR_SOUND_EFFECT_OPTIONS ),
-        new SoundClip( candyBarWrapper02_mp3, CANDY_BAR_SOUND_EFFECT_OPTIONS ),
-        new SoundClip( candyBarWrapper03_mp3, CANDY_BAR_SOUND_EFFECT_OPTIONS )
-      ] : [ new SoundClip( hollowThud_mp3, APPLE_SOUND_EFFECT_OPTIONS ) ];
+        new SoundClip( candyBarWrapper01_mp3, SOUND_EFFECT_OPTIONS ),
+        new SoundClip( candyBarWrapper02_mp3, SOUND_EFFECT_OPTIONS ),
+        new SoundClip( candyBarWrapper03_mp3, SOUND_EFFECT_OPTIONS )
+      ] :
+      [
+        new SoundClip( hollowThud_mp3, SOUND_EFFECT_OPTIONS )
+      ];
 
     for ( const soundClip of this.soundEffects ) {
       soundClip.connect( this.mainGainNode );
@@ -74,19 +72,38 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
 
   public play(): void {
 
-    let soundEffect = this.soundEffects[ 0 ];
-    if ( this.soundEffects.length > 1 ) {
+    let soundEffectToPlay;
+    if ( this.soundEffects.length >= 3 ) {
+
+      // Select a sound effect to play.  This is a random selection, but we prevent the same one from being used twice
+      // in a row.
       const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
                                     _.without( this.soundEffects, this.mostRecentlyPlayedSoundClip ) :
                                     this.soundEffects;
-      soundEffect = dotRandom.sample( availableSoundEffects );
+      soundEffectToPlay = dotRandom.sample( availableSoundEffects );
+    }
+    else if ( this.soundEffects.length === 2 ) {
+
+      // In this case, alternate.
+      const availableSoundEffects = this.mostRecentlyPlayedSoundClip ?
+                                    _.without( this.soundEffects, this.mostRecentlyPlayedSoundClip ) :
+                                    this.soundEffects;
+      soundEffectToPlay = availableSoundEffects[ 0 ];
+    }
+    else {
+
+      // Play the only one we've got.
+      soundEffectToPlay = this.soundEffects[ 0 ];
     }
 
-    soundEffect.setPlaybackRate(
+    // Set the playback rate based on the quantity of snacks present.
+    soundEffectToPlay.setPlaybackRate(
       SnackQuantitySoundPlayer.getPlaybackRateForQuantity( this.snackQuantityProperty.value )
     );
-    soundEffect.play();
-    this.mostRecentlyPlayedSoundClip = soundEffect;
+
+    // Play the effect and update the history.
+    soundEffectToPlay.play();
+    this.mostRecentlyPlayedSoundClip = soundEffectToPlay;
   }
 
   public stop(): void {
