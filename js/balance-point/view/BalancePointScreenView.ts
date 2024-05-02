@@ -161,9 +161,9 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     this.pdomPlayAreaNode.setPDOMOrder( [
       kickButton,
+      ...notepadNode.notepadPDOMOrder,
       sceneView.backSceneViewLayer,
-      controls.numberSpinner,
-      ...notepadNode.notepadPDOMOrder
+      controls.numberSpinner
       ]
     );
 
