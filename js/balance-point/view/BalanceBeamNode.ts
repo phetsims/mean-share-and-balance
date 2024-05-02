@@ -330,8 +330,9 @@ export default class BalanceBeamNode extends Node {
     Multilink.multilink(
       [ supportColumnsVisibleProperty, sceneModel.fulcrumValueProperty ],
       () => {
+        const roundedMean = Utils.roundToInterval( sceneModel.meanValueProperty.value, 0.1 );
         if ( !supportColumnsVisibleProperty.value &&
-             sceneModel.fulcrumValueProperty.value === sceneModel.meanValueProperty.value &&
+             sceneModel.fulcrumValueProperty.value === roundedMean &&
              !isMeanFulcrumFixedProperty.value ) {
           happyAtMeanSoundClip.play();
         }
