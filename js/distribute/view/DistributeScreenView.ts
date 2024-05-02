@@ -188,6 +188,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     this.notepadSnackLayerNode.addChild( cueingArrowNode );
     model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.link( updateCueingArrow );
     model.groupSortInteractionModel.selectedGroupItemProperty.link( updateCueingArrow );
+    model.stackChangedEmitter.addListener( updateCueingArrow );
 
     const notepadPlateNodes = model.plates.map( plate => {
       plate.xPositionProperty.link( updateCueingArrow );

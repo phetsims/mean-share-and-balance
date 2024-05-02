@@ -42,6 +42,11 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   public readonly meanPredictionProperty: Property<number>;
   public readonly predictMeanDragRange = new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
 
+  // This emitter is used to update the keyboard focus and sorting cue when stack changes on a plate.
+  // It is meant to be fired each time something changes about the way things are stacked, since this could
+  // affect the selected item in the group.
+  public readonly stackChangedEmitter: Emitter = new Emitter();
+
   public constructor( providedOptions?: DistributeModelOptions ) {
 
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
@@ -74,13 +79,9 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       tandem: options.tandem.createTandem( 'meanPredictionProperty' )
     } );
 
-    // This emitter is used to update the keyboard focus when stack changes on a plate.  It is meant to be fired each
-    // time something changes about the way things are stacked, since this could affect the selected item in the group.
-    const stackChangedEmitter = new Emitter();
-
     // Update the selected item when the stack changes, since the previously selected one could now be gone or buried.
     const selectedCandyBarProperty = this.groupSortInteractionModel.selectedGroupItemProperty;
-    stackChangedEmitter.addListener( () => {
+    this.stackChangedEmitter.addListener( () => {
       const selectedCandyBar = selectedCandyBarProperty.value;
 
       // If the selected candy bar is not active, default back to the first top candy bar or null if there are no candy
@@ -98,7 +99,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     } );
 
     // Fire the stackChangedEmitter when the number of plates changes since this could cause the selected item to disappear.
-    this.numberOfPlatesProperty.lazyLink( () => stackChangedEmitter.emit() );
+    this.numberOfPlatesProperty.lazyLink( () => this.stackChangedEmitter.emit() );
 
     // Initialize the plates and set up plate-related behavior that is specific to the Distribute screen.
     this.plates.forEach( plate => {
@@ -156,7 +157,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
           } );
         }
 
-        stackChangedEmitter.emit();
+        this.stackChangedEmitter.emit();
       } );
 
       // Monitor the isActiveProperty for each plate and do any redistribution of candy bars that is necessary when
