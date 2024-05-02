@@ -22,6 +22,7 @@ import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer
 import glassNumberOfSelection_mp3 from '../../../sounds/glassNumberOfSelection_mp3.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Range from '../../../../dot/js/Range.js';
 
 type SelfOptions = {
   vBoxOptions?: StrictOmit<VBoxOptions, 'children'>;
@@ -33,6 +34,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
   public constructor( tickMarksVisibleProperty: Property<boolean>,
                       predictMeanVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>,
+                      numberOfCupsRangeProperty: Property<Range>,
                       arePipesOpenProperty: Property<boolean>,
                       providedOptions: LevelOutControlPanelOptions ) {
 
@@ -70,7 +72,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       },
       options.vBoxOptions );
     const vBox = new VBox( combinedOptions );
-    super( vBox, numberOfCupsProperty, MeanShareAndBalanceStrings.numberOfCupsStringProperty, options );
+    super( vBox, numberOfCupsProperty, numberOfCupsRangeProperty, MeanShareAndBalanceStrings.numberOfCupsStringProperty, options );
   }
 }
 

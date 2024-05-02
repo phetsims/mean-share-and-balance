@@ -29,10 +29,11 @@ type LevelOutModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
 
 // constants
 const INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
+const NUMBER_OF_CUPS_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
 
 export default class LevelOutModel implements TModel {
 
-  public readonly numberOfCupsRange = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
+  public readonly numberOfCupsRangeProperty: Property<Range>;
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
 
   public readonly numberOfCupsProperty: Property<number>;
@@ -72,9 +73,21 @@ export default class LevelOutModel implements TModel {
       phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup'
     } );
 
+    this.numberOfCupsRangeProperty = new Property( NUMBER_OF_CUPS_RANGE, {
+      tandem: options.tandem.createTandem( 'numberOfCupsRangeProperty' ),
+      phetioValueType: Range.RangeIO,
+      isValidValue: ( value: Range ) => {
+        const numberOfCups = this.numberOfCupsProperty ? this.numberOfCupsProperty.value :
+                             MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS;
+        return value.min === NUMBER_OF_CUPS_RANGE.min &&
+               NUMBER_OF_CUPS_RANGE.contains( value.max ) &&
+               value.max >= numberOfCups;
+      }
+    } );
+
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
       numberType: 'Integer',
-      range: this.numberOfCupsRange,
+      range: this.numberOfCupsRangeProperty,
 
       // phetio
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' )

@@ -88,7 +88,7 @@ const MeanShareAndBalanceConstants = {
   NOTEPAD_PLATE_HEIGHT: 5, // TODO: this needs to come from the image size itself. https://github.com/phetsims/mean-share-and-balance/issues/186
 
   SOCCER_BALL_RANGE: new Range( 0, 10 ),
-  NUMBER_SPINNER_KICK_RANGE_PROPERTY: new Property( new Range( 0, 7 ) ),
+  NUMBER_OF_KICKS_RANGE_PROPERTY: new Property( new Range( 0, 7 ) ),
   GROUND_POSITION_Y: 558,
   INITIAL_NUMBER_OF_SOCCER_BALLS: 0,
   NUMBER_LINE_LEFT_X_MARGIN: NUMBER_LINE_LEFT_X_MARGIN,

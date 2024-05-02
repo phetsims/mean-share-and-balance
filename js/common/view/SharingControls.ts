@@ -34,6 +34,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
 
   public constructor( model: Pick<SharingModel<Snack>,
                         'numberOfPlatesProperty' |
+                        'numberOfPlatesRangeProperty' |
                         'totalVisibleProperty' |
                         'syncData' | 'areAllActivePlatesInSyncProperty'>,
                       meanCalculationDialogVisibleProperty: Property<boolean>,
@@ -85,7 +86,8 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       controlsPDOMOrder: [ checkboxGroup, buttonAlignBox ]
     }, options );
 
-    super( vBox, model.numberOfPlatesProperty, MeanShareAndBalanceStrings.numberOfPeopleStringProperty, superOptions );
+    super( vBox, model.numberOfPlatesProperty, model.numberOfPlatesRangeProperty,
+      MeanShareAndBalanceStrings.numberOfPeopleStringProperty, superOptions );
   }
 }
 

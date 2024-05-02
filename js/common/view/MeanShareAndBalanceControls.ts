@@ -13,12 +13,12 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberSpinnerVBox from './NumberSpinnerVBox.js';
 import Property from '../../../../axon/js/Property.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
+import Range from '../../../../dot/js/Range.js';
 
 type SelfOptions = {
   numberSpinnerOptions?: NumberSpinnerOptions;
@@ -37,6 +37,7 @@ export default class MeanShareAndBalanceControls extends Node {
   public constructor(
     controlsVBox: Node,
     numberOfObjectsProperty: Property<number>,
+    numberOfObjectsRangeProperty: Property<Range>,
     numberOfObjectsStringProperty: LocalizedStringProperty,
     providedOptions: MeanShareAndBalanceControlsOptions
   ) {
@@ -73,11 +74,9 @@ export default class MeanShareAndBalanceControls extends Node {
       numberSpinnerOptions: numberSpinnerOptions
     };
 
-    const rangeProperty = options.isSoccerContext ? MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE_PROPERTY :
-                  new Property( MeanShareAndBalanceConstants.NUMBER_SPINNER_CONTAINERS_RANGE );
     const numberSpinner = new NumberSpinnerVBox(
       numberOfObjectsProperty,
-      rangeProperty,
+      numberOfObjectsRangeProperty,
       numberOfObjectsStringProperty,
       numberSpinnerVBoxOptions
     );

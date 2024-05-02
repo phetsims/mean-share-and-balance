@@ -61,8 +61,9 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public constructor( isMeanFulcrumFixedProperty: BooleanProperty,
                       options: BalancePointSceneModelOptions ) {
 
+    // TODO: Are we allowing clients to change the kick range as well? https://github.com/phetsims/mean-share-and-balance/issues/187
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
-      range: new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
+      range: MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY,
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
     } );
 
@@ -109,7 +110,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
-      range: MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE_PROPERTY,
+      range: MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY,
       phetioReadOnly: true,
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );
@@ -229,7 +230,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
     maxKicksProperty.link( maxKicks => {
       this.reset();
-      MeanShareAndBalanceConstants.NUMBER_SPINNER_KICK_RANGE_PROPERTY.value.max = maxKicks;
+      MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value.max = maxKicks;
     } );
   }
 

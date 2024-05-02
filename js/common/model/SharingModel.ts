@@ -38,6 +38,7 @@ export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions
 // constants
 const MAX_PLATES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
 const INTER_PLATE_DISTANCE = 100; // distance between plate centers, in screen coords
+const NUMBER_OF_PLATES_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
 
 export default class SharingModel<T extends Snack> implements TModel {
 
@@ -67,12 +68,22 @@ export default class SharingModel<T extends Snack> implements TModel {
     const options = combineOptions<SharingModelOptions>( {}, providedOptions );
 
     this.numberOfPlatesRangeProperty = new Property<Range>(
-      new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ),
+      NUMBER_OF_PLATES_RANGE,
       {
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberOfPlatesRangeProperty' ),
-        phetioValueType: Range.RangeIO
+        phetioValueType: Range.RangeIO,
+
+        // TODO: do we want to adjust the number of plates on the screen if the range changes? Right now
+          // a validation error is thrown if the range max is less than the number of plates. https://github.com/phetsims/mean-share-and-balance/issues/187
+        isValidValue: value => {
+          const numberOfPlates = this.numberOfPlatesProperty ? this.numberOfPlatesProperty.value :
+                               MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE;
+          return value.min === NUMBER_OF_PLATES_RANGE.min &&
+                 NUMBER_OF_PLATES_RANGE.contains( value.max ) &&
+                 value.max >= numberOfPlates;
+        }
       }
     );
 
