@@ -3,6 +3,10 @@
 /**
  * FulcrumSliderSoundPlayer is used to produce sounds when the fulcrum beneath the balance beam is moved by the user.
  *
+ * TODO: See https://github.com/phetsims/mean-share-and-balance/issues/216.  Much of the code in this file, and indeed
+ *       the file itself, was created to test out some competing ideas for the sound design for the balance beam.  Once
+ *       the design is finalized, this code will need to be cleaned up and documented, or deleted if appropriate.
+ *
  * @author John Blanco (PhET Interactive Simulations)
  */
 

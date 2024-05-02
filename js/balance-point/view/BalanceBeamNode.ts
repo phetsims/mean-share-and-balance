@@ -322,6 +322,8 @@ export default class BalanceBeamNode extends Node {
     this.addChild( needAtLeastOneKickMessage );
 
     // sound generation
+    // TODO: See https://github.com/phetsims/mean-share-and-balance/issues/216.  Much of the sound generation code
+    //       below is experimental and will need to be finalized and documented prior to publication.
     const happyAtMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
       initialOutputLevel: 0.1
     } );
