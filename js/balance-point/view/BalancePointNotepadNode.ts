@@ -72,7 +72,11 @@ export default class BalancePointNotepadNode extends NotepadNode {
       maxWidth: buttonTextMaxWidth
     } );
 
-    const checkButtonSoundPlayer = new PillarSoundPlayer( sceneModel.beamSupportsPresentProperty );
+    const checkButtonSoundPlayer = new PillarSoundPlayer(
+      sceneModel.beamSupportsPresentProperty,
+      sceneModel.targetNumberOfBallsProperty
+    );
+
     const checkButton = new RectangularPushButton( {
 
       // The check button is not visible when the fulcrum is fixed.
@@ -134,9 +138,12 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
 class PillarSoundPlayer implements TSoundPlayer {
 
-  private readonly resetButtonSoundClip = new SoundClip( pillarResetButton_mp3, { initialOutputLevel: 0.5 } );
-  private readonly checkButtonSoundClip = new SoundClip( pillarCheckButton_mp3, { initialOutputLevel: 0.25 } );
-  public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean> ) {
+  private readonly resetButtonSoundClip = new SoundClip( pillarResetButton_mp3, { initialOutputLevel: 0.2 } );
+  private readonly checkButtonSoundClip = new SoundClip( pillarCheckButton_mp3, { initialOutputLevel: 0.2 } );
+
+  public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
+                      private readonly numberOfBallsKickedProperty: TReadOnlyProperty<number>
+  ) {
     soundManager.addSoundGenerator( this.resetButtonSoundClip );
     soundManager.addSoundGenerator( this.checkButtonSoundClip );
   }
@@ -144,8 +151,11 @@ class PillarSoundPlayer implements TSoundPlayer {
   public play(): void {
     if ( this.beamSupportsPresentProperty.value ) {
 
-      // Play the sound that is associated with the check button.
-      this.checkButtonSoundClip.play();
+      if ( this.numberOfBallsKickedProperty.value === 0 ) {
+
+        // Play the sound that is associated with the check button.
+        this.checkButtonSoundClip.play();
+      }
     }
     else {
 
