@@ -215,7 +215,7 @@
     "license": "contact phethelp@colorado.edu",
     "notes": "created by Ashton Morris (PhET Interactive Simulations)"
   },
-  "pillarCheckButton.mp3": {
+  "pillarsAdded.mp3": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
     ],
@@ -223,7 +223,7 @@
     "license": "contact phethelp@colorado.edu",
     "notes": "created by Ashton Morris (PhET Interactive Simulations)"
   },
-  "pillarResetButton.mp3": {
+  "pillarsRemoved.mp3": {
     "text": [
       "Copyright 2024 University of Colorado Boulder"
     ],

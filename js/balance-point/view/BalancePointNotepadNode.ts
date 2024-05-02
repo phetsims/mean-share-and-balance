@@ -26,8 +26,8 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import Property from '../../../../axon/js/Property.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
-import pillarCheckButton_mp3 from '../../../sounds/pillarCheckButton_mp3.js';
-import pillarResetButton_mp3 from '../../../sounds/pillarResetButton_mp3.js';
+import pillarsRemoved_mp3 from '../../../sounds/pillarsRemoved_mp3.js';
+import pillarsAdded_mp3 from '../../../sounds/pillarsAdded_mp3.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -138,14 +138,14 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
 class PillarSoundPlayer implements TSoundPlayer {
 
-  private readonly resetButtonSoundClip = new SoundClip( pillarResetButton_mp3, { initialOutputLevel: 0.2 } );
-  private readonly checkButtonSoundClip = new SoundClip( pillarCheckButton_mp3, { initialOutputLevel: 0.2 } );
+  private readonly pillarsAddedSoundClip = new SoundClip( pillarsAdded_mp3, { initialOutputLevel: 0.2 } );
+  private readonly pillarsRemovedSoundClip = new SoundClip( pillarsRemoved_mp3, { initialOutputLevel: 0.2 } );
 
   public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
                       private readonly numberOfBallsKickedProperty: TReadOnlyProperty<number>
   ) {
-    soundManager.addSoundGenerator( this.resetButtonSoundClip );
-    soundManager.addSoundGenerator( this.checkButtonSoundClip );
+    soundManager.addSoundGenerator( this.pillarsAddedSoundClip );
+    soundManager.addSoundGenerator( this.pillarsRemovedSoundClip );
   }
 
   public play(): void {
@@ -154,19 +154,19 @@ class PillarSoundPlayer implements TSoundPlayer {
       if ( this.numberOfBallsKickedProperty.value === 0 ) {
 
         // Play the sound that is associated with the check button.
-        this.checkButtonSoundClip.play();
+        this.pillarsRemovedSoundClip.play();
       }
     }
     else {
 
       // Play the sound that is associated with the reset button.
-      this.resetButtonSoundClip.play();
+      this.pillarsAddedSoundClip.play();
     }
   }
 
   public stop(): void {
-    this.resetButtonSoundClip.stop();
-    this.checkButtonSoundClip.stop();
+    this.pillarsAddedSoundClip.stop();
+    this.pillarsRemovedSoundClip.stop();
   }
 }
 
