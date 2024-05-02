@@ -17,13 +17,6 @@ const SCHEMA_MAP = {
     defaultValue: true
   },
 
-  // TODO: Temporary for trying out sounds, see https://github.com/phetsims/mean-share-and-balance/issues/203.
-  snackSound: {
-    type: 'number',
-    defaultValue: 0,
-    validValues: [ 0, 1, 2 ]
-  },
-
   // TODO: Temporary for trying out sound design options, see https://github.com/phetsims/mean-share-and-balance/issues/216.
   beamSoundMode: {
     type: 'number',
