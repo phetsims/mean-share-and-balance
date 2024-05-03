@@ -138,8 +138,8 @@ export default class BalancePointNotepadNode extends NotepadNode {
 
 class PillarSoundPlayer implements TSoundPlayer {
 
-  private readonly pillarsAddedSoundClip = new SoundClip( pillarsAdded_mp3, { initialOutputLevel: 0.2 } );
-  private readonly pillarsRemovedSoundClip = new SoundClip( pillarsRemoved_mp3, { initialOutputLevel: 0.2 } );
+  private readonly pillarsAddedSoundClip = new SoundClip( pillarsAdded_mp3, { initialOutputLevel: 0.1 } );
+  private readonly pillarsRemovedSoundClip = new SoundClip( pillarsRemoved_mp3, { initialOutputLevel: 0.1 } );
 
   public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
                       private readonly numberOfBallsKickedProperty: TReadOnlyProperty<number>

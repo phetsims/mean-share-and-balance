@@ -133,6 +133,9 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     // Create the visual representation of the plates that sit on the table.
     const tablePlateNodes = model.plates.map( plate => new TablePlateNode<T>( plate, tableCenter, {
       snackType: providedOptions.snackType,
+      snackQuantitySoundPlayerOptions: {
+        initialOutputLevel: providedOptions.snackType === 'candyBars' ? 0.2 : 0.1
+      },
       tandem: providedOptions.tandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
     tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );

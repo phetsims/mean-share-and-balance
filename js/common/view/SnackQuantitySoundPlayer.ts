@@ -23,7 +23,7 @@ import Range from '../../../../dot/js/Range.js';
 import hollowThud_mp3 from '../../../../tambo/sounds/hollowThud_mp3.js';
 
 type SelfOptions = EmptySelfOptions;
-type SnackQuantitySoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
+export type SnackQuantitySoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
 
 // constants
 const SOUND_EFFECT_PLAYBACK_RATE_RANGE = new Range( 0.7071, 1.414 );

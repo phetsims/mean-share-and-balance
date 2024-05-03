@@ -58,7 +58,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           numberOfCupsProperty,
           glassNumberOfSelection_mp3,
-          { initialOutputLevel: 0.5 }
+          { initialOutputLevel: 0.3 }
         )
       },
       controlsPDOMOrder: [ checkboxGroup, pipeSwitch ],

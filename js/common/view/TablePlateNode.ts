@@ -25,11 +25,13 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import greenApple_svg from '../../../images/greenApple_svg.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import Snack from '../model/Snack.js';
-import SnackQuantitySoundPlayer from './SnackQuantitySoundPlayer.js';
+import SnackQuantitySoundPlayer, { SnackQuantitySoundPlayerOptions } from './SnackQuantitySoundPlayer.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
   snackType: SnackType;
+  snackQuantitySoundPlayerOptions?: SnackQuantitySoundPlayerOptions;
 };
 
 type PersonNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem'>;
@@ -42,7 +44,11 @@ export default class TablePlateNode<T extends Snack> extends Node {
 
   public constructor( plate: Plate<T>, tableCenter: Vector2, providedOptions: PersonNodeOptions ) {
 
-    const options = providedOptions;
+    const options = optionize<PersonNodeOptions, SelfOptions, NodeOptions>()( {
+      snackQuantitySoundPlayerOptions: {
+        initialOutputLevel: 0.2
+      }
+    }, providedOptions );
 
     const plateImage = new Image( plate_svg, {
       maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH * 1.3 // Tweaked a little for a better look, adjust as needed.
@@ -52,7 +58,7 @@ export default class TablePlateNode<T extends Snack> extends Node {
     const snackQuantitySoundPlayer = new SnackQuantitySoundPlayer(
       options.snackType,
       plate.tableSnackNumberProperty,
-      { initialOutputLevel: 0.2 }
+      options.snackQuantitySoundPlayerOptions
     );
     soundManager.addSoundGenerator( snackQuantitySoundPlayer );
 

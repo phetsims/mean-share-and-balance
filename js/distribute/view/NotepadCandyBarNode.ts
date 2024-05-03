@@ -90,7 +90,9 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
     //  See: https://github.com/phetsims/mean-share-and-balance/issues/190
     this.dragListener = new RichDragListener( {
       grabSound: grabCandyBarV2_mp3,
+      grabSoundClipOptions: { initialOutputLevel: 0.25 },
       releaseSound: releaseCandyBarV2_mp3,
+      releaseSoundClipOptions: { initialOutputLevel: 0.25 },
       transform: modelViewTransform,
       positionProperty: this.candyBar.positionProperty,
       offsetPosition: ( viewPoint, dragListener ) => {
