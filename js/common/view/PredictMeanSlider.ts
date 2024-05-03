@@ -68,7 +68,7 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     } );
     createSuccessIndicatorMultilink( predictMeanLine, predictMeanSuccessRectangle );
 
-    // Track predictMeanLine drag position.
+    // Track predictMeanLine drag position.  This needs to be a Vector2, and creates the linkage to the Y value.
     const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
     predictMeanPositionProperty.link( predictMeanPosition => {
       meanPredictionProperty.value = dragRange.constrainValue( predictMeanPosition.y );
@@ -98,7 +98,6 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanGlow = predictMeanSuccessRectangle;
 
     this.setPointerAreas();
-    this.centerY = modelViewTransform.modelToViewY( 0 );
     this.centerX = modelViewTransform.modelToViewX( 0 );
 
     // Add sound generation for the "predict mean" slider.

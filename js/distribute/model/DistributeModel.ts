@@ -74,7 +74,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
 
-    this.meanPredictionProperty = new NumberProperty( MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE / 2, {
+    this.meanPredictionProperty = new NumberProperty( 0, {
       range: this.predictMeanDragRange,
       tandem: options.tandem.createTandem( 'meanPredictionProperty' )
     } );
@@ -89,7 +89,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       if ( selectedCandyBar !== null && !selectedCandyBar.isActiveProperty.value ) {
         const platesWithSnacks = this.getPlatesWithSnacks();
         platesWithSnacks.length > 0 ? selectedCandyBarProperty.set( platesWithSnacks[ 0 ].getTopSnack() ) :
-          selectedCandyBarProperty.set( null );
+        selectedCandyBarProperty.set( null );
       }
       else if ( selectedCandyBar !== null ) {
         const parentPlate = this.getPlateForSnack( selectedCandyBar );

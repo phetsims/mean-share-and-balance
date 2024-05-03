@@ -340,6 +340,11 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         focusRect.bounds.minY
       );
     } );
+
+    // TODO: See https://github.com/phetsims/mean-share-and-balance/issues/224.  This is a short-term workaround for a
+    //       problem where the predictMeanSlider is getting moved to an incorrect location during construction.  We
+    //       need to correct the root of the problem, but this addresses the symptom for now.
+    predictMeanSlider.centerY = predictMeanModelViewTransform.modelToViewY( model.meanPredictionProperty.value );
   }
 }
 
