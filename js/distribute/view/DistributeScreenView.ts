@@ -216,6 +216,56 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     } );
     this.notepadSnackLayerNode.addChild( notepadCandyBarsNode );
 
+    // Create predict mean line that acts as a slider for alternative input.
+    const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      new Vector2( 0, 0 ),
+      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y - plateHeight - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
+      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
+    );
+    const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
+      Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty ],
+        ( meanPrediction, meanValue ) => {
+          const meanTolerance = 0.5;
+          const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
+          const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
+          const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
+
+          predictMeanLine.stroke = roundedPrediction === roundedMean ? MeanShareAndBalanceColors.meanColorProperty :
+                                   MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+          successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
+
+        } );
+    };
+
+    const predictMeanSlider = new PredictMeanSlider(
+      model.meanPredictionProperty, model.predictMeanDragRange,
+      createSuccessIndicatorMultilink,
+      predictMeanModelViewTransform,
+      {
+        visibleProperty: model.predictMeanVisibleProperty,
+        valueProperty: model.meanPredictionProperty,
+
+        // Constant range
+        enabledRangeProperty: new Property( model.predictMeanDragRange ),
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'predictMeanSlider' ),
+        phetioDocumentation: 'Line user can drag to predict water level mean.'
+      }
+    );
+
+    // Update line length and dilation based on the number of objects.
+    model.numberOfPlatesProperty.link( () => {
+      const activePlates = model.getActivePlates();
+      const firstPlate = activePlates[ 0 ];
+      const lastPlate = activePlates[ activePlates.length - 1 ];
+      predictMeanSlider.updateLine(
+        firstPlate.xPositionProperty.value - MeanShareAndBalanceConstants.PLATE_WIDTH / 2,
+        lastPlate.xPositionProperty.value + 80
+      );
+    } );
+    this.notepadSnackLayerNode.addChild( predictMeanSlider );
+
     this.groupSortInteractionView = new GroupSortInteractionView(
       model.groupSortInteractionModel,
       notepadCandyBarsNode,
@@ -285,57 +335,6 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         focusRect.bounds.minY
       );
     } );
-
-    // Predict Mean Line that acts as a slider for alternative input.
-    const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-      new Vector2( 0, 0 ),
-      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y - plateHeight - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
-      MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
-    );
-    const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
-      Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty ],
-        ( meanPrediction, meanValue ) => {
-          const meanTolerance = 0.5;
-          const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
-          const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
-          const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
-
-          predictMeanLine.stroke = roundedPrediction === roundedMean ? MeanShareAndBalanceColors.meanColorProperty :
-                                   MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
-          successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
-
-        } );
-    };
-
-    const predictMeanSlider = new PredictMeanSlider(
-      model.meanPredictionProperty, model.predictMeanDragRange,
-      createSuccessIndicatorMultilink,
-      predictMeanModelViewTransform,
-      {
-        visibleProperty: model.predictMeanVisibleProperty,
-        valueProperty: model.meanPredictionProperty,
-
-        // Constant range
-        enabledRangeProperty: new Property( model.predictMeanDragRange ),
-
-        // phet-io
-        tandem: options.tandem.createTandem( 'predictMeanSlider' ),
-        phetioDocumentation: 'Line user can drag to predict water level mean.'
-      }
-    );
-
-    // Update line length and dilation based on the number of objects.
-    model.numberOfPlatesProperty.link( () => {
-      const activePlates = model.getActivePlates();
-      const firstPlate = activePlates[ 0 ];
-      const lastPlate = activePlates[ activePlates.length - 1 ];
-      predictMeanSlider.updateLine(
-        firstPlate.xPositionProperty.value - MeanShareAndBalanceConstants.PLATE_WIDTH / 2,
-        lastPlate.xPositionProperty.value + 80
-      );
-    } );
-
-    this.addChild( predictMeanSlider );
   }
 }
 
