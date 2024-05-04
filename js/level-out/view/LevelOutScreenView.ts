@@ -94,7 +94,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       const activeNotepadCups = model.getActiveNotepadCups();
       const firstCup = activeNotepadCups[ 0 ];
       const lastCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
-      predictMeanSlider.updateLine( firstCup.position.x, lastCup.position.x + 80 );
+      predictMeanSlider.updateLine( firstCup.position.x, lastCup.position.x + MeanShareAndBalanceConstants.CUP_WIDTH );
     } );
 
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );

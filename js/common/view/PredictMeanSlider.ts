@@ -38,6 +38,9 @@ type PredictMeanNodeOptions =
   & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'children'>
   & PickRequired<ParentOptions, 'tandem'>;
 
+// Constants
+const LINE_X_MARGIN = 10;
+
 export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Node;
@@ -56,7 +59,11 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
       lineDash: [ 5, 3 ]
     } );
 
-    const predictMeanHandle = new Image( pencil_png, { scale: 0.04, rotation: Math.PI / 4 } );
+    const predictMeanHandle = new Image( pencil_png, {
+      scale: 0.04,
+      rotation: Math.PI / 4,
+      centerY: predictMeanLine.centerY
+    } );
 
     // Create elements that indicate a successful prediction of the mean.
     const predictMeanSuccessRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 10, {
@@ -113,11 +120,11 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   }
 
   public updateLine( lineStart: number, lineEnd: number ): void {
-    this.predictMeanLine.x1 = lineStart;
-    this.predictMeanLine.x2 = lineEnd;
+    this.predictMeanLine.x1 = lineStart - LINE_X_MARGIN;
+    this.predictMeanLine.x2 = lineEnd + LINE_X_MARGIN * 2;
     this.predictMeanGlow.setRectX( lineStart );
     this.predictMeanGlow.setRectWidth( lineEnd - lineStart );
-    this.predictMeanHandle.leftCenter = this.predictMeanLine.rightCenter;
+    this.predictMeanHandle.left = this.predictMeanLine.right;
     this.setPointerAreas();
   }
 }
