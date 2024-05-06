@@ -22,6 +22,8 @@ import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
 import Cup from '../model/Cup.js';
 import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import Utils from '../../../../dot/js/Utils.js';
+import LinearFunction from '../../../../dot/js/LinearFunction.js';
 
 type SelfOptions = {
 
@@ -39,10 +41,6 @@ export type WaterBalanceSoundGeneratorOptions = SelfOptions & SoundClipOptions;
 // constants
 const MEAN_DEVIATION_CHANGE_THRESHOLD = 0.001; // empirically determined
 const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get desired behavior
-
-// The NOMINAL_CENTER_FREQUENCY value is used to set the value of the cutoff filter, and should be the frequency where
-// the most energy is present in the supplied sound.  This will need adjustment if the underlying sound is changed.
-const NOMINAL_CENTER_FREQUENCY = 800;
 
 class WaterBalanceSoundGenerator extends SoundClip {
 
@@ -76,7 +74,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
     // Create the filter whose frequency will be adjusted based on the max deviation of the cup levels from the mean.
     const lowPassFilter = new BiquadFilterNode( phetAudioContext, {
       type: 'lowpass',
-      Q: 5,
+      Q: 10,
       frequency: 100 // arbitrary initial value - this is adjusted as water levels change
     } );
 
@@ -103,6 +101,8 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     // Start with the output level at zero so that the initial sound can fade in.
     this.setOutputLevel( 0, 0 );
+
+    const getFrequencyFromMaxDeviationFromMean = new LinearFunction( 0, 1, 100, 10000 );
 
     let previousMaxDeviationFromMean = 0;
 
@@ -131,6 +131,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
           0
         );
 
+        // Calculate how much the max deviation from the mean has changed since the last time.
         const deltaMaxDeviationFromMean = maxDeviationFromMean - previousMaxDeviationFromMean;
 
         if ( this.fullyEnabled && Math.abs( deltaMaxDeviationFromMean ) > MEAN_DEVIATION_CHANGE_THRESHOLD ) {
@@ -141,21 +142,11 @@ class WaterBalanceSoundGenerator extends SoundClip {
             this.startOrContinueSoundProduction();
           }
 
-          // Set the cutoff frequency of the lowpass filter based on the mean and the max deviation from it.  The intent
-          // here is to produce a more filtered sound when far from the mean, and less filtered when all cups are close
-          // to it.
+          // Set the cutoff frequency of the lowpass filter based on the max deviation from the mean.  The intent here
+          // is to produce a more filtered sound when far from the mean and less filtered when all cups are close to it.
 
-          const filterFrequencyRange = new Range(
-            playbackRate * NOMINAL_CENTER_FREQUENCY / 2,
-            10000
-          );
-          const filterFrequency = filterFrequencyRange.expandNormalizedValue(
-
-            // The exponent in the calculation below was empirically determined.  Higher values make the effect of the
-            // filter more obvious more quickly, so audible differences can be heard for smaller deviations from the
-            // mean.  Smaller values of the exponent spread the audible change out over the range more evenly.
-            Math.pow( 1 - maxDeviationFromMean, 10 )
-          );
+          const filterFrequency = getFrequencyFromMaxDeviationFromMean.evaluate( maxDeviationFromMean );
+          console.log( `filterFrequency = ${Utils.roundSymmetric( filterFrequency )}` );
           lowPassFilter.frequency.cancelScheduledValues( 0 );
           lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
         }
