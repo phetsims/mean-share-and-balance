@@ -312,6 +312,10 @@ export default class FairShareModel extends SharingModel<Apple> {
       // state.  These animations, if present, would have been instigated by changes to the notebook mode.
       this.finishInProgressAnimations();
 
+      // We cannot count on the totalSnacks value to be accurate because it comes from a derivedProperty that may
+      // not be updated yet during phet-io state setting.
+      const actualTotalSnacks = this.plates.reduce( ( sum, plate ) => sum + plate.tableSnackNumberProperty.value, 0 );
+
       const notepadMode = this.notepadModeProperty.value;
       if ( notepadMode === NotepadMode.SYNC ) {
 
@@ -323,7 +327,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       else if ( notepadMode === NotepadMode.SHARE ) {
         this.plates.forEach( plate => {
           if ( plate.isActiveProperty.value ) {
-            plate.setNotepadSnacksToValue( new Fraction( totalSnacks, this.numberOfPlatesProperty.value ) );
+            plate.setNotepadSnacksToValue( new Fraction( actualTotalSnacks, this.numberOfPlatesProperty.value ) );
           }
           else {
 
@@ -334,7 +338,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( notepadMode === NotepadMode.COLLECT ) {
 
-        const delta = totalSnacks - this.appleCollection.length;
+        const delta = actualTotalSnacks - this.appleCollection.length;
         if ( delta > 0 ) {
 
           // Add apples to the collection.

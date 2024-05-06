@@ -76,7 +76,7 @@ export default class SharingModel<T extends Snack> implements TModel {
         phetioValueType: Range.RangeIO,
 
         // TODO: do we want to adjust the number of plates on the screen if the range changes? Right now
-          // a validation error is thrown if the range max is less than the number of plates. https://github.com/phetsims/mean-share-and-balance/issues/187
+        //   a validation error is thrown if the range max is less than the number of plates. https://github.com/phetsims/mean-share-and-balance/issues/187
         isValidValue: value => {
           const numberOfPlates = this.numberOfPlatesProperty ? this.numberOfPlatesProperty.value :
                                MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE;
