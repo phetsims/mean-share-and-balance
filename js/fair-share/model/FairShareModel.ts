@@ -127,6 +127,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       const index = this.appleCollection.indexOf( apple );
 
       apple.isActiveProperty.value = true;
+      apple.fractionProperty.value = Fraction.ONE;
       apple.moveTo( this.getCollectionPosition( index ), this.animateAddedSnacks );
     } );
 
