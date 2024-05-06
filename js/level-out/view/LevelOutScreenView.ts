@@ -216,11 +216,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider, controls.numberSpinner ], controls.controlsPDOMOrder );
-
-    // TODO: See https://github.com/phetsims/mean-share-and-balance/issues/224.  This is a short-term workaround for a
-    //       problem where the predictMeanSlider is getting moved to an incorrect location during construction.  We
-    //       need to correct the root of the problem, but this addresses the symptom for now.
-    predictMeanSlider.centerY = modelViewTransformNotepadCups.modelToViewY( model.meanPredictionProperty.value );
   }
 
   public override reset(): void {
