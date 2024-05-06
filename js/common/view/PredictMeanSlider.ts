@@ -23,6 +23,8 @@ import Property from '../../../../axon/js/Property.js';
 import pencil_png from '../../../images/pencil_png.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
@@ -99,6 +101,10 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
 
     this.setPointerAreas();
     this.centerX = modelViewTransform.modelToViewX( 0 );
+
+    // Add sound generation for the "predict mean" slider.
+    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( meanPredictionProperty );
+    soundManager.addSoundGenerator( predictMeanSoundGenerator );
   }
 
   private setPointerAreas(): void {

@@ -30,7 +30,6 @@ import { Shape } from '../../../../kite/js/imports.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
-import MeanPredictionChangeSoundGenerator from '../../common/view/MeanPredictionChangeSoundGenerator.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -195,10 +194,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes )
         .transformed( pipeNodes[ 0 ].getGlobalToLocalMatrix() );
     } );
-
-    // Add sound generation for the "predict mean" slider.
-    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( model.meanPredictionProperty );
-    soundManager.addSoundGenerator( predictMeanSoundGenerator );
 
     // Add sound generation for the water cup levels.
     this.waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(
