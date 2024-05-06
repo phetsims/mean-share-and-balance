@@ -27,7 +27,8 @@ export default class Apple extends Snack {
     this.fractionProperty = new Property<Fraction>( Fraction.ONE, {
       tandem: options.tandem.createTandem( 'fractionProperty' ),
       phetioReadOnly: true,
-      phetioValueType: Fraction.FractionIO
+      phetioValueType: Fraction.FractionIO,
+      phetioState: false
     } );
 
     // Make sure the fraction value isn't incorrectly set.
