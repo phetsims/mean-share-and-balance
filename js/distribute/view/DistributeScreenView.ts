@@ -188,7 +188,6 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           SnackStacker.getCueingArrowPosition( plate!, plateHeight )
         );
       }
-
     };
     this.notepadSnackLayerNode.addChild( cueingArrowNode );
     model.groupSortInteractionModel.registerUpdateSortCueNode( updateCueingArrow );

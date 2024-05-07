@@ -63,6 +63,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
         const plate = this.getPlateForSnack( candyBar );
         return plate ? plate.linePlacement : null;
       },
+      mouseSortCueVisibleAtStart: true,
       tandem: options.tandem.createTandem( 'groupSortInteractionModel' )
     } );
     this.sortingRangeProperty = new DerivedProperty(
