@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2022-2024, University of Colorado Boulder
 
 /**
  * Sound generator used to produce a sound for the movement of the pencil that is used for making mean predictions on
