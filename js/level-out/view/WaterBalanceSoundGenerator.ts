@@ -24,6 +24,7 @@ import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteCho
 import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
+import soundConstants from '../../../../tambo/js/soundConstants.js';
 
 type SelfOptions = {
 
@@ -41,6 +42,12 @@ export type WaterBalanceSoundGeneratorOptions = SelfOptions & SoundClipOptions;
 // constants
 const MEAN_DEVIATION_CHANGE_THRESHOLD = 0.001; // empirically determined
 const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get desired behavior
+const FILTER_FREQUENCY_RANGE = new Range( 250, 12000 );
+const CENTER_RANGE_PROPORTION = 0.3; // the middle proportion of the piecewise linear mapping function
+
+// Function for default mapping of max deviation from mean to filter cutoff frequencies.
+const SMALLER_DEVIATION_LINEAR_FUNCTION = new LinearFunction( 0, 1, 1, 0.75 );
+const GREATER_DEVIATION_LINEAR_FUNCTION = new LinearFunction( 0, 1, 0, 0.1 );
 
 class WaterBalanceSoundGenerator extends SoundClip {
 
@@ -62,7 +69,8 @@ class WaterBalanceSoundGenerator extends SoundClip {
   private readonly disposeWaterBalanceSoundGenerator: () => void;
 
   public constructor( meanProperty: TReadOnlyProperty<number>,
-                      cups: Cup[],
+                      tableCups: Cup[],
+                      notepadCups: Cup[],
                       arePipesOpenProperty: TReadOnlyProperty<boolean>,
                       providedOptions?: WaterBalanceSoundGeneratorOptions ) {
 
@@ -102,14 +110,58 @@ class WaterBalanceSoundGenerator extends SoundClip {
     // Start with the output level at zero so that the initial sound can fade in.
     this.setOutputLevel( 0, 0 );
 
-    const getFrequencyFromMaxDeviationFromMean = new LinearFunction( 0, 1, 100, 10000 );
+    let maxPossibleDeviationFromMean = 1;
+    meanProperty.link( mean => {
 
+      // Compute the maximum possible deviation from the mean based on the table cups.  This identifies the value in
+      // the cup that is furthest from the mean and calculates the difference.
+      const activeCups = tableCups.filter( cup => cup.isActiveProperty.value );
+      maxPossibleDeviationFromMean = activeCups.reduce(
+        ( previousMax, currentCup ) => Math.max(
+          previousMax,
+          Math.abs( currentCup.waterLevelProperty.value - mean )
+        ),
+        0
+      );
+    } );
+
+    // Create a closure function that maps the current max deviation from the mean for the notepad cups to a cutoff
+    // frequency for the lowpass filter.
+    const getFrequencyFromMaxDeviationFromMean = ( deviationFromMean: number ) => {
+
+      // The input is expected to be a normalized value, so make sure it is.
+      assert && assert( deviationFromMean >= 0 && deviationFromMean <= 1 );
+
+      const endOfLowerRange = ( 0.5 - CENTER_RANGE_PROPORTION / 2 ) * maxPossibleDeviationFromMean;
+      const startOfUpperRange = ( 0.5 + CENTER_RANGE_PROPORTION / 2 ) * maxPossibleDeviationFromMean;
+
+      let normalizedFrequencyValue;
+      if ( deviationFromMean < endOfLowerRange ) {
+        normalizedFrequencyValue = SMALLER_DEVIATION_LINEAR_FUNCTION.evaluate( deviationFromMean );
+      }
+      else if ( deviationFromMean > startOfUpperRange ) {
+        normalizedFrequencyValue = GREATER_DEVIATION_LINEAR_FUNCTION.evaluate( deviationFromMean );
+      }
+      else {
+        const linearFunction = new LinearFunction(
+          endOfLowerRange,
+          startOfUpperRange,
+          SMALLER_DEVIATION_LINEAR_FUNCTION.evaluate( endOfLowerRange ),
+          GREATER_DEVIATION_LINEAR_FUNCTION.evaluate( startOfUpperRange )
+        );
+        normalizedFrequencyValue = linearFunction.evaluate( deviationFromMean );
+      }
+      console.log( `normalizedFrequencyValue = ${normalizedFrequencyValue}` );
+      return FILTER_FREQUENCY_RANGE.expandNormalizedValue( normalizedFrequencyValue );
+    };
+
+    // for tracking history
     let previousMaxDeviationFromMean = 0;
 
     const multilink = Multilink.multilinkAny(
       [
-        ...cups.map( cup => cup.waterLevelProperty ),
-        ...cups.map( cup => cup.isActiveProperty ),
+        ...notepadCups.map( cup => cup.waterLevelProperty ),
+        ...notepadCups.map( cup => cup.isActiveProperty ),
         meanProperty
       ],
       () => {
@@ -121,8 +173,8 @@ class WaterBalanceSoundGenerator extends SoundClip {
           this.setPlaybackRate( playbackRate );
         }
 
-        // Determine which cup is most different from the mean and what the amount of that difference is.
-        const activeCups = cups.filter( cup => cup.isActiveProperty.value );
+        // Get the deviation from the mean for the notepad cup whose water level is furthest from it.
+        const activeCups = notepadCups.filter( cup => cup.isActiveProperty.value );
         const maxDeviationFromMean = activeCups.reduce(
           ( previousMax, currentCup ) => Math.max(
             previousMax,
@@ -144,11 +196,10 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
           // Set the cutoff frequency of the lowpass filter based on the max deviation from the mean.  The intent here
           // is to produce a more filtered sound when far from the mean and less filtered when all cups are close to it.
-
-          const filterFrequency = getFrequencyFromMaxDeviationFromMean.evaluate( maxDeviationFromMean );
+          const filterFrequency = getFrequencyFromMaxDeviationFromMean( maxDeviationFromMean );
           console.log( `filterFrequency = ${Utils.roundSymmetric( filterFrequency )}` );
           lowPassFilter.frequency.cancelScheduledValues( 0 );
-          lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, 0.015 );
+          lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, soundConstants.DEFAULT_PARAM_CHANGE_TIME_CONSTANT );
         }
 
         // Update the history for the next pass.

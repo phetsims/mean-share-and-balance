@@ -198,6 +198,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     // Add sound generation for the water cup levels.
     this.waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(
       model.meanProperty,
+      model.tableCups,
       model.notepadCups,
       model.arePipesOpenProperty,
       { initialOutputLevel: 0.1 }
