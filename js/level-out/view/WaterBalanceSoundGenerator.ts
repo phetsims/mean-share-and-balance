@@ -66,6 +66,22 @@ const MID_RANGE_DEVIATION_LINEAR_FUNCTION = new LinearFunction(
   MAPPING_FUNCTION_POINT_2.y
 );
 
+// Verify that the point definitions from which the mapping function will be built are actually usable.
+assert && assert(
+MAPPING_FUNCTION_POINT_1.x > 0 &&
+MAPPING_FUNCTION_POINT_1.x < MAPPING_FUNCTION_POINT_2.x &&
+MAPPING_FUNCTION_POINT_1.y >= 0 &&
+MAPPING_FUNCTION_POINT_1.y <= 1,
+  'mapping function 1 does not appear to be usable, please check'
+);
+assert && assert(
+MAPPING_FUNCTION_POINT_2.x > MAPPING_FUNCTION_POINT_1.x &&
+MAPPING_FUNCTION_POINT_2.x < 1 &&
+MAPPING_FUNCTION_POINT_2.y >= 0 &&
+MAPPING_FUNCTION_POINT_2.y <= 1,
+  'mapping function 2 does not appear to be usable, please check'
+);
+
 class WaterBalanceSoundGenerator extends SoundClip {
 
   // duration of inactivity fade out
