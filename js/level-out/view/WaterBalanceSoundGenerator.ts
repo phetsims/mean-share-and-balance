@@ -25,6 +25,8 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import soundConstants from '../../../../tambo/js/soundConstants.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 
 type SelfOptions = {
 
@@ -37,17 +39,32 @@ type SelfOptions = {
   // amount of time in seconds from full fade to stop of sound, done to avoid sonic glitches
   delayBeforeStop?: number;
 };
-export type WaterBalanceSoundGeneratorOptions = SelfOptions & SoundClipOptions;
+export type WaterBalanceSoundGeneratorOptions = SelfOptions & StrictOmit<SoundClipOptions, 'loop'>;
 
 // constants
 const MEAN_DEVIATION_CHANGE_THRESHOLD = 0.001; // empirically determined
-const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get desired behavior
-const FILTER_FREQUENCY_RANGE = new Range( 250, 12000 );
-const CENTER_RANGE_PROPORTION = 0.3; // the middle proportion of the piecewise linear mapping function
-
-// Function for default mapping of max deviation from mean to filter cutoff frequencies.
-const SMALLER_DEVIATION_LINEAR_FUNCTION = new LinearFunction( 0, 1, 1, 0.75 );
-const GREATER_DEVIATION_LINEAR_FUNCTION = new LinearFunction( 0, 1, 0, 0.1 );
+const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get the specified behavior
+const FILTER_FREQUENCY_RANGE = new Range( 200, 12000 );
+const MAPPING_FUNCTION_POINT_1 = new Vector2( 0.4, 0.85 );
+const MAPPING_FUNCTION_POINT_2 = new Vector2( 0.55, 0.1 );
+const SMALLER_DEVIATION_LINEAR_FUNCTION = new LinearFunction(
+  0,
+  MAPPING_FUNCTION_POINT_1.x,
+  1,
+  MAPPING_FUNCTION_POINT_1.y
+);
+const LARGER_DEVIATION_LINEAR_FUNCTION = new LinearFunction(
+  MAPPING_FUNCTION_POINT_2.x,
+  1,
+  MAPPING_FUNCTION_POINT_2.y,
+  0
+);
+const MID_RANGE_DEVIATION_LINEAR_FUNCTION = new LinearFunction(
+  MAPPING_FUNCTION_POINT_1.x,
+  MAPPING_FUNCTION_POINT_2.x,
+  MAPPING_FUNCTION_POINT_1.y,
+  MAPPING_FUNCTION_POINT_2.y
+);
 
 class WaterBalanceSoundGenerator extends SoundClip {
 
@@ -73,11 +90,6 @@ class WaterBalanceSoundGenerator extends SoundClip {
                       notepadCups: Cup[],
                       arePipesOpenProperty: TReadOnlyProperty<boolean>,
                       providedOptions?: WaterBalanceSoundGeneratorOptions ) {
-
-    assert && assert(
-      !providedOptions || !providedOptions.loop,
-      'loop option should be supplied by WaterBalanceSoundGenerator'
-    );
 
     // Create the filter whose frequency will be adjusted based on the max deviation of the cup levels from the mean.
     const lowPassFilter = new BiquadFilterNode( phetAudioContext, {
@@ -110,8 +122,9 @@ class WaterBalanceSoundGenerator extends SoundClip {
     // Start with the output level at zero so that the initial sound can fade in.
     this.setOutputLevel( 0, 0 );
 
+    // Set up a listener that will update the max possible deviation from the mean when changes occur.
     let maxPossibleDeviationFromMean = 1;
-    meanProperty.link( mean => {
+    const updateMaxPossibleDeviation = ( mean: number ) => {
 
       // Compute the maximum possible deviation from the mean based on the table cups.  This identifies the value in
       // the cup that is furthest from the mean and calculates the difference.
@@ -123,41 +136,43 @@ class WaterBalanceSoundGenerator extends SoundClip {
         ),
         0
       );
-    } );
+
+      assert && assert( maxPossibleDeviationFromMean >= 0 && maxPossibleDeviationFromMean <= 1,
+        'the max possible deviation for a single cup from the mean should be between 0 and 1'
+      );
+    };
+    meanProperty.link( updateMaxPossibleDeviation );
 
     // Create a closure function that maps the current max deviation from the mean for the notepad cups to a cutoff
-    // frequency for the lowpass filter.
+    // frequency for the lowpass filter.  This uses a piecewise function defined by two points in a unit square.  It's
+    // hard to describe in a comment, so please see
+    // https://github.com/phetsims/mean-share-and-balance/issues/171#issuecomment-2099127519, which includes a diagram.
     const getFrequencyFromMaxDeviationFromMean = ( deviationFromMean: number ) => {
 
-      // The input is expected to be a normalized value, so make sure it is.
-      assert && assert( deviationFromMean >= 0 && deviationFromMean <= 1 );
+      // Scale the provided deviation value versus the max possible in the current state.
+      const scaledDeviation = Utils.clamp( deviationFromMean / maxPossibleDeviationFromMean, 0, 1 );
 
-      const endOfLowerRange = ( 0.5 - CENTER_RANGE_PROPORTION / 2 ) * maxPossibleDeviationFromMean;
-      const startOfUpperRange = ( 0.5 + CENTER_RANGE_PROPORTION / 2 ) * maxPossibleDeviationFromMean;
-
-      let normalizedFrequencyValue;
-      if ( deviationFromMean < endOfLowerRange ) {
-        normalizedFrequencyValue = SMALLER_DEVIATION_LINEAR_FUNCTION.evaluate( deviationFromMean );
+      // Use the appropriate piece of the piecewise mapping function to come up with a normalized frequency value
+      // between 0 and 1.
+      let normalizedFrequency;
+      if ( scaledDeviation < MAPPING_FUNCTION_POINT_1.x ) {
+        normalizedFrequency = SMALLER_DEVIATION_LINEAR_FUNCTION.evaluate( scaledDeviation );
       }
-      else if ( deviationFromMean > startOfUpperRange ) {
-        normalizedFrequencyValue = GREATER_DEVIATION_LINEAR_FUNCTION.evaluate( deviationFromMean );
+      else if ( scaledDeviation > MAPPING_FUNCTION_POINT_2.x ) {
+        normalizedFrequency = LARGER_DEVIATION_LINEAR_FUNCTION.evaluate( scaledDeviation );
       }
       else {
-        const linearFunction = new LinearFunction(
-          endOfLowerRange,
-          startOfUpperRange,
-          SMALLER_DEVIATION_LINEAR_FUNCTION.evaluate( endOfLowerRange ),
-          GREATER_DEVIATION_LINEAR_FUNCTION.evaluate( startOfUpperRange )
-        );
-        normalizedFrequencyValue = linearFunction.evaluate( deviationFromMean );
+        normalizedFrequency = MID_RANGE_DEVIATION_LINEAR_FUNCTION.evaluate( scaledDeviation );
       }
-      console.log( `normalizedFrequencyValue = ${normalizedFrequencyValue}` );
-      return FILTER_FREQUENCY_RANGE.expandNormalizedValue( normalizedFrequencyValue );
+
+      // Map the normalized value to an actual cutoff frequency.
+      return FILTER_FREQUENCY_RANGE.expandNormalizedValue( normalizedFrequency );
     };
 
     // for tracking history
     let previousMaxDeviationFromMean = 0;
 
+    // Set up a multilink to update the cutoff frequency for the low pass filter as water levels change.
     const multilink = Multilink.multilinkAny(
       [
         ...notepadCups.map( cup => cup.waterLevelProperty ),
@@ -197,7 +212,6 @@ class WaterBalanceSoundGenerator extends SoundClip {
           // Set the cutoff frequency of the lowpass filter based on the max deviation from the mean.  The intent here
           // is to produce a more filtered sound when far from the mean and less filtered when all cups are close to it.
           const filterFrequency = getFrequencyFromMaxDeviationFromMean( maxDeviationFromMean );
-          console.log( `filterFrequency = ${Utils.roundSymmetric( filterFrequency )}` );
           lowPassFilter.frequency.cancelScheduledValues( 0 );
           lowPassFilter.frequency.setTargetAtTime( filterFrequency, 0, soundConstants.DEFAULT_PARAM_CHANGE_TIME_CONSTANT );
         }
@@ -218,6 +232,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     // dispose function
     this.disposeWaterBalanceSoundGenerator = () => {
+      meanProperty.unlink( updateMaxPossibleDeviation );
       multilink.dispose();
       stepTimer.removeListener( stepListener );
     };
