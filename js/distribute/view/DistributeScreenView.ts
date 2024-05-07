@@ -129,6 +129,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
       if ( closestPlate !== plateHoldingSnack ) {
 
+        // If the candy bar was dropped on a different plate, update the groupSortInteractionModel in order to remove
+        // any related visual cues.
+        model.groupSortInteractionModel.hasMouseSortedGroupItemProperty.value = true;
+
         // Move the candy bar to the new plate, since it's closer.
         plateHoldingSnack!.removeSnack( candyBar );
         closestPlate.addSnackToTop( candyBar );
@@ -153,32 +157,33 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     const leftCueingArrow = new ArrowNode( 0, 0, -CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
     const rightCueingArrow = new ArrowNode( 0, 0, CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
     const cueingArrowNode = new Node( {
-      children: [ leftCueingArrow, rightCueingArrow ]
+      children: [ leftCueingArrow, rightCueingArrow ],
+      visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty
     } );
     leftCueingArrow.left = 0;
     rightCueingArrow.left = leftCueingArrow.right + MeanShareAndBalanceConstants.PLATE_WIDTH + CUEING_ARROW_MARGIN * 2;
 
     const updateCueingArrow = () => {
       if ( model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
-        cueingArrowNode.visible = false;
+        model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
       }
       else if ( model.groupSortInteractionModel.selectedGroupItemProperty.value === null ) {
         const plate = model.getPlateWithMostSnacks();
         if ( plate ) {
-          cueingArrowNode.visible = true;
+          model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
           cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition(
             SnackStacker.getCueingArrowPosition( plate, plateHeight )
           );
         }
         else {
-          cueingArrowNode.visible = false;
+          model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
         }
       }
       else {
         const selectedCandyBar = model.groupSortInteractionModel.selectedGroupItemProperty.value;
         const plate = model.getPlateForSnack( selectedCandyBar );
         assert && assert( plate, 'selected candy bar must be on a plate' );
-        cueingArrowNode.visible = true;
+        model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
         cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition(
           SnackStacker.getCueingArrowPosition( plate!, plateHeight )
         );
@@ -186,8 +191,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     };
     this.notepadSnackLayerNode.addChild( cueingArrowNode );
-    model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.link( updateCueingArrow );
-    model.groupSortInteractionModel.selectedGroupItemProperty.link( updateCueingArrow );
+    model.groupSortInteractionModel.registerUpdateSortCueNode( updateCueingArrow );
     model.stackChangedEmitter.addListener( updateCueingArrow );
 
     const notepadPlateNodes = model.plates.map( plate => {
@@ -322,7 +326,6 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         }
       }
     );
-    this.groupSortInteractionView.positionSortCueNodeEmitter.addListener( updateCueingArrow );
 
     this.notepadSnackLayerNode.boundsProperty.link( () => {
       const focusRect = Shape.rect(
