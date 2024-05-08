@@ -166,7 +166,9 @@ class WaterBalanceSoundGenerator extends SoundClip {
     const getFrequencyFromMaxDeviationFromMean = ( deviationFromMean: number ) => {
 
       // Scale the provided deviation value versus the max possible in the current state.
-      const scaledDeviation = Utils.clamp( deviationFromMean / maxPossibleDeviationFromMean, 0, 1 );
+      const scaledDeviation = maxPossibleDeviationFromMean > 0 ?
+                              Utils.clamp( deviationFromMean / maxPossibleDeviationFromMean, 0, 1 ) :
+                              0;
 
       // Use the appropriate piece of the piecewise mapping function to come up with a normalized frequency value
       // between 0 and 1.
@@ -239,7 +241,9 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
     // Initiate sound production any time the pipes are opened or closed.
     arePipesOpenProperty.lazyLink( () => {
-      this.startOrContinueSoundProduction();
+      if ( notepadCups.filter( cup => cup.isActiveProperty.value ).length > 1 ) {
+        this.startOrContinueSoundProduction();
+      }
     } );
 
     // Hook up the step listener that will fade out the sound after a certain amount of inactivity.
