@@ -25,7 +25,6 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import RichDragListener from '../../../../scenery-phet/js/RichDragListener.js';
 import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
-import Property from '../../../../axon/js/Property.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
@@ -37,8 +36,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   public readonly dragListener: DragListener;
   public readonly candyBar: CandyBar;
 
-  public constructor( hasMouseSortedGroupItemProperty: Property<boolean>,
-                      candyBar: CandyBar,
+  public constructor( candyBar: CandyBar,
                       modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,
@@ -106,7 +104,6 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       ),
       start: () => {
         candyBar.isDraggingProperty.value = true;
-        hasMouseSortedGroupItemProperty.value = true;
         this.moveToFront();
       },
       end: () => {

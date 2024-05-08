@@ -121,7 +121,6 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         this.scheduleKicks( delta );
       }
 
-        // TODO: JB am I creating a listener order dependency here? https://github.com/phetsims/mean-share-and-balance/issues/196
       // During reset or PhET-iO state setting the number of active balls may already match the target number value
       else if ( delta < 0 && this.getKickedBalls().length !== newValue ) {
         const ballsToRemove = -delta;

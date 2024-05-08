@@ -131,7 +131,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
         // If the candy bar was dropped on a different plate, update the groupSortInteractionModel in order to remove
         // any related visual cues.
-        model.groupSortInteractionModel.hasMouseSortedGroupItemProperty.value = true;
+        model.groupSortInteractionModel.setMouseSortedGroupItem( true );
 
         // Move the candy bar to the new plate, since it's closer.
         plateHoldingSnack!.removeSnack( candyBar );
@@ -204,8 +204,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
     const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
-      new NotepadCandyBarNode( model.groupSortInteractionModel.hasMouseSortedGroupItemProperty,
-        candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
+      new NotepadCandyBarNode( candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
