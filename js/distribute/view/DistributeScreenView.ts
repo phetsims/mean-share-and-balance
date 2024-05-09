@@ -225,13 +225,9 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
-      Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty, model.areAllActivePlatesInSyncProperty ],
-        ( meanPrediction, meanValue, areAllActivePlatesInSync ) => {
-          if ( areAllActivePlatesInSync ) {
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
-            successRectangle.visible = false;
-          }
-          else {
+      Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty, model.areSnacksDistributedProperty ],
+        ( meanPrediction, meanValue, areSnacksDistributed ) => {
+          if ( areSnacksDistributed ) {
             const meanTolerance = 0.5;
             const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
             const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
@@ -240,6 +236,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
             predictMeanLine.stroke = roundedPrediction === roundedMean ? MeanShareAndBalanceColors.meanColorProperty :
                                      MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
             successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
+          }
+          else {
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            successRectangle.visible = false;
           }
         } );
     };
