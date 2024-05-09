@@ -73,7 +73,8 @@ export default class FulcrumSlider extends HSlider {
       ],
       excludeInvisibleChildrenFromBounds: false,
       align: 'bottom',
-      tandem: providedOptions.tandem.createTandem( 'thumbNode' )
+      tandem: providedOptions.tandem.createTandem( 'thumbNode' ),
+      phetioVisiblePropertyInstrumented: false
     } );
 
     const sliderSoundGenerator = new FulcrumSliderSoundPlayer( fulcrumValueProperty,

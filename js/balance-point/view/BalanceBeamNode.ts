@@ -67,7 +67,9 @@ export default class BalanceBeamNode extends Node {
     providedOptions: BalanceBeamNodeOptions
   ) {
 
-    const options = optionize<BalanceBeamNodeOptions, EmptySelfOptions, NodeOptions>()( {}, providedOptions );
+    const options = optionize<BalanceBeamNodeOptions, EmptySelfOptions, NodeOptions>()( {
+      phetioVisiblePropertyInstrumented: false
+    }, providedOptions );
 
     const notepadNumberLineNode = new NumberLineNode(
       MeanShareAndBalanceConstants.CHART_VIEW_WIDTH,
