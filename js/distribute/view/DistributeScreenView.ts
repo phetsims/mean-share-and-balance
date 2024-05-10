@@ -11,7 +11,15 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import DistributeModel, { NOTEPAD_PLATE_BOTTOM_Y } from '../model/DistributeModel.js';
-import { Color, Image, InteractiveHighlightingNode, Node, Path } from '../../../../scenery/js/imports.js';
+import {
+  HighlightPath,
+  Image,
+  InteractiveHighlightingNode,
+  ManualConstraint,
+  Node,
+  Path,
+  Rectangle
+} from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -34,51 +42,47 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
-import ArrowNode, { ArrowNodeOptions } from '../../../../scenery-phet/js/ArrowNode.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
+import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
+import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
 
 // constants
 const CANDY_BAR_FOCUS_X_MARGIN = 10; // in screen coords, empirically determined
-export const CUEING_ARROW_LENGTH = 24; // in screen coords, empirically determined
+const CUEING_ARROW_SCALE = 0.7;
 export const CUEING_ARROW_MARGIN = 2; // in screen coords, empirically determined
-const CUEING_ARROW_OPTIONS: ArrowNodeOptions = {
-  fill: MeanShareAndBalanceColors.arrowFillColorProperty,
-  stroke: Color.BLACK,
-  lineWidth: 1,
-  tailWidth: MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT * 0.6,
-  headWidth: MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT * 1.2,
-  lineJoin: 'round'
-};
 
 export default class DistributeScreenView extends SharingScreenView<CandyBar> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
-  private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
 
-  public constructor( model: DistributeModel, providedOptions: DistributeScreenViewOptions ) {
+  // class members needed for the group sort interaction
+  private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
+  private readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
+  private readonly keyboardSortCueNode: Node;
+  private readonly mouseSortIndicatorArrowNode: Node;
+  private readonly cueingHighlight: Node;
+  private readonly modelToNotepadTransform: ModelViewTransform2;
+
+  public constructor( private readonly model: DistributeModel, providedOptions: DistributeScreenViewOptions ) {
 
     const options = optionize<DistributeScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
       snackType: 'candyBars',
       predictMeanVisibleProperty: model.predictMeanVisibleProperty
     }, providedOptions );
 
-    const plateHeight = new Image( notepadPlateSketch_svg, {
-      maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH
-    } ).bounds.height;
-
+    // Create the notepad and necessary pattern strings.
     const measurementStringProperty = new DerivedProperty( [ model.totalSnacksProperty,
         MeanShareAndBalanceStrings.barStringProperty,
         MeanShareAndBalanceStrings.barsStringProperty ],
       ( total, singular, plural ) => total === 1 ? singular : plural );
-
     const totalCandyBarsPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.totalCandyBarsPatternStringProperty, {
       total: model.totalSnacksProperty,
       measurement: measurementStringProperty
     } );
-
     const notepadNode = new NotepadNode( {
       readoutPatternStringProperty: totalCandyBarsPatternStringProperty,
       totalVisibleProperty: model.totalVisibleProperty,
@@ -93,6 +97,11 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       options
     );
 
+    this.modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
+      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y ),
+      1
+    );
+
     // Calculate the bounds for constraining the dragging of the candy bars in the notepad.
     this.notepadBoundsProperty = new Property( new Bounds2(
       -this.notepad.bounds.width / 2,
@@ -101,101 +110,50 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       this.notepad.bounds.maxY - NOTEPAD_PLATE_BOTTOM_Y
     ) );
 
-    // function for what candy bars should do at the end of their drag
-    const candyBarDropped = ( candyBarNode: NotepadCandyBarNode ) => {
-      const candyBar = candyBarNode.candyBar;
-
-      const platesWithSpace = model.getPlatesWithSpace();
-      const plateHoldingSnack = model.getPlateForSnack( candyBarNode.candyBar );
-      assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
-
-      // Set the flag that will ensure that the candy bars animate to the top of the stacks when dropped.
-      model.animateAddedSnacks = true;
-
-      // Even if there are no plates with space the plate our candy bar came from should always have space for the candy
-      // bar to return.
-      !platesWithSpace.includes( plateHoldingSnack! ) && platesWithSpace.push( plateHoldingSnack! );
-
-      // Find the plate closest to where the candy bar was dropped.
-      const closestPlate = platesWithSpace.reduce(
-        ( previousPlate, thisPlate ) => {
-          const candyBarXPosition = candyBar.positionProperty.value.x;
-          const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
-          const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
-          return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
-        },
-        platesWithSpace[ 0 ]
-      );
-
-      if ( closestPlate !== plateHoldingSnack ) {
-
-        // If the candy bar was dropped on a different plate, update the groupSortInteractionModel in order to remove
-        // any related visual cues.
-        model.groupSortInteractionModel.setMouseSortedGroupItem( true );
-
-        // Move the candy bar to the new plate, since it's closer.
-        plateHoldingSnack!.removeSnack( candyBar );
-        closestPlate.addSnackToTop( candyBar );
-      }
-      else {
-        assert && assert( plateHoldingSnack.hasSnack( candyBar ), 'this situation should be impossible' );
-
-        // Put the candy bar back on the same plate.
-        candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
-      }
-
-      // Clear the flag for animating added snacks, since any adding due to the drop action should now be complete.
-      model.animateAddedSnacks = false;
-    };
-
-    // Create the nodes on the notepad that represent the plates in the model.
-    const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
-      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y ),
-      1
-    );
-
-    const leftCueingArrow = new ArrowNode( 0, 0, -CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
-    const rightCueingArrow = new ArrowNode( 0, 0, CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
-    const cueingArrowNode = new Node( {
-      children: [ leftCueingArrow, rightCueingArrow ],
-      visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty
+    // Create and register sort cue nodes.
+    this.groupSortInteractionModel = model.groupSortInteractionModel;
+    this.keyboardSortCueNode = GroupSortInteractionView.createSortCueNode(
+      model.groupSortInteractionModel.keyboardSortCueVisibleProperty, CUEING_ARROW_SCALE );
+    this.mouseSortIndicatorArrowNode = GroupSortInteractionView.createSortCueNode(
+      model.groupSortInteractionModel.mouseSortCueVisibleProperty, CUEING_ARROW_SCALE );
+    const mouseSortHandCueNode = new Image( dragIndicatorHand_png, {
+      scale: 0.06,
+      visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty,
+      rotation: Math.PI / 4
     } );
-    leftCueingArrow.left = 0;
-    rightCueingArrow.left = leftCueingArrow.right + MeanShareAndBalanceConstants.PLATE_WIDTH + CUEING_ARROW_MARGIN * 2;
 
-    const updateCueingArrow = () => {
-      if ( model.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ) {
-        model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
-      }
-      else if ( model.groupSortInteractionModel.selectedGroupItemProperty.value === null ) {
-        const plate = model.getPlateWithMostSnacks();
-        if ( plate ) {
-          model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
-          cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition(
-            SnackStacker.getCueingArrowPosition( plate, plateHeight )
-          );
-        }
-        else {
-          model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
-        }
-      }
-      else {
-        const selectedCandyBar = model.groupSortInteractionModel.selectedGroupItemProperty.value;
-        const plate = model.getPlateForSnack( selectedCandyBar );
-        assert && assert( plate, 'selected candy bar must be on a plate' );
-        model.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
-        cueingArrowNode.center = modelToNotepadTransform.modelToViewPosition(
-          SnackStacker.getCueingArrowPosition( plate!, plateHeight )
-        );
-      }
-    };
-    this.notepadSnackLayerNode.addChild( cueingArrowNode );
-    model.groupSortInteractionModel.registerUpdateSortCueNode( updateCueingArrow );
-    model.stackChangedEmitter.addListener( updateCueingArrow );
+    this.cueingHighlight = new Rectangle( -2, -2,
+      MeanShareAndBalanceConstants.CANDY_BAR_WIDTH + 2, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2, {
+        fill: HighlightPath.INNER_FOCUS_COLOR,
+        stroke: HighlightPath.OUTER_FOCUS_COLOR,
+        lineWidth: 1,
+        cornerRadius: 2,
+        visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty
+      } );
+
+
+    const mouseSortCueNode = new Node( {
+      children: [ this.mouseSortIndicatorArrowNode, mouseSortHandCueNode ]
+    } );
+
+    ManualConstraint.create( mouseSortCueNode, [ this.mouseSortIndicatorArrowNode, mouseSortHandCueNode ],
+      ( arrowProxy, handProxy ) => {
+
+        // Pixel adjustments needed with rotation option on mouseSortHandCueNode and empirically determined to match design
+        handProxy.right = arrowProxy.left + 22;
+        handProxy.top = arrowProxy.bottom + CUEING_ARROW_MARGIN;
+      } );
+
+
+    model.groupSortInteractionModel.registerUpdateSortCueNode( this.updateMouseSortCueNode.bind( this ) );
+    model.groupSortInteractionModel.registerUpdateSortCueNode( this.updateKeyboardSortCueNode.bind( this ) );
+    model.stackChangedEmitter.addListener( this.updateMouseSortCueNode.bind( this ) );
+    model.stackChangedEmitter.addListener( this.updateKeyboardSortCueNode.bind( this ) );
 
     const notepadPlateNodes = model.plates.map( plate => {
-      plate.xPositionProperty.link( updateCueingArrow );
-      return new DistributeNotepadPlateNode( plate, modelToNotepadTransform,
+      plate.xPositionProperty.link( this.updateMouseSortCueNode.bind( this ) );
+      plate.xPositionProperty.link( this.updateKeyboardSortCueNode.bind( this ) );
+      return new DistributeNotepadPlateNode( plate, this.modelToNotepadTransform,
         {
           tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
         } );
@@ -204,7 +162,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
     const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
-      new NotepadCandyBarNode( candyBar, modelToNotepadTransform, this.notepadBoundsProperty, candyBarDropped, {
+      new NotepadCandyBarNode( candyBar, this.modelToNotepadTransform, this.notepadBoundsProperty, this.candyBarDropped, {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
@@ -216,12 +174,17 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       children: notepadCandyBarNodes,
       excludeInvisibleChildrenFromBounds: true
     } );
+
+    this.notepadSnackLayerNode.addChild( this.cueingHighlight );
     this.notepadSnackLayerNode.addChild( notepadCandyBarsNode );
+    this.notepadSnackLayerNode.addChild( mouseSortCueNode );
+    this.notepadSnackLayerNode.addChild( this.keyboardSortCueNode );
 
     // Create predict mean line that acts as a slider for alternative input.
     const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
-      new Vector2( this.playAreaCenterX, NOTEPAD_PLATE_BOTTOM_Y - plateHeight - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
+      new Vector2( this.playAreaCenterX,
+        NOTEPAD_PLATE_BOTTOM_Y - DistributeScreenView.PLATE_HEIGHT - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
       MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
@@ -343,6 +306,103 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       );
     } );
   }
+
+  // Handle a candy bar being dropped in the notepad.
+  private candyBarDropped( candyBarNode: NotepadCandyBarNode ): void {
+    const candyBar = candyBarNode.candyBar;
+
+    const platesWithSpace = this.model.getPlatesWithSpace();
+    const plateHoldingSnack = this.model.getPlateForSnack( candyBarNode.candyBar );
+    assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
+
+    // Set the flag that will ensure that the candy bars animate to the top of the stacks when dropped.
+    this.model.animateAddedSnacks = true;
+
+    // Even if there are no plates with space the plate our candy bar came from should always have space for the candy
+    // bar to return.
+    !platesWithSpace.includes( plateHoldingSnack! ) && platesWithSpace.push( plateHoldingSnack! );
+
+    // Find the plate closest to where the candy bar was dropped.
+    const closestPlate = platesWithSpace.reduce(
+      ( previousPlate, thisPlate ) => {
+        const candyBarXPosition = candyBar.positionProperty.value.x;
+        const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
+        const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
+        return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
+      },
+      platesWithSpace[ 0 ]
+    );
+
+    if ( closestPlate !== plateHoldingSnack ) {
+
+      // If the candy bar was dropped on a different plate, update the groupSortInteractionModel in order to remove
+      // any related visual cues.
+      this.model.groupSortInteractionModel.setMouseSortedGroupItem( true );
+
+      // Move the candy bar to the new plate, since it's closer.
+      plateHoldingSnack!.removeSnack( candyBar );
+      closestPlate.addSnackToTop( candyBar );
+    }
+    else {
+      assert && assert( plateHoldingSnack.hasSnack( candyBar ), 'this situation should be impossible' );
+
+      // Put the candy bar back on the same plate.
+      candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
+    }
+
+    // Clear the flag for animating added snacks, since any adding due to the drop action should now be complete.
+    this.model.animateAddedSnacks = false;
+  }
+
+  // Update the visibility and position of the mouse sort cue node based on the model's state.
+  private updateMouseSortCueNode(): void {
+    if ( this.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ||
+         this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
+      this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
+    }
+    else if ( this.groupSortInteractionModel.selectedGroupItemProperty.value === null ) {
+      const plate = this.model.getPlateWithMostSnacks();
+      if ( plate ) {
+        this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
+        const topCandyBarIndex = plate.snacksOnNotepadPlate.length - 1;
+        const highlightPosition = this.modelToNotepadTransform.modelToViewPosition(
+          SnackStacker.getStackedCandyBarPosition( plate.xPositionProperty.value, topCandyBarIndex )
+        );
+        this.cueingHighlight.x = highlightPosition.x;
+        this.cueingHighlight.y = highlightPosition.y;
+        this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
+          SnackStacker.getCueingArrowPosition( plate, DistributeScreenView.PLATE_HEIGHT )
+        );
+      }
+      else {
+        this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
+      }
+    }
+    else {
+      const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
+      const plate = this.model.getPlateForSnack( selectedCandyBar );
+      assert && assert( plate, 'selected candy bar must be on a plate' );
+      this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
+      this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
+        SnackStacker.getCueingArrowPosition( plate!, DistributeScreenView.PLATE_HEIGHT )
+      );
+    }
+  }
+
+  private updateKeyboardSortCueNode(): void {
+    const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
+    if ( !this.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value && selectedCandyBar ) {
+      const plate = this.model.getPlateForSnack( selectedCandyBar );
+      assert && assert( plate, 'selected candy bar must be on a plate' );
+      this.keyboardSortCueNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
+        SnackStacker.getCueingArrowPosition( plate!, DistributeScreenView.PLATE_HEIGHT )
+      );
+    }
+  }
+
+  private static readonly PLATE_HEIGHT = new Image( notepadPlateSketch_svg, {
+    maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH
+  } ).bounds.height;
 }
 
 meanShareAndBalance.register( 'DistributeScreenView', DistributeScreenView );

@@ -114,7 +114,7 @@ class SnackStacker {
     const topSnackIndex = plate.snacksOnNotepadPlate.length - 1;
     const plateXPosition = plate.xPositionProperty.value;
     return SnackStacker.getStackedCandyBarPosition( plateXPosition, topSnackIndex )
-      .plusXY( MeanShareAndBalanceConstants.PLATE_WIDTH / 2 - CUEING_ARROW_MARGIN / 2, plateHeight );
+      .plusXY( MeanShareAndBalanceConstants.PLATE_WIDTH / 2, plateHeight - CUEING_ARROW_MARGIN );
   }
 }
 
