@@ -1,9 +1,9 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Sound generator used to produce a sound for the movement of the pencil that is used for making mean predictions on
- * the notepad.  This uses filtered noise as the sound source, and changes the volume and center frequency of the filter
- * based on the rate and direction of the pencil's movement, which represents the mean prediction value.
+ * MeanPredictionChangeSoundGenerator is used to produce a sound for the movement of the pencil and the line that
+ * represents the predicted mean on the notepad.  This sound generator uses filtered noise as the sound source and
+ * changes the volume and center frequency of the filter based on the rate and direction of the pencil's movement.
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
@@ -22,8 +22,8 @@ type MotionState = 'unchanging' | 'increasing' | 'decreasing';
 // constants
 const MAX_DRAG_SOUND_VOLUME = 0.5; // can be greater than 1 because filtering tends to reduce output a lot
 const VELOCITY_REDUCTION_RATE = 20; // proportion per second, empirically determined for best sound
-const STILLNESS_TIME = 0.064; // in seconds, if there are no angle updates for this long, the leg is considered still
-const NOISE_CENTER_FREQUENCY = 1500; // Hz
+const STILLNESS_TIME = 0.064; // in seconds, amount of time with no movement before the prediction line is considered still
+const NOISE_CENTER_FREQUENCY = 1500; // in Hz
 const DIRECTION_FREQUENCY_DELTA = NOISE_CENTER_FREQUENCY * 0.1; // in Hz, difference for increasing vs decreasing changes
 const MAX_CHANGE_RATE = 1; // in proportion/sec, see explanatory note where this is used
 const MIN_SOUND_GAP = 0.05; // in seconds
