@@ -306,7 +306,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     // Handler function that is invoked when the total number of active apples changes.  This will activate and position
     // apples based on the current mode.
-    const handleNumberOfSnacksChanged = ( totalSnacks: number ) => {
+    const handleNumberOfSnacksChanged = () => {
 
       // Force any in-progress animations to finish before doing anything so that the model doesn't end up in a wierd
       // state.  These animations, if present, would have been instigated by changes to the notebook mode.
@@ -368,12 +368,13 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.notepadModeProperty.link( handleModeChange );
 
     // Hook up the handler for changes to the number of apples that are on the table.
-    Multilink.multilinkAny( [
+    Multilink.multilinkAny(
+      [
         this.totalSnacksProperty,
-        ...this.plates.map( plate => plate.isActiveProperty ) ],
-      () => {
-        handleNumberOfSnacksChanged( this.totalSnacksProperty.value );
-      } );
+        ...this.plates.map( plate => plate.isActiveProperty )
+      ],
+      handleNumberOfSnacksChanged
+    );
   }
 
   /**
