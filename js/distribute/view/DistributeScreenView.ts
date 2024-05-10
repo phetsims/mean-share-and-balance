@@ -27,7 +27,6 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/group-sort/view/GroupSortInteractionView.js';
 import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
-import ShredUtils from '../../../../shred/js/Utils.js'; // eslint-disable-line default-import-match-filename
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -231,7 +230,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
             const meanTolerance = 0.5;
             const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
             const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
-            const closeToMean = ShredUtils.roughlyEqual( roundedPrediction, roundedMean, meanTolerance );
+            const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
 
             predictMeanLine.stroke = roundedPrediction === roundedMean ? MeanShareAndBalanceColors.meanColorProperty :
                                      MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
