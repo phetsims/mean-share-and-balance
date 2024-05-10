@@ -12,7 +12,7 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import { ApplesAnimationState, NotepadMode } from '../model/FairShareModel.js';
+import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
 import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
 import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
@@ -48,7 +48,7 @@ const SHARE_COMPLETE_DELAY_FUNCTION = new LinearFunction(
 
 class AllocationModeSoundGenerator extends SoundGenerator {
 
-  public constructor( allocationModeProperty: TReadOnlyProperty<NotepadMode>,
+  public constructor( allocationModeProperty: TReadOnlyProperty<DistributionMode>,
                       applesAnimationStateEmitter: TinyEmitter<ApplesAnimationState>,
                       totalApplesProperty: TReadOnlyProperty<number>,
                       numberOfActivePlatesProperty: TReadOnlyProperty<number>,
@@ -104,14 +104,14 @@ class AllocationModeSoundGenerator extends SoundGenerator {
       }
 
       if ( !ResetAllButton.isResettingAllProperty.value ) {
-        if ( mode === NotepadMode.SYNC ) {
+        if ( mode === DistributionMode.SYNC ) {
           syncSoundClip.play();
         }
-        else if ( mode === NotepadMode.COLLECT ) {
+        else if ( mode === DistributionMode.COLLECT ) {
           collectSoundClip.play();
         }
-        else if ( mode === NotepadMode.SHARE ) {
-          if ( previousMode === NotepadMode.SYNC ) {
+        else if ( mode === DistributionMode.SHARE ) {
+          if ( previousMode === DistributionMode.SYNC ) {
             playShareCompleteSound();
           }
           else {

@@ -9,7 +9,7 @@
 
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import FairShareModel, { ApplesAnimationState, NotepadMode } from '../model/FairShareModel.js';
+import FairShareModel, { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import { AlignBox, Image, Text } from '../../../../scenery/js/imports.js';
@@ -26,7 +26,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
 export default class FairShareNotepadNode extends NotepadNode {
 
-  public constructor( notepadModeProperty: Property<NotepadMode>,
+  public constructor( appleDistributionModeProperty: Property<DistributionMode>,
                       applesAnimationStateEmitter: TinyEmitter<ApplesAnimationState>,
                       totalApplesProperty: TReadOnlyProperty<number>,
                       numberOfActivePlatesProperty: TReadOnlyProperty<number>,
@@ -35,29 +35,29 @@ export default class FairShareNotepadNode extends NotepadNode {
     super( providedOptions );
 
     // Add the radio buttons for selecting the different modes.
-    const notepadModes = [ NotepadMode.SYNC, NotepadMode.COLLECT, NotepadMode.SHARE ];
-    const notepadModeItems = notepadModes.map( choice => ( {
+    const distributionModes = [ DistributionMode.SYNC, DistributionMode.COLLECT, DistributionMode.SHARE ];
+    const distributionModeItems = distributionModes.map( choice => ( {
       createNode: () => new Text( choice.stringProperty, { font: new PhetFont( 12 ), maxWidth: 120 } ),
       value: choice,
       tandemName: `${choice.name.toLowerCase()}RadioButton`,
       options: { minWidth: 80 }
     } ) );
 
-    const notepadModeRadioButtonGroup = new RectangularRadioButtonGroup<NotepadMode>(
-      notepadModeProperty,
-      notepadModeItems,
+    const distributionModeRadioButtonGroup = new RectangularRadioButtonGroup<DistributionMode>(
+      appleDistributionModeProperty,
+      distributionModeItems,
       {
         orientation: 'horizontal',
         spacing: 5,
-        soundPlayers: notepadModeItems.map( () => nullSoundPlayer ), // sound generation handled below
-        tandem: providedOptions.tandem.createTandem( 'notepadModeRadioButtonGroup' )
+        soundPlayers: distributionModeItems.map( () => nullSoundPlayer ), // sound generation handled below
+        tandem: providedOptions.tandem.createTandem( 'distributionModeRadioButtonGroup' )
       }
     );
 
     // Add the box that will depict the collection area, which is only shown in 'Collect' mode.
     const collectionAreaVisibleProperty = new DerivedProperty(
-      [ notepadModeProperty ],
-      mode => mode === NotepadMode.COLLECT
+      [ appleDistributionModeProperty ],
+      mode => mode === DistributionMode.COLLECT
     );
     const collectionAreaNode = new Image( collectionArea_svg, {
       initialWidth: FairShareModel.COLLECTION_AREA_SIZE.width,
@@ -69,7 +69,7 @@ export default class FairShareNotepadNode extends NotepadNode {
 
     this.addChild( collectionAreaNode );
 
-    const radioButtonGroupAlignBox = new AlignBox( notepadModeRadioButtonGroup, {
+    const radioButtonGroupAlignBox = new AlignBox( distributionModeRadioButtonGroup, {
       alignBounds: this.localBounds,
       xAlign: 'center',
       yAlign: 'bottom',
@@ -79,7 +79,7 @@ export default class FairShareNotepadNode extends NotepadNode {
 
     // Add sound generator for the movement of the apples as the notepad mode changes.
     soundManager.addSoundGenerator( new AllocationModeSoundGenerator(
-      notepadModeProperty,
+      appleDistributionModeProperty,
       applesAnimationStateEmitter,
       totalApplesProperty,
       numberOfActivePlatesProperty,

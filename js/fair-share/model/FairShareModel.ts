@@ -51,19 +51,19 @@ const INITIAL_PLATE_VALUES = [ 2, 1, 6, 2, 10, 5, 8 ];
 const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
 
 // Enum that defines the states that the notepad can be in.
-export class NotepadMode extends EnumerationValue {
+export class DistributionMode extends EnumerationValue {
 
   // The plates on the notepad are in sync with those on the table, meaning they contain the same number of apples.
-  public static readonly SYNC = new NotepadMode( MeanShareAndBalanceStrings.syncStringProperty );
+  public static readonly SYNC = new DistributionMode( MeanShareAndBalanceStrings.syncStringProperty );
 
   // The snacks are collected into a single collection area that doesn't involve the plates.
-  public static readonly COLLECT = new NotepadMode( MeanShareAndBalanceStrings.collectStringProperty );
+  public static readonly COLLECT = new DistributionMode( MeanShareAndBalanceStrings.collectStringProperty );
 
   // The total amount of snacks on the table are shared evenly between the plates in the notepad.
-  public static readonly SHARE = new NotepadMode( MeanShareAndBalanceStrings.shareStringProperty );
+  public static readonly SHARE = new DistributionMode( MeanShareAndBalanceStrings.shareStringProperty );
 
   // Gets a list of keys, values and mapping between them.  For use in EnumerationProperty and PhET-iO.
-  public static readonly enumeration = new Enumeration( NotepadMode, {
+  public static readonly enumeration = new Enumeration( DistributionMode, {
     phetioDocumentation: 'Describes the way in which the information in the notepad is displayed.'
   } );
 
@@ -76,7 +76,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   // An enumeration property that controls the way in which the quantity of snacks on the table are displayed on the
   // notepad.  See the enumeration for more information about the possible modes.
-  public readonly notepadModeProperty: EnumerationProperty<NotepadMode>;
+  public readonly appleDistributionModeProperty: EnumerationProperty<DistributionMode>;
 
   // A timer listener for the 2nd phase of the animation that distributes apples from the collection area to the plates
   // when there are fractional apples involved (Share mode).
@@ -113,8 +113,8 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     super( createApple, SnackStacker.getStackedApplePosition, handleFraction, options );
 
-    this.notepadModeProperty = new EnumerationProperty( NotepadMode.SYNC, {
-      tandem: providedOptions.tandem.createTandem( 'notepadModeProperty' ),
+    this.appleDistributionModeProperty = new EnumerationProperty( DistributionMode.SYNC, {
+      tandem: providedOptions.tandem.createTandem( 'appleDistributionModeProperty' ),
       phetioFeatured: true
     } );
 
@@ -150,7 +150,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     // Handle a change in the mode setting for the notepad.  This is a complex process that moves apples around between
     // plates and the collection area, and some of this motion is animated.
-    const handleModeChange = ( notepadMode: NotepadMode, previousNotepadMode: NotepadMode | null ): void => {
+    const handleModeChange = ( appleDistributionMode: DistributionMode, previousDistributionMode: DistributionMode | null ): void => {
 
       // Make sure any leftover animations from previous mode changes are cleared.
       this.finishInProgressAnimations();
@@ -162,7 +162,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       this.getAllSnacks().forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
 
       // Handle each of the six possible start transitions.
-      if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SYNC ) {
+      if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SYNC ) {
         this.animateAddedSnacks = true;
 
         // Move each of the apples in the collection area to a notepad plate based on how many are on the associated
@@ -182,7 +182,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         // Check plate state after all apples in collection have been handled.
         this.getActivePlates().forEach( plate => this.confirmPlateValues( plate ) );
       }
-      else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.COLLECT ) {
+      else if ( previousDistributionMode === DistributionMode.SYNC && appleDistributionMode === DistributionMode.COLLECT ) {
         this.animateAddedSnacks = true;
 
         // Move all apples from their current, synced up locations to the collection area.
@@ -195,7 +195,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           }
         } );
       }
-      else if ( previousNotepadMode === NotepadMode.COLLECT && notepadMode === NotepadMode.SHARE ) {
+      else if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SHARE ) {
         this.animateAddedSnacks = true;
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
         const activePlates = this.getActivePlates();
@@ -254,7 +254,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           } );
         }
       }
-      else if ( previousNotepadMode === NotepadMode.SHARE && notepadMode === NotepadMode.COLLECT ) {
+      else if ( previousDistributionMode === DistributionMode.SHARE && appleDistributionMode === DistributionMode.COLLECT ) {
 
         this.animateAddedSnacks = true;
 
@@ -281,14 +281,14 @@ export default class FairShareModel extends SharingModel<Apple> {
           } );
         } );
       }
-      else if ( ( previousNotepadMode === NotepadMode.SHARE || previousNotepadMode === null ) &&
-                notepadMode === NotepadMode.SYNC ) {
+      else if ( ( previousDistributionMode === DistributionMode.SHARE || previousDistributionMode === null ) &&
+                appleDistributionMode === DistributionMode.SYNC ) {
 
         // In the Sync mode the number of apples on the notepad plates match those shown on the table plates. There is
         // no animation needed for this mode change.
         this.getActivePlates().forEach( plate => plate.syncNotepadToTable() );
       }
-      else if ( previousNotepadMode === NotepadMode.SYNC && notepadMode === NotepadMode.SHARE ) {
+      else if ( previousDistributionMode === DistributionMode.SYNC && appleDistributionMode === DistributionMode.SHARE ) {
 
         // In the Share mode the total number of apples is split evenly over all active plates, so each plate ends up
         // with the mean value, which could include a fractional part. There is no animation for this transition.
@@ -297,7 +297,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         } );
       }
       else {
-        assert && assert( false, `Unhandled state transition - from ${previousNotepadMode} to ${notepadMode}` );
+        assert && assert( false, `Unhandled state transition - from ${previousDistributionMode} to ${appleDistributionMode}` );
       }
 
       // Clear the flag that controls whether apple motion is animated - it is set at the start of each state change.
@@ -316,15 +316,15 @@ export default class FairShareModel extends SharingModel<Apple> {
       // not be updated yet during phet-io state setting.
       const actualTotalSnacks = this.plates.reduce( ( sum, plate ) => sum + plate.tableSnackNumberProperty.value, 0 );
 
-      const notepadMode = this.notepadModeProperty.value;
-      if ( notepadMode === NotepadMode.SYNC ) {
+      const distributionMode = this.appleDistributionModeProperty.value;
+      if ( distributionMode === DistributionMode.SYNC ) {
 
         // Sync up the notepad plates with the table plates.
         this.plates.forEach( plate => {
           plate.syncNotepadToTable();
         } );
       }
-      else if ( notepadMode === NotepadMode.SHARE ) {
+      else if ( distributionMode === DistributionMode.SHARE ) {
         this.plates.forEach( plate => {
           if ( plate.isActiveProperty.value ) {
             plate.setNotepadSnacksToValue( new Fraction( actualTotalSnacks, this.numberOfPlatesProperty.value ) );
@@ -336,7 +336,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           }
         } );
       }
-      else if ( notepadMode === NotepadMode.COLLECT ) {
+      else if ( distributionMode === DistributionMode.COLLECT ) {
 
         const delta = actualTotalSnacks - this.appleCollection.length;
         if ( delta > 0 ) {
@@ -360,12 +360,12 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.updateCollectedApplePositions();
       }
       else {
-        assert && assert( false, `unhandled notepad mode: ${notepadMode}` );
+        assert && assert( false, `unhandled notepad mode: ${distributionMode}` );
       }
     };
 
     // Hook up the handler for changes to the notepad mode.
-    this.notepadModeProperty.link( handleModeChange );
+    this.appleDistributionModeProperty.link( handleModeChange );
 
     // Hook up the handler for changes to the number of apples that are on the table.
     Multilink.multilinkAny(
@@ -453,15 +453,15 @@ export default class FairShareModel extends SharingModel<Apple> {
    * on the table plates.
    */
   private confirmPlateValues( plate: Plate<Apple> ): void {
-    if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
+    if ( this.appleDistributionModeProperty.value === DistributionMode.SYNC ) {
       assert && assert( plate.snacksOnNotepadPlate.length === plate.tableSnackNumberProperty.value,
         'the number of snacks on the plate should match the table snack number' );
     }
-    else if ( this.notepadModeProperty.value === NotepadMode.COLLECT ) {
+    else if ( this.appleDistributionModeProperty.value === DistributionMode.COLLECT ) {
       assert && assert( plate.snacksOnNotepadPlate.length === 0 && this.appleCollection.length === this.totalSnacksProperty.value,
         'the plate should have no snacks and the collection should have all of the snacks' );
     }
-    else if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
+    else if ( this.appleDistributionModeProperty.value === DistributionMode.SHARE ) {
       const numberOfWholeApplesPerActivePlate = Math.floor( this.totalSnacksProperty.value / this.numberOfPlatesProperty.value );
       const wholeApples = plate.getSnackStack().filter( snack => {
         return snack.fractionProperty.value.equals( Fraction.ONE );
@@ -495,10 +495,10 @@ export default class FairShareModel extends SharingModel<Apple> {
   private snackAddedToPlateListener( apple: Apple, plate: Plate<Apple> ): void {
     const index = plate.snacksOnNotepadPlate.indexOf( apple );
 
-    assert && assert( this.notepadModeProperty.value !== NotepadMode.COLLECT,
+    assert && assert( this.appleDistributionModeProperty.value !== DistributionMode.COLLECT,
       'apples should not be added to plates in collect mode' );
 
-    if ( this.notepadModeProperty.value === NotepadMode.SHARE ) {
+    if ( this.appleDistributionModeProperty.value === DistributionMode.SHARE ) {
 
       // Calculate the fractional amount that will be set for the apples being distributed to the plates.
       // Do not used derived Properties to avoid listener dependencies.
@@ -542,7 +542,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         }, APPLE_FRACTION_DISTRIBUTION_DELAY * 1000 ) );
       }
     }
-    else if ( this.notepadModeProperty.value === NotepadMode.SYNC ) {
+    else if ( this.appleDistributionModeProperty.value === DistributionMode.SYNC ) {
       apple.isActiveProperty.value = true;
       apple.fractionProperty.value = Fraction.ONE;
       apple.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
@@ -551,7 +551,7 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   public override reset(): void {
     this.finishInProgressAnimations();
-    this.notepadModeProperty.reset();
+    this.appleDistributionModeProperty.reset();
     super.reset();
   }
 

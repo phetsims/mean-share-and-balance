@@ -10,7 +10,7 @@
 import { Image } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../../common/model/Plate.js';
-import { NotepadMode } from '../model/FairShareModel.js';
+import { DistributionMode } from '../model/FairShareModel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -20,12 +20,14 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 
 export default class FairShareNotepadPlateNode extends Image {
 
-  public constructor( plate: Plate<Apple>, mvt: ModelViewTransform2, notepadModeProperty: TReadOnlyProperty<NotepadMode> ) {
+  public constructor( plate: Plate<Apple>,
+                      mvt: ModelViewTransform2,
+                      appleDistributionModeProperty: TReadOnlyProperty<DistributionMode> ) {
 
     // The visibility of the plate is a function of whether the plate is active and the state of the notepad.
     const plateVisibleProperty = new DerivedProperty(
-      [ plate.isActiveProperty, notepadModeProperty ],
-      ( isActive, notepadMode ) => isActive && ( notepadMode !== NotepadMode.COLLECT )
+      [ plate.isActiveProperty, appleDistributionModeProperty ],
+      ( isActive, distributionMode ) => isActive && ( distributionMode !== DistributionMode.COLLECT )
     );
 
     super( notepadPlateSketch_svg, {

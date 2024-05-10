@@ -55,7 +55,7 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
 
     // Create the notepad Node where the graphical representations of the snacks will be displayed.
     const notepadNode = new FairShareNotepadNode(
-      model.notepadModeProperty,
+      model.appleDistributionModeProperty,
       model.applesAnimationStateEmitter,
       model.totalSnacksProperty,
       model.numberOfPlatesProperty,
@@ -80,7 +80,7 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
       1
     );
     const notepadPlateNodes = model.plates.map(
-      plate => new FairShareNotepadPlateNode( plate, modelToNotepadTransform, model.notepadModeProperty )
+      plate => new FairShareNotepadPlateNode( plate, modelToNotepadTransform, model.appleDistributionModeProperty )
     );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
