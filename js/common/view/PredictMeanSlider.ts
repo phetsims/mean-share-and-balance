@@ -115,10 +115,12 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   }
 
   public updateLine( lineStart: number, lineEnd: number ): void {
-    this.predictMeanLine.x1 = lineStart - LINE_X_MARGIN;
-    this.predictMeanLine.x2 = lineEnd + LINE_X_MARGIN * 2;
-    this.predictMeanGlow.setRectX( lineStart );
-    this.predictMeanGlow.setRectWidth( lineEnd - lineStart );
+    const x1 = lineStart - LINE_X_MARGIN;
+    const x2 = lineEnd + LINE_X_MARGIN * 2;
+    this.predictMeanLine.x1 = x1;
+    this.predictMeanLine.x2 = x2;
+    this.predictMeanGlow.setRectX( x1 );
+    this.predictMeanGlow.setRectWidth( x2 - x1 );
     this.predictMeanHandle.left = this.predictMeanLine.right;
     this.setPointerAreas();
   }
