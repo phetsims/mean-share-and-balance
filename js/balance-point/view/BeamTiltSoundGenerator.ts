@@ -37,7 +37,7 @@ class BeamTiltSoundGenerator extends SoundGenerator {
     const soundClip = new SoundClip( audioBuffer, { rateChangesAffectPlayingSounds: false } );
     soundClip.connect( this.mainGainNode );
     let timeOfLastPlay = Number.NEGATIVE_INFINITY;
-    const minTimeBetweenPlays = 50;
+    const minTimeBetweenPlays = 90;
     const pitchVariationRange = new Range( 1, 2 );
     const expectedAngleRange = new Range( 0, 0.45 );
     beamTiltProperty.lazyLink( tiltAngle => {
