@@ -43,7 +43,7 @@ export type WaterBalanceSoundGeneratorOptions = SelfOptions & StrictOmit<SoundCl
 
 // constants
 const MEAN_DEVIATION_CHANGE_THRESHOLD = 0.001; // empirically determined
-const PLAYBACK_PITCH_RANGE = new Range( 0.5, 1.3 ); // empirically determined to get the specified behavior
+const PLAYBACK_PITCH_RANGE = new Range( 0.4, 0.8 ); // empirically determined by design team
 const FILTER_FREQUENCY_RANGE = new Range( 200, 12000 );
 const MAPPING_FUNCTION_POINT_1 = new Vector2( 0.4, 0.85 );
 const MAPPING_FUNCTION_POINT_2 = new Vector2( 0.55, 0.1 );
@@ -110,7 +110,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
     // Create the filter whose frequency will be adjusted based on the max deviation of the cup levels from the mean.
     const lowPassFilter = new BiquadFilterNode( phetAudioContext, {
       type: 'lowpass',
-      Q: 10,
+      Q: 0.1,
       frequency: 100 // arbitrary initial value - this is adjusted as water levels change
     } );
 
