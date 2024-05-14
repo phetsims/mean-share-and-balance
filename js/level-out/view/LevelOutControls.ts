@@ -19,7 +19,7 @@ import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBala
 import PipeSwitch from './PipeSwitch.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
-import glassNumberOfSelection_mp3 from '../../../sounds/glassNumberOfSelection_mp3.js';
+import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
@@ -57,8 +57,8 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           numberOfCupsProperty,
-          glassNumberOfSelection_mp3,
-          { initialOutputLevel: 0.3 }
+          numberOfPlatesV6_mp3,
+          { initialOutputLevel: 0.15 }
         )
       },
       controlsPDOMOrder: [ checkboxGroup, pipeSwitch ],
