@@ -59,8 +59,13 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     // Predict Mean Line that acts as a slider for alternative input.
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
-      Multilink.multilink( [ model.arePipesOpenProperty, model.meanPredictionProperty,
-          model.meanProperty, model.doWaterLevelsMatchMeanProperty ],
+      Multilink.multilink(
+        [
+          model.arePipesOpenProperty,
+          model.meanPredictionProperty,
+          model.meanProperty,
+          model.doWaterLevelsMatchMeanProperty
+        ],
         ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean ) => {
           const meanTolerance = 0.05;
           const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
@@ -83,10 +88,12 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
                ( successRectangle.visible || predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty ) ) {
             meanPredictionSuccessSoundClip.play();
           }
-        } );
+        }
+      );
     };
     const predictMeanSlider = new PredictMeanSlider(
-      model.meanPredictionProperty, model.dragRange,
+      model.meanPredictionProperty,
+      model.dragRange,
       createSuccessIndicatorMultilink,
       modelViewTransformNotepadCups,
       {
