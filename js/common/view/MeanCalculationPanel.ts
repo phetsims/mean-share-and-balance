@@ -1,8 +1,8 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A custom non-modal dialog that extends panel for aesthetic purposes.
- * The dialog shows different mathematical representations of the mean according to the sim's current data.
+ * A custom non-modal info panel that pops up in front of the notepadNode.
+ * The panel shows different mathematical representations of the mean according to the sim's current data.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -39,7 +39,7 @@ type SelfOptions = {
   calculatedMeanDisplayMode?: MeanDisplayType;
   zeroDataMessageProperty?: LocalizedStringProperty | null;
 };
-export type MeanCalculationDialogOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
+export type MeanCalculationPanelOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
 
 // constants
 const LABEL_FONT = new PhetFont( 16 );
@@ -50,9 +50,7 @@ const WHOLE_NUMBER_FONT = new PhetFont( 18 );
 const VINCULUM_LINE_WIDTH = 1;
 const DIALOG_MAX_WIDTH_MARGIN = 50;
 
-// TODO: @jbphet should I change the name to MeanCalculationPanel now, even though it's behaving like a dialog?
-//  https://github.com/phetsims/mean-share-and-balance/issues/230
-export default class MeanCalculationDialog extends Panel {
+export default class MeanCalculationPanel extends Panel {
 
   /**
    * @param calculationDependencies - A set of Properties that are monitored to cause the dialog to update.
@@ -68,7 +66,7 @@ export default class MeanCalculationDialog extends Panel {
                       getNumberOfActiveDataObjects: () => number,
                       visibleProperty: Property<boolean>,
                       notebookPaperBounds: Bounds2,
-                      providedOptions: MeanCalculationDialogOptions ) {
+                      providedOptions: MeanCalculationPanelOptions ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty, {
       font: new PhetFont( 20 ),
@@ -89,7 +87,7 @@ export default class MeanCalculationDialog extends Panel {
       phetioState: false
     } );
 
-    const options = optionize<MeanCalculationDialogOptions, SelfOptions, PanelOptions>()( {
+    const options = optionize<MeanCalculationPanelOptions, SelfOptions, PanelOptions>()( {
       visibleProperty: visibleProperty,
       resize: false,
       calculatedMeanDisplayMode: 'decimal',
@@ -254,4 +252,4 @@ export default class MeanCalculationDialog extends Panel {
   }
 }
 
-meanShareAndBalance.register( 'MeanCalculationDialog', MeanCalculationDialog );
+meanShareAndBalance.register( 'MeanCalculationPanel', MeanCalculationPanel );

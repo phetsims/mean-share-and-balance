@@ -23,7 +23,7 @@ import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
-import MeanCalculationDialog from '../../common/view/MeanCalculationDialog.js';
+import MeanCalculationPanel from '../../common/view/MeanCalculationPanel.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';
@@ -145,7 +145,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
     ];
 
-    const meanInfoDialog = new MeanCalculationDialog(
+    const meanCalculationPanel = new MeanCalculationPanel(
       calculationDependencies,
       () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
       () => model.selectedSceneModelProperty.value.getStackedObjects().length,
@@ -154,14 +154,14 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
         zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         centerX: this.playAreaCenterX,
-        tandem: options.tandem.createTandem( 'meanInfoDialog' )
+        tandem: options.tandem.createTandem( 'meanCalculationPanel' )
       }
     );
 
     sceneView.groupSortInteractionView.setGroupFocusHighlightTop( notepadNodeBounds.bottom,
       MeanShareAndBalanceConstants.SOCCER_BALL_RANGE );
 
-    this.addChild( meanInfoDialog );
+    this.addChild( meanCalculationPanel );
 
     this.pdomPlayAreaNode.setPDOMOrder( [
       kickButton,

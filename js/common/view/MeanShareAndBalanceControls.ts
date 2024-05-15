@@ -17,8 +17,11 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import InfoBooleanStickyToggleButton from './InfoBooleanStickyToggleButton.js';
 import Range from '../../../../dot/js/Range.js';
+import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
+import generalOpenSoundPlayer from '../../../../tambo/js/shared-sound-players/generalOpenSoundPlayer.js';
+import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
+import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 
 type SelfOptions = {
   numberSpinnerOptions?: NumberSpinnerOptions;
@@ -27,7 +30,10 @@ type SelfOptions = {
   dialogVisibleProperty?: Property<boolean> | null;
 };
 
-export type MeanShareAndBalanceControlsOptions = SelfOptions & StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
+export type MeanShareAndBalanceControlsOptions =
+  SelfOptions
+  & StrictOmit<NodeOptions, 'children'>
+  & PickRequired<NodeOptions, 'tandem'>;
 export default class MeanShareAndBalanceControls extends Node {
 
   protected readonly controlsAlignGroup: AlignGroup;
@@ -54,10 +60,17 @@ export default class MeanShareAndBalanceControls extends Node {
     super( { children: [ vBoxAlignBox ] } );
 
     if ( options.dialogVisibleProperty ) {
-      const infoButton = new InfoBooleanStickyToggleButton( options.dialogVisibleProperty, {
+
+      const infoButtonSoundPlayer = new InfoButtonSoundPlayer( options.dialogVisibleProperty );
+      const infoButton = new InfoButton( {
+        listener: () => {
+          options.dialogVisibleProperty!.value = !options.dialogVisibleProperty!.value;
+        },
         centerY: 230,
+        scale: 0.6,
         left: vBoxAlignBox.left,
-        tandem: options.tandem.createTandem( 'infoButton' )
+        tandem: options.tandem.createTandem( 'infoButton' ),
+        soundPlayer: infoButtonSoundPlayer
       } );
       this.addChild( infoButton );
       options.controlsPDOMOrder.push( infoButton );
@@ -90,6 +103,25 @@ export default class MeanShareAndBalanceControls extends Node {
     this.controlsAlignGroup = controlsAlignGroup;
     this.controlsPDOMOrder = options.controlsPDOMOrder;
     this.numberSpinner = numberSpinner;
+  }
+}
+
+class InfoButtonSoundPlayer implements TSoundPlayer {
+  public constructor( private readonly dialogVisibleProperty: Property<boolean> ) {
+  }
+
+  public play(): void {
+    if ( this.dialogVisibleProperty.value ) {
+      generalCloseSoundPlayer.play();
+    }
+    else {
+      generalOpenSoundPlayer.play();
+    }
+  }
+
+  public stop(): void {
+    generalOpenSoundPlayer.stop();
+    generalCloseSoundPlayer.stop();
   }
 }
 

@@ -179,7 +179,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     this.notepadSnackLayerNode.addChild( mouseSortCueNode );
     this.notepadSnackLayerNode.addChild( this.keyboardSortCueNode );
 
-// Create predict mean line that acts as a slider for alternative input.
+    // Create predict mean line that acts as a slider for alternative input.
     const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
       new Vector2( this.playAreaCenterX,

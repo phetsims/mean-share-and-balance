@@ -20,7 +20,7 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { AlignBox, Node, TColor } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import SharingControls from './SharingControls.js';
-import MeanCalculationDialog from './MeanCalculationDialog.js';
+import MeanCalculationPanel from './MeanCalculationPanel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import PersonImage from '../../distribute/view/PersonImage.js';
 import TablePlateNode from './TablePlateNode.js';
@@ -112,7 +112,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     ];
 
     // Create the dialog that will show the various ways to calculate the mean.
-    const meanCalculationDialog = new MeanCalculationDialog(
+    const meanCalculationPanel = new MeanCalculationPanel(
       calculationDependencies,
       () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
       () => model.getActivePlates().length,
@@ -122,7 +122,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
         calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'remainder' : 'mixedFraction',
         centerX: this.playAreaCenterX,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
-        tandem: providedOptions.tandem.createTandem( 'meanCalculationDialog' )
+        tandem: providedOptions.tandem.createTandem( 'meanCalculationPanel' )
       }
     );
 
@@ -186,7 +186,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       tableSnackLayerNode,
       notepadSnackLayerNode,
       controlsAlignBox,
-      meanCalculationDialog
+      meanCalculationPanel
     ];
     children.forEach( childNode => { this.addChild( childNode ); } );
 
