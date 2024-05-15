@@ -66,19 +66,23 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
           const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
           const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
+          const successRectangleWasVisible = successRectangle.visible;
+          const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
 
           if ( arePipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
+            predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
             successRectangle.visible = false;
-            if ( predictMeanLine.stroke !== MeanShareAndBalanceColors.meanColorProperty ) {
-              predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
-              meanPredictionSuccessSoundClip.play();
-            }
           }
           else {
             successRectangle.visible = arePipesOpen && doWaterLevelsMatchMean && closeToMean;
             predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
           }
 
+          // If one of the success indicators was just activated, play the "successful prediction" sound.
+          if ( model.predictMeanVisibleProperty.value && !successRectangleWasVisible && !successStrokeColorWasSet &&
+               ( successRectangle.visible || predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty ) ) {
+            meanPredictionSuccessSoundClip.play();
+          }
         } );
     };
     const predictMeanSlider = new PredictMeanSlider(
