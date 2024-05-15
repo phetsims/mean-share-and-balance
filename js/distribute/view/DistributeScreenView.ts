@@ -11,15 +11,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import DistributeModel, { NOTEPAD_PLATE_BOTTOM_Y } from '../model/DistributeModel.js';
-import {
-  HighlightPath,
-  Image,
-  InteractiveHighlightingNode,
-  ManualConstraint,
-  Node,
-  Path,
-  Rectangle
-} from '../../../../scenery/js/imports.js';
+import { HighlightPath, Image, InteractiveHighlightingNode, ManualConstraint, Node, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -43,9 +35,8 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
-import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
+import hand_png from '../../../../scenery-phet/images/hand_png.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
-import PhetColorScheme from '../../../../scenery-phet/js/PhetColorScheme.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -115,7 +106,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       model.groupSortInteractionModel.keyboardSortCueVisibleProperty, CUEING_ARROW_SCALE );
     this.mouseSortIndicatorArrowNode = GroupSortInteractionView.createSortCueNode(
       model.groupSortInteractionModel.mouseSortCueVisibleProperty, CUEING_ARROW_SCALE );
-    const mouseSortHandCueNode = new Image( dragIndicatorHand_png, {
+    const mouseSortHandCueNode = new Image( hand_png, {
       scale: 0.06,
       visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty,
       rotation: Math.PI / 4

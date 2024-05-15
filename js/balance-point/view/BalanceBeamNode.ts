@@ -323,13 +323,12 @@ export default class BalanceBeamNode extends Node {
     } );
     this.addChild( needAtLeastOneKickMessage );
 
-    // sound generation
-    // TODO: See https://github.com/phetsims/mean-share-and-balance/issues/216.  Much of the sound generation code
-    //       below is experimental and will need to be finalized and documented prior to publication.
-    const happyAtMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
+    // Create and hook up the sound that will be played when the fulcrum reaches the mean value while the pillars are
+    // not present, or when the pillars are removed when the fulcrum is already at the mean.
+    const atMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
       initialOutputLevel: 0.1
     } );
-    soundManager.addSoundGenerator( happyAtMeanSoundClip );
+    soundManager.addSoundGenerator( atMeanSoundClip );
 
     Multilink.multilink(
       [ supportColumnsVisibleProperty, sceneModel.fulcrumValueProperty ],
@@ -339,7 +338,7 @@ export default class BalanceBeamNode extends Node {
         if ( !supportColumnsVisibleProperty.value &&
              sceneModel.fulcrumValueProperty.value === roundedMean &&
              !isMeanFulcrumFixedProperty.value ) {
-          happyAtMeanSoundClip.play();
+          atMeanSoundClip.play();
         }
       }
     );

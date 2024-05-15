@@ -36,6 +36,8 @@ import Utils from '../../../../dot/js/Utils.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import switchToLeftSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToLeftSoundPlayer.js';
 import switchToRightSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToRightSoundPlayer.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
@@ -51,6 +53,10 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransformNotepadCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
+    // Create the sound that will be played when the mean prediction become correct.
+    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
+    soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
+
     // Predict Mean Line that acts as a slider for alternative input.
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
       Multilink.multilink( [ model.arePipesOpenProperty, model.meanPredictionProperty,
@@ -62,8 +68,11 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
 
           if ( arePipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
-            predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
             successRectangle.visible = false;
+            if ( predictMeanLine.stroke !== MeanShareAndBalanceColors.meanColorProperty ) {
+              predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
+              meanPredictionSuccessSoundClip.play();
+            }
           }
           else {
             successRectangle.visible = arePipesOpen && doWaterLevelsMatchMean && closeToMean;
