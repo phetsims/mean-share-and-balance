@@ -194,27 +194,30 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
       Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty, model.areSnacksDistributedProperty ],
         ( meanPrediction, meanValue, areSnacksDistributed ) => {
+
+          const successRectangleWasVisible = successRectangle.visible;
+          const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
+
           if ( areSnacksDistributed ) {
             const meanTolerance = 0.5;
             const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
             const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
             const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
 
-            if ( roundedPrediction === roundedMean ) {
-              successRectangle.visible = false;
-              if ( predictMeanLine.stroke !== MeanShareAndBalanceColors.meanColorProperty ) {
-                predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
-                meanPredictionSuccessSoundClip.play();
-              }
-            }
-            else {
-              predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
-              successRectangle.visible = closeToMean;
-            }
+            predictMeanLine.stroke = roundedPrediction === roundedMean ?
+                                     MeanShareAndBalanceColors.meanColorProperty :
+                                     MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
           }
           else {
             predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
             successRectangle.visible = false;
+          }
+
+          // If one of the success indicators was just activated, play the "successful prediction" sound.
+          if ( model.predictMeanVisibleProperty.value && !successRectangleWasVisible && !successStrokeColorWasSet &&
+               ( successRectangle.visible || predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty ) ) {
+            meanPredictionSuccessSoundClip.play();
           }
         } );
     };
