@@ -171,7 +171,11 @@ export default class FairShareModel extends SharingModel<Apple> {
           this.getActivePlates().forEach( plate => {
 
             _.times( plate.tableSnackNumberProperty.value, () => {
-              const apple = this.appleCollection.pop();
+
+              // Get an apple from the collection.  The `shift` method is used here because it leads to better apple
+              // movement (shorter distances to travel) versus `pop`.
+              const apple = this.appleCollection.shift();
+
               assert && assert( apple, 'there should be enough apples to put on the plates' );
               plate.addSnackToTop( apple! );
             } );
@@ -227,6 +231,8 @@ export default class FairShareModel extends SharingModel<Apple> {
             );
           }
         } );
+
+        // Mark the collection as empty now that the apples have all been moved to plates.
         this.appleCollection.length = 0;
 
         // Any apples that were moved to the top are subsequently turned into fractional representations and distributed
