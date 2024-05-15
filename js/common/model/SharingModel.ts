@@ -282,6 +282,8 @@ export default class SharingModel<T extends Snack> implements TModel {
     // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
     this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
   }
+
+  public static readonly INTER_PLATE_DISTANCE = INTER_PLATE_DISTANCE;
 }
 
 meanShareAndBalance.register( 'SharingModel', SharingModel );

@@ -46,6 +46,9 @@ const INTER_STACKED_GROUP_SPACING = 20;
 const COLLECTION_BOTTOM_Y = 10; // in screen coords, empirically determined
 const APPLE_FRACTION_DISTRIBUTION_DELAY = 0.75; // in seconds
 const INITIAL_PLATE_VALUES = [ 2, 1, 6, 2, 10, 5, 8 ];
+const PLATE_MIN_X_POSITION = -SharingModel.INTER_PLATE_DISTANCE *
+                             MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS / 2;
+const SORT_REFERENCE_POINT = new Vector2( PLATE_MIN_X_POSITION, 0 );
 
 // Size of the collection area, empirically determined. Could be derived from other constants, but didn't seem worth it.
 const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
@@ -202,7 +205,6 @@ export default class FairShareModel extends SharingModel<Apple> {
       else if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SHARE ) {
         this.animateAddedSnacks = true;
         const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
-        const activePlates = this.getActivePlates();
         const applesAtTop: Apple[] = [];
 
         // We want to identify the index of the middle apple traveling to the top of the collection area so that
@@ -211,28 +213,33 @@ export default class FairShareModel extends SharingModel<Apple> {
                                         ( numberOfWholeApplesPerActivePlate * this.numberOfPlatesProperty.value );
         const middleAppleIndex = Math.floor( numberOfRemainingApples / 2 );
 
-        // Iterate over the apples in the collection, moving them to the appropriate plates or to the top of the notepad.
-        this.appleCollection.forEach( ( apple, i ) => {
+        // Sort the apples by their distance from the left side to minimize the distance they need to travel.
+        this.appleCollection.sort( ( a1, a2 ) =>
+          a2.positionProperty.value.distance( SORT_REFERENCE_POINT ) -
+          a1.positionProperty.value.distance( SORT_REFERENCE_POINT )
+        );
 
-          // Move the whole apples to the appropriate plates.
-          if ( i < numberOfWholeApplesPerActivePlate * activePlates.length ) {
-            const plate = activePlates[ i % activePlates.length ];
-            plate.addSnackToTop( apple );
-          }
-          else {
-
-            // The remaining apples are moved in an animation to the top of the notepad.
-            applesAtTop.push( apple );
-            apple.moveTo( new Vector2(
-                ( applesAtTop.length - middleAppleIndex - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
-                -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
-              ),
-              true
-            );
-          }
+        // Move the whole apples to the active plates.
+        this.getActivePlates().forEach( plate => {
+          _.times( numberOfWholeApplesPerActivePlate, () => {
+            const apple = this.appleCollection.pop();
+            assert && assert( apple, 'There should be enough apples to add the wholes ones to each plate.' );
+            plate.addSnackToTop( apple! );
+          } );
         } );
 
-        // Mark the collection as empty now that the apples have all been moved to plates.
+        // The remaining apples are moved in an animation to the top of the notepad.
+        this.appleCollection.forEach( apple => {
+          applesAtTop.push( apple );
+          apple.moveTo( new Vector2(
+              ( applesAtTop.length - middleAppleIndex - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+              -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
+            ),
+            true
+          );
+        } );
+
+        // Mark the collection as empty now that the apples have all been moved out of the collection.
         this.appleCollection.length = 0;
 
         // Any apples that were moved to the top are subsequently turned into fractional representations and distributed
