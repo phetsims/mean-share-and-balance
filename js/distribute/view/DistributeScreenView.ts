@@ -37,6 +37,10 @@ import SnackStacker from '../../common/SnackStacker.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import hand_png from '../../../../scenery-phet/images/hand_png.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -119,8 +123,8 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         lineWidth: 1,
         cornerRadius: 2,
         visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty
-      } );
-
+      }
+    );
 
     const mouseSortCueNode = new Node( {
       children: [ this.mouseSortIndicatorArrowNode, mouseSortHandCueNode ]
@@ -175,13 +179,18 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     this.notepadSnackLayerNode.addChild( mouseSortCueNode );
     this.notepadSnackLayerNode.addChild( this.keyboardSortCueNode );
 
-    // Create predict mean line that acts as a slider for alternative input.
+// Create predict mean line that acts as a slider for alternative input.
     const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
       new Vector2( this.playAreaCenterX,
         NOTEPAD_PLATE_BOTTOM_Y - DistributeScreenView.PLATE_HEIGHT - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
       MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
+    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, {
+      initialOutputLevel: 0.1,
+      enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
+    } );
+    soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
       Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty, model.areSnacksDistributedProperty ],
         ( meanPrediction, meanValue, areSnacksDistributed ) => {
@@ -191,9 +200,17 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
             const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
             const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
 
-            predictMeanLine.stroke = roundedPrediction === roundedMean ? MeanShareAndBalanceColors.meanColorProperty :
-                                     MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
-            successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
+            if ( roundedPrediction === roundedMean ) {
+              successRectangle.visible = false;
+              if ( predictMeanLine.stroke !== MeanShareAndBalanceColors.meanColorProperty ) {
+                predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
+                meanPredictionSuccessSoundClip.play();
+              }
+            }
+            else {
+              predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+              successRectangle.visible = closeToMean;
+            }
           }
           else {
             predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
