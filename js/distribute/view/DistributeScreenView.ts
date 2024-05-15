@@ -152,7 +152,12 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
     const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
-      new NotepadCandyBarNode( candyBar, this.modelToNotepadTransform, this.notepadBoundsProperty, this.candyBarDropped, {
+      new NotepadCandyBarNode(
+        candyBar,
+        this.modelToNotepadTransform,
+        this.notepadBoundsProperty,
+        this.candyBarDropped.bind( this ),
+        {
           tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
