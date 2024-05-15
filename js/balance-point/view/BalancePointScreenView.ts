@@ -87,27 +87,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       }
     );
 
-    const notepadNodeBounds = notepadNode.bounds;
-
-    const calculationDependencies = [
-      model.selectedSceneModelProperty,
-      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
-      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
-    ];
-
-    const meanInfoDialog = new MeanCalculationDialog(
-      calculationDependencies,
-      () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
-      () => model.selectedSceneModelProperty.value.getStackedObjects().length,
-      model.isMeanInfoDialogVisibleProperty, notepadNodeBounds,
-      {
-        zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
-        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
-        centerX: this.playAreaCenterX,
-        tandem: options.tandem.createTandem( 'meanInfoDialog' )
-      }
-    );
-
     const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',
@@ -144,8 +123,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 )
     } );
 
-    sceneView.groupSortInteractionView.setGroupFocusHighlightTop( notepadNodeBounds.bottom,
-      MeanShareAndBalanceConstants.SOCCER_BALL_RANGE );
+
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
     this.addChild( kickButton );
@@ -157,6 +135,32 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     this.addChild( this.mouseSortHandCueNode );
     this.addChild( this.sortIndicatorArrowNode );
     this.addChild( sceneView.frontSceneViewLayer );
+
+    // Grab the notepadNode bounds after the playAreaNumberLineNode and notepadNode have been added to the scene graph.
+    // This ensures that we have updated notepadNode bounds as the numberLines are transformed to match along the x-axis.
+    const notepadNodeBounds = notepadNode.bounds;
+    const calculationDependencies = [
+      model.selectedSceneModelProperty,
+      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
+      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
+    ];
+
+    const meanInfoDialog = new MeanCalculationDialog(
+      calculationDependencies,
+      () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
+      () => model.selectedSceneModelProperty.value.getStackedObjects().length,
+      model.isMeanInfoDialogVisibleProperty, notepadNodeBounds,
+      {
+        zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
+        centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
+        centerX: this.playAreaCenterX,
+        tandem: options.tandem.createTandem( 'meanInfoDialog' )
+      }
+    );
+
+    sceneView.groupSortInteractionView.setGroupFocusHighlightTop( notepadNodeBounds.bottom,
+      MeanShareAndBalanceConstants.SOCCER_BALL_RANGE );
+
     this.addChild( meanInfoDialog );
 
     this.pdomPlayAreaNode.setPDOMOrder( [

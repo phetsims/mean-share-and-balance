@@ -17,7 +17,6 @@ import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import Dialog from '../../../../sun/js/Dialog.js';
 import { AlignBox, Node, TColor } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import SharingControls from './SharingControls.js';
@@ -63,7 +62,6 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
 
   // Various nodes used to depict visual elements in the view.
   protected readonly tablePlateNodes: Node[];
-  private readonly meanCalculationDialog: Dialog;
 
   public constructor( model: SharingModel<T>,
                       questionBarStringProperty: TReadOnlyProperty<string>,
@@ -179,8 +177,6 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     model.numberOfPlatesProperty.link( () => {
       this.interruptSubtreeInput();
     } );
-
-    this.meanCalculationDialog = meanCalculationDialog;
 
     // Add all the children.  This is done all at once so that the layering of apparent and easily adjusted.
     const children = [

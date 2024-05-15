@@ -1,16 +1,16 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A dialog that shows different mathematical representations of the mean according to the sim's current data.
+ * A custom non-modal dialog that extends panel for aesthetic purposes.
+ * The dialog shows different mathematical representations of the mean according to the sim's current data.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import Dialog, { DialogOptions } from '../../../../sun/js/Dialog.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, GridBox, Line, Text, TextOptions, VBox, Node } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, Line, Node, Text, TextOptions, VBox } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
@@ -23,9 +23,12 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import Panel, { PanelOptions } from '../../../../sun/js/Panel.js';
+import CloseButton from '../../../../scenery-phet/js/buttons/CloseButton.js';
+import ButtonNode from '../../../../sun/js/buttons/ButtonNode.js';
+import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 
@@ -36,7 +39,7 @@ type SelfOptions = {
   calculatedMeanDisplayMode?: MeanDisplayType;
   zeroDataMessageProperty?: LocalizedStringProperty | null;
 };
-export type MeanCalculationDialogOptions = SelfOptions & WithRequired<DialogOptions, 'tandem'>;
+export type MeanCalculationDialogOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
 
 // constants
 const LABEL_FONT = new PhetFont( 16 );
@@ -47,7 +50,9 @@ const WHOLE_NUMBER_FONT = new PhetFont( 18 );
 const VINCULUM_LINE_WIDTH = 1;
 const DIALOG_MAX_WIDTH_MARGIN = 50;
 
-export default class MeanCalculationDialog extends Dialog {
+// TODO: @jbphet should I change the name to MeanCalculationPanel now, even though it's behaving like a dialog?
+//  https://github.com/phetsims/mean-share-and-balance/issues/230
+export default class MeanCalculationDialog extends Panel {
 
   /**
    * @param calculationDependencies - A set of Properties that are monitored to cause the dialog to update.
@@ -70,17 +75,25 @@ export default class MeanCalculationDialog extends Dialog {
       maxWidth: notebookPaperBounds.width - DIALOG_MAX_WIDTH_MARGIN
     } );
 
-    const options = optionize<MeanCalculationDialogOptions, SelfOptions, DialogOptions>()( {
-      title: meanTitleText,
-      titleAlign: 'left',
+    const closeButton = new CloseButton( {
+      listener: () => visibleProperty.set( false ),
+      baseColor: 'transparent',
+      buttonAppearanceStrategy: ButtonNode.FlatAppearanceStrategy,
+      soundPlayer: generalCloseSoundPlayer,
+      pathOptions: {
+        stroke: 'black'
+      },
+
+      // phet-io
+      tandem: providedOptions.tandem.createTandem( 'closeButton' ),
+      phetioState: false
+    } );
+
+    const options = optionize<MeanCalculationDialogOptions, SelfOptions, PanelOptions>()( {
       visibleProperty: visibleProperty,
       resize: false,
-      closeButtonListener: () => this.visibleProperty.set( false ),
-      layoutStrategy: _.noop,
       calculatedMeanDisplayMode: 'decimal',
-      zeroDataMessageProperty: null,
-      closeButtonTouchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      closeButtonTouchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION
+      zeroDataMessageProperty: null
     }, providedOptions );
 
     const messageVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {
@@ -120,11 +133,6 @@ export default class MeanCalculationDialog extends Dialog {
       minContentHeight = unreducedFraction.bounds.height;
     }
 
-    const calculationNode = new GridBox( {
-      margin: 10,
-      minContentHeight: minContentHeight
-    } );
-
     let zeroDataMessageText: Node | null;
     if ( options.zeroDataMessageProperty !== null ) {
       const messageOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS,
@@ -132,10 +140,27 @@ export default class MeanCalculationDialog extends Dialog {
       zeroDataMessageText = new Text( options.zeroDataMessageProperty, messageOptions );
     }
 
+    // These bounds effectively set the size of the dialog and were empirically determined.
+    const alignBounds = notebookPaperBounds.dilatedXY( -5, -5 );
+    const panelMargin = 10;
+    const titleAlignBox = new AlignBox( meanTitleText, {
+      alignBounds: alignBounds,
+      xAlign: 'left',
+      yAlign: 'top',
+      margin: panelMargin
+    } );
+    const closeButtonAlignBox = new AlignBox( closeButton, {
+      alignBounds: alignBounds,
+      xAlign: 'right',
+      yAlign: 'top',
+      margin: panelMargin
+    } );
+    const calculationNode = new GridBox( {
+      margin: panelMargin,
+      minContentHeight: minContentHeight
+    } );
     const alignedCalculationNode = new AlignBox( calculationNode, {
-
-      // These bounds effectively set the size of the dialog and were empirically determined.
-      alignBounds: notebookPaperBounds.dilatedXY( -40, -32 )
+      alignBounds: alignBounds
     } );
 
     // Monitor the dependencies and update the equations as changes occur.
@@ -223,7 +248,9 @@ export default class MeanCalculationDialog extends Dialog {
       ];
     } );
 
-    super( alignedCalculationNode, options );
+    const content = new Node( { children: [ titleAlignBox, closeButtonAlignBox, alignedCalculationNode ] } );
+
+    super( content, options );
   }
 }
 
