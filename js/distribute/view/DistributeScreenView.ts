@@ -35,12 +35,12 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
-import hand_png from '../../../../scenery-phet/images/hand_png.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -110,7 +110,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       model.groupSortInteractionModel.keyboardSortCueVisibleProperty, CUEING_ARROW_SCALE );
     this.mouseSortIndicatorArrowNode = GroupSortInteractionView.createSortCueNode(
       model.groupSortInteractionModel.mouseSortCueVisibleProperty, CUEING_ARROW_SCALE );
-    const mouseSortHandCueNode = new Image( hand_png, {
+    const mouseSortHandCueNode = new Image( dragIndicatorHand_png, {
       scale: 0.06,
       visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty,
       rotation: Math.PI / 4
