@@ -77,11 +77,10 @@ export default class FulcrumSlider extends HSlider {
       phetioVisiblePropertyInstrumented: false
     } );
 
-    const sliderSoundGenerator = new FulcrumSliderSoundPlayer( fulcrumValueProperty,
-      beamSupportsPresentProperty,
-      meanValueProperty );
+    // sound generation
+    const sliderSoundGenerator = new FulcrumSliderSoundPlayer( beamSupportsPresentProperty, meanValueProperty );
 
-    // combing provided and default options
+    // Combine provided and default options.
     const options = optionize<BalanceBeamFulcrumOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
       thumbYOffset: providedOptions.fulcrumHeight / 2,

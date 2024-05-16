@@ -1,7 +1,8 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * BeamTiltSoundGenerator is a sound generator for the angle of tilt of the balance beam.
+ * BeamTiltSoundGenerator is a sound generator for balance beam.  It creates a sound somewhat like a creaking door, and
+ * the pitch varies with the tilt angle of the beam.
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
@@ -13,12 +14,15 @@ import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
 import Range from '../../../../dot/js/Range.js';
-import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import brightMarimbaShort_mp3 from '../../../../tambo/sounds/brightMarimbaShort_mp3.js';
 
 type SelfOptions = EmptySelfOptions;
 type BeamTiltSoundGeneratorOptions = SoundGeneratorOptions & SelfOptions;
+
+// constants
+const MIN_TIME_BETWEEN_CREAK_PLAYS = 90; // in ms
+const PITCH_VARIATION_RANGE = new Range( 1, 2 );
+const EXPECTED_ANGLE_RANGE = new Range( 0, 0.45 ); // empirically determined based on model behavior
 
 class BeamTiltSoundGenerator extends SoundGenerator {
 
@@ -27,29 +31,23 @@ class BeamTiltSoundGenerator extends SoundGenerator {
 
     super( providedOptions );
 
-    let audioBuffer;
-    if ( MeanShareAndBalanceQueryParameters.beamSoundMode === 4 || MeanShareAndBalanceQueryParameters.beamSoundMode === 5 ) {
-      audioBuffer = brightMarimbaShort_mp3;
-    }
-    else {
-      audioBuffer = boundaryReached_mp3;
-    }
-    const soundClip = new SoundClip( audioBuffer, { rateChangesAffectPlayingSounds: false } );
-    soundClip.connect( this.mainGainNode );
+    const creakSoundClip = new SoundClip( boundaryReached_mp3, { rateChangesAffectPlayingSounds: false } );
+    creakSoundClip.connect( this.mainGainNode );
     let timeOfLastPlay = Number.NEGATIVE_INFINITY;
-    const minTimeBetweenPlays = 90;
-    const pitchVariationRange = new Range( 1, 2 );
-    const expectedAngleRange = new Range( 0, 0.45 );
+
     beamTiltProperty.lazyLink( tiltAngle => {
       if ( !ResetAllButton.isResettingAllProperty.value &&
-           phet.joist.elapsedTime > timeOfLastPlay + minTimeBetweenPlays ) {
+           phet.joist.elapsedTime > timeOfLastPlay + MIN_TIME_BETWEEN_CREAK_PLAYS ) {
 
-        const normalizedAngle = expectedAngleRange.getNormalizedValue( Math.abs( tiltAngle ) );
-        const playbackRate = MeanShareAndBalanceQueryParameters.beamSoundMode % 2 === 0 ?
-                             pitchVariationRange.expandNormalizedValue( 1 - normalizedAngle ) :
-                             pitchVariationRange.expandNormalizedValue( normalizedAngle );
-        soundClip.setPlaybackRate( playbackRate, 0 );
-        soundClip.play();
+        // Calculate the playback rate (aka pitch) for the individual creak sound based on the beam's angle.
+        const normalizedAngle = EXPECTED_ANGLE_RANGE.getNormalizedValue( Math.abs( tiltAngle ) );
+        const playbackRate = PITCH_VARIATION_RANGE.expandNormalizedValue( normalizedAngle );
+        creakSoundClip.setPlaybackRate( playbackRate, 0 );
+
+        // Play the creak sound.
+        creakSoundClip.play();
+
+        // Record the time so that we can prevent the individual sounds from being played too often.
         timeOfLastPlay = phet.joist.elapsedTime;
       }
     } );

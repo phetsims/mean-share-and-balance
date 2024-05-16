@@ -15,15 +15,7 @@ const SCHEMA_MAP = {
   showAnimation: {
     type: 'boolean',
     defaultValue: true
-  },
-
-  // TODO: Temporary for trying out sound design options, see https://github.com/phetsims/mean-share-and-balance/issues/216.
-  beamSoundMode: {
-    type: 'number',
-    defaultValue: 7,
-    validValues: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
   }
-
 } as const;
 
 const MeanShareAndBalanceQueryParameters = QueryStringMachine.getAll( SCHEMA_MAP );
