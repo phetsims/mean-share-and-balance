@@ -116,11 +116,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       rotation: Math.PI / 4
     } );
 
-    this.cueingHighlight = new Rectangle( -2, -2,
+    this.cueingHighlight = new Rectangle( -2, -1.5,
       MeanShareAndBalanceConstants.CANDY_BAR_WIDTH + 2, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + 2, {
-        fill: HighlightPath.INNER_FOCUS_COLOR,
-        stroke: HighlightPath.OUTER_FOCUS_COLOR,
-        lineWidth: 1,
+        stroke: HighlightPath.INNER_FOCUS_COLOR,
+        lineWidth: 2,
         cornerRadius: 2,
         visibleProperty: model.groupSortInteractionModel.mouseSortCueVisibleProperty
       }
