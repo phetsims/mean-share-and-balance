@@ -62,7 +62,7 @@ export default class MeanAccordionBox extends AccordionBox {
 
         // Add the plate first, which is just a line.
         const plateNode = new Image( notepadPlateSketch_svg, {
-          maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH
+          maxWidth: MeanShareAndBalanceConstants.PLATE_DIMENSION.width
         } );
         meanSnacksGraphicNode.addChild( plateNode );
 

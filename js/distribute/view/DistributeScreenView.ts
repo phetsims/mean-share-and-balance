@@ -34,7 +34,6 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
@@ -182,7 +181,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     const predictMeanModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
       new Vector2( this.playAreaCenterX,
-        NOTEPAD_PLATE_BOTTOM_Y - DistributeScreenView.PLATE_HEIGHT - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
+        NOTEPAD_PLATE_BOTTOM_Y - MeanShareAndBalanceConstants.PLATE_DIMENSION.height - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
       MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
     const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, {
@@ -245,7 +244,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       const lastPlate = activePlates[ activePlates.length - 1 ];
       predictMeanSlider.updateLine(
         firstPlate.xPositionProperty.value,
-        lastPlate.xPositionProperty.value + MeanShareAndBalanceConstants.PLATE_WIDTH / 2
+        lastPlate.xPositionProperty.value + MeanShareAndBalanceConstants.PLATE_DIMENSION.width / 2
       );
     } );
 
@@ -385,7 +384,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         this.cueingHighlight.x = highlightPosition.x;
         this.cueingHighlight.y = highlightPosition.y;
         this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-          SnackStacker.getCueingArrowPosition( plate, DistributeScreenView.PLATE_HEIGHT )
+          SnackStacker.getCueingArrowPosition( plate, MeanShareAndBalanceConstants.PLATE_DIMENSION.height )
         );
       }
       else {
@@ -398,7 +397,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       assert && assert( plate, 'selected candy bar must be on a plate' );
       this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
       this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getCueingArrowPosition( plate!, DistributeScreenView.PLATE_HEIGHT )
+        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.PLATE_DIMENSION.height )
       );
     }
   }
@@ -409,14 +408,10 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       const plate = this.model.getPlateForSnack( selectedCandyBar );
       assert && assert( plate, 'selected candy bar must be on a plate' );
       this.keyboardSortCueNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getCueingArrowPosition( plate!, DistributeScreenView.PLATE_HEIGHT )
+        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.PLATE_DIMENSION.height )
       );
     }
   }
-
-  private static readonly PLATE_HEIGHT = new Image( notepadPlateSketch_svg, {
-    maxWidth: MeanShareAndBalanceConstants.PLATE_WIDTH
-  } ).bounds.height;
 }
 
 meanShareAndBalance.register( 'DistributeScreenView', DistributeScreenView );

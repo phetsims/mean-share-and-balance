@@ -16,6 +16,7 @@ import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import Property from '../../../axon/js/Property.js';
+import Dimension2 from '../../../dot/js/Dimension2.js';
 
 const DEFAULT_MARGIN = 15;
 const CONTROLS_MAX_TEXT_WIDTH = 175;
@@ -67,7 +68,7 @@ const MeanShareAndBalanceConstants = {
     boxWidth: 16
   },
 
-  PLATE_WIDTH: PLATE_WIDTH,
+  PLATE_DIMENSION: new Dimension2( PLATE_WIDTH, 5 ),
 
   CANDY_BAR_HEIGHT: 12,
   CANDY_BAR_WIDTH: PLATE_WIDTH,
