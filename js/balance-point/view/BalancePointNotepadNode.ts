@@ -8,7 +8,7 @@
  */
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, Node, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, createGatedVisibleProperty, Node, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -77,10 +77,14 @@ export default class BalancePointNotepadNode extends NotepadNode {
       sceneModel.targetNumberOfBallsProperty
     );
 
+    const checkButtonTandem = options.tandem.createTandem( 'checkButton' );
+    const gatedVisibleProperty = createGatedVisibleProperty( DerivedProperty.not( isMeanFulcrumFixedProperty ),
+      checkButtonTandem );
+
     const checkButton = new RectangularPushButton( {
 
       // The check button is not visible when the fulcrum is fixed.
-      visibleProperty: DerivedProperty.not( isMeanFulcrumFixedProperty ),
+      visibleProperty: gatedVisibleProperty,
       content: new Node( { children: [ checkText, resetText ] } ),
       soundPlayer: checkButtonSoundPlayer,
       listener: () => {
@@ -88,7 +92,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
       },
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      tandem: options.tandem.createTandem( 'checkButton' )
+      tandem: checkButtonTandem
     } );
     sceneModel.beamSupportsPresentProperty.link( supportsPresent => {
       checkButton.baseColor = supportsPresent ? MeanShareAndBalanceColors.checkButtonColorProperty : 'white';

@@ -138,10 +138,12 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     this.leftBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
-      tandem: options.tandem.createTandem( 'leftBalanceBeamYValueProperty' )
+      tandem: options.tandem.createTandem( 'leftBalanceBeamYValueProperty' ),
+      phetioReadOnly: true
     } );
     this.rightBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
-      tandem: options.tandem.createTandem( 'rightBalanceBeamYValueProperty' )
+      tandem: options.tandem.createTandem( 'rightBalanceBeamYValueProperty' ),
+      phetioReadOnly: true
     } );
 
     // Update the position of the beam as other aspects of the model change.
