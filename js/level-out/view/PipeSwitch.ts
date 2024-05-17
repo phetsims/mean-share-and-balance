@@ -14,31 +14,32 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 
 export default class PipeSwitch extends ABSwitch<boolean> {
 
-  public constructor( arePipesOpenProperty: Property<boolean>, tandem: Tandem ) {
+  public constructor( arePipesOpenProperty: Property<boolean>, arePipesEnabledProperty: Property<boolean>, tandem: Tandem ) {
 
-    const options = {
+    const closedValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( 0 ) );
+
+    const openValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ) );
+
+    const options: ABSwitchOptions = {
+      align: 'top',
+      justify: 'left',
+      enabledProperty: arePipesEnabledProperty,
+      tandem: tandem,
+
       toggleSwitchOptions: {
         size: new Dimension2( 40, 20 ),
 
         // Turn off default sound production for switch - sounds for the pipes changing are handled elsewhere.
         switchToLeftSoundPlayer: nullSoundPlayer,
         switchToRightSoundPlayer: nullSoundPlayer
-      },
-      tandem: tandem
+      }
     };
 
-    const closedValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( 0 ) );
-
-    const openValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ) );
-
-    const combinedOptions = combineOptions<ABSwitchOptions>( { align: 'top', justify: 'left' }, options );
-
-    super( arePipesOpenProperty, false, closedValveIcon, true, openValveIcon, combinedOptions );
+    super( arePipesOpenProperty, false, closedValveIcon, true, openValveIcon, options );
   }
 }
 

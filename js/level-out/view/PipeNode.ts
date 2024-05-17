@@ -33,7 +33,8 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
   // Public for traversal order
   public readonly valveNode: ValveNode;
 
-  public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
+  public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, arePipesEnabledProperty: Property<boolean>,
+                      modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
     const options = providedOptions;
 
     // Pipe & valve dimensions
@@ -97,6 +98,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     const combinedOptions = combineOptions<NodeOptions>( {
       visibleProperty: pipe.isActiveProperty,
+      enabledProperty: arePipesEnabledProperty,
       children: [ pipeRectangle, pipeStrokeLeft, pipeStrokeBottom, pipeStrokeTop, pipeStrokeRight, valveNode ]
     }, options );
     super( combinedOptions );
@@ -115,6 +117,10 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     // interactive highlighting - set a custom highlight because the pipe nodes have a unique combined highlight
     // collectively in the ScreenView
     this.interactiveHighlight = Shape.bounds( this.localBounds );
+
+    arePipesEnabledProperty.link( enabled => {
+      enabled ? this.opacity = 1 : this.opacity = 0.5;
+    } );
   }
 }
 

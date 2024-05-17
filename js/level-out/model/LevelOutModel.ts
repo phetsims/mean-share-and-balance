@@ -44,6 +44,7 @@ export default class LevelOutModel implements TModel {
   public readonly notepadCups: Cup[];
   public readonly pipeArray: Pipe[];
   public readonly arePipesOpenProperty: Property<boolean>;
+  public readonly arePipesEnabledProperty: Property<boolean>;
   public readonly doWaterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>;
 
   // visible properties
@@ -95,6 +96,9 @@ export default class LevelOutModel implements TModel {
 
     this.arePipesOpenProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'arePipesOpenProperty' )
+    } );
+    this.arePipesEnabledProperty = new BooleanProperty( true, {
+      tandem: options.tandem.createTandem( 'arePipesEnabledProperty' )
     } );
 
     // The tableCups are the "ground truth" and the notepadCups mirror them.

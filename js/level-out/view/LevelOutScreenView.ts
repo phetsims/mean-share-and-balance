@@ -50,8 +50,10 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     const options = providedOptions;
 
-    const modelViewTransformNotepadCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-    const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ), new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const modelViewTransformNotepadCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
+      new Vector2( 0, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
+      new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
     // Create the sound that will be played when the mean prediction become correct.
     const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
@@ -124,7 +126,8 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     // Add all cup nodes to the view.
     const notepadCupNodes: Array<NotepadCupNode> = [];
     model.notepadCups.forEach( ( cupModel, index ) => {
-      const cupNode = new NotepadCupNode( cupModel, model.tableCups[ index ], modelViewTransformNotepadCups, model.meanProperty, model.tickMarksVisibleProperty,
+      const cupNode = new NotepadCupNode( cupModel, model.tableCups[ index ], modelViewTransformNotepadCups,
+        model.meanProperty, model.tickMarksVisibleProperty,
         { tandem: notepadCupsParentTandem.createTandem( `notepadCupNode${cupModel.linePlacement + 1}` ) } );
       notepadCupNodes.push( cupNode );
     } );
@@ -143,7 +146,8 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const pipeNodes: Array<PipeNode> = [];
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
-      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty, modelViewTransformNotepadCups,
+      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty,
+        model.arePipesEnabledProperty, modelViewTransformNotepadCups,
         { tandem: pipesParentTandem.createTandem( `pipeNode${index + 1}` ), focusable: index === 0 } );
 
       pipeNodes.push( pipeNode );
@@ -181,7 +185,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     // Controls on Right side of screen
     const controls = new LevelOutControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
       model.numberOfCupsProperty, model.numberOfCupsRangeProperty,
-      model.arePipesOpenProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
+      model.arePipesOpenProperty, model.arePipesEnabledProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
