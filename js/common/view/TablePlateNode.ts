@@ -51,7 +51,7 @@ export default class TablePlateNode<T extends Snack> extends Node {
     }, providedOptions );
 
     const plateImage = new Image( plate_svg, {
-      maxWidth: MeanShareAndBalanceConstants.PLATE_DIMENSION.width * 1.3 // Tweaked a little for a better look, adjust as needed.
+      maxWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width * 1.3 // Tweaked a little for a better look, adjust as needed.
     } );
 
     // Create the sound generator for the quantity of snacks on the plate.

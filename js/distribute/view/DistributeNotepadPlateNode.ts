@@ -28,8 +28,8 @@ export default class DistributeNotepadPlateNode extends Node {
                       mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
 
     const plateNode = new Image( notepadPlateSketch_svg, {
-      maxWidth: MeanShareAndBalanceConstants.PLATE_DIMENSION.width,
-      maxHeight: MeanShareAndBalanceConstants.PLATE_DIMENSION.height
+      maxWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width,
+      maxHeight: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height
     } );
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {

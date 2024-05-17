@@ -62,8 +62,8 @@ class SnackStacker {
 
       // The apples are stacked in two columns with some space between them in both the x and y dimensions.
       snackNode.centerX = positionInStack % 2 === 0 ?
-                          MeanShareAndBalanceConstants.PLATE_DIMENSION.width / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
-                          MeanShareAndBalanceConstants.PLATE_DIMENSION.width / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
+                          MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
+                          MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
       snackNode.bottom = -Math.floor( positionInStack / 2 ) * ( snackNode.width + VERTICAL_SPACE_BETWEEN_APPLES ) -
                          VERTICAL_SPACE_BETWEEN_APPLES;
     }
@@ -78,7 +78,7 @@ class SnackStacker {
    */
   public static getStackedCandyBarPosition( plateXPosition: number, positionInStack: number ): Vector2 {
 
-    const xPosition = plateXPosition - MeanShareAndBalanceConstants.PLATE_DIMENSION.width / 2;
+    const xPosition = plateXPosition - MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2;
 
     // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
@@ -114,7 +114,7 @@ class SnackStacker {
     const topSnackIndex = plate.snacksOnNotepadPlate.length - 1;
     const plateXPosition = plate.xPositionProperty.value;
     return SnackStacker.getStackedCandyBarPosition( plateXPosition, topSnackIndex )
-      .plusXY( MeanShareAndBalanceConstants.PLATE_DIMENSION.width / 2, -plateHeight + CUEING_ARROW_MARGIN );
+      .plusXY( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2, -plateHeight + CUEING_ARROW_MARGIN );
   }
 }
 

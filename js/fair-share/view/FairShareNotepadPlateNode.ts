@@ -31,7 +31,7 @@ export default class FairShareNotepadPlateNode extends Image {
     );
 
     super( notepadPlateSketch_svg, {
-      maxWidth: MeanShareAndBalanceConstants.PLATE_DIMENSION.width,
+      maxWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width,
       visibleProperty: plateVisibleProperty
     } );
 

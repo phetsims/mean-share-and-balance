@@ -68,7 +68,8 @@ const MeanShareAndBalanceConstants = {
     boxWidth: 16
   },
 
-  PLATE_DIMENSION: new Dimension2( PLATE_WIDTH, 5 ),
+  // If the notepad plate image is change, update dimension to match the new aspect ratio.
+  NOTEPAD_PLATE_DIMENSION: new Dimension2( PLATE_WIDTH, 5 ),
 
   CANDY_BAR_HEIGHT: 12,
   CANDY_BAR_WIDTH: PLATE_WIDTH,
