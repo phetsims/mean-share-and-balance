@@ -47,9 +47,12 @@ export default class LevelOutModel implements TModel {
   public readonly arePipesEnabledProperty: Property<boolean>;
   public readonly doWaterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>;
 
-  // visible properties
+  // visible Properties
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly tickMarksVisibleProperty: Property<boolean>;
+
+  // phet-io specific Properties
+  public readonly successIndicatorsOperatingProperty: Property<boolean>;
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 
@@ -197,6 +200,11 @@ export default class LevelOutModel implements TModel {
     ], () => {
       return _.every( this.getActiveNotepadCups(), notepadCup =>
         Utils.roundToInterval( notepadCup.waterLevelProperty.value, 0.1 ) === Utils.roundToInterval( this.meanProperty.value, 0.1 ) );
+    } );
+
+    // For phet-io client use only.
+    this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
+      tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
   }
 

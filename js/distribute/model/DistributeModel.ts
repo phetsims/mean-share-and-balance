@@ -47,6 +47,9 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   // affect the selected item in the group.
   public readonly stackChangedEmitter: Emitter = new Emitter();
 
+  // phet-io specific Properties
+  public readonly successIndicatorsOperatingProperty: Property<boolean>;
+
   public constructor( providedOptions?: DistributeModelOptions ) {
 
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
@@ -188,6 +191,11 @@ export default class DistributeModel extends SharingModel<CandyBar> {
         // after the redistribution above.
         plate.tableSnackNumberProperty.value = isActive ? plate.startingNumberOfSnacks : 0;
       } );
+    } );
+
+    // For phet-io client use only.
+    this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
+      tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
   }
 

@@ -66,9 +66,18 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           model.arePipesOpenProperty,
           model.meanPredictionProperty,
           model.meanProperty,
-          model.doWaterLevelsMatchMeanProperty
+          model.doWaterLevelsMatchMeanProperty,
+          model.successIndicatorsOperatingProperty
         ],
-        ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean ) => {
+        ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean, successIndicatorsOperating ) => {
+
+          // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
+          // the default pattern, and return early.
+          if ( !successIndicatorsOperating ) {
+            successRectangle.visible = false;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            return;
+          }
           const meanTolerance = 0.05;
           const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
           const roundedMean = Utils.roundToInterval( meanValue, 0.01 );

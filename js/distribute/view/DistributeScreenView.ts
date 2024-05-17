@@ -190,9 +190,21 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     } );
     soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
-      Multilink.multilink( [ model.meanPredictionProperty, model.meanProperty, model.areSnacksDistributedProperty ],
-        ( meanPrediction, meanValue, areSnacksDistributed ) => {
+      Multilink.multilink( [
+          model.meanPredictionProperty,
+          model.meanProperty,
+          model.areSnacksDistributedProperty,
+          model.successIndicatorsOperatingProperty
+        ],
+        ( meanPrediction, meanValue, areSnacksDistributed, successIndicatorsOperating ) => {
 
+          // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
+          // the default pattern, and return early.
+          if ( !successIndicatorsOperating ) {
+            successRectangle.visible = false;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            return;
+          }
           const successRectangleWasVisible = successRectangle.visible;
           const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
 
