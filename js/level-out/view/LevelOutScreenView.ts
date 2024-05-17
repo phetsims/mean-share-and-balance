@@ -15,7 +15,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadCupNode from './NotepadCupNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
+import MeanPredictionSlider from '../../common/view/MeanPredictionSlider.js';
 import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -93,7 +93,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         }
       );
     };
-    const predictMeanSlider = new PredictMeanSlider(
+    const meanPredictionSlider = new MeanPredictionSlider(
       model.meanPredictionProperty,
       model.dragRange,
       createSuccessIndicatorMultilink,
@@ -106,7 +106,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         enabledRangeProperty: new Property( model.dragRange ),
 
         // phet-io
-        tandem: options.tandem.createTandem( 'predictMeanSlider' ),
+        tandem: options.tandem.createTandem( 'meanPredictionSlider' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
@@ -116,7 +116,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       const activeNotepadCups = model.getActiveNotepadCups();
       const firstCup = activeNotepadCups[ 0 ];
       const lastCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
-      predictMeanSlider.updateLine( firstCup.position.x, lastCup.position.x + MeanShareAndBalanceConstants.CUP_WIDTH );
+      meanPredictionSlider.updateLine( firstCup.position.x, lastCup.position.x + MeanShareAndBalanceConstants.CUP_WIDTH );
     } );
 
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
@@ -166,7 +166,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const tableNode = new LabTableNode( { centerX: waterCupLayerNode.centerX } );
 
     const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
-      children: [ notepadNode, tableNode, waterCupLayerNode, predictMeanSlider ]
+      children: [ notepadNode, tableNode, waterCupLayerNode, meanPredictionSlider ]
     } );
 
     // Instantiate Parent
@@ -204,7 +204,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     ManualConstraint.create( this, [ waterCupLayerNode ], waterCupLayerProxy => {
       waterCupLayerProxy.centerX = this.playAreaCenterX;
-      predictMeanSlider.x = waterCupLayerProxy.x - 12.5;
+      meanPredictionSlider.x = waterCupLayerProxy.x - 12.5;
       tableNode.centerX = waterCupLayerProxy.centerX - 10;
 
       tableNode.y = waterCupLayerProxy.bottom - 30;
@@ -240,7 +240,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       this.interruptSubtreeInput();
     } );
 
-    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], predictMeanSlider, controls.numberSpinner ], controls.controlsPDOMOrder );
+    this.msabSetPDOMOrder( tableCupNodes, [ pipeNodes[ 0 ], meanPredictionSlider, controls.numberSpinner ], controls.controlsPDOMOrder );
   }
 
   public override reset(): void {

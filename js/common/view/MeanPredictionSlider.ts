@@ -36,7 +36,7 @@ type PredictMeanNodeOptions =
 // Constants
 const LINE_X_MARGIN = 10;
 
-export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
+export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Node;
   private readonly predictMeanGlow: Rectangle;
@@ -126,4 +126,4 @@ export default class PredictMeanSlider extends AccessibleSlider( Node, 0 ) {
   }
 }
 
-meanShareAndBalance.register( 'PredictMeanSlider', PredictMeanSlider );
+meanShareAndBalance.register( 'MeanPredictionSlider', MeanPredictionSlider );

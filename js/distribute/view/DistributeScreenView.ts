@@ -32,7 +32,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import PredictMeanSlider from '../../common/view/PredictMeanSlider.js';
+import MeanPredictionSlider from '../../common/view/MeanPredictionSlider.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
@@ -220,7 +220,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         } );
     };
 
-    const predictMeanSlider = new PredictMeanSlider(
+    const meanPredictionSlider = new MeanPredictionSlider(
       model.meanPredictionProperty, model.predictMeanDragRange,
       createSuccessIndicatorMultilink,
       predictMeanModelViewTransform,
@@ -232,7 +232,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         enabledRangeProperty: new Property( model.predictMeanDragRange ),
 
         // phet-io
-        tandem: options.tandem.createTandem( 'predictMeanSlider' ),
+        tandem: options.tandem.createTandem( 'meanPredictionSlider' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
@@ -242,13 +242,13 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       const activePlates = model.getActivePlates();
       const firstPlate = activePlates[ 0 ];
       const lastPlate = activePlates[ activePlates.length - 1 ];
-      predictMeanSlider.updateLine(
+      meanPredictionSlider.updateLine(
         firstPlate.xPositionProperty.value,
         lastPlate.xPositionProperty.value + MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2
       );
     } );
 
-    this.notepadSnackLayerNode.addChild( predictMeanSlider );
+    this.notepadSnackLayerNode.addChild( meanPredictionSlider );
 
     this.groupSortInteractionView = new GroupSortInteractionView(
       model.groupSortInteractionModel,
