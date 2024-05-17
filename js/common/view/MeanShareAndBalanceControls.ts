@@ -22,6 +22,7 @@ import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 import generalOpenSoundPlayer from '../../../../tambo/js/shared-sound-players/generalOpenSoundPlayer.js';
 import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
 type SelfOptions = {
   numberSpinnerOptions?: NumberSpinnerOptions;
@@ -69,6 +70,7 @@ export default class MeanShareAndBalanceControls extends Node {
         centerY: 230,
         scale: 0.6,
         left: vBoxAlignBox.left,
+        iconFill: MeanShareAndBalanceColors.infoIconFillColorProperty,
         tandem: options.tandem.createTandem( 'infoButton' ),
         soundPlayer: infoButtonSoundPlayer
       } );

@@ -102,6 +102,9 @@ const meanShareAndBalanceColors = {
   } ),
   arrowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'arrowFill', {
     default: '#FFF383'
+  } ),
+  infoIconFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'infoIconFill', {
+    default: '#286AA1'
   } )
 };
 
