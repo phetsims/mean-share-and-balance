@@ -89,6 +89,7 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
       cursor: 'ns-resize'
     }, options );
     super( combinedOptions );
+    this.addLinkedElement( meanPredictionProperty );
 
     meanPredictionProperty.link( prediction => {
       this.centerY = modelViewTransform.modelToViewY( prediction );
