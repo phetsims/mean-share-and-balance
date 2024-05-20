@@ -61,6 +61,9 @@ export default class SharingModel<T extends Snack> implements TModel {
   // cause it to be activated, adding to the array will cause it to be deactivated.
   protected readonly unusedSnacks: ObservableArray<T>;
 
+  // Allows PhET-iO clients to modify the max number of plates in the screen.
+  public readonly maxNumberOfPlatesProperty: Property<number>;
+
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
                       handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void,
@@ -71,22 +74,18 @@ export default class SharingModel<T extends Snack> implements TModel {
     this.numberOfPlatesRangeProperty = new Property<Range>(
       NUMBER_OF_PLATES_RANGE,
       {
-
         // phet-io
         tandem: options.tandem.createTandem( 'numberOfPlatesRangeProperty' ),
         phetioValueType: Range.RangeIO,
-
-        // TODO: do we want to adjust the number of plates on the screen if the range changes? Right now
-        //   a validation error is thrown if the range max is less than the number of plates. https://github.com/phetsims/mean-share-and-balance/issues/187
-        isValidValue: value => {
-          const numberOfPlates = this.numberOfPlatesProperty ? this.numberOfPlatesProperty.value :
-                               MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE;
-          return value.min === NUMBER_OF_PLATES_RANGE.min &&
-                 NUMBER_OF_PLATES_RANGE.contains( value.max ) &&
-                 value.max >= numberOfPlates;
-        }
+        phetioReadOnly: true
       }
     );
+
+    this.maxNumberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+      numberType: 'Integer',
+      range: NUMBER_OF_PLATES_RANGE,
+      tandem: options.tandem.createTandem( 'maxNumberOfPlatesProperty' )
+    } );
 
     this.numberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
@@ -214,6 +213,13 @@ export default class SharingModel<T extends Snack> implements TModel {
           plate.snacksOnNotepadPlate.length === meanFloor || plate.snacksOnNotepadPlate.length === meanCeil
         );
       } );
+
+    this.maxNumberOfPlatesProperty.lazyLink( maxNumberOfPlates => {
+      this.resetData();
+      this.numberOfPlatesProperty.value = Math.min( this.numberOfPlatesProperty.value, maxNumberOfPlates );
+      this.numberOfPlatesRangeProperty.value = new Range( NUMBER_OF_PLATES_RANGE.min, maxNumberOfPlates );
+
+    } );
   }
 
   /**
@@ -266,12 +272,9 @@ export default class SharingModel<T extends Snack> implements TModel {
   }
 
   /**
-   * Restore initial state.
+   * Resets the data in the simulation to it's initial state.
    */
-  public reset(): void {
-    this.meanCalculationDialogVisibleProperty.reset();
-    this.totalVisibleProperty.reset();
-
+  protected resetData(): void {
     this.numberOfPlatesProperty.reset();
 
     // Release all snack from plates by setting their table snack number to 0.  This puts the snacks back onto the
@@ -279,8 +282,18 @@ export default class SharingModel<T extends Snack> implements TModel {
     // construction of the model.
     this.plates.forEach( plate => { plate.tableSnackNumberProperty.value = 0; } );
 
-    // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
-    this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
+  // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
+  this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
+  }
+
+  /**
+   * Restore initial state of the sim including visual Properties and data.
+   */
+  public reset(): void {
+    this.meanCalculationDialogVisibleProperty.reset();
+    this.totalVisibleProperty.reset();
+
+    this.resetData();
   }
 
   public static readonly INTER_PLATE_DISTANCE = INTER_PLATE_DISTANCE;

@@ -226,7 +226,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
     maxKicksProperty.link( maxKicks => {
       this.clearData();
-      MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value.max = maxKicks;
+      MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value = new Range(
+        MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value.min,
+        maxKicks
+      );
     } );
   }
 

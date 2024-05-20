@@ -562,10 +562,10 @@ export default class FairShareModel extends SharingModel<Apple> {
     }
   }
 
-  public override reset(): void {
+  protected override resetData(): void {
     this.finishInProgressAnimations();
     this.appleDistributionModeProperty.reset();
-    super.reset();
+    super.resetData();
   }
 
   public static readonly NOTEPAD_PLATE_CENTER_Y = 300;

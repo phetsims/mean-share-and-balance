@@ -237,6 +237,11 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     return sortedPlatesWithSpace.length > 0 ? sortedPlatesWithSpace[ 0 ] : null;
   }
 
+  protected override resetData(): void {
+    this.syncData();
+    super.resetData();
+  }
+
   public override reset(): void {
     this.meanPredictionProperty.reset();
     this.predictMeanVisibleProperty.reset();
