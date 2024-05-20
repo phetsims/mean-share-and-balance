@@ -62,7 +62,7 @@ export default class SharingModel<T extends Snack> implements TModel {
   protected readonly unusedSnacks: ObservableArray<T>;
 
   // Allows PhET-iO clients to modify the max number of plates in the screen.
-  public readonly maxNumberOfPlatesProperty: Property<number>;
+  private readonly maxPlatesProperty: Property<number>;
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
@@ -73,10 +73,10 @@ export default class SharingModel<T extends Snack> implements TModel {
 
     this.numberOfPlatesRangeProperty = new Property<Range>( NUMBER_OF_PLATES_RANGE );
 
-    this.maxNumberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+    this.maxPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       numberType: 'Integer',
       range: NUMBER_OF_PLATES_RANGE,
-      tandem: options.tandem.createTandem( 'maxNumberOfPlatesProperty' )
+      tandem: options.tandem.createTandem( 'maxPlatesProperty' )
     } );
 
     this.numberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
@@ -206,7 +206,7 @@ export default class SharingModel<T extends Snack> implements TModel {
         );
       } );
 
-    this.maxNumberOfPlatesProperty.lazyLink( maxNumberOfPlates => {
+    this.maxPlatesProperty.lazyLink( maxNumberOfPlates => {
       this.resetData();
       this.numberOfPlatesProperty.value = Math.min( this.numberOfPlatesProperty.value, maxNumberOfPlates );
       this.numberOfPlatesRangeProperty.value = new Range( NUMBER_OF_PLATES_RANGE.min, maxNumberOfPlates );

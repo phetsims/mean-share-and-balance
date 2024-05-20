@@ -30,10 +30,6 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   // A Property that tracks whether the fulcrum has been dragged.
   public readonly fulcrumWasDraggedProperty: Property<boolean>;
 
-  // Allows PhET-iO clients to modify the max number of kicks.
-  public readonly maxKicksProperty: Property<number>;
-
-
   public constructor( providedOptions: BalancePointModelOptions ) {
 
     const options = optionize<BalancePointModelOptions, SelfOptions, SoccerModelOptions<BalancePointSceneModel>>()( {
@@ -56,6 +52,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
     } );
 
+    // Allows PhET-iO clients to modify the max number of kicks.
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       range: MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value,
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
@@ -66,8 +63,6 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     } );
 
     super( [ sceneModel ], options );
-
-    this.maxKicksProperty = maxKicksProperty;
 
     this.isMeanFulcrumFixedProperty = isMeanFulcrumFixedProperty;
     this.fulcrumWasDraggedProperty = new BooleanProperty( false, {

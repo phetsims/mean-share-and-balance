@@ -53,7 +53,7 @@ export default class LevelOutModel implements TModel {
 
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
-  private readonly maxNumberOfCupsProperty: Property<number>;
+  private readonly maxCupsProperty: Property<number>;
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 
@@ -88,9 +88,9 @@ export default class LevelOutModel implements TModel {
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' )
     } );
 
-    this.maxNumberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+    this.maxCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       range: NUMBER_OF_CUPS_RANGE,
-      tandem: options.tandem.createTandem( 'maxNumberOfCupsProperty' )
+      tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
 
     this.arePipesOpenProperty = new BooleanProperty( false, {
@@ -203,7 +203,7 @@ export default class LevelOutModel implements TModel {
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
 
-    this.maxNumberOfCupsProperty.lazyLink( max => {
+    this.maxCupsProperty.lazyLink( max => {
       this.resetData();
       this.numberOfCupsProperty.value = Math.min( this.numberOfCupsProperty.value, max );
       this.numberOfCupsRangeProperty.value = new Range( NUMBER_OF_CUPS_RANGE.min, max );
