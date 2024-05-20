@@ -15,6 +15,9 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/model/SoccerCommonGroupSortInteractionModel.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Range from '../../../../dot/js/Range.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
@@ -27,6 +30,9 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
   // A Property that tracks whether the fulcrum has been dragged.
   public readonly fulcrumWasDraggedProperty: Property<boolean>;
+
+  // Allows PhET-iO clients to modify the max number of kicks.
+  public readonly maxKicksProperty: Property<number>;
 
 
   public constructor( providedOptions: BalancePointModelOptions ) {
@@ -50,11 +56,19 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     const isMeanFulcrumFixedProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
     } );
-    const sceneModel = new BalancePointSceneModel( isMeanFulcrumFixedProperty, {
+
+    const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+      range: new Range( 0, 7 ),
+      tandem: options.tandem.createTandem( 'maxKicksProperty' )
+    } );
+
+    const sceneModel = new BalancePointSceneModel( isMeanFulcrumFixedProperty, maxKicksProperty, {
       tandem: options.tandem.createTandem( 'sceneModel' )
     } );
 
     super( [ sceneModel ], options );
+
+    this.maxKicksProperty = maxKicksProperty;
 
     this.isMeanFulcrumFixedProperty = isMeanFulcrumFixedProperty;
     this.fulcrumWasDraggedProperty = new BooleanProperty( false, {
