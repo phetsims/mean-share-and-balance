@@ -410,6 +410,9 @@ export default class LevelOutModel extends PhetioObject implements TModel {
         implementation: function( this: LevelOutModel, dataPoints: number[] ) {
 
           // Validate data points
+          if ( dataPoints.length > this.maxCupsProperty.value ) {
+            dataPoints = dataPoints.slice( 0, this.maxCupsProperty.value );
+          }
           dataPoints.forEach( ( dataPoint, i ) => {
             const tableCup = this.tableCups[ i ];
             const error = tableCup.waterLevelProperty.getValidationError( dataPoint );
@@ -419,7 +422,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
           } );
 
           this.resetData();
-          this.numberOfCupsProperty.value = Math.min( dataPoints.length, this.maxCupsProperty.value );
+          this.numberOfCupsProperty.value = dataPoints.length;
           dataPoints.forEach( ( dataPoint, index ) => {
             this.tableCups[ index ].waterLevelProperty.set( dataPoint );
           } );

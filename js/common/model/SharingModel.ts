@@ -9,9 +9,8 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TModel from '../../../../joist/js/TModel.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
@@ -27,20 +26,22 @@ import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import VoidIO from '../../../../tandem/js/types/VoidIO.js';
+import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
 
 type SelfOptions = {
 
   // Controls the initial number of snacks on each plate.
   initialPlateValues: number[];
 };
-export type SharingModelOptions = SelfOptions & PickRequired<PhetioObjectOptions, 'tandem'>;
+export type SharingModelOptions = SelfOptions & PhetioObjectOptions;
 
 // constants
 const MAX_PLATES = MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
 const INTER_PLATE_DISTANCE = 100; // distance between plate centers, in screen coords
 const NUMBER_OF_PLATES_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
 
-export default class SharingModel<T extends Snack> implements TModel {
+export default class SharingModel<T extends Snack> extends PhetioObject implements TModel {
 
   public readonly numberOfPlatesRangeProperty: Property<Range>;
   public readonly numberOfPlatesProperty: Property<number>;
@@ -69,7 +70,13 @@ export default class SharingModel<T extends Snack> implements TModel {
                       handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void,
                       providedOptions: SharingModelOptions ) {
 
-    const options = combineOptions<SharingModelOptions>( {}, providedOptions );
+    const options = optionize<SharingModelOptions, SelfOptions, PhetioObjectOptions>()( {
+      phetioType: SharingModel.SharingModelIO,
+      phetioState: false,
+      phetioDocumentation: 'The model for the Distribute and Fair Share screens, which includes tablePlates and notepadPlates.'
+    }, providedOptions );
+
+    super( options );
 
     this.numberOfPlatesRangeProperty = new Property<Range>( NUMBER_OF_PLATES_RANGE );
 
@@ -274,8 +281,8 @@ export default class SharingModel<T extends Snack> implements TModel {
     // construction of the model.
     this.plates.forEach( plate => { plate.tableSnackNumberProperty.value = 0; } );
 
-  // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
-  this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
+    // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
+    this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
   }
 
   /**
@@ -289,6 +296,47 @@ export default class SharingModel<T extends Snack> implements TModel {
   }
 
   public static readonly INTER_PLATE_DISTANCE = INTER_PLATE_DISTANCE;
+
+  private static SharingModelIO = new IOType( 'SharingModelIO', {
+    valueType: SharingModel,
+    methods: {
+      setDataPoints: {
+        returnType: VoidIO,
+        parameterTypes: [ ArrayIO( NumberIO ) ],
+        implementation: function( this: SharingModel<Snack>, dataPoints: number[] ) {
+
+          // Validate data points
+          if ( dataPoints.length > this.maxPlatesProperty.value ) {
+            dataPoints = dataPoints.slice( 0, this.maxPlatesProperty.value );
+          }
+          dataPoints.forEach( ( dataPoint, i ) => {
+            const plate = this.plates[ i ];
+            const error = plate.tableSnackNumberProperty.getValidationError( dataPoint );
+            if ( error ) {
+              throw new Error( error );
+            }
+          } );
+
+          this.resetData();
+          this.numberOfPlatesProperty.value = dataPoints.length;
+
+          dataPoints.forEach( ( dataPoint, index ) => {
+            this.plates[ index ].tableSnackNumberProperty.set( dataPoint );
+          } );
+        },
+        documentation: 'Sets the data points for the scene model. Array lengths that exceed maxPlates will ignore excess values.'
+      },
+
+      getDataPoints: {
+        returnType: ArrayIO( NumberIO ),
+        parameterTypes: [],
+        implementation: function( this: SharingModel<Snack> ) {
+          return this.getActivePlates().map( plate => plate.tableSnackNumberProperty.value );
+        },
+        documentation: 'Gets the data points for the scene model.'
+      }
+    }
+  } );
 }
 
 meanShareAndBalance.register( 'SharingModel', SharingModel );
