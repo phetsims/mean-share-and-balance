@@ -7,7 +7,6 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Range from '../../../../dot/js/Range.js';
@@ -22,16 +21,20 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
+import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import IOType from '../../../../tandem/js/types/IOType.js';
+import VoidIO from '../../../../tandem/js/types/VoidIO.js';
+import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import TModel from '../../../../joist/js/TModel.js';
-import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 
-type LevelOutModelOptions = PickRequired<PhetioObjectOptions, 'tandem'>;
+type LevelOutModelOptions = EmptySelfOptions & PhetioObjectOptions;
 
 // constants
 const INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
 const NUMBER_OF_CUPS_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
 
-export default class LevelOutModel implements TModel {
+export default class LevelOutModel extends PhetioObject implements TModel {
 
   public readonly numberOfCupsRangeProperty: Property<Range>;
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
@@ -57,7 +60,13 @@ export default class LevelOutModel implements TModel {
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 
-    const options = providedOptions;
+    const options = optionize<LevelOutModelOptions, EmptySelfOptions, PhetioObjectOptions>()( {
+      phetioType: LevelOutModel.LevelOutModelIO,
+      phetioState: false,
+      phetioDocumentation: 'The model for the LevelOut screen, which includes tableCups and notepadCups.'
+    }, providedOptions );
+
+    super( options );
 
     // Visibility properties
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
@@ -317,6 +326,18 @@ export default class LevelOutModel implements TModel {
   }
 
   /**
+   * For use by PhET-iO clients. Sets thee waterLevelProperty of the table cups to the provided array
+   * of numbers. If the array is longer than the number of table cups, the excess values are ignored.
+   */
+  private setDataPoints( dataPoints: number[] ): void {
+    this.resetData();
+    this.numberOfCupsProperty.value = dataPoints.length;
+    dataPoints.forEach( ( dataPoint, index ) => {
+      this.tableCups[ index ].waterLevelProperty.set( dataPoint );
+    } );
+  }
+
+  /**
    * @param dt - in seconds
    */
   public step( dt: number ): void {
@@ -379,6 +400,43 @@ export default class LevelOutModel implements TModel {
     notepadCup.waterLevelProperty.set( notepadCupWaterLevel );
 
   }
+
+  private static LevelOutModelIO = new IOType( 'LevelOutModelIO', {
+    valueType: LevelOutModel,
+    methods: {
+      setDataPoints: {
+        returnType: VoidIO,
+        parameterTypes: [ ArrayIO( NumberIO ) ],
+        implementation: function( this: LevelOutModel, dataPoints: number[] ) {
+
+          // Validate data points
+          dataPoints.forEach( ( dataPoint, i ) => {
+            const tableCup = this.tableCups[ i ];
+            const error = tableCup.waterLevelProperty.getValidationError( dataPoint );
+            if ( error ) {
+              throw new Error( error );
+            }
+          } );
+
+          this.resetData();
+          this.numberOfCupsProperty.value = Math.min( dataPoints.length, this.maxCupsProperty.value );
+          dataPoints.forEach( ( dataPoint, index ) => {
+            this.tableCups[ index ].waterLevelProperty.set( dataPoint );
+          } );
+        },
+        documentation: 'Sets the data points for the scene model. Array lengths that exceed maxCups will ignore excess values.'
+      },
+
+      getDataPoints: {
+        returnType: ArrayIO( NumberIO ),
+        parameterTypes: [],
+        implementation: function( this: LevelOutModel ) {
+          return this.getActiveTableCups().map( cup => cup.waterLevelProperty.value );
+        },
+        documentation: 'Gets the data points for the scene model.'
+      }
+    }
+  } );
 }
 
 function calculateMean( values: number[] ): number {
