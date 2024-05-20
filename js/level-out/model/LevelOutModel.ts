@@ -53,6 +53,7 @@ export default class LevelOutModel implements TModel {
 
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
+  private readonly maxNumberOfCupsProperty: Property<number>;
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 
@@ -80,13 +81,7 @@ export default class LevelOutModel implements TModel {
     this.numberOfCupsRangeProperty = new Property( NUMBER_OF_CUPS_RANGE, {
       tandem: options.tandem.createTandem( 'numberOfCupsRangeProperty' ),
       phetioValueType: Range.RangeIO,
-      isValidValue: ( value: Range ) => {
-        const numberOfCups = this.numberOfCupsProperty ? this.numberOfCupsProperty.value :
-                             MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS;
-        return value.min === NUMBER_OF_CUPS_RANGE.min &&
-               NUMBER_OF_CUPS_RANGE.contains( value.max ) &&
-               value.max >= numberOfCups;
-      }
+      phetioReadOnly: true
     } );
 
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
@@ -95,6 +90,11 @@ export default class LevelOutModel implements TModel {
 
       // phetio
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' )
+    } );
+
+    this.maxNumberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+      range: NUMBER_OF_CUPS_RANGE,
+      tandem: options.tandem.createTandem( 'maxNumberOfCupsProperty' )
     } );
 
     this.arePipesOpenProperty = new BooleanProperty( false, {
@@ -205,6 +205,12 @@ export default class LevelOutModel implements TModel {
     // For phet-io client use only.
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
+    } );
+
+    this.maxNumberOfCupsProperty.lazyLink( max => {
+      this.resetData();
+      this.numberOfCupsProperty.value = Math.min( this.numberOfCupsProperty.value, max );
+      this.numberOfCupsRangeProperty.value = new Range( NUMBER_OF_CUPS_RANGE.min, max );
     } );
   }
 
@@ -332,17 +338,26 @@ export default class LevelOutModel implements TModel {
     assert && assert( this.notepadCups.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, `There should be ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS}, but there were actually ${this.notepadCups.length} cups` );
   }
 
-  public reset(): void {
+  /**
+   * Resets the data in the simulation to it's initial state.
+   */
+  private resetData(): void {
     this.numberOfCupsProperty.reset();
+    this.pipeArray.forEach( pipe => pipe.reset() );
+    this.tableCups.forEach( tableCup => tableCup.reset() );
+    this.notepadCups.forEach( notepadCup => notepadCup.reset() );
+
+    this.assertConsistentState();
+  }
+
+  public reset(): void {
     this.meanPredictionProperty.reset();
     this.arePipesOpenProperty.reset();
 
     this.predictMeanVisibleProperty.reset();
     this.tickMarksVisibleProperty.reset();
 
-    this.pipeArray.forEach( pipe => pipe.reset() );
-    this.tableCups.forEach( tableCup => tableCup.reset() );
-    this.notepadCups.forEach( notepadCup => notepadCup.reset() );
+    this.resetData();
 
     this.assertConsistentState();
   }
