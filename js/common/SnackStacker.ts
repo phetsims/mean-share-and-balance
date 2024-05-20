@@ -53,7 +53,7 @@ class SnackStacker {
 
       // The candy bar graphic Nodes are stacked in a single column with a little space between each.
       snackNode.centerX = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH / 2;
-      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
+      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height +
                              MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT / 2 +
                              positionInStack * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
                              MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
@@ -81,7 +81,7 @@ class SnackStacker {
     const xPosition = plateXPosition - MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2;
 
     // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
-    const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT +
+    const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height +
                          MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
                          1 +
                          ( positionInStack + 1 ) * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
@@ -102,7 +102,7 @@ class SnackStacker {
     const xPosition = positionInStack % 2 === 0 ?
                       plateXPosition - appleRadius - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
                       plateXPosition + appleRadius + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
-    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_HEIGHT / 2 -
+    const yPosition = -MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height / 2 -
                       MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS -
                       VERTICAL_SPACE_BETWEEN_APPLES -
                       Math.floor( positionInStack / 2 ) *
