@@ -27,6 +27,7 @@ import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioS
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import BooleanIO from '../../../../tandem/js/types/BooleanIO.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -41,6 +42,10 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly meanPredictionProperty: Property<number>;
   public readonly predictMeanDragRange = new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
+
+  // Tracks whether the snacks are distributed evenly across the plates or at least distributed as much as is possible
+  // with the data provided.
+  public readonly areSnacksDistributedProperty: TReadOnlyProperty<boolean>;
 
   // This emitter is used to update the keyboard focus and sorting cue when stack changes on a plate.
   // It is meant to be fired each time something changes about the way things are stacked, since this could
@@ -192,6 +197,23 @@ export default class DistributeModel extends SharingModel<CandyBar> {
         plate.tableSnackNumberProperty.value = isActive ? plate.startingNumberOfSnacks : 0;
       } );
     } );
+
+    const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
+    const notepadPlateSnackCountDependencies = this.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
+    this.areSnacksDistributedProperty = DerivedProperty.deriveAny( [
+        ...activePlateDependencies, ...notepadPlateSnackCountDependencies, this.meanProperty
+      ],
+      () => {
+        const meanFloor = Math.floor( this.meanProperty.value );
+        const meanCeil = Math.ceil( this.meanProperty.value );
+
+        return _.every( this.getActivePlates(), plate =>
+          plate.snacksOnNotepadPlate.length === meanFloor || plate.snacksOnNotepadPlate.length === meanCeil
+        );
+      }, {
+        tandem: options.tandem.createTandem( 'areSnacksDistributedProperty' ),
+        phetioValueType: BooleanIO
+      } );
 
     // For phet-io client use only.
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {

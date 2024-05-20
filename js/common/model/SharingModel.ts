@@ -51,7 +51,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   public readonly totalVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
   public readonly areAllActivePlatesInSyncProperty: TReadOnlyProperty<boolean>;
-  public readonly areSnacksDistributedProperty: TReadOnlyProperty<boolean>;
 
   // A state flag used to control whether the motion of snacks is animated or instantaneous.  This is helpful for
   // preventing animations during phet-io state setting.
@@ -199,19 +198,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
         plate.xPositionProperty.value = leftPlateCenterX + ( i * INTER_PLATE_DISTANCE );
       } );
     } );
-
-    const notepadPlateSnackCountDependencies = this.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
-    this.areSnacksDistributedProperty = DerivedProperty.deriveAny( [
-        ...activePlateDependencies, ...notepadPlateSnackCountDependencies, this.meanProperty
-      ],
-      () => {
-        const meanFloor = Math.floor( this.meanProperty.value );
-        const meanCeil = Math.ceil( this.meanProperty.value );
-
-        return _.every( this.getActivePlates(), plate =>
-          plate.snacksOnNotepadPlate.length === meanFloor || plate.snacksOnNotepadPlate.length === meanCeil
-        );
-      } );
 
     this.maxPlatesProperty.lazyLink( maxNumberOfPlates => {
       this.resetData();
