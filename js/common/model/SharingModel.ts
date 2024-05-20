@@ -71,15 +71,7 @@ export default class SharingModel<T extends Snack> implements TModel {
 
     const options = combineOptions<SharingModelOptions>( {}, providedOptions );
 
-    this.numberOfPlatesRangeProperty = new Property<Range>(
-      NUMBER_OF_PLATES_RANGE,
-      {
-        // phet-io
-        tandem: options.tandem.createTandem( 'numberOfPlatesRangeProperty' ),
-        phetioValueType: Range.RangeIO,
-        phetioReadOnly: true
-      }
-    );
+    this.numberOfPlatesRangeProperty = new Property<Range>( NUMBER_OF_PLATES_RANGE );
 
     this.maxNumberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       numberType: 'Integer',

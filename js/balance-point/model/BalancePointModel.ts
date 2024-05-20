@@ -17,7 +17,6 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/model/SoccerCommonGroupSortInteractionModel.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Range from '../../../../dot/js/Range.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
@@ -58,7 +57,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     } );
 
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
-      range: new Range( 0, 7 ),
+      range: MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value,
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
     } );
 
@@ -86,7 +85,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       tandem: options.tandem.createTandem( 'isTotalVisibleProperty' )
     } );
 
-    sceneModel.targetNumberOfBallsProperty.link( ( ) => {
+    sceneModel.targetNumberOfBallsProperty.link( () => {
       this.groupSortInteractionModel.updateSelectedGroupItem( sceneModel );
     } );
   }

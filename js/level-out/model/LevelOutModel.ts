@@ -78,11 +78,7 @@ export default class LevelOutModel implements TModel {
       phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup'
     } );
 
-    this.numberOfCupsRangeProperty = new Property( NUMBER_OF_CUPS_RANGE, {
-      tandem: options.tandem.createTandem( 'numberOfCupsRangeProperty' ),
-      phetioValueType: Range.RangeIO,
-      phetioReadOnly: true
-    } );
+    this.numberOfCupsRangeProperty = new Property( NUMBER_OF_CUPS_RANGE );
 
     this.numberOfCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_CUPS, {
       numberType: 'Integer',
