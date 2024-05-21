@@ -246,6 +246,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
+    meanPredictionSlider.addLinkedElement( model.successIndicatorsOperatingProperty );
 
     // Update line length and dilation based on the number of objects.
     model.numberOfPlatesProperty.link( () => {

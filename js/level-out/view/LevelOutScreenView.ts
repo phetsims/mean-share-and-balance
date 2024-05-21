@@ -119,6 +119,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
+    meanPredictionSlider.addLinkedElement( model.successIndicatorsOperatingProperty );
 
     // Update line length and dilation based on the number of objects.
     model.numberOfCupsProperty.link( () => {
