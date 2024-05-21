@@ -27,6 +27,7 @@ import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -37,6 +38,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   public readonly candyBar: CandyBar;
 
   public constructor( candyBar: CandyBar,
+                      groupSortInteractionModel: GroupSortInteractionModel<CandyBar>,
                       modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,
@@ -103,6 +105,9 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         new Bounds2( bounds.minX, bounds.minY, bounds.maxX - candyBarNode.width, bounds.maxY - candyBarNode.height )
       ),
       start: () => {
+
+        // When the candy bar is grabbed with the mouse, set the mouseSortedGroupItem property to true.
+        groupSortInteractionModel.setMouseSortedGroupItem( true );
         candyBar.isDraggingProperty.value = true;
         this.moveToFront();
       },

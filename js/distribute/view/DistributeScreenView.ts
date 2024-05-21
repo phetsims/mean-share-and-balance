@@ -156,6 +156,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
       new NotepadCandyBarNode(
         candyBar,
+        model.groupSortInteractionModel,
         this.modelToNotepadTransform,
         this.notepadBoundsProperty,
         this.candyBarDropped.bind( this ),
@@ -359,10 +360,6 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     );
 
     if ( closestPlate !== plateHoldingSnack ) {
-
-      // If the candy bar was dropped on a different plate, update the groupSortInteractionModel in order to remove
-      // any related visual cues.
-      this.model.groupSortInteractionModel.setMouseSortedGroupItem( true );
 
       // Move the candy bar to the new plate, since it's closer.
       plateHoldingSnack!.removeSnack( candyBar );
