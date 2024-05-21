@@ -41,7 +41,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       physicalRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
       chartViewWidth: MeanShareAndBalanceConstants.CHART_VIEW_WIDTH,
       numberLineXMargin: MeanShareAndBalanceConstants.NUMBER_LINE_LEFT_X_MARGIN,
-      groundPositionY: MeanShareAndBalanceConstants.GROUND_POSITION_Y
+      groundPositionY: MeanShareAndBalanceConstants.GROUND_POSITION_Y,
+      numberLineNodeTandem: providedOptions.tandem.createTandem( 'playAreaNumberLineNode' )
     }, providedOptions );
 
 
