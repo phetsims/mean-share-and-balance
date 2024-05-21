@@ -77,11 +77,11 @@ export default class BalancePointNotepadNode extends NotepadNode {
       sceneModel.targetNumberOfBallsProperty
     );
 
-    const checkButtonTandem = options.tandem.createTandem( 'checkButton' );
+    const checkAndResetButtonTandem = options.tandem.createTandem( 'checkAndResetButton' );
     const gatedVisibleProperty = createGatedVisibleProperty( DerivedProperty.not( isMeanFulcrumFixedProperty ),
-      checkButtonTandem );
+      checkAndResetButtonTandem );
 
-    const checkButton = new RectangularPushButton( {
+    const checkAndResetButton = new RectangularPushButton( {
 
       // The check button is not visible when the fulcrum is fixed.
       visibleProperty: gatedVisibleProperty,
@@ -92,14 +92,14 @@ export default class BalancePointNotepadNode extends NotepadNode {
       },
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      tandem: checkButtonTandem
+      tandem: checkAndResetButtonTandem
     } );
     sceneModel.beamSupportsPresentProperty.link( supportsPresent => {
-      checkButton.baseColor = supportsPresent ? MeanShareAndBalanceColors.checkButtonColorProperty : 'white';
+      checkAndResetButton.baseColor = supportsPresent ? MeanShareAndBalanceColors.checkButtonColorProperty : 'white';
     } );
 
     // The meanReadoutText should be vertically centered in the notepad node.
-    const alignBox = new AlignBox( checkButton, {
+    const alignBox = new AlignBox( checkAndResetButton, {
       alignBounds: this.paperStackBounds,
       xAlign: 'right',
       yAlign: 'bottom',
@@ -132,7 +132,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     this.moveChildToFront( this.ringsNode );
     this.readoutNode && this.moveChildToFront( this.readoutNode );
 
-    this.notepadPDOMOrder = [ this.balanceBeamNode, checkButton ];
+    this.notepadPDOMOrder = [ this.balanceBeamNode, checkAndResetButton ];
   }
 
   public reset(): void {
