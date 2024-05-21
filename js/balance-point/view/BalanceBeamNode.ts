@@ -14,7 +14,7 @@ import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js'
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import FulcrumSlider from './FulcrumSlider.js';
+import MeanPredictionFulcrumSlider from './MeanPredictionFulcrumSlider.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -53,7 +53,7 @@ export const BALANCE_BEAM_TRANSFORM = ModelViewTransform2.createSinglePointScale
 type BalanceBeamNodeOptions = EmptySelfOptions & WithRequired<NodeOptions, 'tandem'>;
 export default class BalanceBeamNode extends Node {
 
-  private readonly fulcrumSlider: FulcrumSlider;
+  private readonly fulcrumSlider: MeanPredictionFulcrumSlider;
 
   public constructor(
     sceneModel: BalancePointSceneModel,
@@ -97,8 +97,8 @@ export default class BalanceBeamNode extends Node {
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( fulcrumWidth );
 
     // The adjustable fulcrum that can be moved by the user.
-    const fulcrumSlider = new FulcrumSlider(
-      sceneModel.fulcrumValueProperty,
+    const fulcrumSlider = new MeanPredictionFulcrumSlider(
+      sceneModel.meanPredictionFulcrumValueProperty,
       fulcrumWasDraggedProperty,
       sceneModel.meanValueProperty,
       isMeanFulcrumFixedProperty,
@@ -107,7 +107,7 @@ export default class BalanceBeamNode extends Node {
         fulcrumHeight: triangleHeight,
         fulcrumWidth: triangleWidth,
         bottom: groundY,
-        tandem: options.tandem?.createTandem( 'fulcrumSlider' )
+        tandem: options.tandem?.createTandem( 'meanPredictionFulcrumSlider' )
       }
     );
 
@@ -330,12 +330,12 @@ export default class BalanceBeamNode extends Node {
     soundManager.addSoundGenerator( atMeanSoundClip );
 
     Multilink.multilink(
-      [ supportColumnsVisibleProperty, sceneModel.fulcrumValueProperty ],
+      [ supportColumnsVisibleProperty, sceneModel.meanPredictionFulcrumValueProperty ],
       () => {
         const roundedMean = sceneModel.meanValueProperty.value ?
                             Utils.roundToInterval( sceneModel.meanValueProperty.value, 0.1 ) : null;
         if ( !supportColumnsVisibleProperty.value &&
-             sceneModel.fulcrumValueProperty.value === roundedMean &&
+             sceneModel.meanPredictionFulcrumValueProperty.value === roundedMean &&
              !isMeanFulcrumFixedProperty.value ) {
           atMeanSoundClip.play();
         }

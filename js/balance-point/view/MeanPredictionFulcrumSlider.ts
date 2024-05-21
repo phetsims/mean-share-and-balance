@@ -27,7 +27,7 @@ type SelfOptions = {
   fulcrumWidth: number; // in screen coordinates
 };
 
-type BalanceBeamFulcrumOptions = SelfOptions & WithRequired<HSliderOptions, 'tandem'>;
+type MeanPredictionFulcrumSliderOptions = SelfOptions & WithRequired<HSliderOptions, 'tandem'>;
 
 // constants
 const CUEING_ARROW_LENGTH = 24;
@@ -43,14 +43,14 @@ const CUEING_ARROW_OPTIONS = {
   }
 };
 
-export default class FulcrumSlider extends HSlider {
+export default class MeanPredictionFulcrumSlider extends HSlider {
   public constructor(
     fulcrumValueProperty: Property<number>,
     fulcrumWasDraggedProperty: Property<boolean>,
     meanValueProperty: TReadOnlyProperty<number | null>,
     isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
-    providedOptions: BalanceBeamFulcrumOptions
+    providedOptions: MeanPredictionFulcrumSliderOptions
   ) {
 
     const fulcrumNode = new TriangleNode( {
@@ -81,7 +81,7 @@ export default class FulcrumSlider extends HSlider {
     const sliderSoundGenerator = new FulcrumSliderSoundPlayer( beamSupportsPresentProperty, meanValueProperty );
 
     // Combine provided and default options.
-    const options = optionize<BalanceBeamFulcrumOptions, SelfOptions, HSliderOptions>()( {
+    const options = optionize<MeanPredictionFulcrumSliderOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
       thumbYOffset: providedOptions.fulcrumHeight / 2,
       trackFillEnabled: null,
@@ -115,4 +115,4 @@ export default class FulcrumSlider extends HSlider {
   }
 }
 
-meanShareAndBalance.register( 'FulcrumSlider', FulcrumSlider );
+meanShareAndBalance.register( 'MeanPredictionFulcrumSlider', MeanPredictionFulcrumSlider );

@@ -41,7 +41,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
   public readonly targetNumberOfBallsProperty: Property<number>;
-  public readonly fulcrumValueProperty: Property<number>;
+  public readonly meanPredictionFulcrumValueProperty: Property<number>;
 
   // Controls whether the column supports for the beam are present or not, fixing the beam in a horizontal position
   // when present, and allowing the beam to tilt when not.
@@ -128,8 +128,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       }
     } );
 
-    this.fulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
-      tandem: options.tandem.createTandem( 'fulcrumValueProperty' )
+    this.meanPredictionFulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
+      tandem: options.tandem.createTandem( 'meanPredictionFulcrumValueProperty' )
     } );
 
     this.leftBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
@@ -145,7 +145,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     Multilink.multilink(
       [
         this.beamSupportsPresentProperty,
-        this.fulcrumValueProperty,
+        this.meanPredictionFulcrumValueProperty,
         this.meanValueProperty,
         isMeanFulcrumFixedProperty
       ],
@@ -283,14 +283,14 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     if ( leftEdgeDistanceFromTarget !== 0 ) {
       const rotationSign = leftEdgeDistanceFromTarget > 0 ? 1 : -1;
       const leftEdgePoint = new Vector2( X_AXIS_RANGE.min, this.leftBalanceBeamYValueProperty.value );
-      const fulcrumTipPoint = new Vector2( this.fulcrumValueProperty.value, FULCRUM_HEIGHT );
+      const fulcrumTipPoint = new Vector2( this.meanPredictionFulcrumValueProperty.value, FULCRUM_HEIGHT );
       const rotatedLeftEdgePoint = leftEdgePoint.rotatedAboutPoint(
         fulcrumTipPoint,
         rotationSign * BEAM_ROTATION_RATE * dt
       );
       const rotatedBeamLineFunction = new LinearFunction(
         rotatedLeftEdgePoint.x,
-        this.fulcrumValueProperty.value,
+        this.meanPredictionFulcrumValueProperty.value,
         rotatedLeftEdgePoint.y,
         FULCRUM_HEIGHT
       );
@@ -301,7 +301,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         this.leftBalanceBeamYValueProperty.value = this.targetLeftBalanceBeamYValue;
         const linearFunctionForTargetValue = new LinearFunction(
           X_AXIS_RANGE.min,
-          this.fulcrumValueProperty.value,
+          this.meanPredictionFulcrumValueProperty.value,
           this.targetLeftBalanceBeamYValue,
           FULCRUM_HEIGHT
         );
@@ -328,7 +328,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public override reset(): void {
     super.reset();
     this.targetNumberOfBallsProperty.reset();
-    this.fulcrumValueProperty.reset();
+    this.meanPredictionFulcrumValueProperty.reset();
     this.beamSupportsPresentProperty.reset();
   }
 }
