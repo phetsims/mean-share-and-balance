@@ -129,7 +129,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     this.meanPredictionFulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
-      tandem: options.tandem.createTandem( 'meanPredictionFulcrumValueProperty' )
+      tandem: options.tandem.createTandem( 'meanPredictionFulcrumValueProperty' ),
+      range: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE
     } );
 
     this.leftBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
