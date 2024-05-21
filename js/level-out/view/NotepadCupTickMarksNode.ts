@@ -11,7 +11,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
-type TickMarksNodeOptions = PickRequired<NodeOptions, 'visibleProperty' | 'tandem'>;
+type TickMarksNodeOptions = PickRequired<NodeOptions, 'visibleProperty'>;
 
 export default class NotepadCupTickMarksNode extends Node {
 

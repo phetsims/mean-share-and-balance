@@ -142,9 +142,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     const people: Node[] = tablePlateNodes.map( ( plate, i ) => {
       const selectedImage = PEOPLE_IMAGES[ i ];
       assert && assert( selectedImage, `No corresponding image for index: ${i}` );
-      return new PersonImage( selectedImage, plate, {
-        visibleProperty: plate.visibleProperty, tandem: providedOptions.tandem.createTandem( `person${i + 1}` )
-      } );
+      return new PersonImage( selectedImage, plate, { visibleProperty: plate.visibleProperty } );
     } );
 
     const peopleLayerNode = new Node( { children: people } );

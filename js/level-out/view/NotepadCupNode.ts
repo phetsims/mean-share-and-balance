@@ -38,12 +38,7 @@ export default class NotepadCupNode extends Node {
 
     const tickMarks = new NotepadCupTickMarksNode(
       MeanShareAndBalanceConstants.CUP_HEIGHT,
-      {
-        visibleProperty: isShowingTickMarksProperty,
-
-        // phet-io
-        tandem: options.tandem.createTandem( 'tickMarks' )
-      }
+      { visibleProperty: isShowingTickMarksProperty }
     );
 
     // 0 is empty, 1 is full

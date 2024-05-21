@@ -13,19 +13,18 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import Plate from '../../common/model/Plate.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import CandyBar from '../model/CandyBar.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
-type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'> & PickRequired<NodeOptions, 'tandem'>;
+type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'>;
 
 export default class DistributeNotepadPlateNode extends Node {
 
   public constructor( plate: Plate<CandyBar>,
-                      mvt: ModelViewTransform2, providedOptions: NotepadPlateNodeOptions ) {
+                      mvt: ModelViewTransform2, providedOptions?: NotepadPlateNodeOptions ) {
 
     const plateNode = new Image( notepadPlateSketch_svg, {
       maxWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width,

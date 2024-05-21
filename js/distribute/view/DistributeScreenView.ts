@@ -145,10 +145,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     const notepadPlateNodes = model.plates.map( plate => {
       plate.xPositionProperty.link( this.updateMouseSortCueNode.bind( this ) );
       plate.xPositionProperty.link( this.updateKeyboardSortCueNode.bind( this ) );
-      return new DistributeNotepadPlateNode( plate, this.modelToNotepadTransform,
-        {
-          tandem: options.tandem.createTandem( `notepadPlate${plate.linePlacement + 1}` )
-        } );
+      return new DistributeNotepadPlateNode( plate, this.modelToNotepadTransform );
     } );
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
