@@ -34,8 +34,6 @@ import person7_png from '../../../images/person7_png.js';
 import NotepadNode from './NotepadNode.js';
 import PartyTableNode from './PartyTableNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
-import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
 import Property from '../../../../axon/js/Property.js';
 
 export type SnackType = 'candyBars' | 'apples';
@@ -86,14 +84,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
-      predictMeanVisibleProperty: options.predictMeanVisibleProperty,
-      numberSpinnerOptions: {
-        arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
-          model.numberOfPlatesProperty,
-          numberOfPlatesV6_mp3,
-          { initialOutputLevel: 0.15 }
-        )
-      }
+      predictMeanVisibleProperty: options.predictMeanVisibleProperty
     } );
 
     // Create table node upon which the table plates will be shown.

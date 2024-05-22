@@ -26,7 +26,8 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 
 type SelfOptions = EmptySelfOptions;
-type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
+type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions,
+  'controlsPDOMOrder' | 'numberSpinnerOptions'>;
 
 export default class BalancePointControls extends MeanShareAndBalanceControls {
 
@@ -73,7 +74,8 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup ],
       isSoccerContext: true,
       numberSpinnerOptions: {
-        arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty )
+        arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty ),
+        tandem: providedOptions.tandem.createTandem( 'numberOfBallsSpinner' )
       },
       dialogVisibleProperty: model.isMeanInfoDialogVisibleProperty
     }, providedOptions );

@@ -13,15 +13,14 @@ import NumberSpinner, { NumberSpinnerOptions } from '../../../../sun/js/NumberSp
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
   minContentHeight?: number;
-  numberSpinnerOptions?: NumberSpinnerOptions;
+  numberSpinnerOptions: NumberSpinnerOptions;
 };
 
-export type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
+export type NumberSpinnerVBoxOptions = SelfOptions & VBoxOptions;
 
 export default class NumberSpinnerVBox extends VBox {
 
@@ -31,17 +30,7 @@ export default class NumberSpinnerVBox extends VBox {
                       providedOptions: NumberSpinnerVBoxOptions ) {
 
     const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {
-      minContentHeight: 100,
-      numberSpinnerOptions: {
-        arrowsPosition: 'leftRight',
-        layoutOptions: {
-          align: 'left'
-        },
-        accessibleName: stringProperty,
-
-        // phet-io
-        tandem: providedOptions.tandem.createTandem( 'numberSpinner' )
-      }
+      minContentHeight: 100
     }, providedOptions );
 
     const numberOfCupsText = new Text( stringProperty, {
@@ -49,10 +38,18 @@ export default class NumberSpinnerVBox extends VBox {
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
 
+    const numberSpinnerOptions = combineOptions<NumberSpinnerOptions>( {
+      arrowsPosition: 'leftRight',
+      layoutOptions: {
+        align: 'left'
+      },
+      accessibleName: stringProperty
+    }, options.numberSpinnerOptions );
+
     const numberSpinner = new NumberSpinner(
       numberProperty,
       rangeProperty,
-      options.numberSpinnerOptions
+      numberSpinnerOptions
     );
 
     const superOptions = combineOptions<VBoxOptions>( {

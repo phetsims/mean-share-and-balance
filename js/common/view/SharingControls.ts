@@ -22,13 +22,17 @@ import MeanShareAndBalanceCheckboxGroup from './MeanShareAndBalanceCheckboxGroup
 import SoundClipPlayer from '../../../../tambo/js/sound-generators/SoundClipPlayer.js';
 import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
+import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
+
 
 type SelfOptions = {
   showSyncButton?: boolean;
   predictMeanVisibleProperty?: Property<boolean> | null;
   vBoxOptions?: StrictOmit<VBoxOptions, 'children' | 'align'>;
 };
-type SharingControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
+type SharingControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions,
+  'controlsPDOMOrder' | 'numberSpinnerOptions'>;
 
 export default class SharingControls extends MeanShareAndBalanceControls {
 
@@ -46,7 +50,15 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       excludeInvisibleChildrenFromBounds: false,
       vBoxOptions: {},
       predictMeanVisibleProperty: null,
-      dialogVisibleProperty: meanCalculationDialogVisibleProperty
+      dialogVisibleProperty: meanCalculationDialogVisibleProperty,
+      numberSpinnerOptions: {
+        arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
+          model.numberOfPlatesProperty,
+          numberOfPlatesV6_mp3,
+          { initialOutputLevel: 0.15 }
+        ),
+        tandem: providedOptions.tandem.createTandem( 'numberOfPlatesSpinner' )
+      }
     }, providedOptions );
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {

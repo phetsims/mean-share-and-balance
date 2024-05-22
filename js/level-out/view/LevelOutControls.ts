@@ -27,7 +27,8 @@ import Range from '../../../../dot/js/Range.js';
 type SelfOptions = {
   vBoxOptions?: StrictOmit<VBoxOptions, 'children'>;
 };
-type LevelOutControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>;
+type LevelOutControlPanelOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions,
+  'controlsPDOMOrder' | 'numberSpinnerOptions'>;
 
 export default class LevelOutControls extends MeanShareAndBalanceControls {
 
@@ -62,7 +63,8 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
           numberOfCupsProperty,
           numberOfPlatesV6_mp3,
           { initialOutputLevel: 0.15 }
-        )
+        ),
+        tandem: providedOptions.tandem.createTandem( 'numberOfCupsSpinner' )
       },
       controlsPDOMOrder: [ checkboxGroup, pipeSwitch ],
       vBoxOptions: {}

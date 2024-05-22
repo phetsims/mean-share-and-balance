@@ -23,9 +23,10 @@ import generalOpenSoundPlayer from '../../../../tambo/js/shared-sound-players/ge
 import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = {
-  numberSpinnerOptions?: NumberSpinnerOptions;
+  numberSpinnerOptions: WithRequired<NumberSpinnerOptions, 'tandem'>;
   controlsPDOMOrder: Node[];
   isSoccerContext?: boolean;
   dialogVisibleProperty?: Property<boolean> | null;
@@ -51,8 +52,7 @@ export default class MeanShareAndBalanceControls extends Node {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
       isSoccerContext: false,
-      dialogVisibleProperty: null,
-      numberSpinnerOptions: {}
+      dialogVisibleProperty: null
     }, providedOptions );
     const controlsAlignGroup = new AlignGroup( { matchVertical: false } );
 
