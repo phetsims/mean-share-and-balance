@@ -402,6 +402,13 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
       const plate = this.model.getPlateForSnack( selectedCandyBar );
       assert && assert( plate, 'selected candy bar must be on a plate' );
+
+      const topCandyBarIndex = plate!.snacksOnNotepadPlate.length - 1;
+      const highlightPosition = this.modelToNotepadTransform.modelToViewPosition(
+        SnackStacker.getStackedCandyBarPosition( plate!.xPositionProperty.value, topCandyBarIndex )
+      );
+      this.cueingHighlight.x = highlightPosition.x;
+      this.cueingHighlight.y = highlightPosition.y;
       this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
       this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
         SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height )
