@@ -71,7 +71,8 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
 
     const options = optionize<DistributeModelOptions, SelfOptions, SharingModelOptions>()( {
-      initialPlateValues: INITIAL_PLATE_VALUES
+      initialPlateValues: INITIAL_PLATE_VALUES,
+      snackTandemPrefix: 'candyBar'
     }, providedOptions );
 
     super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );

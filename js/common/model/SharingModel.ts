@@ -33,6 +33,7 @@ type SelfOptions = {
 
   // Controls the initial number of snacks on each plate.
   initialPlateValues: number[];
+  snackTandemPrefix: string;
 };
 export type SharingModelOptions = SelfOptions & PhetioObjectOptions;
 
@@ -122,13 +123,13 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     // Create and initialize all the snacks.
     const totalNumberOfSnacks = MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE *
                                 MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
-    let totalCandyBarCount = 0;
+    let totalSnackCount = 0;
     _.times( totalNumberOfSnacks, () => {
 
       const snack = snackCreator( {
 
         // phet-io
-        tandem: snacksParentTandem.createTandem( `notepadCandyBar${totalCandyBarCount++}` )
+        tandem: snacksParentTandem.createTandem( `${options.snackTandemPrefix}${totalSnackCount++}` )
       } );
 
       this.unusedSnacks.push( snack );
@@ -137,6 +138,8 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     // Create the set of plates that will hold the snacks.
     assert && assert( options.initialPlateValues.length === MAX_PLATES, 'initialPlateValues must have the same length as the number of plates' );
     this.plates = [];
+
+    const platesParentTandem = options.tandem.createTandem( 'plates' );
     _.times( MAX_PLATES, plateIndex => {
       const initialXPosition = plateIndex * INTER_PLATE_DISTANCE;
       const plate = new Plate(
@@ -151,7 +154,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
           snackStackingFunction: snackStackingFunction,
 
           // phet-io
-          tandem: options.tandem.createTandem( `plate${plateIndex + 1}` )
+          tandem: platesParentTandem.createTandem( `plate${plateIndex + 1}` )
         }
       );
       this.plates.push( plate );

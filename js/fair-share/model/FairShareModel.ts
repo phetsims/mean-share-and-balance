@@ -93,7 +93,8 @@ export default class FairShareModel extends SharingModel<Apple> {
   public constructor( providedOptions: FairShareModelOptions ) {
 
     const options = optionize<FairShareModelOptions, SelfOptions, SharingModelOptions>()( {
-      initialPlateValues: INITIAL_PLATE_VALUES
+      initialPlateValues: INITIAL_PLATE_VALUES,
+      snackTandemPrefix: 'apple'
     }, providedOptions );
 
     const createApple = ( options: SnackOptions ) => new Apple( options );

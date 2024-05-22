@@ -120,12 +120,13 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     const tableCenter = new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.TABLE_PLATE_CENTER_Y );
 
     // Create the visual representation of the plates that sit on the table.
+    const tablePlateParentTandem = providedOptions.tandem.createTandem( 'tablePlates' );
     const tablePlateNodes = model.plates.map( plate => new TablePlateNode<T>( plate, tableCenter, {
       snackType: providedOptions.snackType,
       snackQuantitySoundPlayerOptions: {
         initialOutputLevel: providedOptions.snackType === 'candyBars' ? 0.2 : 0.1
       },
-      tandem: providedOptions.tandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
+      tandem: tablePlateParentTandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
     tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );
 
