@@ -33,7 +33,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
 
   public constructor( model: BalancePointModel, providedOptions: BalancePointControlsOptions ) {
 
-    const meanFulcrumRadioButtonGroup = new RectangularRadioButtonGroup( model.isMeanFulcrumFixedProperty, [
+    const meanFulcrumRadioButtonGroup = new RectangularRadioButtonGroup( model.meanFulcrumFixedProperty, [
       {
         createNode: () => new MovableFulcrumIcon(),
         value: false,
@@ -53,8 +53,8 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
     } );
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
-      tickMarksVisibleProperty: model.areTickMarksVisibleProperty,
-      totalVisibleProperty: model.isTotalVisibleProperty,
+      tickMarksVisibleProperty: model.tickMarksVisibleProperty,
+      totalVisibleProperty: model.totalVisibleProperty,
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );
@@ -77,7 +77,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty ),
         tandem: providedOptions.tandem.createTandem( 'numberOfBallsSpinner' )
       },
-      dialogVisibleProperty: model.isMeanInfoDialogVisibleProperty
+      infoPanelVisibleProperty: model.meanInfoPanelVisibleProperty
     }, providedOptions );
     super( vBox, numberOfDataPointsProperty, MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY, MeanShareAndBalanceStrings.numberOfBallsStringProperty, options );
   }

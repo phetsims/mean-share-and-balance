@@ -191,7 +191,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
       Multilink.multilink( [
           model.meanPredictionProperty,
           model.meanProperty,
-          model.areSnacksDistributedProperty,
+          model.snacksDistributedProperty,
           model.successIndicatorsOperatingProperty
         ],
         ( meanPrediction, meanValue, areSnacksDistributed, successIndicatorsOperating ) => {

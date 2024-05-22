@@ -22,10 +22,10 @@ type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
 
 export default class BalancePointModel extends SoccerModel<BalancePointSceneModel> {
-  public readonly isMeanFulcrumFixedProperty: Property<boolean>;
-  public readonly areTickMarksVisibleProperty: Property<boolean>;
-  public readonly isMeanInfoDialogVisibleProperty: Property<boolean>;
-  public readonly isTotalVisibleProperty: Property<boolean>;
+  public readonly meanFulcrumFixedProperty: Property<boolean>;
+  public readonly tickMarksVisibleProperty: Property<boolean>;
+  public readonly meanInfoPanelVisibleProperty: Property<boolean>;
+  public readonly totalVisibleProperty: Property<boolean>;
 
   // A Property that tracks whether the fulcrum has been dragged.
   public readonly fulcrumWasDraggedProperty: Property<boolean>;
@@ -48,8 +48,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       phetioState: false
     }, providedOptions );
 
-    const isMeanFulcrumFixedProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isMeanFulcrumFixedProperty' )
+    const meanFulcrumFixedProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'meanFulcrumFixedProperty' )
     } );
 
     // Allows PhET-iO clients to modify the max number of kicks.
@@ -58,26 +58,26 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       tandem: options.tandem.createTandem( 'maxKicksProperty' )
     } );
 
-    const sceneModel = new BalancePointSceneModel( isMeanFulcrumFixedProperty, maxKicksProperty, {
+    const sceneModel = new BalancePointSceneModel( meanFulcrumFixedProperty, maxKicksProperty, {
       tandem: options.tandem.createTandem( 'sceneModel' )
     } );
 
     super( [ sceneModel ], options );
 
-    this.isMeanFulcrumFixedProperty = isMeanFulcrumFixedProperty;
+    this.meanFulcrumFixedProperty = meanFulcrumFixedProperty;
     this.fulcrumWasDraggedProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'fulcrumWasDraggedProperty' ),
       phetioReadOnly: true
     } );
-    this.areTickMarksVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'areTickMarksVisibleProperty' )
+    this.tickMarksVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
-    this.isMeanInfoDialogVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isMeanInfoDialogVisibleProperty' )
+    this.meanInfoPanelVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'meanInfoPanelVisibleProperty' )
     } );
 
-    this.isTotalVisibleProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'isTotalVisibleProperty' )
+    this.totalVisibleProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'totalVisibleProperty' )
     } );
 
     sceneModel.targetNumberOfBallsProperty.link( () => {
@@ -87,10 +87,10 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
   public override reset(): void {
     super.reset();
-    this.isMeanFulcrumFixedProperty.reset();
-    this.isTotalVisibleProperty.reset();
-    this.areTickMarksVisibleProperty.reset();
-    this.isMeanInfoDialogVisibleProperty.reset();
+    this.meanFulcrumFixedProperty.reset();
+    this.totalVisibleProperty.reset();
+    this.tickMarksVisibleProperty.reset();
+    this.meanInfoPanelVisibleProperty.reset();
     this.fulcrumWasDraggedProperty.reset();
   }
 }

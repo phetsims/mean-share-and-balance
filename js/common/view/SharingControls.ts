@@ -40,8 +40,8 @@ export default class SharingControls extends MeanShareAndBalanceControls {
                         'numberOfPlatesProperty' |
                         'numberOfPlatesRangeProperty' |
                         'totalVisibleProperty' |
-                        'syncData' | 'areAllActivePlatesInSyncProperty'>,
-                      meanCalculationDialogVisibleProperty: Property<boolean>,
+                        'syncData' | 'activePlatesInSyncProperty'>,
+                      meanInfoPanelVisibleProperty: Property<boolean>,
                       providedOptions: SharingControlsOptions ) {
 
     const options = optionize<SharingControlsOptions, SelfOptions,
@@ -50,7 +50,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       excludeInvisibleChildrenFromBounds: false,
       vBoxOptions: {},
       predictMeanVisibleProperty: null,
-      dialogVisibleProperty: meanCalculationDialogVisibleProperty,
+      infoPanelVisibleProperty: meanInfoPanelVisibleProperty,
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer(
           model.numberOfPlatesProperty,
@@ -69,7 +69,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
 
     const syncButton = new SyncButton( {
       listener: () => model.syncData(),
-      enabledProperty: DerivedProperty.not( model.areAllActivePlatesInSyncProperty ),
+      enabledProperty: DerivedProperty.not( model.activePlatesInSyncProperty ),
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       soundPlayer: new SoundClipPlayer( erase_mp3, {

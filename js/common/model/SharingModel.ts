@@ -47,10 +47,10 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   public readonly numberOfPlatesProperty: Property<number>;
   public readonly totalSnacksProperty: TReadOnlyProperty<number>;
   public readonly plates: Plate<T>[];
-  public readonly meanCalculationDialogVisibleProperty: Property<boolean>;
+  public readonly meanInfoPanelVisibleProperty: Property<boolean>;
   public readonly totalVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
-  public readonly areAllActivePlatesInSyncProperty: TReadOnlyProperty<boolean>;
+  public readonly activePlatesInSyncProperty: TReadOnlyProperty<boolean>;
 
   // A state flag used to control whether the motion of snacks is animated or instantaneous.  This is helpful for
   // preventing animations during phet-io state setting.
@@ -93,10 +93,10 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
       tandem: options.tandem.createTandem( 'numberOfPlatesProperty' )
     } );
 
-    this.meanCalculationDialogVisibleProperty = new BooleanProperty( false, {
+    this.meanInfoPanelVisibleProperty = new BooleanProperty( false, {
 
       // phet-io
-      tandem: options.tandem.createTandem( 'meanCalculationDialogVisibleProperty' )
+      tandem: options.tandem.createTandem( 'meanInfoPanelVisibleProperty' )
     } );
 
     this.totalVisibleProperty = new BooleanProperty( false, {
@@ -159,7 +159,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
     const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
     const plateSyncDependencies = this.plates.map( plate => plate.areSnacksInSyncProperty );
-    this.areAllActivePlatesInSyncProperty = DerivedProperty.deriveAny( [ ...activePlateDependencies, ...plateSyncDependencies ],
+    this.activePlatesInSyncProperty = DerivedProperty.deriveAny( [ ...activePlateDependencies, ...plateSyncDependencies ],
       () => {
         return this.plates.every( plate => plate.isActiveProperty.value ? plate.areSnacksInSyncProperty.value : true );
       } );
@@ -275,7 +275,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
    * Restore initial state of the sim including visual Properties and data.
    */
   public reset(): void {
-    this.meanCalculationDialogVisibleProperty.reset();
+    this.meanInfoPanelVisibleProperty.reset();
     this.totalVisibleProperty.reset();
 
     this.resetData();

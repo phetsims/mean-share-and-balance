@@ -63,10 +63,10 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
       Multilink.multilink(
         [
-          model.arePipesOpenProperty,
+          model.pipesOpenProperty,
           model.meanPredictionProperty,
           model.meanProperty,
-          model.doWaterLevelsMatchMeanProperty,
+          model.waterLevelsMatchMeanProperty,
           model.successIndicatorsOperatingProperty
         ],
         ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean, successIndicatorsOperating ) => {
@@ -156,8 +156,8 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const pipeNodes: Array<PipeNode> = [];
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
-      const pipeNode = new PipeNode( pipeModel, model.arePipesOpenProperty,
-        model.arePipesEnabledProperty, modelViewTransformNotepadCups,
+      const pipeNode = new PipeNode( pipeModel, model.pipesOpenProperty,
+        model.pipesEnabledProperty, modelViewTransformNotepadCups,
         { tandem: pipesParentTandem.createTandem( `pipeNode${index + 1}` ), focusable: index === 0 } );
 
       pipeNodes.push( pipeNode );
@@ -195,7 +195,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     // Controls on Right side of screen
     const controls = new LevelOutControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
       model.numberOfCupsProperty, model.numberOfCupsRangeProperty,
-      model.arePipesOpenProperty, model.arePipesEnabledProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
+      model.pipesOpenProperty, model.pipesEnabledProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
@@ -234,13 +234,13 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       model.meanProperty,
       model.tableCups,
       model.notepadCups,
-      model.arePipesOpenProperty,
+      model.pipesOpenProperty,
       { initialOutputLevel: 0.1 }
     );
     soundManager.addSoundGenerator( this.waterBalanceSoundGenerator );
 
     // Add sound generation for the pipes opening and closing.
-    model.arePipesOpenProperty.lazyLink( pipesOpen => {
+    model.pipesOpenProperty.lazyLink( pipesOpen => {
       if ( !ResetAllButton.isResettingAllProperty.value ) {
         pipesOpen ? switchToRightSoundPlayer.play() : switchToLeftSoundPlayer.play();
       }

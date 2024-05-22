@@ -56,7 +56,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
   // Tracks whether the snacks are distributed evenly across the plates or at least distributed as much as is possible
   // with the data provided.
-  public readonly areSnacksDistributedProperty: TReadOnlyProperty<boolean>;
+  public readonly snacksDistributedProperty: TReadOnlyProperty<boolean>;
 
   // This emitter is used to update the keyboard focus and sorting cue when stack changes on a plate.
   // It is meant to be fired each time something changes about the way things are stacked, since this could
@@ -211,7 +211,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
     const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
     const notepadPlateSnackCountDependencies = this.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
-    this.areSnacksDistributedProperty = DerivedProperty.deriveAny( [
+    this.snacksDistributedProperty = DerivedProperty.deriveAny( [
         ...activePlateDependencies, ...notepadPlateSnackCountDependencies, this.meanProperty
       ],
       () => {
@@ -222,7 +222,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
           plate.snacksOnNotepadPlate.length === meanFloor || plate.snacksOnNotepadPlate.length === meanCeil
         );
       }, {
-        tandem: options.tandem.createTandem( 'areSnacksDistributedProperty' ),
+        tandem: options.tandem.createTandem( 'snacksDistributedProperty' ),
         phetioValueType: BooleanIO
       } );
 

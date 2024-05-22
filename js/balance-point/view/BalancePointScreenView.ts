@@ -80,9 +80,9 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     // Notepad
     const notepadNode = new BalancePointNotepadNode( sceneModel, this.playAreaNumberLineNode,
-      model.fulcrumWasDraggedProperty, model.areTickMarksVisibleProperty,
-      model.isMeanFulcrumFixedProperty, {
-        totalVisibleProperty: model.isTotalVisibleProperty,
+      model.fulcrumWasDraggedProperty, model.tickMarksVisibleProperty,
+      model.meanFulcrumFixedProperty, {
+        totalVisibleProperty: model.totalVisibleProperty,
         tandem: options.tandem.createTandem( 'notepadNode' ),
         centerX: this.playAreaCenterX
       }
@@ -150,7 +150,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       calculationDependencies,
       () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
       () => model.selectedSceneModelProperty.value.getStackedObjects().length,
-      model.isMeanInfoDialogVisibleProperty, notepadNodeBounds,
+      model.meanInfoPanelVisibleProperty, notepadNodeBounds,
       {
         zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,

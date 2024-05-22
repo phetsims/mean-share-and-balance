@@ -81,7 +81,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     notepadNode.centerY = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y;
 
     // Create the controls.
-    const controls = new SharingControls( model, model.meanCalculationDialogVisibleProperty, {
+    const controls = new SharingControls( model, model.meanInfoPanelVisibleProperty, {
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
       predictMeanVisibleProperty: options.predictMeanVisibleProperty
@@ -107,7 +107,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       calculationDependencies,
       () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
       () => model.getActivePlates().length,
-      model.meanCalculationDialogVisibleProperty,
+      model.meanInfoPanelVisibleProperty,
       notepadNode.bounds,
       {
         calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'remainder' : 'mixedFraction',

@@ -46,9 +46,9 @@ export default class LevelOutModel extends PhetioObject implements TModel {
   public readonly tableCups: Cup[];
   public readonly notepadCups: Cup[];
   public readonly pipeArray: Pipe[];
-  public readonly arePipesOpenProperty: Property<boolean>;
-  public readonly arePipesEnabledProperty: Property<boolean>;
-  public readonly doWaterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>;
+  public readonly pipesOpenProperty: Property<boolean>;
+  public readonly pipesEnabledProperty: Property<boolean>;
+  public readonly waterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>;
 
   // visible Properties
   public readonly predictMeanVisibleProperty: Property<boolean>;
@@ -102,11 +102,11 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
 
-    this.arePipesOpenProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'arePipesOpenProperty' )
+    this.pipesOpenProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'pipesOpenProperty' )
     } );
-    this.arePipesEnabledProperty = new BooleanProperty( true, {
-      tandem: options.tandem.createTandem( 'arePipesEnabledProperty' )
+    this.pipesEnabledProperty = new BooleanProperty( true, {
+      tandem: options.tandem.createTandem( 'pipesEnabledProperty' )
     } );
 
     // The tableCups are the "ground truth" and the notepadCups mirror them.
@@ -144,7 +144,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       } ) );
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS - 1 ) {
-        const pipe = new Pipe( this.arePipesOpenProperty, {
+        const pipe = new Pipe( this.pipesOpenProperty, {
           position: notepadCupPosition,
           isActive: i === 0,
 
@@ -198,7 +198,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     const waterLevelDependencies = this.notepadCups.map( waterCup => waterCup.waterLevelProperty );
     const activeCupsDependencies = this.notepadCups.map( waterCup => waterCup.isActiveProperty );
-    this.doWaterLevelsMatchMeanProperty = DerivedProperty.deriveAny( [
+    this.waterLevelsMatchMeanProperty = DerivedProperty.deriveAny( [
       ...waterLevelDependencies,
       ...activeCupsDependencies,
       this.meanProperty
@@ -272,7 +272,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     this.iterateCups( ( notepadCup, tableCup ) => {
       const currentWaterLevel = notepadCup.waterLevelProperty.value;
       let newWaterLevel;
-      if ( this.arePipesOpenProperty.value ) {
+      if ( this.pipesOpenProperty.value ) {
         const delta = this.meanProperty.value - currentWaterLevel;
 
         let discrepancy = 4;
@@ -369,7 +369,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
   public reset(): void {
     this.meanPredictionProperty.reset();
-    this.arePipesOpenProperty.reset();
+    this.pipesOpenProperty.reset();
 
     this.predictMeanVisibleProperty.reset();
     this.tickMarksVisibleProperty.reset();
@@ -394,7 +394,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     if ( oldWaterLevel ) {
       const delta = waterLevel - oldWaterLevel;
       notepadCupWaterLevel = Utils.clamp( notepadCup.waterLevelProperty.value + delta, 0, 1 );
-      this.arePipesOpenProperty.value && this.distributeWaterRipple( this.getActiveNotepadCups(), notepadCup, delta );
+      this.pipesOpenProperty.value && this.distributeWaterRipple( this.getActiveNotepadCups(), notepadCup, delta );
     }
 
     notepadCup.waterLevelProperty.set( notepadCupWaterLevel );

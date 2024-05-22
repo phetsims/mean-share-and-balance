@@ -29,7 +29,7 @@ type SelfOptions = {
   numberSpinnerOptions: WithRequired<NumberSpinnerOptions, 'tandem'>;
   controlsPDOMOrder: Node[];
   isSoccerContext?: boolean;
-  dialogVisibleProperty?: Property<boolean> | null;
+  infoPanelVisibleProperty?: Property<boolean> | null;
 };
 
 export type MeanShareAndBalanceControlsOptions =
@@ -52,7 +52,7 @@ export default class MeanShareAndBalanceControls extends Node {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
       isSoccerContext: false,
-      dialogVisibleProperty: null
+      infoPanelVisibleProperty: null
     }, providedOptions );
     const controlsAlignGroup = new AlignGroup( { matchVertical: false } );
 
@@ -60,12 +60,12 @@ export default class MeanShareAndBalanceControls extends Node {
 
     super( { children: [ vBoxAlignBox ] } );
 
-    if ( options.dialogVisibleProperty ) {
+    if ( options.infoPanelVisibleProperty ) {
 
-      const infoButtonSoundPlayer = new InfoButtonSoundPlayer( options.dialogVisibleProperty );
+      const infoButtonSoundPlayer = new InfoButtonSoundPlayer( options.infoPanelVisibleProperty );
       const infoButton = new InfoButton( {
         listener: () => {
-          options.dialogVisibleProperty!.value = !options.dialogVisibleProperty!.value;
+          options.infoPanelVisibleProperty!.value = !options.infoPanelVisibleProperty!.value;
         },
         centerY: 230,
         scale: 0.6,
