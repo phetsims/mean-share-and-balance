@@ -28,6 +28,12 @@ import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import BooleanIO from '../../../../tandem/js/types/BooleanIO.js';
+import ObjectLiteralIO from '../../../../tandem/js/types/ObjectLiteralIO.js';
+
+type MeanWithRemainder = {
+  wholeNumber: number;
+  remainder: number;
+};
 
 type SelfOptions = EmptySelfOptions;
 type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -37,11 +43,16 @@ export const NOTEPAD_PLATE_BOTTOM_Y = 330;
 
 export default class DistributeModel extends SharingModel<CandyBar> {
 
+  // Class properties needed for alt-input group sort interaction.
   public readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
   public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
+
+  // Properties for the mean prediction tool.
   public readonly predictMeanVisibleProperty: Property<boolean>;
   public readonly meanPredictionProperty: Property<number>;
   public readonly predictMeanDragRange = new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
+
+  public readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
 
   // Tracks whether the snacks are distributed evenly across the plates or at least distributed as much as is possible
   // with the data provided.
@@ -214,6 +225,21 @@ export default class DistributeModel extends SharingModel<CandyBar> {
         tandem: options.tandem.createTandem( 'areSnacksDistributedProperty' ),
         phetioValueType: BooleanIO
       } );
+
+    this.meanWithRemainderProperty = new DerivedProperty( [
+      this.meanProperty,
+      this.numberOfPlatesProperty,
+      this.totalSnacksProperty
+    ], ( mean, numberOfPlates, totalSnacks ) => {
+      const meanFloor = Math.floor( mean );
+      const remainder = totalSnacks - meanFloor * numberOfPlates;
+
+      return { wholeNumber: meanFloor, remainder: remainder };
+    }, {
+      tandem: options.tandem.createTandem( 'meanWithRemainderProperty' ),
+      phetioState: false,
+      phetioValueType: ObjectLiteralIO
+    } );
 
     // For phet-io client use only.
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
