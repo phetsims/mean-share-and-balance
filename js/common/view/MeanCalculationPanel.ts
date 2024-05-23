@@ -29,6 +29,7 @@ import Panel, { PanelOptions } from '../../../../sun/js/Panel.js';
 import CloseButton from '../../../../scenery-phet/js/buttons/CloseButton.js';
 import ButtonNode from '../../../../sun/js/buttons/ButtonNode.js';
 import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
+import ToggleNode from '../../../../sun/js/ToggleNode.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 
@@ -94,15 +95,14 @@ export default class MeanCalculationPanel extends Panel {
       zeroDataMessageProperty: null
     }, providedOptions );
 
-    const messageVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {
-      return getNumberOfActiveDataObjects() === 0;
+    const calculationsVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {
+      return getNumberOfActiveDataObjects() > 0;
     } );
 
-    const calculationsVisibleProperty = DerivedProperty.not( messageVisibleProperty );
 
-    const calculationsTextOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS, {
+    const calculationsTextOptions = combineOptions<TextOptions>( {
       visibleProperty: calculationsVisibleProperty
-    } );
+    }, LABEL_TEXT_OPTIONS );
     const meanEqualsAdditionFractionText = new Text(
       MeanShareAndBalanceStrings.meanEqualsStringProperty,
       calculationsTextOptions
@@ -131,13 +131,6 @@ export default class MeanCalculationPanel extends Panel {
       minContentHeight = unreducedFraction.bounds.height;
     }
 
-    let zeroDataMessageText: Node | null;
-    if ( options.zeroDataMessageProperty !== null ) {
-      const messageOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS,
-        { visibleProperty: messageVisibleProperty, maxWidth: notebookPaperBounds.width - DIALOG_MAX_WIDTH_MARGIN } );
-      zeroDataMessageText = new Text( options.zeroDataMessageProperty, messageOptions );
-    }
-
     // These bounds effectively set the size of the dialog and were empirically determined.
     const alignBounds = notebookPaperBounds.dilatedXY( -5, -5 );
     const panelMargin = 10;
@@ -153,11 +146,33 @@ export default class MeanCalculationPanel extends Panel {
       yAlign: 'top',
       margin: panelMargin
     } );
+
     const calculationNode = new GridBox( {
       margin: panelMargin,
       minContentHeight: minContentHeight
     } );
-    const alignedCalculationNode = new AlignBox( calculationNode, {
+
+    // If a zeroDataMessageProperty is provided create a ToggleNode that will display information based on how many
+    // active data points there are.
+    let alignBoxNode: Node = calculationNode;
+    if ( options.zeroDataMessageProperty !== null ) {
+      const messageOptions = combineOptions<TextOptions>( LABEL_TEXT_OPTIONS,
+        { maxWidth: notebookPaperBounds.width - DIALOG_MAX_WIDTH_MARGIN } );
+      const zeroDataMessageText = new Text( options.zeroDataMessageProperty, messageOptions );
+
+      alignBoxNode = new ToggleNode<boolean, Node>( calculationsVisibleProperty, [
+        {
+          value: true,
+          createNode: () => calculationNode
+        },
+        {
+          value: false,
+          createNode: () => zeroDataMessageText
+        }
+      ], { alignChildren: ToggleNode.NONE, excludeInvisibleChildrenFromBounds: true } );
+    }
+
+    const alignedCalculationNode = new AlignBox( alignBoxNode, {
       alignBounds: alignBounds
     } );
 
@@ -176,14 +191,12 @@ export default class MeanCalculationPanel extends Panel {
       // Create the Node that shows a set of numbers being added together on top and the number of items to divide by
       // on the bottom.
       const fractionNumberOptions = {
-        font: FRACTION_NUMBER_FONT,
-        visibleProperty: calculationsVisibleProperty
+        font: FRACTION_NUMBER_FONT
       };
       const additionText = new Text( values.join( ' + ' ), fractionNumberOptions );
       const additionFractionLine = new Line( 0, 0, additionText.width, 0, {
         stroke: 'black',
-        lineWidth: VINCULUM_LINE_WIDTH,
-        visibleProperty: calculationsVisibleProperty
+        lineWidth: VINCULUM_LINE_WIDTH
       } );
       const additionDenominatorText = new Text( numberOfActiveDataObjects, fractionNumberOptions );
       const additionFraction = new VBox( { children: [ additionText, additionFractionLine, additionDenominatorText ] } );
@@ -193,16 +206,14 @@ export default class MeanCalculationPanel extends Panel {
         numerator: totalValues,
         denominator: numberOfActiveDataObjects,
         fractionNumbersFont: FRACTION_NUMBER_FONT,
-        vinculumLineWidth: VINCULUM_LINE_WIDTH,
-        visibleProperty: calculationsVisibleProperty
+        vinculumLineWidth: VINCULUM_LINE_WIDTH
       } );
 
       // The value can be represented as either a decimal, mixed fraction, or a whole number with a remainder.
       let valueRepresentation;
       if ( options.calculatedMeanDisplayMode === 'decimal' ) {
         const decimalOptions = {
-          font: DECIMAL_FONT,
-          visibleProperty: calculationsVisibleProperty
+          font: DECIMAL_FONT
         };
         valueRepresentation = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
       }
@@ -213,8 +224,7 @@ export default class MeanCalculationPanel extends Panel {
           remainder: meanRemainder
         } );
         valueRepresentation = new Text( patternStringProperty, {
-          font: DECIMAL_FONT,
-          visibleProperty: calculationsVisibleProperty
+          font: DECIMAL_FONT
         } );
       }
       else {
@@ -233,16 +243,14 @@ export default class MeanCalculationPanel extends Panel {
           denominator: fraction ? fraction.denominator : null,
           wholeNumberFont: WHOLE_NUMBER_FONT,
           fractionNumbersFont: FRACTION_NUMBER_FONT,
-          vinculumLineWidth: VINCULUM_LINE_WIDTH,
-          visibleProperty: calculationsVisibleProperty
+          vinculumLineWidth: VINCULUM_LINE_WIDTH
         } );
       }
 
       calculationNode.rows = [
         [ meanEqualsAdditionFractionText, additionFraction ],
         [ meanEqualsUnreducedFractionText, unreducedFraction ],
-        [ meanEqualsDecimalOrMixedFractionText, valueRepresentation ],
-        zeroDataMessageText ? [ zeroDataMessageText ] : []
+        [ meanEqualsDecimalOrMixedFractionText, valueRepresentation ]
       ];
     } );
 
