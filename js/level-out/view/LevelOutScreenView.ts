@@ -235,7 +235,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       model.tableCups,
       model.notepadCups,
       model.pipesOpenProperty,
-      { initialOutputLevel: 0.1 }
+      { initialOutputLevel: 0.03 }
     );
     soundManager.addSoundGenerator( this.waterBalanceSoundGenerator );
 
