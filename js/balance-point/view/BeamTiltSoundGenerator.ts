@@ -27,6 +27,9 @@ const EXPECTED_ANGLE_RANGE = new Range( 0, 0.45 ); // empirically determined bas
 class BeamTiltSoundGenerator extends SoundGenerator {
 
   public constructor( beamTiltProperty: TReadOnlyProperty<number>,
+                      meanValueProperty: TReadOnlyProperty<number | null>,
+                      meanPredictionFulcrumValueProperty: TReadOnlyProperty<number>,
+                      beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
                       providedOptions?: BeamTiltSoundGeneratorOptions ) {
 
     super( providedOptions );
@@ -37,7 +40,9 @@ class BeamTiltSoundGenerator extends SoundGenerator {
 
     beamTiltProperty.lazyLink( tiltAngle => {
       if ( !ResetAllButton.isResettingAllProperty.value &&
-           phet.joist.elapsedTime > timeOfLastPlay + MIN_TIME_BETWEEN_CREAK_PLAYS ) {
+           !beamSupportsPresentProperty.value &&
+           phet.joist.elapsedTime > timeOfLastPlay + MIN_TIME_BETWEEN_CREAK_PLAYS &&
+           meanValueProperty.value !== meanPredictionFulcrumValueProperty.value ) {
 
         // Calculate the playback rate (aka pitch) for the individual creak sound based on the beam's angle.
         const normalizedAngle = EXPECTED_ANGLE_RANGE.getNormalizedValue( Math.abs( tiltAngle ) );

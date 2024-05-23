@@ -351,7 +351,14 @@ export default class BalanceBeamNode extends Node {
         return Vector2.getAngleBetweenVectors( leftPoint, rightPoint );
       }
     );
-    soundManager.addSoundGenerator( new BeamTiltSoundGenerator( beamAngleProperty, { initialOutputLevel: 0.2 } ) );
+    soundManager.addSoundGenerator(
+      new BeamTiltSoundGenerator(
+        beamAngleProperty,
+        sceneModel.meanValueProperty,
+        sceneModel.meanPredictionFulcrumValueProperty,
+        sceneModel.beamSupportsPresentProperty,
+        { initialOutputLevel: 0.2 }
+      ) );
   }
 
   public reset(): void {
