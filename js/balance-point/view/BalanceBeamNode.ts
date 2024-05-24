@@ -323,17 +323,16 @@ export default class BalanceBeamNode extends Node {
     this.addChild( needAtLeastOneKickMessage );
 
     // Create and hook up the sound that will be played when the fulcrum reaches the mean value while the pillars are
-    // not present, or when the pillars are removed when the fulcrum is already at the mean.
-    const atMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, {
-      initialOutputLevel: 0.1
-    } );
+    // not present, or when the pillars are removed and the fulcrum is already at the mean.
+    const atMeanSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
     soundManager.addSoundGenerator( atMeanSoundClip );
 
     Multilink.multilink(
       [ supportColumnsVisibleProperty, sceneModel.meanPredictionFulcrumValueProperty ],
       () => {
-        const roundedMean = sceneModel.meanValueProperty.value ?
-                            Utils.roundToInterval( sceneModel.meanValueProperty.value, 0.1 ) : null;
+        const roundedMean = sceneModel.meanValueProperty.value === null ?
+                            Number.NEGATIVE_INFINITY :
+                            Utils.roundToInterval( sceneModel.meanValueProperty.value, 0.1 );
         if ( !supportColumnsVisibleProperty.value &&
              sceneModel.meanPredictionFulcrumValueProperty.value === roundedMean &&
              !isMeanFulcrumFixedProperty.value ) {
