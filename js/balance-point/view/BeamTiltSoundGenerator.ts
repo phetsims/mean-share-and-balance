@@ -21,7 +21,7 @@ type BeamTiltSoundGeneratorOptions = SoundGeneratorOptions & SelfOptions;
 
 // constants
 const MIN_TIME_BETWEEN_CREAK_PLAYS = 90; // in ms
-const PITCH_VARIATION_RANGE = new Range( 1, 2 );
+const PITCH_VARIATION_RANGE = new Range( 1, 1.5 );
 const EXPECTED_ANGLE_RANGE = new Range( 0, 0.45 ); // empirically determined based on model behavior
 
 class BeamTiltSoundGenerator extends SoundGenerator {
