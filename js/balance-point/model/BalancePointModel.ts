@@ -38,7 +38,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
           soccerModel.selectedSceneModelProperty,
           soccerModel.selectedSceneStackedSoccerBallCountProperty,
           soccerModel.selectedSceneMaxKicksProperty,
-          soccerModel.sceneModels, {
+          soccerModel.sceneModels,
+          {
             getGroupItemValue: soccerBall => soccerBall.valueProperty.value,
             enabledProperty: soccerModel.soccerBallsEnabledProperty,
             tandem: tandem

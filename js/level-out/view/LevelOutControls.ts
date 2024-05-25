@@ -49,8 +49,10 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
 
     // Pipe Switch
     const pipeSwitch = new PipeSwitch(
-      arePipesOpenProperty, arePipesEnabledProperty,
-      providedOptions.tandem.createTandem( 'pipeSwitch' ) );
+      arePipesOpenProperty,
+      arePipesEnabledProperty,
+      providedOptions.tandem.createTandem( 'pipeSwitch' )
+    );
 
     // Hook up Number Spinner callbacks.
     numberOfCupsProperty.link( () => {
