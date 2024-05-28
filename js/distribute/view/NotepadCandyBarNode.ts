@@ -22,7 +22,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import RichDragListener from '../../../../scenery-phet/js/RichDragListener.js';
+import RichPointerDragListener from '../../../../scenery-phet/js/RichPointerDragListener.js';
 import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
@@ -88,7 +88,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     // TODO: This only adds sound for mouse interactions. We will need to play the sound separately for keyboard.
     //  See: https://github.com/phetsims/mean-share-and-balance/issues/190
-    this.dragListener = new RichDragListener( {
+    this.dragListener = new RichPointerDragListener( {
       grabSound: grabCandyBarV2_mp3,
       grabSoundClipOptions: { initialOutputLevel: 0.25 },
       releaseSound: releaseCandyBarV2_mp3,
