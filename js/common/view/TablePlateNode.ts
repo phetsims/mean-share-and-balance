@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { Image, Node, NodeOptions, SceneryConstants } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
@@ -75,7 +75,12 @@ export default class TablePlateNode<T extends Snack> extends Node {
         color: MeanShareAndBalanceColors.numberPickerColorProperty,
         valueChangedSoundPlayer: snackQuantitySoundPlayer,
         boundarySoundPlayer: snackQuantitySoundPlayer,
-        tandem: options.tandem.createTandem( 'numberPicker' )
+        tandem: options.tandem.createTandem( 'numberPicker' ),
+
+        // These options create a "displayMode" for the Number Picker when it is disabled.
+        disabledOpacity: 1,
+        arrowDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
+        backgroundDisabledOpacity: SceneryConstants.DISABLED_OPACITY
       }
     );
 
