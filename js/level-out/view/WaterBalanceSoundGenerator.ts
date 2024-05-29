@@ -104,7 +104,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
   public constructor( meanProperty: TReadOnlyProperty<number>,
                       tableCups: Cup[],
                       notepadCups: Cup[],
-                      arePipesOpenProperty: TReadOnlyProperty<boolean>,
+                      pipesOpenProperty: TReadOnlyProperty<boolean>,
                       providedOptions?: WaterBalanceSoundGeneratorOptions ) {
 
     // Create the filter whose frequency will be adjusted based on the max deviation of the cup levels from the mean.
@@ -223,7 +223,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
 
           // If we are already playing sound when this change occurred, continue it.  If we aren't but the change
           // occurred with the pipes open, start producing sound.
-          if ( this.isPlaying || arePipesOpenProperty.value ) {
+          if ( this.isPlaying || pipesOpenProperty.value ) {
             this.startOrContinueSoundProduction();
           }
 
@@ -240,7 +240,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
     );
 
     // Initiate sound production any time the pipes are opened or closed.
-    arePipesOpenProperty.lazyLink( () => {
+    pipesOpenProperty.lazyLink( () => {
       if ( notepadCups.filter( cup => cup.isActiveProperty.value ).length > 1 ) {
         this.startOrContinueSoundProduction();
       }

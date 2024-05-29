@@ -60,9 +60,9 @@ export default class TableCupNode extends Node {
       emptyBeakerFill: MeanShareAndBalanceColors.emptyTableCupColorProperty
     } );
 
-    const isShowingTickMarksListener = ( isShowingTickMarks: boolean ) => waterCupNode.setTicksVisible( isShowingTickMarks );
+    const showingTickMarksListener = ( showingTickMarks: boolean ) => waterCupNode.setTicksVisible( showingTickMarks );
 
-    tickMarksVisibleProperty.link( isShowingTickMarksListener );
+    tickMarksVisibleProperty.link( showingTickMarksListener );
 
     waterCup.waterLevelProperty.link( ( waterLevel, oldWaterLevel ) => {
       model.changeWaterLevel( waterCup, waterLevel, oldWaterLevel );

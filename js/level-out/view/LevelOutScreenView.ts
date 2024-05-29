@@ -69,7 +69,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           model.waterLevelsMatchMeanProperty,
           model.successIndicatorsOperatingProperty
         ],
-        ( arePipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean, successIndicatorsOperating ) => {
+        ( pipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean, successIndicatorsOperating ) => {
 
           // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
           // the default pattern, and return early.
@@ -85,12 +85,12 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           const successRectangleWasVisible = successRectangle.visible;
           const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
 
-          if ( arePipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
+          if ( pipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
             predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
             successRectangle.visible = false;
           }
           else {
-            successRectangle.visible = arePipesOpen && doWaterLevelsMatchMean && closeToMean;
+            successRectangle.visible = pipesOpen && doWaterLevelsMatchMean && closeToMean;
             predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
           }
 

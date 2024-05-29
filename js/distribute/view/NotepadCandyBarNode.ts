@@ -56,7 +56,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         fill: 'black',
         opacity: 0.2,
         cornerRadius: 1,
-        visibleProperty: candyBar.isDraggingProperty,
+        visibleProperty: candyBar.draggingProperty,
         x: 4,
         y: 4
       } );
@@ -80,7 +80,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     // Prevent this from being pickable while animating or dragging.
     Multilink.multilink(
-      [ candyBar.isDraggingProperty, candyBar.travelAnimationProperty ],
+      [ candyBar.draggingProperty, candyBar.travelAnimationProperty ],
       ( isDragging, travelAnimation ) => {
         candyBarNode.pickable = !isDragging && !travelAnimation;
       }
@@ -108,11 +108,11 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
         // When the candy bar is grabbed with the mouse, set the mouseSortedGroupItem property to true.
         groupSortInteractionModel.setMouseSortedGroupItem( true );
-        candyBar.isDraggingProperty.value = true;
+        candyBar.draggingProperty.value = true;
         this.moveToFront();
       },
       end: () => {
-        candyBar.isDraggingProperty.value = false;
+        candyBar.draggingProperty.value = false;
         candyBarDropped( this );
       },
       tandem: options.tandem.createTandem( 'dragListener' )

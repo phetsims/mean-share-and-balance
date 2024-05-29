@@ -18,7 +18,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 
 type SelfOptions = {
-  isInitiallyActive?: boolean;
+  initiallyActive?: boolean;
   initialPosition?: Vector2;
 };
 export type SnackOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
@@ -42,7 +42,7 @@ export default class Snack extends PhetioObject {
   // An animation for moving this snack from one location to another in a continuous fashion.
   public travelAnimationProperty: Property<Animation | null> = new Property<Animation | null>( null );
 
-  public isDraggingProperty = new BooleanProperty( false );
+  public draggingProperty = new BooleanProperty( false );
 
   // for debugging
   public readonly instanceID = instanceCount++;
@@ -50,14 +50,14 @@ export default class Snack extends PhetioObject {
   public constructor( providedOptions: SnackOptions ) {
 
     const options = optionize<SnackOptions, SelfOptions, PhetioObjectOptions>()( {
-      isInitiallyActive: false,
+      initiallyActive: false,
       initialPosition: Vector2.ZERO,
       phetioState: false
     }, providedOptions );
 
     super( options );
 
-    this.isActiveProperty = new BooleanProperty( options.isInitiallyActive, {
+    this.isActiveProperty = new BooleanProperty( options.initiallyActive, {
 
       // phet-io
       tandem: providedOptions.tandem.createTandem( 'isActiveProperty' ),

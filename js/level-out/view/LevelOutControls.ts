@@ -36,8 +36,8 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
                       predictMeanVisibleProperty: Property<boolean>,
                       numberOfCupsProperty: Property<number>,
                       numberOfCupsRangeProperty: Property<Range>,
-                      arePipesOpenProperty: Property<boolean>,
-                      arePipesEnabledProperty: Property<boolean>,
+                      pipesOpenProperty: Property<boolean>,
+                      pipesEnabledProperty: Property<boolean>,
                       providedOptions: LevelOutControlPanelOptions ) {
 
     // Checkbox Group
@@ -49,8 +49,8 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
 
     // Pipe Switch
     const pipeSwitch = new PipeSwitch(
-      arePipesOpenProperty,
-      arePipesEnabledProperty,
+      pipesOpenProperty,
+      pipesEnabledProperty,
       providedOptions.tandem.createTandem( 'pipeSwitch' )
     );
 

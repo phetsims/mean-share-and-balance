@@ -61,8 +61,8 @@ export default class BalanceBeamNode extends Node {
     paperStackBounds: Bounds2,
     supportColumnsVisibleProperty: TReadOnlyProperty<boolean>,
     fulcrumWasDraggedProperty: Property<boolean>,
-    areTickMarksVisibleProperty: TReadOnlyProperty<boolean>,
-    isMeanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
+    tickMarksVisibleProperty: TReadOnlyProperty<boolean>,
+    meanFulcrumFixedProperty: TReadOnlyProperty<boolean>,
     providedOptions: BalanceBeamNodeOptions
   ) {
 
@@ -76,7 +76,7 @@ export default class BalanceBeamNode extends Node {
         includeXAxis: false,
         color: 'black',
         showTickMarks: false,
-        visibleProperty: areTickMarksVisibleProperty,
+        visibleProperty: tickMarksVisibleProperty,
         bottom: paperStackBounds.bottom - 15,
         excludeInvisibleChildrenFromBounds: true
       }
@@ -101,7 +101,7 @@ export default class BalanceBeamNode extends Node {
       sceneModel.meanPredictionFulcrumValueProperty,
       fulcrumWasDraggedProperty,
       sceneModel.meanValueProperty,
-      isMeanFulcrumFixedProperty,
+      meanFulcrumFixedProperty,
       sceneModel.beamSupportsPresentProperty,
       {
         fulcrumHeight: triangleHeight,
@@ -119,13 +119,13 @@ export default class BalanceBeamNode extends Node {
         triangleHeight: triangleHeight - FULCRUM_LINE_WIDTH,
         triangleWidth: triangleWidth,
         bottom: groundY,
-        visibleProperty: isMeanFulcrumFixedProperty,
+        visibleProperty: meanFulcrumFixedProperty,
         lineWidth: FULCRUM_LINE_WIDTH
       }
     );
 
     // Update the position of the fixed fulcrum when related model values change.
-    Multilink.multilink( [ isMeanFulcrumFixedProperty, sceneModel.meanValueProperty ], ( isFulcrumFixed, meanValue ) => {
+    Multilink.multilink( [ meanFulcrumFixedProperty, sceneModel.meanValueProperty ], ( isFulcrumFixed, meanValue ) => {
       if ( isFulcrumFixed ) {
 
         // Position the fulcrum at the mean when in the "fixed" mode.
@@ -165,7 +165,7 @@ export default class BalanceBeamNode extends Node {
     _.times( numberOfBeamDots, () => {
       const dot = new Circle( BEAM_DOT_RADIUS, {
         fill: MeanShareAndBalanceColors.meanColorProperty,
-        visibleProperty: areTickMarksVisibleProperty
+        visibleProperty: tickMarksVisibleProperty
       } );
       beamDots.push( dot );
     } );
@@ -335,7 +335,7 @@ export default class BalanceBeamNode extends Node {
                             Utils.roundToInterval( sceneModel.meanValueProperty.value, 0.1 );
         if ( !supportColumnsVisibleProperty.value &&
              sceneModel.meanPredictionFulcrumValueProperty.value === roundedMean &&
-             !isMeanFulcrumFixedProperty.value ) {
+             !meanFulcrumFixedProperty.value ) {
           atMeanSoundClip.play();
         }
       }

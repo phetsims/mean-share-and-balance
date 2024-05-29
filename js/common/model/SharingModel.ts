@@ -147,7 +147,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
         this.releaseSnack.bind( this ),
         {
           initialXPosition: initialXPosition,
-          isInitiallyActive: plateIndex < this.numberOfPlatesProperty.value,
+          initiallyActive: plateIndex < this.numberOfPlatesProperty.value,
           linePlacement: plateIndex,
           startingNumberOfSnacks: options.initialPlateValues[ plateIndex ],
           handleFraction: handleFraction,
@@ -161,10 +161,10 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     } );
 
     const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
-    const plateSyncDependencies = this.plates.map( plate => plate.areSnacksInSyncProperty );
+    const plateSyncDependencies = this.plates.map( plate => plate.snacksInSyncProperty );
     this.activePlatesInSyncProperty = DerivedProperty.deriveAny( [ ...activePlateDependencies, ...plateSyncDependencies ],
       () => {
-        return this.plates.every( plate => plate.isActiveProperty.value ? plate.areSnacksInSyncProperty.value : true );
+        return this.plates.every( plate => plate.isActiveProperty.value ? plate.snacksInSyncProperty.value : true );
       } );
 
     // Tracks the total number of snacks based on the "ground truth" numbers for each plate.

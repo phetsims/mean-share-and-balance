@@ -29,7 +29,7 @@ type NotepadCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTra
 export default class NotepadCupNode extends Node {
 
   public constructor( notepadCup: Cup, tableCup: Cup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
-                      isShowingTickMarksProperty: Property<boolean>, providedOptions?: NotepadCupNodeOptions ) {
+                      showingTickMarksProperty: Property<boolean>, providedOptions?: NotepadCupNodeOptions ) {
     const options = optionize<NotepadCupNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: notepadCup.position.x,
@@ -38,7 +38,7 @@ export default class NotepadCupNode extends Node {
 
     const tickMarks = new NotepadCupTickMarksNode(
       MeanShareAndBalanceConstants.CUP_HEIGHT,
-      { visibleProperty: isShowingTickMarksProperty }
+      { visibleProperty: showingTickMarksProperty }
     );
 
     // 0 is empty, 1 is full

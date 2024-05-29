@@ -18,7 +18,7 @@ import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSound
 
 export default class PipeSwitch extends ABSwitch<boolean> {
 
-  public constructor( arePipesOpenProperty: Property<boolean>, arePipesEnabledProperty: Property<boolean>, tandem: Tandem ) {
+  public constructor( pipesOpenProperty: Property<boolean>, pipesEnabledProperty: Property<boolean>, tandem: Tandem ) {
 
     const closedValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( 0 ) );
 
@@ -27,7 +27,7 @@ export default class PipeSwitch extends ABSwitch<boolean> {
     const options: ABSwitchOptions = {
       align: 'top',
       justify: 'left',
-      enabledProperty: arePipesEnabledProperty,
+      enabledProperty: pipesEnabledProperty,
       tandem: tandem,
 
       toggleSwitchOptions: {
@@ -39,7 +39,7 @@ export default class PipeSwitch extends ABSwitch<boolean> {
       }
     };
 
-    super( arePipesOpenProperty, false, closedValveIcon, true, openValveIcon, options );
+    super( pipesOpenProperty, false, closedValveIcon, true, openValveIcon, options );
   }
 }
 

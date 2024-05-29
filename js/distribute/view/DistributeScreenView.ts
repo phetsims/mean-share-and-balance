@@ -194,7 +194,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           model.snacksDistributedProperty,
           model.successIndicatorsOperatingProperty
         ],
-        ( meanPrediction, meanValue, areSnacksDistributed, successIndicatorsOperating ) => {
+        ( meanPrediction, meanValue, snacksDistributed, successIndicatorsOperating ) => {
 
           // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
           // the default pattern, and return early.
@@ -206,7 +206,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           const successRectangleWasVisible = successRectangle.visible;
           const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
 
-          if ( areSnacksDistributed ) {
+          if ( snacksDistributed ) {
             const meanTolerance = 0.5;
             const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
             const roundedMean = Utils.roundToInterval( meanValue, 0.1 );

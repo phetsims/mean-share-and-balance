@@ -29,7 +29,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type SelfOptions<T extends Snack> = {
-  isInitiallyActive?: boolean;
+  initiallyActive?: boolean;
   initialXPosition?: number;
   linePlacement: number;
   startingNumberOfSnacks?: number;
@@ -59,7 +59,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // only public so that clients can get to the length and lengthProperty.
   public readonly snacksOnNotepadPlate: ObservableArray<T>;
 
-  public readonly areSnacksInSyncProperty: TReadOnlyProperty<boolean>;
+  public readonly snacksInSyncProperty: TReadOnlyProperty<boolean>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
   public readonly linePlacement: number;
@@ -85,7 +85,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
                       providedOptions: PlateOptions<T> ) {
 
     const options = optionize<PlateOptions<T>, SelfOptions<T>, PhetioObjectOptions>()( {
-      isInitiallyActive: false,
+      initiallyActive: false,
       initialXPosition: 0,
       phetioState: false,
       startingNumberOfSnacks: 1,
@@ -100,7 +100,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     this.startingNumberOfSnacks = options.startingNumberOfSnacks;
     this.snackStackingFunction = options.snackStackingFunction;
 
-    this.isActiveProperty = new BooleanProperty( options.isInitiallyActive, {
+    this.isActiveProperty = new BooleanProperty( options.initiallyActive, {
 
       // phet-io
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
@@ -113,7 +113,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
     // So that reset of isActiveProperty and reset of tableSnackNumberProperty are in agreement, make sure their initial
     // states are compatible.
-    const initialTableSnackNumber = options.isInitiallyActive ? options.startingNumberOfSnacks : 0;
+    const initialTableSnackNumber = options.initiallyActive ? options.startingNumberOfSnacks : 0;
 
     this.tableSnackNumberProperty = new NumberProperty( initialTableSnackNumber, {
       range: new Range( 0, 10 ),
@@ -132,15 +132,15 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
       // Add a listener that updates the stack when a resident snack starts being dragged.  This is done because, by
       // design, snacks stay in a plate's array when dragging.  See #193 for more information on this.
-      const updateStackWhenDragging = ( isDragging: boolean ) => {
-        if ( isDragging ) {
+      const updateStackWhenDragging = ( dragging: boolean ) => {
+        if ( dragging ) {
           this.updateSnackPositions();
         }
       };
-      snack.isDraggingProperty.lazyLink( updateStackWhenDragging );
+      snack.draggingProperty.lazyLink( updateStackWhenDragging );
       const snackRemovedListener = ( removedSnack: T ) => {
         if ( removedSnack === snack ) {
-          snack.isDraggingProperty.unlink( updateStackWhenDragging );
+          snack.draggingProperty.unlink( updateStackWhenDragging );
           this.snacksOnNotepadPlate.removeItemRemovedListener( snackRemovedListener );
         }
       };
@@ -149,7 +149,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
       this.snacksOnNotepadPlate.addItemRemovedListener( snackRemovedListener );
     } );
 
-    this.areSnacksInSyncProperty = new DerivedProperty(
+    this.snacksInSyncProperty = new DerivedProperty(
       [ this.tableSnackNumberProperty, this.snacksOnNotepadPlate.lengthProperty ],
       ( tableSnackNumber, notepadSnackNumber ) => tableSnackNumber === notepadSnackNumber );
 
@@ -175,7 +175,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // Count the number of items on this plate excluding snacks that are dragging and the provided snack, since it is
     // possible that it is already assigned to this plate.
     const numberOfStackedSnacks = this.snacksOnNotepadPlate.filter(
-      snackOnList => !snackOnList.isDraggingProperty.value && snackOnList !== snack
+      snackOnList => !snackOnList.draggingProperty.value && snackOnList !== snack
     ).length;
     return this.getPositionForStackedItem( numberOfStackedSnacks );
   }
@@ -198,7 +198,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // better for conveying state via phet-io, where dragging state information isn't included.  An ordered list of the
     // snacks is needed here, excluding any that are dragging.  For more information on this, see
     // https://github.com/phetsims/mean-share-and-balance/issues/193.
-    const stackableSnacks = this.snacksOnNotepadPlate.filter( snack => !snack.isDraggingProperty.value );
+    const stackableSnacks = this.snacksOnNotepadPlate.filter( snack => !snack.draggingProperty.value );
 
     // Update the positions of the snacks.
     stackableSnacks.forEach( ( snack, i ) => {
@@ -296,7 +296,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
     // Exclude any snacks that are currently being dragged or are animating.
     const snacksFullyOnPlate = this.snacksOnNotepadPlate.filter(
-      snack => !snack.isDraggingProperty.value && !snack.travelAnimationProperty.value
+      snack => !snack.draggingProperty.value && !snack.travelAnimationProperty.value
     );
 
     return snacksFullyOnPlate[ snacksFullyOnPlate.length - 1 ] || null;

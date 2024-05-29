@@ -28,7 +28,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 type SelfOptions = {
   numberSpinnerOptions: WithRequired<NumberSpinnerOptions, 'tandem'>;
   controlsPDOMOrder: Node[];
-  isSoccerContext?: boolean;
+  soccerContext?: boolean;
   infoPanelVisibleProperty?: Property<boolean> | null;
 };
 
@@ -51,7 +51,7 @@ export default class MeanShareAndBalanceControls extends Node {
   ) {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
-      isSoccerContext: false,
+      soccerContext: false,
       infoPanelVisibleProperty: null
     }, providedOptions );
     const controlsAlignGroup = new AlignGroup( { matchVertical: false } );

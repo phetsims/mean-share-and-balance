@@ -39,14 +39,14 @@ export default class Pipe {
 
   // Holds the valve node rotation value. Closed is 0, and open is Pi/2
   public readonly rotationProperty = new NumberProperty( 0 );
-  public readonly arePipesOpenProperty: Property<boolean>;
+  public readonly pipesOpenProperty: Property<boolean>;
 
-  public constructor( arePipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
+  public constructor( pipesOpenProperty: Property<boolean>, providedOptions?: PipeOptions ) {
     const options = optionize<PipeOptions, SelfOptions, PhetioObjectOptions>()( {
       isActive: false
     }, providedOptions );
 
-    this.arePipesOpenProperty = arePipesOpenProperty;
+    this.pipesOpenProperty = pipesOpenProperty;
     this.isActiveProperty = new BooleanProperty( options.isActive, {
       tandem: options.tandem.createTandem( 'isActiveProperty' ),
       phetioReadOnly: true
@@ -63,7 +63,7 @@ export default class Pipe {
   // Valve animation
   public step( dt: number ): void {
     const currentRotation = this.rotationProperty.value;
-    const targetRotation = this.arePipesOpenProperty.value ? Math.PI / 2 : 0;
+    const targetRotation = this.pipesOpenProperty.value ? Math.PI / 2 : 0;
     const delta = targetRotation - currentRotation;
     const rotationThreshold = Math.abs( this.rotationProperty.value - targetRotation ) * 0.4;
     const proposedRotation = currentRotation + Math.sign( delta ) * dt * 3;

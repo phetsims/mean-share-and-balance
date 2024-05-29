@@ -33,7 +33,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
   // Public for traversal order
   public readonly valveNode: ValveNode;
 
-  public constructor( pipe: Pipe, arePipesOpenProperty: Property<boolean>, arePipesEnabledProperty: Property<boolean>,
+  public constructor( pipe: Pipe, pipesOpenProperty: Property<boolean>, pipesEnabledProperty: Property<boolean>,
                       modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
     const options = providedOptions;
 
@@ -79,7 +79,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     valveNode.touchArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
     const handleFire = () => {
-      arePipesOpenProperty.set( !pipe.arePipesOpenProperty.value );
+      pipesOpenProperty.set( !pipe.pipesOpenProperty.value );
 
       pipe.isCurrentlyClickedProperty.set( true );
       pipe.isCurrentlyClickedProperty.set( false );
@@ -98,7 +98,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     const combinedOptions = combineOptions<NodeOptions>( {
       visibleProperty: pipe.isActiveProperty,
-      enabledProperty: arePipesEnabledProperty,
+      enabledProperty: pipesEnabledProperty,
       children: [ pipeRectangle, pipeStrokeLeft, pipeStrokeBottom, pipeStrokeTop, pipeStrokeRight, valveNode ]
     }, options );
     super( combinedOptions );
@@ -118,7 +118,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     // collectively in the ScreenView
     this.interactiveHighlight = Shape.bounds( this.localBounds );
 
-    arePipesEnabledProperty.link( enabled => {
+    pipesEnabledProperty.link( enabled => {
       enabled ? this.opacity = 1 : this.opacity = 0.5;
     } );
   }
