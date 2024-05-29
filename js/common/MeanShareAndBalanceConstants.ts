@@ -15,7 +15,6 @@ import ScreenView from '../../../joist/js/ScreenView.js';
 import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import Property from '../../../axon/js/Property.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
 
 const DEFAULT_MARGIN = 15;
@@ -89,7 +88,6 @@ const MeanShareAndBalanceConstants = {
   NOTEPAD_LINE_PATTERN_WIDTH: 1.95,
 
   SOCCER_BALL_RANGE: new Range( 0, 10 ),
-  NUMBER_OF_KICKS_RANGE_PROPERTY: new Property( new Range( 0, 7 ) ),
   GROUND_POSITION_Y: 558,
   INITIAL_NUMBER_OF_SOCCER_BALLS: 0,
   NUMBER_LINE_LEFT_X_MARGIN: NUMBER_LINE_LEFT_X_MARGIN,

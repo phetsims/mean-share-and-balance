@@ -25,6 +25,7 @@ import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import BalancePointModel from './BalancePointModel.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -105,7 +106,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
-      range: MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY,
+      range: BalancePointModel.numberOfKicksRangeProperty,
       phetioReadOnly: true,
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );
@@ -227,8 +228,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
     maxKicksProperty.link( maxKicks => {
       this.clearData();
-      MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value = new Range(
-        MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value.min,
+      BalancePointModel.numberOfKicksRangeProperty.value = new Range(
+        BalancePointModel.numberOfKicksRangeProperty.value.min,
         maxKicks
       );
     } );

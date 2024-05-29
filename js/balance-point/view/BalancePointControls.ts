@@ -79,7 +79,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       },
       infoPanelVisibleProperty: model.meanInfoPanelVisibleProperty
     }, providedOptions );
-    super( vBox, numberOfDataPointsProperty, MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY, MeanShareAndBalanceStrings.numberOfBallsStringProperty, options );
+    super( vBox, numberOfDataPointsProperty, BalancePointModel.numberOfKicksRangeProperty, MeanShareAndBalanceStrings.numberOfBallsStringProperty, options );
   }
 }
 

@@ -17,12 +17,19 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/model/SoccerCommonGroupSortInteractionModel.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Range from '../../../../dot/js/Range.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
 
+const NUMBER_OF_KICKS_RANGE_PROPERTY = new Property( new Range( 0, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS ) );
+
 export default class BalancePointModel extends SoccerModel<BalancePointSceneModel> {
+
+  // This Property determines wether the fulcrum is fixed on the current mean value, or is movable by the user.
   public readonly meanFulcrumFixedProperty: Property<boolean>;
+
+  // Visible Properties
   public readonly tickMarksVisibleProperty: Property<boolean>;
   public readonly meanInfoPanelVisibleProperty: Property<boolean>;
   public readonly totalVisibleProperty: Property<boolean>;
@@ -55,8 +62,9 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
     // Allows PhET-iO clients to modify the max number of kicks.
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
-      range: MeanShareAndBalanceConstants.NUMBER_OF_KICKS_RANGE_PROPERTY.value,
-      tandem: options.tandem.createTandem( 'maxKicksProperty' )
+      range: BalancePointModel.numberOfKicksRangeProperty.value,
+      tandem: options.tandem.createTandem( 'maxKicksProperty' ),
+      phetioFeatured: true
     } );
 
     const sceneModel = new BalancePointSceneModel( meanFulcrumFixedProperty, maxKicksProperty, {
@@ -76,7 +84,6 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     this.meanInfoPanelVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'meanInfoPanelVisibleProperty' )
     } );
-
     this.totalVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'totalVisibleProperty' )
     } );
@@ -94,6 +101,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     this.meanInfoPanelVisibleProperty.reset();
     this.fulcrumWasDraggedProperty.reset();
   }
+
+  public static numberOfKicksRangeProperty = NUMBER_OF_KICKS_RANGE_PROPERTY;
 }
 
 meanShareAndBalance.register( 'BalancePointModel', BalancePointModel );
