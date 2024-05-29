@@ -228,11 +228,10 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       } );
 
     this.meanWithRemainderProperty = new DerivedProperty( [
-      this.meanProperty,
       this.numberOfPlatesProperty,
       this.totalSnacksProperty
-    ], ( mean, numberOfPlates, totalSnacks ) => {
-      const meanFloor = Math.floor( mean );
+    ], ( numberOfPlates, totalSnacks ) => {
+      const meanFloor = Math.floor( totalSnacks / numberOfPlates );
       const remainder = totalSnacks - meanFloor * numberOfPlates;
 
       return { wholeNumber: meanFloor, remainder: remainder };
