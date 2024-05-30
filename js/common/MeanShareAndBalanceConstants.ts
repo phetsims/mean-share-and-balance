@@ -51,7 +51,7 @@ const MeanShareAndBalanceConstants = {
     .addColorStop( 0, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
     .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty ),
   PIPE_LENGTH: 40,
-  CONTROLS_VERTICAL_MARGIN: 30,
+  CONTROLS_VERTICAL_MARGIN: 37,
   CONTROLS_HORIZONTAL_MARGIN: 15,
 
   TABLE_CUPS_CENTER_Y: 625,

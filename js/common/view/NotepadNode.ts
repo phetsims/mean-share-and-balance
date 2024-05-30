@@ -22,6 +22,7 @@ import notepadRing_svg from '../../../images/notepadRing_svg.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Property from '../../../../axon/js/Property.js';
+import BackgroundNode from '../../../../scenery-phet/js/BackgroundNode.js';
 
 type SelfOptions = {
   readoutPatternStringProperty?: PatternStringProperty<{
@@ -39,6 +40,7 @@ export type NotepadNodeOptions = SelfOptions &
 const NOTEPAD_RING_BOTTOM = 33.5;
 const PAPER_PAGE_SIZE = new Dimension2( 720, 240 );
 const LABEL_MARGIN = 15;
+const TOTAL_MARGIN = 5;
 
 export default class NotepadNode extends Node {
 
@@ -106,12 +108,12 @@ export default class NotepadNode extends Node {
         maxWidth: 200,
         fill: 'black'
       } );
-      const readoutBackground = new Rectangle( readoutText.bounds, {
-        children: [ readoutText ],
-        fill: MeanShareAndBalanceColors.notepadReadoutBackgroundColorProperty,
-        sizable: true,
-        layoutOptions: {
-          stretch: true
+      const readoutBackground = new BackgroundNode( readoutText, {
+        xMargin: TOTAL_MARGIN,
+        yMargin: TOTAL_MARGIN,
+        rectangleOptions: {
+          opacity: 0.5,
+          cornerRadius: 5
         }
       } );
       readoutText.center = readoutBackground.center;
