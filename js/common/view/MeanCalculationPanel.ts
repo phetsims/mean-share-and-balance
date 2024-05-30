@@ -45,9 +45,8 @@ export type MeanCalculationPanelOptions = SelfOptions & WithRequired<PanelOption
 // constants
 const LABEL_FONT = new PhetFont( 16 );
 const LABEL_TEXT_OPTIONS = { font: LABEL_FONT, maxWidth: 300 };
-const DECIMAL_FONT = new PhetFont( 16 );
 const FRACTION_NUMBER_FONT = new PhetFont( 14 );
-const WHOLE_NUMBER_FONT = new PhetFont( 18 );
+const NUMBER_FONT = new PhetFont( 16 );
 const VINCULUM_LINE_WIDTH = 1;
 const DIALOG_MAX_WIDTH_MARGIN = 50;
 
@@ -103,16 +102,21 @@ export default class MeanCalculationPanel extends Panel {
     const calculationsTextOptions = combineOptions<TextOptions>( {
       visibleProperty: calculationsVisibleProperty
     }, LABEL_TEXT_OPTIONS );
+
+
+    const equalsPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.meanEqualSignPatternStringProperty, {
+      equals: '='
+    } );
     const meanEqualsAdditionFractionText = new Text(
-      MeanShareAndBalanceStrings.meanEqualsStringProperty,
+      equalsPatternStringProperty,
       calculationsTextOptions
     );
     const meanEqualsUnreducedFractionText = new Text(
-      MeanShareAndBalanceStrings.meanEqualsStringProperty,
+      equalsPatternStringProperty,
       calculationsTextOptions
     );
-    const meanEqualsDecimalOrMixedFractionText = new Text(
-      MeanShareAndBalanceStrings.meanEqualsStringProperty,
+    const meanEqualsMixedFractionOrRemainderText = new Text(
+      equalsPatternStringProperty,
       calculationsTextOptions
     );
 
@@ -209,25 +213,11 @@ export default class MeanCalculationPanel extends Panel {
         vinculumLineWidth: VINCULUM_LINE_WIDTH
       } );
 
-      // The value can be represented as either a decimal, mixed fraction, or a whole number with a remainder.
-      let valueRepresentation;
-      if ( options.calculatedMeanDisplayMode === 'decimal' ) {
-        const decimalOptions = {
-          font: DECIMAL_FONT
-        };
-        valueRepresentation = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
-      }
-      else if ( options.calculatedMeanDisplayMode === 'remainder' ) {
-        const wholeNumber = Math.floor( mean );
-        const patternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.remainderPatternStringProperty, {
-          wholeNumber: wholeNumber,
-          remainder: meanRemainder
-        } );
-        valueRepresentation = new Text( patternStringProperty, {
-          font: DECIMAL_FONT
-        } );
-      }
-      else {
+      // The value can be represented as either a decimal & mixed fraction, mixed fraction, or a whole number with a remainder.
+      let valueRepresentation: Node | null = null;
+      let decimalRepresentationText: Node | null = null;
+      let decimalRepresentation: Node | null = null;
+      if ( options.calculatedMeanDisplayMode === 'decimal' || options.calculatedMeanDisplayMode === 'mixedFraction' ) {
 
         // Calculate the fractional portion, if present.
         let fraction;
@@ -241,16 +231,45 @@ export default class MeanCalculationPanel extends Panel {
           whole: ( meanWholePart > 0 || totalValues === 0 ) ? meanWholePart : null,
           numerator: fraction ? fraction.numerator : null,
           denominator: fraction ? fraction.denominator : null,
-          wholeNumberFont: WHOLE_NUMBER_FONT,
+          wholeNumberFont: NUMBER_FONT,
           fractionNumbersFont: FRACTION_NUMBER_FONT,
           vinculumLineWidth: VINCULUM_LINE_WIDTH
+        } );
+
+
+        const equalSign = mean > Math.floor( mean ) ? '≈' : '=';
+        const decimalTextPatternStringProperty = new PatternStringProperty(
+          MeanShareAndBalanceStrings.meanEqualSignPatternStringProperty,
+          {
+            equals: equalSign
+          }
+        );
+        decimalRepresentationText = new Text( decimalTextPatternStringProperty,
+          calculationsTextOptions );
+        const decimalOptions = {
+          font: NUMBER_FONT
+        };
+        decimalRepresentation = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
+
+
+      }
+      else if ( options.calculatedMeanDisplayMode === 'remainder' ) {
+        const wholeNumber = Math.floor( mean );
+        const patternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.remainderPatternStringProperty, {
+          wholeNumber: wholeNumber,
+          remainder: meanRemainder
+        } );
+        valueRepresentation = new Text( patternStringProperty, {
+          font: NUMBER_FONT
         } );
       }
 
       calculationNode.rows = [
         [ meanEqualsAdditionFractionText, additionFraction ],
         [ meanEqualsUnreducedFractionText, unreducedFraction ],
-        [ meanEqualsDecimalOrMixedFractionText, valueRepresentation ]
+        [ meanEqualsMixedFractionOrRemainderText, valueRepresentation ],
+        options.calculatedMeanDisplayMode === 'decimal' ?
+          [ decimalRepresentationText, decimalRepresentation ] : []
       ];
     } );
 

@@ -30,7 +30,7 @@ type StringsType = {
   'distributeQuestionStringProperty': LocalizedStringProperty;
   'fairShareQuestionStringProperty': LocalizedStringProperty;
   'numberOfPeopleStringProperty': LocalizedStringProperty;
-  'meanEqualsStringProperty': LocalizedStringProperty;
+  'meanEqualSignPatternStringProperty': LocalizedStringProperty;
   'meanEqualsPatternStringProperty': LocalizedStringProperty;
   'totalCandyBarsPatternStringProperty': LocalizedStringProperty;
   'barStringProperty': LocalizedStringProperty;
