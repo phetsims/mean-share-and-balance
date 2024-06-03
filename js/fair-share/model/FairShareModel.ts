@@ -33,6 +33,7 @@ import stepTimer from '../../../../axon/js/stepTimer.js';
 import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
+import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -128,11 +129,9 @@ export default class FairShareModel extends SharingModel<Apple> {
     } );
 
     this.appleCollection.addItemAddedListener( apple => {
-      const index = this.appleCollection.indexOf( apple );
-
       apple.isActiveProperty.value = true;
       apple.fractionProperty.value = Fraction.ONE;
-      apple.moveTo( this.getCollectionPosition( index ), this.animateAddedSnacks );
+      apple.moveTo( this.getCollectionPosition( this.appleCollection.indexOf( apple ) ), this.animateAddedSnacks );
     } );
 
     // Set up plate-related behavior that is specific to the Fair Share screen.
@@ -155,6 +154,13 @@ export default class FairShareModel extends SharingModel<Apple> {
     // Handle a change in the mode setting for the notepad.  This is a complex process that moves apples around between
     // plates and the collection area, and some of this motion is animated.
     const handleModeChange = ( appleDistributionMode: DistributionMode, previousDistributionMode: DistributionMode | null ): void => {
+
+      // Do nothing if this is being called due to the setting of phet-io state.  Why? Because the more granular state
+      // information, such as apple positions and fractional values, is already taken care of by instrumented Property
+      // instances, and trying to set it all again will likely mess up the state.
+      if ( isSettingPhetioStateProperty.value ) {
+        return;
+      }
 
       // Make sure any leftover animations from previous mode changes are cleared.
       this.finishInProgressAnimations();
