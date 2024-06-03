@@ -23,9 +23,6 @@
   "tickMarks": {
     "value": "Tick Marks"
   },
-  "cupWaterLevel": {
-    "value": "Cup Water Level"
-  },
   "sync": {
     "value": "Sync"
   },
@@ -52,9 +49,6 @@
   },
   "meanEqualSignPattern": {
     "value": "mean {{equals}} "
-  },
-  "meanEqualsPattern": {
-    "value": "Mean = {{value}} m"
   },
   "totalCandyBarsPattern": {
     "value": "Total = {{total}} candy {{measurement}}"
@@ -88,9 +82,6 @@
   },
   "reset": {
     "value": "Reset"
-  },
-  "meanEqualsUnknown": {
-    "value": "Mean = ?"
   },
   "needAtLeastOneKick": {
     "value": "Need at least one kick"

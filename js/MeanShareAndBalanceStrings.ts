@@ -21,7 +21,6 @@ type StringsType = {
   'predictMeanStringProperty': LocalizedStringProperty;
   'meanStringProperty': LocalizedStringProperty;
   'tickMarksStringProperty': LocalizedStringProperty;
-  'cupWaterLevelStringProperty': LocalizedStringProperty;
   'syncStringProperty': LocalizedStringProperty;
   'collectStringProperty': LocalizedStringProperty;
   'shareStringProperty': LocalizedStringProperty;
@@ -31,7 +30,6 @@ type StringsType = {
   'fairShareQuestionStringProperty': LocalizedStringProperty;
   'numberOfPeopleStringProperty': LocalizedStringProperty;
   'meanEqualSignPatternStringProperty': LocalizedStringProperty;
-  'meanEqualsPatternStringProperty': LocalizedStringProperty;
   'totalCandyBarsPatternStringProperty': LocalizedStringProperty;
   'barStringProperty': LocalizedStringProperty;
   'barsStringProperty': LocalizedStringProperty;
@@ -43,7 +41,6 @@ type StringsType = {
   'numberOfBallsStringProperty': LocalizedStringProperty;
   'checkStringProperty': LocalizedStringProperty;
   'resetStringProperty': LocalizedStringProperty;
-  'meanEqualsUnknownStringProperty': LocalizedStringProperty;
   'needAtLeastOneKickStringProperty': LocalizedStringProperty;
   'kickStringProperty': LocalizedStringProperty;
   'remainderPatternStringProperty': LocalizedStringProperty;
