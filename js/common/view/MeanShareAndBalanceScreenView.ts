@@ -74,11 +74,11 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     // May be used for future screens
   }
 
-  protected msabSetPDOMOrder( firstInteractionNodes: Node[], secondInteractionNodes: Node[], controlNodes: Node[] ): void {
+  protected msabSetPDOMOrder( notepadInteractionNodes: Node[], tableInteractionNodes: Node[], controlNodes: Node[] ): void {
     this.pdomPlayAreaNode.setPDOMOrder( [
-      ...firstInteractionNodes,
+      ...notepadInteractionNodes,
       this.notepad,
-      ...secondInteractionNodes
+      ...tableInteractionNodes
     ] );
 
     this.pdomControlAreaNode.setPDOMOrder( [
