@@ -43,8 +43,9 @@ type SelfOptions = {
 export type MeanCalculationPanelOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
 
 // constants
+const TEXT_MAX_WIDTH = 300;
 const LABEL_FONT = new PhetFont( 16 );
-const LABEL_TEXT_OPTIONS = { font: LABEL_FONT, maxWidth: 300 };
+const LABEL_TEXT_OPTIONS = { font: LABEL_FONT, maxWidth: TEXT_MAX_WIDTH };
 const FRACTION_NUMBER_FONT = new PhetFont( 14 );
 const NUMBER_FONT = new PhetFont( 16 );
 const VINCULUM_LINE_WIDTH = 1;
@@ -261,7 +262,8 @@ export default class MeanCalculationPanel extends Panel {
           remainder: meanRemainder
         } );
         valueRepresentation = new Text( patternStringProperty, {
-          font: NUMBER_FONT
+          font: NUMBER_FONT,
+          maxWidth: TEXT_MAX_WIDTH
         } );
       }
 
