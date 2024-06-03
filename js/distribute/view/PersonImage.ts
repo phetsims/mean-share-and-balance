@@ -13,21 +13,20 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import TablePlateNode from '../../common/view/TablePlateNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Snack from '../../common/model/Snack.js';
+import LocalizedImageProperty from '../../../../joist/js/i18n/LocalizedImageProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type PersonImageOptions = SelfOptions & ImageOptions;
 
-// PersonImage is reliant on the scale of the artwork being consistent from image to image. When creating new artwork
-// this should be taken into account.
-const PEOPLE_SCALE = 0.3;
+const MAX_IMAGE_WIDTH = 160;
 
 export default class PersonImage<T extends Snack> extends Image {
 
-  public constructor( image: HTMLImageElement, tablePlateNode: TablePlateNode<T>, providedOptions: PersonImageOptions ) {
+  public constructor( image: LocalizedImageProperty, tablePlateNode: TablePlateNode<T>, providedOptions: PersonImageOptions ) {
     const options = optionize<PersonImageOptions, SelfOptions, ImageOptions>()( {
-      scale: PEOPLE_SCALE,
+      maxWidth: MAX_IMAGE_WIDTH,
       centerX: tablePlateNode.centerX,
-      bottom: MeanShareAndBalanceConstants.PARTY_TABLE_Y + 80
+      bottom: MeanShareAndBalanceConstants.PARTY_TABLE_Y + 95
     }, providedOptions );
 
     super( image, options );

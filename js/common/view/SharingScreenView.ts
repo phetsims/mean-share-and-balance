@@ -24,17 +24,11 @@ import MeanCalculationPanel from './MeanCalculationPanel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import PersonImage from '../../distribute/view/PersonImage.js';
 import TablePlateNode from './TablePlateNode.js';
-import person1_png from '../../../images/person1_png.js';
-import person2_png from '../../../images/person2_png.js';
-import person3_png from '../../../images/person3_png.js';
-import person4_png from '../../../images/person4_png.js';
-import person5_png from '../../../images/person5_png.js';
-import person6_png from '../../../images/person6_png.js';
-import person7_png from '../../../images/person7_png.js';
 import NotepadNode from './NotepadNode.js';
 import PartyTableNode from './PartyTableNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
+import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -47,10 +41,14 @@ type SelfOptions = {
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
 
 // constants
-const PEOPLE_IMAGES = [ person1_png, person2_png, person3_png, person4_png, person5_png, person6_png, person7_png ];
+const PEOPLE_IMAGES = [
+  SoccerCommonImages.kicker01StandingImageProperty, SoccerCommonImages.kicker02StandingImageProperty,
+  SoccerCommonImages.kicker03StandingImageProperty, SoccerCommonImages.kicker04StandingImageProperty,
+  SoccerCommonImages.kicker05StandingImageProperty, SoccerCommonImages.kicker06StandingImageProperty,
+  SoccerCommonImages.kicker07StandingImageProperty ];
 
 // Offset for positioning individual people relative to the plate with which each is associated, in screen coordinates.
-const PEOPLE_LAYER_X_OFFSET = -70;
+const PEOPLE_LAYER_X_OFFSET = -80;
 
 export default class SharingScreenView<T extends Snack> extends MeanShareAndBalanceScreenView {
 
@@ -132,9 +130,9 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
 
     // Create the images of the people that stand near the plates.
     const people: Node[] = tablePlateNodes.map( ( plate, i ) => {
-      const selectedImage = PEOPLE_IMAGES[ i ];
-      assert && assert( selectedImage, `No corresponding image for index: ${i}` );
-      return new PersonImage( selectedImage, plate, { visibleProperty: plate.visibleProperty } );
+      const selectedImageProperty = PEOPLE_IMAGES[ i ];
+      assert && assert( selectedImageProperty, `No corresponding image for index: ${i}` );
+      return new PersonImage( selectedImageProperty, plate, { visibleProperty: plate.visibleProperty } );
     } );
 
     const peopleLayerNode = new Node( { children: people } );
