@@ -21,6 +21,9 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'>;
 
+// constants
+const PLATE_X_OFFSET = 2; // The plate can appear off center since there is empty space on the left side of the image.
+
 export default class DistributeNotepadPlateNode extends Node {
 
   public constructor( plate: Plate<CandyBar>,
@@ -44,7 +47,7 @@ export default class DistributeNotepadPlateNode extends Node {
 
     // Set position based on the plate's position.
     plate.xPositionProperty.link( xPosition => {
-      this.centerX = mvt.transformX( xPosition );
+      this.centerX = mvt.transformX( xPosition ) - PLATE_X_OFFSET;
     } );
   }
 }
