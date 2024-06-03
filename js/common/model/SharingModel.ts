@@ -71,6 +71,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
                       providedOptions: SharingModelOptions ) {
 
     const options = optionize<SharingModelOptions, SelfOptions, PhetioObjectOptions>()( {
+      isDisposable: false,
       phetioType: SharingModel.SharingModelIO,
       phetioState: false,
       phetioDocumentation: 'The model for the Distribute and Fair Share screens, which includes tablePlates and notepadPlates.'

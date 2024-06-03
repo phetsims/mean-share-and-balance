@@ -16,7 +16,6 @@ import NotepadCupTickMarksNode from './NotepadCupTickMarksNode.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
@@ -28,12 +27,13 @@ type NotepadCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTra
 
 export default class NotepadCupNode extends Node {
 
-  public constructor( notepadCup: Cup, tableCup: Cup, modelViewTransform: ModelViewTransform2, meanProperty: TReadOnlyProperty<number>,
+  public constructor( notepadCup: Cup, modelViewTransform: ModelViewTransform2,
                       showingTickMarksProperty: Property<boolean>, providedOptions?: NotepadCupNodeOptions ) {
     const options = optionize<NotepadCupNodeOptions, SelfOptions, NodeOptions>()( {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: notepadCup.position.x,
-      visibleProperty: notepadCup.isActiveProperty
+      visibleProperty: notepadCup.isActiveProperty,
+      isDisposable: false
     }, providedOptions );
 
     const tickMarks = new NotepadCupTickMarksNode(

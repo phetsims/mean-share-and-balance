@@ -52,6 +52,7 @@ export default class Snack extends PhetioObject {
     const options = optionize<SnackOptions, SelfOptions, PhetioObjectOptions>()( {
       initiallyActive: false,
       initialPosition: Vector2.ZERO,
+      isDisposable: false,
       phetioState: false
     }, providedOptions );
 

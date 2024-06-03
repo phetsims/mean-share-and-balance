@@ -70,7 +70,8 @@ export default class WaterLevelTriangleSlider extends VSlider {
         soundPlayerCrossFade: 0,
         keyboardStep: enabledRangeProperty.value.getLength() / NUMBER_OF_KEYBOARD_STEPS,
         shiftKeyboardStep: enabledRangeProperty.value.getLength() / NUMBER_OF_KEYBOARD_STEPS / 2,
-        pageKeyboardStep: enabledRangeProperty.value.getLength() / 4
+        pageKeyboardStep: enabledRangeProperty.value.getLength() / 4,
+        isDisposable: false
       },
       providedOptions );
 

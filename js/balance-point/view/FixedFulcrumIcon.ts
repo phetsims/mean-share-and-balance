@@ -40,7 +40,8 @@ export default class FixedFulcrumIcon extends Node {
     const iconDimension = icon.width > icon.height ? icon.width : icon.height;
     const superOptions = combineOptions<NodeOptions>( {
       children: [ icon ],
-      localBounds: new Bounds2( 0, 0, iconDimension, iconDimension )
+      localBounds: new Bounds2( 0, 0, iconDimension, iconDimension ),
+      isDisposable: false
     }, options );
     super( superOptions );
     icon.center = this.center;

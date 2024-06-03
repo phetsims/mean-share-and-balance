@@ -71,7 +71,8 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     const options = optionize<NotepadCandyBarNodeOptions, SelfOptions, NodeOptions>()( {
       children: children,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      isDisposable: false
     }, providedOptions );
 
     super( options );

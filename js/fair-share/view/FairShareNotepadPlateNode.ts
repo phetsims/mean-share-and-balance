@@ -32,7 +32,8 @@ export default class FairShareNotepadPlateNode extends Image {
 
     super( notepadPlateSketch_svg, {
       maxWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width,
-      visibleProperty: plateVisibleProperty
+      visibleProperty: plateVisibleProperty,
+      isDisposable: false
     } );
 
     // Set the Y position once.  It shouldn't change after construction.

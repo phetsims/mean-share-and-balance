@@ -41,7 +41,8 @@ export default class TableCupNode extends Node {
       y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
       left: waterCup.position.x,
       visibleProperty: waterCup.isActiveProperty,
-      soundPlayerCrossFade: 0
+      soundPlayerCrossFade: 0,
+      isDisposable: false
     }, providedOptions );
 
     // The CUP_HEIGHT is the height of the notepad cups.  The table cups have to be adjusted accordingly because of the

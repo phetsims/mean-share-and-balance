@@ -63,7 +63,8 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     const options = optionize<LevelOutModelOptions, EmptySelfOptions, PhetioObjectOptions>()( {
       phetioType: LevelOutModel.LevelOutModelIO,
       phetioState: false,
-      phetioDocumentation: 'The model for the LevelOut screen, which includes tableCups and notepadCups.'
+      phetioDocumentation: 'The model for the LevelOut screen, which includes tableCups and notepadCups.',
+      isDisposable: false
     }, providedOptions );
 
     super( options );

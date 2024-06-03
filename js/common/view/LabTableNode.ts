@@ -28,7 +28,8 @@ export default class LabTableNode extends Node {
     } );
 
     const options = optionize<TableNodeOptions, SelfOptions, NodeOptions>()( {
-      children: [ tableBottom, table ]
+      children: [ tableBottom, table ],
+      isDisposable: false
     }, providedOptions );
 
     super( options );

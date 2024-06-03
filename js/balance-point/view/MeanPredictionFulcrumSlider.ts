@@ -97,7 +97,8 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
       a11yMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
-      drag: () => { fulcrumWasDraggedProperty.value = true; }
+      drag: () => { fulcrumWasDraggedProperty.value = true; },
+      isDisposable: false
     }, providedOptions );
     super( fulcrumValueProperty, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, options );
 

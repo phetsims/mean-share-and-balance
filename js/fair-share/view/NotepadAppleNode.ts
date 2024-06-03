@@ -48,7 +48,7 @@ export default class NotepadAppleNode extends Node {
 
     // Layer the component Nodes together into the composite Node.
     const options = optionize<NotepadAppleNodeOptions, SelfOptions, PathOptions>()(
-      { children: [ backgroundNode, outlineCircle, foregroundShape ] },
+      { children: [ backgroundNode, outlineCircle, foregroundShape ], isDisposable: false },
       providedOptions
     );
 

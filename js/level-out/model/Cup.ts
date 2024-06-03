@@ -22,6 +22,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import Disposable from '../../../../axon/js/Disposable.js';
 
 type SelfOptions = {
   position: Vector2; // the cups x & y position in the view
@@ -90,6 +91,10 @@ export default class Cup {
   public reset(): void {
     this.partialReset();
     this.isActiveProperty.reset();
+  }
+
+  public dispose(): void {
+    Disposable.assertNotDisposable();
   }
 }
 

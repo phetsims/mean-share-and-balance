@@ -21,7 +21,7 @@ export default class SyncIcon extends Node {
     const downArrow = new LineArrowNode( 0, 0, 0, ARROW_LENGTH, arrowOptions );
     const upArrow = new LineArrowNode( ARROW_SPACING, ARROW_LENGTH, ARROW_SPACING, 0, arrowOptions );
 
-    super( { children: [ downArrow, upArrow ], scale: 0.5 } );
+    super( { children: [ downArrow, upArrow ], scale: 0.5, isDisposable: false } );
   }
 }
 meanShareAndBalance.register( 'SyncIcon', SyncIcon );

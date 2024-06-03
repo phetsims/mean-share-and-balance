@@ -15,7 +15,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
-import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -28,7 +28,7 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 
 type SelfOptions = EmptySelfOptions;
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
-type PredictMeanNodeOptions =
+type MeanPredictionSliderOptions =
   SelfOptions
   & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'children'>
   & PickRequired<ParentOptions, 'tandem'>;
@@ -44,9 +44,11 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range,
                       createSuccessIndicatorMultilink: ( predictMeanLine: Path, successRectangle: Node ) => void,
                       modelViewTransform: ModelViewTransform2,
-                      providedOptions: PredictMeanNodeOptions ) {
+                      providedOptions: MeanPredictionSliderOptions ) {
 
-    const options = providedOptions;
+    const options = optionize<MeanPredictionSliderOptions, SelfOptions, ParentOptions>()( {
+      isDisposable: false
+    }, providedOptions );
 
     const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), {
       lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN_WIDTH,

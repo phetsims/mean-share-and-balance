@@ -31,7 +31,8 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
       tickMarksVisibleProperty: null,
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       align: 'left',
-      layoutOptions: { align: 'left' }
+      layoutOptions: { align: 'left' },
+      isDisposable: false
     }, providedOptions );
 
     const checkboxItems: VerticalCheckboxGroupItem[] = [];

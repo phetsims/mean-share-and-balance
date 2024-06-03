@@ -28,7 +28,8 @@ export default class InfoBooleanStickyToggleButton extends BooleanRoundStickyTog
     const options = combineOptions<BooleanRoundStickyToggleButtonOptions>( {
       content: infoIcon,
       baseColor: 'rgb( 238, 238, 238 )',
-      radius: 18
+      radius: 18,
+      isDisposable: false
     }, providedOptions );
 
     super( dialogVisibleProperty, options );

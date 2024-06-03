@@ -21,7 +21,8 @@ export default class PartyTableNode extends Image {
   public constructor( providedOptions?: PartyTableNodeOptions ) {
 
     const options = optionize<PartyTableNodeOptions, SelfOptions, NodeOptions>()( {
-        maxWidth: 780 // width empirically determined to work with the plate placements
+        maxWidth: 780, // width empirically determined to work with the plate placements
+        isDisposable: false
       },
       providedOptions
     );

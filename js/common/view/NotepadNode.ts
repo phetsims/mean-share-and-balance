@@ -59,7 +59,8 @@ export default class NotepadNode extends Node {
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
       readoutPatternStringProperty: null,
       totalVisibleProperty: null,
-      phetioVisiblePropertyInstrumented: false
+      phetioVisiblePropertyInstrumented: false,
+      isDisposable: false
     }, providedOptions );
 
     const paperStackNode = new Node();

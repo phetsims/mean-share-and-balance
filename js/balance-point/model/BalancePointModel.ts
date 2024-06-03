@@ -53,6 +53,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
           }
         );
       },
+      isDisposable: false,
       phetioState: false
     }, providedOptions );
 

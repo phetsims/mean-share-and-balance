@@ -36,7 +36,8 @@ export default class PipeSwitch extends ABSwitch<boolean> {
         // Turn off default sound production for switch - sounds for the pipes changing are handled elsewhere.
         switchToLeftSoundPlayer: nullSoundPlayer,
         switchToRightSoundPlayer: nullSoundPlayer
-      }
+      },
+      isDisposable: false
     };
 
     super( pipesOpenProperty, false, closedValveIcon, true, openValveIcon, options );

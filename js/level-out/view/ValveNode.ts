@@ -53,7 +53,8 @@ export default class ValveNode extends Node {
       children: [ innerPipe, outerValve, innerValve ],
       cursor: 'pointer',
       x: parentCenter.x,
-      y: parentCenter.y
+      y: parentCenter.y,
+      isDisposable: false
     } );
 
     rotationProperty.link( rotation => {

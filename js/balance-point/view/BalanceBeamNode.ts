@@ -67,7 +67,8 @@ export default class BalanceBeamNode extends Node {
   ) {
 
     const options = optionize<BalanceBeamNodeOptions, EmptySelfOptions, NodeOptions>()( {
-      phetioVisiblePropertyInstrumented: false
+      phetioVisiblePropertyInstrumented: false,
+      isDisposable: false
     }, providedOptions );
 
     const notepadNumberLineNode = new NumberLineNode(

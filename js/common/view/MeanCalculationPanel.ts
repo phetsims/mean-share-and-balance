@@ -91,7 +91,8 @@ export default class MeanCalculationPanel extends Panel {
       visibleProperty: visibleProperty,
       resize: false,
       calculatedMeanDisplayMode: 'decimal',
-      zeroDataMessageProperty: null
+      zeroDataMessageProperty: null,
+      isDisposable: false
     }, providedOptions );
 
     const calculationsVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {

@@ -36,7 +36,8 @@ export default class SyncButton extends RectangularPushButton {
     const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {
       content: syncContent,
       baseColor: 'white',
-      accessibleName: MeanShareAndBalanceStrings.syncStringProperty
+      accessibleName: MeanShareAndBalanceStrings.syncStringProperty,
+      isDisposable: false
     }, providedOptions );
 
     super( options );

@@ -30,7 +30,8 @@ export default class NumberSpinnerVBox extends VBox {
                       providedOptions: NumberSpinnerVBoxOptions ) {
 
     const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {
-      minContentHeight: 100
+      minContentHeight: 100,
+      isDisposable: false
     }, providedOptions );
 
     const numberOfCupsText = new Text( stringProperty, {

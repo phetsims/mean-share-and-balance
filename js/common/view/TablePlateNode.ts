@@ -47,7 +47,8 @@ export default class TablePlateNode<T extends Snack> extends Node {
     const options = optionize<PersonNodeOptions, SelfOptions, NodeOptions>()( {
       snackQuantitySoundPlayerOptions: {
         initialOutputLevel: 0.2
-      }
+      },
+      isDisposable: false
     }, providedOptions );
 
     const plateImage = new Image( plate_svg, {

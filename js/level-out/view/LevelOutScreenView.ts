@@ -135,9 +135,8 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     // Add all cup nodes to the view.
     const notepadCupNodes: Array<NotepadCupNode> = [];
-    model.notepadCups.forEach( ( cupModel, index ) => {
-      const cupNode = new NotepadCupNode( cupModel, model.tableCups[ index ], modelViewTransformNotepadCups,
-        model.meanProperty, model.tickMarksVisibleProperty,
+    model.notepadCups.forEach( cupModel => {
+      const cupNode = new NotepadCupNode( cupModel, modelViewTransformNotepadCups, model.tickMarksVisibleProperty,
         { tandem: notepadCupsParentTandem.createTandem( `notepadCupNode${cupModel.linePlacement + 1}` ) } );
       notepadCupNodes.push( cupNode );
     } );

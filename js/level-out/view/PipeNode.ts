@@ -9,7 +9,7 @@
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import { FireListener, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
@@ -35,7 +35,9 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
   public constructor( pipe: Pipe, pipesOpenProperty: Property<boolean>, pipesEnabledProperty: Property<boolean>,
                       modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
-    const options = providedOptions;
+    const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
+      isDisposable: false
+    }, providedOptions );
 
     // Pipe & valve dimensions
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, MeanShareAndBalanceConstants.PIPE_WIDTH / 2 );

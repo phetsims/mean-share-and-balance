@@ -7,16 +7,20 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
-type TickMarksNodeOptions = PickRequired<NodeOptions, 'visibleProperty'>;
+type TickMarksNodeOptions = WithRequired<NodeOptions, 'visibleProperty'>;
 
 export default class NotepadCupTickMarksNode extends Node {
 
   public constructor( cupHeight: number, providedOptions: TickMarksNodeOptions ) {
-    super( providedOptions );
+    const options = optionize<TickMarksNodeOptions, EmptySelfOptions, NodeOptions>()( {
+      isDisposable: false
+    }, providedOptions );
+    super( options );
 
     const tickLevels = [ 0.25, 0.5, 0.75 ];
     tickLevels.forEach( tickLevel => {

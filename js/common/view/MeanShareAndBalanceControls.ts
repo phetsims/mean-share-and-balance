@@ -52,13 +52,17 @@ export default class MeanShareAndBalanceControls extends Node {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
       soccerContext: false,
-      infoPanelVisibleProperty: null
+      infoPanelVisibleProperty: null,
+      isDisposable: false
     }, providedOptions );
     const controlsAlignGroup = new AlignGroup( { matchVertical: false } );
 
     const vBoxAlignBox = controlsAlignGroup.createBox( controlsVBox, { xAlign: 'left' } );
 
-    super( { children: [ vBoxAlignBox ] } );
+    const superOptions = combineOptions<NodeOptions>( {
+      children: [ vBoxAlignBox ]
+    }, options );
+    super( superOptions );
 
     if ( options.infoPanelVisibleProperty ) {
 

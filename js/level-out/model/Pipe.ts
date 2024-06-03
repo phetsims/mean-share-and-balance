@@ -18,6 +18,7 @@ import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Disposable from '../../../../axon/js/Disposable.js';
 
 type SelfOptions = {
   position: Vector2; // the x & y-position of the pipe in the view
@@ -70,6 +71,9 @@ export default class Pipe {
     this.rotationProperty.value = rotationThreshold <= dt ? targetRotation : proposedRotation;
   }
 
+  public dispose(): void {
+    Disposable.assertNotDisposable();
+  }
 }
 
 

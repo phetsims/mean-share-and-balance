@@ -90,7 +90,8 @@ export default class Plate<T extends Snack> extends PhetioObject {
       phetioState: false,
       startingNumberOfSnacks: 1,
       snackStackingFunction: SnackStacker.getStackedCandyBarPosition,
-      handleFraction: _.noop // By default plates _.noop snack fraction values.
+      handleFraction: _.noop, // By default plates _.noop snack fraction values.
+      isDisposable: false
     }, providedOptions );
 
     super( options );

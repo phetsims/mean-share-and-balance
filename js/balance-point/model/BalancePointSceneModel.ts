@@ -26,6 +26,7 @@ import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import BalancePointModel from './BalancePointModel.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 
@@ -61,7 +62,11 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
 
   public constructor( isMeanFulcrumFixedProperty: BooleanProperty,
                       maxKicksProperty: Property<number>,
-                      options: BalancePointSceneModelOptions ) {
+                      providedOptions: BalancePointSceneModelOptions ) {
+
+    const options = optionize<BalancePointSceneModelOptions, EmptySelfOptions, SoccerSceneModelOptions>()( {
+      isDisposable: false
+    }, providedOptions );
 
     const kickDistributionStrategy = new KickDistributionStrategy(
       'randomSkew',

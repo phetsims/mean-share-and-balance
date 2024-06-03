@@ -26,7 +26,8 @@ export default class PersonImage<T extends Snack> extends Image {
     const options = optionize<PersonImageOptions, SelfOptions, ImageOptions>()( {
       maxWidth: MAX_IMAGE_WIDTH,
       centerX: tablePlateNode.centerX,
-      bottom: MeanShareAndBalanceConstants.PARTY_TABLE_Y + 95
+      bottom: MeanShareAndBalanceConstants.PARTY_TABLE_Y + 95,
+      isDisposable: false
     }, providedOptions );
 
     super( image, options );
