@@ -35,14 +35,14 @@ In Balance Point a transform is created to map the soccer ball model values in m
 #### Memory Management
 
 - Static Allocation: All objects in this sim are allocated at startup and exist for the lifetime of the simulation.
-- Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink, removeListener, etc.
+- Listeners: Unless otherwise noted in the code, all uses of link, `addListener`, etc. do NOT need a corresponding `unlink`, `removeListener`, etc.
 
 ### Level Out Screen
 
 #### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
-The central model is for the Level Out Screen is LevelOutModel. LevelOutModel tracks water levels across cups, ensures water levels change according to restrictions on space, and calculates mean across the data set.
+The central model is for the Level Out Screen is `LevelOutModel`. `LevelOutModel` tracks water levels across cups, ensures water levels change according to restrictions on space, and calculates mean across the data set.
 
 #### View
 
@@ -59,9 +59,9 @@ The central model is for the Level Out Screen is LevelOutModel. LevelOutModel tr
 #### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
-SharingModel is the central model for the Distribute and Fair Share Screens. It tracks the number of plates, the total number of snacks, and any snacks that are not currently active in the model. It also calculates the mean for the data set.
+`SharingModel` is the central model for the Distribute and Fair Share Screens. It tracks the number of plates, the total number of snacks, and any snacks that are not currently active in the model. It also calculates the mean for the data set.
 
-The Plate model uses an ObservableArray to track the current snacks on the plate. These ObservableArrays are in charge of setting the positionProperty, isActiveProperty, and fractionProperty (if applicable) of the snacks when they are added or removed. numberOfTableSnacksProperty and notepadModeProperty listeners are in charge of assigning snacks to the correct array, and determining whether animation should be triggered or not.
+The `Plate` model uses an `ObservableArray` to track the current snacks on the plate. These `ObservableArray`s are in charge of setting the `positionProperty`, `isActiveProperty`, and `fractionProperty` (if applicable) of the snacks when they are added or removed. `numberOfTableSnacksProperty` and `notepadModeProperty` listeners are in charge of assigning snacks to the correct array, and determining whether animation should be triggered or not.
 
 ### Balance Point Screen
 The Balance Point screen uses soccer-common as a base for the model and the view.
@@ -69,11 +69,11 @@ The Balance Point screen uses soccer-common as a base for the model and the view
 #### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
-The central model for the Balance Point Screen is BalancePointModel which extends SoccerModel. BalancePointModel tracks the position of the soccer balls, the tilt of the balance beam, the position of the fulcrum, and the mean of the data set.
+The central model for the Balance Point Screen is `BalancePointModel` which extends `SoccerModel`. `BalancePointModel` tracks the position of the soccer balls, the tilt of the balance beam, the position of the fulcrum, and the mean of the data set.
 
 The majority of the model relies on common code logic from soccer-common that at the time of this writing is also used in Center and Variability. More information about soccer-common can be found [here](https://github.com/phetsims/soccer-common/blob/main/doc/implementation-notes.md)
 
 ### PhET-iO
 The PhET-iO instrumentation of this simulation is relatively straightforward. Everything is created at startup, and exists for the lifetime of the sim, so
-there is no sim-specific use of PhetioGroup or PhetioCapsule. Another important part of the phet-io instrumentation is the use of ObservableArrays in the Sharing Screens (Distribute and Fair Share). The ObservableArrays are a critical part of state setting and tracking for both of those screens. 
+there is no sim-specific use of `PhetioGroup` or `PhetioCapsule`. Another important part of the phet-io instrumentation is the use of `ObservableArray`s in the Sharing Screens (Distribute and Fair Share). The `ObservableArray`s are a critical part of state setting and tracking for both of those screens. 
 
