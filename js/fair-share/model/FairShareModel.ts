@@ -33,7 +33,6 @@ import stepTimer from '../../../../axon/js/stepTimer.js';
 import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
-import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -155,13 +154,6 @@ export default class FairShareModel extends SharingModel<Apple> {
     // plates and the collection area, and some of this motion is animated.
     const handleModeChange = ( appleDistributionMode: DistributionMode, previousDistributionMode: DistributionMode | null ): void => {
 
-      // Do nothing if this is being called due to the setting of phet-io state.  Why? Because the more granular state
-      // information, such as apple positions and fractional values, is already taken care of by instrumented Property
-      // instances, and trying to set it all again will likely mess up the state.
-      if ( isSettingPhetioStateProperty.value ) {
-        return;
-      }
-
       // Make sure any leftover animations from previous mode changes are cleared.
       this.finishInProgressAnimations();
 
@@ -228,14 +220,14 @@ export default class FairShareModel extends SharingModel<Apple> {
 
         // Move the whole apples to the active plates.
         this.getActivePlates().forEach( plate => {
-          _.times( numberOfWholeApplesPerActivePlate, () => {
+          while ( plate.snacksOnNotepadPlate.length < numberOfWholeApplesPerActivePlate ) {
             const apple = this.appleCollection.pop();
             assert && assert( apple, 'There should be enough apples to add the wholes ones to each plate.' );
             plate.addSnackToTop( apple! );
-          } );
+          }
         } );
 
-        // The remaining apples are moved in an animation to the top of the notepad.
+        // The remaining apples, if any, are moved in an animation to the top of the notepad.
         this.appleCollection.forEach( apple => {
           applesAtTop.push( apple );
           apple.moveTo( new Vector2(
