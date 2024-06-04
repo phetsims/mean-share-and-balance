@@ -2,8 +2,6 @@
 
 @author Marla Schulz (PhET Interactive Simulations)
 
-A Jira test
-
 ### Introduction
 
 This document contains notes related to the implementation of Mean: Share and Balance. This is not an exhaustive
@@ -25,42 +23,54 @@ appear in this notepad.
 
 #### Model-View Transform
 
-This sim uses one model-view transform to map model coordinates (0, 1) to view coordinates.
+This sim uses multiple model-view transform to map model coordinates (0, 1) to view coordinates.
 
-This transform is applied to both the 2D and 3D water cups and their water levels. The bottom of the cups is mapped to
+In the Level Out Screen, a transform is applied to both the notepad and table water cups and their water levels. The bottom of the cups is mapped to
 0, and the top of the cups is mapped to 1. Any number in between is viewed as a percentage of water filled.
+
+In the Distribute and Fair Share Screens a transform is used to map the bottom of the plate and the center of the play area. This allows us to stack snacks with greater ease in both screens. Additionally, in the Distribute Screen a transform is created for the prediction tool that maps 0 to the plate, and 10 to the top of the possible candy bar stack.
+
+In Balance Point a transform is created to map the soccer ball model values in meters to screen coordinates. This allows us to ensure that soccer balls in the field representation and data points in the notepad representation are in the same location horizontally.
 
 #### Memory Management
 
 - Static Allocation: All objects in this sim are allocated at startup and exist for the lifetime of the simulation.
-- Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink,
-  removeListener, etc.
+- Listeners: Unless otherwise noted in the code, all uses of link, addListener, etc. do NOT need a corresponding unlink, removeListener, etc.
 
-#### Intro Screen
+### Level Out Screen
 
-Currently, this sim is a single screen.
-
-### Model
-
+#### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
-As a single screen, the central model is LevelOutModel. LevelOutModel tracks water levels across cups, ensures water levels
-change according to restrictions on space, and calculates mean across the data set.
+The central model is for the Level Out Screen is LevelOutModel. LevelOutModel tracks water levels across cups, ensures water levels change according to restrictions on space, and calculates mean across the data set.
 
-### View
+#### View
 
 - In
   [LevelOutScreenView](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/IntroScreenView.ts), `waterCupLayerNode`
-  holds all of the cups (2D/3D) and pipes, which properly z-orders elements as they are allocated. This node also
+  holds all the cups (notepad/table) and pipes, which properly z-orders elements as they are allocated. This node also
   centers cups and pipes as they are activated/ deactivated by the numberSpinner.
 - [NotepadCupNode](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/WaterCup2DNode.ts)
   and [TableCupNode](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/WaterCup3DNode.ts)
   implement the model-view transform described [above](#model-view-transform).
 
-#### Sharing Screens ( Distribute and Fair Share )
+### Sharing Screens ( Distribute and Fair Share )
 
-TODO: ObservableArrays in the Plate class are in charge of setting the positionProperty, isActiveProperty, and
-fractionProperty of the snacks when they are added. numberOfTableSnacksProperty and notepadModeProperty listeners are in
-charge of assigning snacks to the correct array, and animation.
+#### Model
+See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
+
+SharingModel is the central model for the Distribute and Fair Share Screens. It tracks the number of plates, the total number of snacks, and any snacks that are not currently active in the model. It also calculates the mean for the data set.
+
+The Plate model uses an ObservableArray to track the current snacks on the plate. These ObservableArrays are in charge of setting the positionProperty, isActiveProperty, and fractionProperty (if applicable) of the snacks when they are added or removed. numberOfTableSnacksProperty and notepadModeProperty listeners are in charge of assigning snacks to the correct array, and determining whether animation should be triggered or not.
+
+### Balance Point Screen
+The Balance Point screen uses soccer-common as a base for the model and the view.
+
+#### Model
+See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
+
+The central model for the Balance Point Screen is BalancePointModel which extends SoccerModel. BalancePointModel tracks the position of the soccer balls, the tilt of the balance beam, the position of the fulcrum, and the mean of the data set.
+
+
 
 
