@@ -90,7 +90,7 @@ data set.
 
 The majority of the model relies on common code logic from soccer-common that at the time of this writing is also used
 in Center and Variability. More information about soccer-common can be
-found [here](https://github.com/phetsims/soccer-common/blob/main/doc/implementation-notes.md)
+found [here](https://github.com/phetsims/soccer-common/blob/main/doc/implementation-notes.md).
 
 ## PhET-iO
 
