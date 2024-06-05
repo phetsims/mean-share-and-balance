@@ -7,9 +7,9 @@ This document is a high-level description of the model used in PhET's *Mean: Sha
 ## Overview
 
 The goal of this simulation is to provide users an understanding of mean as it relates to a data set. More specifically,
-how mean can be calculated, and how individual data values impact the mean. The screens provide an experience of
-embodied math, allowing users to feel what the mean/average is in various qualitative scenarios. For example, as water
-levels out among cups, evenly distributing candy bars across peers, or finding the balance point of a beam.
+how mean can be calculated and how individual data values impact the mean. The screens provide an experience of
+embodied math, allowing users to feel what the mean/average is in various qualitative scenarios, such as water
+levelling out among cups, evenly distributing candy bars across peers, or finding the balance point of a beam.
 
 ## Data Representations
 
@@ -20,7 +20,7 @@ representations are the ground truth, determining the data set that users can in
 representation.
 
 The notepad representation allows users to interact with the data set in order to gain a stronger understanding of the
-mean. In the "Level Out" screen users can add or remove cups, and open or close pipes to level out the water. In the
+mean. In the "Level Out" screen users can add or remove cups and open or close pipes to level out the water. In the
 "Distribute" screen users can move candy bars from one plate to another. In the "Fair Share" screen users can collect
 and split apples into slices. In the "Balance Point" screen users can move the balance beam fulcrum to find the balance
 point across the data set.
@@ -52,8 +52,8 @@ physics of the simulation, data set integrity, and UX design.
 
 ### Candy Bars
 
-The candy bars in the notepad representation can be dragged from one plate to another allowing users to evenly
-distribute candy bars across the plates. Since the candy bars cannot be broken into pieces this screen allows users to
+The candy bars in the notepad representation can be dragged from one plate to another, allowing users to evenly
+distribute candy bars across the plates. Since the candy bars cannot be broken into pieces, this screen allows users to
 interact with a remainder.
 
 As candy bars are added or removed from the table representations the notepad representation will update accordingly. If
@@ -71,18 +71,18 @@ two representations.
 ### Distribution Modes
 
 The Fair Share screen has three distribution modes: 'Sync', 'Collect', and 'Share'. The mode is selected by the user and
-determines the visual arrangement of the apples in the notepad. Apples will animate between the different modes to
-demonstrate the distribution process. Apples will not animate when going from share to sync.
+determines the visual arrangement of the apples in the notepad. In some cases, apples will animate between the different
+modes to demonstrate the distribution process. Apples will not animate when switching between 'Share' and 'Sync'.
 
-**Sync**
+**Sync:**
 The notepad representation will match the table representation. This mode is used when the user wants to see the apples
 in the same arrangement as the table.
 
-**Collect**
+**Collect:**
 All the apples are gathered into a central area in the notepad. This mode allows users to see all the apples as a total
 collection instead of on individual plates.
 
-**Share**
+**Share:**
 The apples are evenly distributed across the plates in the notepad. The Fair Share screen explores the mean as a mixed
 fraction where we see Apples split into fractional pieces if needed. In share mode all the plates will have the exact
 same number of apples.
