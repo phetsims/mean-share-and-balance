@@ -4,9 +4,9 @@
 
 ### Introduction
 
-This document contains notes related to the implementation of Mean: Share and Balance. This is not an exhaustive
-description of the implementation. The intention is to provide a concise high-level overview, and to supplement the
-internal documentation (source code comments) and external documentation (design documents).
+This document contains notes related to the implementation of the "Mean: Share and Balance" simulation. This is not an
+exhaustive description of the implementation. The intention is to provide a concise high-level overview, and to
+supplement the internal documentation (source code comments) and external documentation (design documents).
 
 Before reading this document, please read:
 
