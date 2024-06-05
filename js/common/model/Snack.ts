@@ -24,19 +24,18 @@ type SelfOptions = {
 export type SnackOptions = SelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
 // constants
-const TRAVEL_SPEED = 300; // in screen coordinates per second, empirically determined to look decent
+const TRAVEL_SPEED = 300; // In screen coordinates per second, empirically determined to look decent.
 
-// Total number of snack allocated, for debugging.
-let instanceCount = 0;
+let instanceCount = 0; // Total number of snack allocated, for debugging.
 
 export default class Snack extends PhetioObject {
 
   // This Property controls the snack's visibility and participation in data calculations in the sim.
-  // Subclass handles reset.
+  // The subclass handles reset.
   public readonly isActiveProperty: Property<boolean>;
 
   // For the Distribute screen the positionProperty is set by the parentPlateProperty and the drag handler.
-  // Subclass handles reset.
+  // The subclass handles reset.
   public readonly positionProperty: Property<Vector2>;
 
   // An animation for moving this snack from one location to another in a continuous fashion.
@@ -139,7 +138,7 @@ export default class Snack extends PhetioObject {
 
   /**
    * If there is an in-progress animation, force it to finish immediately.  If there is no in-progress animation, this
-   * does nothing.  This is primarily intended to be used in conditions like a reset or a change in conditions where
+   * does nothing. This is primarily intended to be used in conditions like a reset or a change in conditions where
    * having a moving snack could be problematic.
    */
   public forceAnimationToFinish(): void {

@@ -51,6 +51,8 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   public readonly meanInfoPanelVisibleProperty: Property<boolean>;
   public readonly totalVisibleProperty: Property<boolean>;
   public readonly meanProperty: TReadOnlyProperty<number>;
+
+  // Tracks whether all active notepad plates are in sync with their ground truth (table) values.
   public readonly activePlatesInSyncProperty: TReadOnlyProperty<boolean>;
 
   // A state flag used to control whether the motion of snacks is animated or instantaneous.  This is helpful for
@@ -58,8 +60,8 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   public animateAddedSnacks = false;
 
   // This ObservableArray is used to keep track of snacks that are not in use and are thus available to be moved to a
-  // plate or elsewhere. These are generally inactive and not visible in the view.  Removing a snack from this array will
-  // cause it to be activated, adding to the array will cause it to be deactivated.
+  // plate or elsewhere. These are generally inactive and not visible in the view. Adding a snack to this array will
+  // cause it to be deactivated.
   protected readonly unusedSnacks: ObservableArray<T>;
 
   // Allows PhET-iO clients to modify the max number of plates in the screen.
@@ -79,31 +81,22 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
     super( options );
 
+    // Create Properties
     this.numberOfPlatesRangeProperty = new Property<Range>( NUMBER_OF_PLATES_RANGE );
-
     this.maxPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       numberType: 'Integer',
       range: NUMBER_OF_PLATES_RANGE,
       tandem: options.tandem.createTandem( 'maxPlatesProperty' )
     } );
-
     this.numberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
       range: this.numberOfPlatesRangeProperty,
-
-      // phet-io
       tandem: options.tandem.createTandem( 'numberOfPlatesProperty' )
     } );
-
     this.meanInfoPanelVisibleProperty = new BooleanProperty( false, {
-
-      // phet-io
       tandem: options.tandem.createTandem( 'meanInfoPanelVisibleProperty' )
     } );
-
     this.totalVisibleProperty = new BooleanProperty( false, {
-
-      // phet-io
       tandem: options.tandem.createTandem( 'totalVisibleProperty' )
     } );
 
@@ -139,7 +132,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     // Create the set of plates that will hold the snacks.
     assert && assert( options.initialPlateValues.length === MAX_PLATES, 'initialPlateValues must have the same length as the number of plates' );
     this.plates = [];
-
     const platesParentTandem = options.tandem.createTandem( 'plates' );
     _.times( MAX_PLATES, plateIndex => {
       const initialXPosition = plateIndex * INTER_PLATE_DISTANCE;
@@ -160,7 +152,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
       );
       this.plates.push( plate );
     } );
-
     const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
     const plateSyncDependencies = this.plates.map( plate => plate.snacksInSyncProperty );
     this.activePlatesInSyncProperty = DerivedProperty.deriveAny( [ ...activePlateDependencies, ...plateSyncDependencies ],
@@ -190,7 +181,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
       }
     );
 
-    // Monitor the number of active plates/people and update the plate positions to keep them centered.
+    // Monitor the number of active plates and update the plate positions to keep them centered.
     this.numberOfPlatesProperty.link( numberOfPlates => {
       const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
       const leftPlateCenterX = -( totalSpan / 2 );
@@ -243,13 +234,13 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
    * Get the plate on which the provided snack is currently sitting.  Returns null if the snack is not on a plate.
    */
   public getPlateForSnack( snack: T ): Plate<T> | null {
-    let returnVal = null;
-    for ( const plate of this.plates ) {
+    let currentPlate = null;
+    this.plates.forEach( plate => {
       if ( plate.hasSnack( snack ) ) {
-        returnVal = plate;
+        currentPlate = plate;
       }
-    }
-    return returnVal;
+    } );
+    return currentPlate;
   }
 
   /**
@@ -307,6 +298,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
             }
           } );
 
+          // Restore the state of the data before setting the new data points.
           this.resetData();
           this.numberOfPlatesProperty.value = dataPoints.length;
 

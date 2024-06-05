@@ -51,7 +51,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // The X position of the center of this plate relative to the center of the table.
   public readonly xPositionProperty: TProperty<number>;
 
-  // The number of snacks (candy bars or apples) on that table representation of this plate.
+  // The number of snacks (candy bars or apples) on the table representation of this plate.
   public readonly tableSnackNumberProperty: Property<number>;
 
   // The list of snacks that are on this plate in the notepad.  Depending on what the user has done, this may or may not
@@ -59,6 +59,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // only public so that clients can get to the length and lengthProperty.
   public readonly snacksOnNotepadPlate: ObservableArray<T>;
 
+  // Whether the number of snacks on the table and in the notepad are in sync.
   public readonly snacksInSyncProperty: TReadOnlyProperty<boolean>;
 
   // The plate's index, 0-indexed.  This is primarily used for debugging.
@@ -104,10 +105,9 @@ export default class Plate<T extends Snack> extends PhetioObject {
     this.isActiveProperty = new BooleanProperty( options.initiallyActive, {
 
       // phet-io
-      tandem: options.tandem.createTandem( 'isActiveProperty' ),
-
       // Takes its value from DistributeModel.numberOfPeopleProperty, so cannot be independently adjusted.
-      phetioReadOnly: true
+      phetioReadOnly: true,
+      tandem: options.tandem.createTandem( 'isActiveProperty' )
     } );
 
     this.xPositionProperty = new NumberProperty( options.initialXPosition );
@@ -115,14 +115,12 @@ export default class Plate<T extends Snack> extends PhetioObject {
     // So that reset of isActiveProperty and reset of tableSnackNumberProperty are in agreement, make sure their initial
     // states are compatible.
     const initialTableSnackNumber = options.initiallyActive ? options.startingNumberOfSnacks : 0;
-
     this.tableSnackNumberProperty = new NumberProperty( initialTableSnackNumber, {
       range: new Range( 0, 10 ),
-
-      // phet-io
       tandem: options.tandem.createTandem( 'tableSnackNumberProperty' )
     } );
 
+    // Create the observable array that tracks the snacks a notepad plate has.
     this.snacksOnNotepadPlate = createObservableArray( {
       phetioType: ObservableArrayIO( ReferenceIO( IOType.ObjectIO ) ),
       tandem: options.tandem.createTandem( 'snacksOnNotepadPlate' )
@@ -145,8 +143,6 @@ export default class Plate<T extends Snack> extends PhetioObject {
           this.snacksOnNotepadPlate.removeItemRemovedListener( snackRemovedListener );
         }
       };
-
-      // REVIEW: Do we not need a listener here to set the isActiveProperty to false when the snack is removed?
       this.snacksOnNotepadPlate.addItemRemovedListener( snackRemovedListener );
     } );
 
@@ -185,8 +181,6 @@ export default class Plate<T extends Snack> extends PhetioObject {
    * Get the position for the snack at the provided index position in the stack.
    */
   public getPositionForStackedItem( stackIndex: number ): Vector2 {
-
-    // Get the position.
     return this.snackStackingFunction( this.xPositionProperty.value, stackIndex );
   }
 
@@ -356,7 +350,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
   }
 
   /**
-   * Remove all the snacks from this plate.  Has no effect if there are none.
+   * Remove all the snacks from this plate. Has no effect if there are none.
    */
   public removeAllSnacks(): void {
     while ( this.getNumberOfNotepadSnacks() > 0 ) {
