@@ -1,8 +1,8 @@
-## Mean: Share and Balance - Implementation Notes
+# Mean: Share and Balance - Implementation Notes
 
 @author Marla Schulz (PhET Interactive Simulations)
 
-### Introduction
+## Introduction
 
 This document contains notes related to the implementation of the "Mean: Share and Balance" simulation. This is not an
 exhaustive description of the implementation. The intention is to provide a concise high-level overview, and to
@@ -13,15 +13,16 @@ Before reading this document, please read:
 - [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md), a high-level description of the
   simulation model.
 
-### General Considerations
+## General Considerations
 
-#### Terminology
+### Terminology
 
 In all screens, there is a notepad shown towards the top of the screen that contains "sketches" of things shown towards
 the bottom of the screen. The term "sketch" is used in the comments and in class/variable names to indicate items that
-appear in this notepad.
+appear in this notepad.  The term "table" is often used in comments and class names for things that appear on or relate
+to the table at the bottom of the screen, and the term "notepad" is used similar for things relating to the notepad.
 
-#### Model-View Transform
+### Model-View Transform
 
 This sim uses multiple model-view transform to map model coordinates (0, 1) to view coordinates.
 
@@ -40,20 +41,20 @@ representation are in the same location horizontally. Along the vertical axis th
 points to view coordinates. This vertical transform is different between the notepad and the field representations since
 the diameter (in view coordinates) of a data point is different in each.
 
-#### Memory Management
+### Memory Management
 
 - Static Allocation: All objects in this sim are allocated at startup and exist for the lifetime of the simulation.
 - Listeners: Unless otherwise noted in the code, all uses of link, `addListener`, etc. do NOT need a corresponding `unlink`, `removeListener`, etc.
 
-### Level Out Screen
+## Level Out Screen
 
-#### Model
+### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
 The central model is for the "Level Out" screen is `LevelOutModel`. `LevelOutModel` tracks water levels across cups,
 ensures water levels change according to restrictions on space, and calculates mean across the data set.
 
-#### View
+### View
 
 - In
   [LevelOutScreenView](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/IntroScreenView.ts), `waterCupLayerNode`
@@ -63,9 +64,9 @@ ensures water levels change according to restrictions on space, and calculates m
   and [TableCupNode](https://github.com/phetsims/mean-share-and-balance/blob/main/js/intro/view/WaterCup3DNode.ts)
   implement the model-view transform described [above](#model-view-transform).
 
-### Sharing Screens ( Distribute and Fair Share )
+## Sharing Screens ( Distribute and Fair Share )
 
-#### Model
+### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
 `SharingModel` is the central model for the "Distribute" and "Fair Share" screens. It tracks the number of plates, the
@@ -77,10 +78,10 @@ charge of setting the `positionProperty`, `isActiveProperty`, and `fractionPrope
 they are added or removed. `numberOfTableSnacksProperty` and `notepadModeProperty` listeners are in charge of assigning
 snacks to the correct array, and determining whether animation should be triggered or not.
 
-### Balance Point Screen
+## Balance Point Screen
 The "Balance Point" screen uses soccer-common as a base for the model and the view.
 
-#### Model
+### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
 The central model for the "Balance Point" screen is `BalancePointModel` which extends `SoccerModel`. `BalancePointModel`
@@ -91,7 +92,7 @@ The majority of the model relies on common code logic from soccer-common that at
 in Center and Variability. More information about soccer-common can be
 found [here](https://github.com/phetsims/soccer-common/blob/main/doc/implementation-notes.md)
 
-### PhET-iO
+## PhET-iO
 
 The PhET-iO instrumentation of this simulation is relatively straightforward. Everything is created at startup, and
 exists for the lifetime of the sim, so there is no sim-specific use of `PhetioGroup` or `PhetioCapsule`. Another
