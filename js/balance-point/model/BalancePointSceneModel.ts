@@ -1,6 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 /**
- * The BalancePointSceneModel has the soccer ball information for the balance point screen.
+ * The BalancePointSceneModel has the soccer ball information for the balance point screen as well as the information
+ * needed to render the balance beam.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -93,10 +94,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       createSoccerBall,
       options
     );
-    this.beamSupportsPresentProperty = new BooleanProperty( true, {
-      tandem: options.tandem.createTandem( 'beamSupportsPresentProperty' )
-    } );
 
+    // Create Properties
     const valueDependencies = this.soccerBalls.map( ball => ball.valueProperty );
     const phaseDependencies = this.soccerBalls.map( ball => ball.soccerBallPhaseProperty );
     const positionDependencies = this.soccerBalls.map( ball => ball.positionProperty );
@@ -115,7 +114,24 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       phetioReadOnly: true,
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );
+    this.meanPredictionFulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
+      tandem: options.tandem.createTandem( 'meanPredictionFulcrumValueProperty' ),
+      range: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE
+    } );
+    this.beamSupportsPresentProperty = new BooleanProperty( true, {
+      tandem: options.tandem.createTandem( 'beamSupportsPresentProperty' )
+    } );
+    this.leftBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
+      tandem: options.tandem.createTandem( 'leftBalanceBeamYValueProperty' ),
+      phetioReadOnly: true
+    } );
+    this.rightBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
+      tandem: options.tandem.createTandem( 'rightBalanceBeamYValueProperty' ),
+      phetioReadOnly: true
+    } );
 
+
+    // Listen to Properties
     this.targetNumberOfBallsProperty.lazyLink( ( newValue, oldValue ) => {
       const delta = newValue - oldValue;
       if ( delta > 0 ) {
@@ -132,20 +148,6 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         this.numberOfQueuedKicksProperty.value -= numberOfBallsToRemoveFromQueue;
         _.times( numberOfBallsToRemoveFromField, () => this.regressLine() );
       }
-    } );
-
-    this.meanPredictionFulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
-      tandem: options.tandem.createTandem( 'meanPredictionFulcrumValueProperty' ),
-      range: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE
-    } );
-
-    this.leftBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
-      tandem: options.tandem.createTandem( 'leftBalanceBeamYValueProperty' ),
-      phetioReadOnly: true
-    } );
-    this.rightBalanceBeamYValueProperty = new NumberProperty( FULCRUM_HEIGHT, {
-      tandem: options.tandem.createTandem( 'rightBalanceBeamYValueProperty' ),
-      phetioReadOnly: true
     } );
 
     // Update the position of the beam as other aspects of the model change.
@@ -248,6 +250,9 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     );
   }
 
+  /**
+   * Regress the kickers line by removing the last kicked ball from the field.
+   */
   private regressLine(): void {
 
     this.activeKickIndexProperty.value = this.targetNumberOfBallsProperty.value;

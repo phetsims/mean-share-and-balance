@@ -1,6 +1,6 @@
 // Copyright 2024, University of Colorado Boulder
 /**
- * The fulcrum of the balance beam is a slider that can move along the x-axis in increments of a tenth.
+ * The fulcrum of the balance beam is a slider that can move discretely along the x-axis.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -53,6 +53,7 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
     providedOptions: MeanPredictionFulcrumSliderOptions
   ) {
 
+    // Create the thumb node for the fulcrum slider.
     const fulcrumNode = new TriangleNode( {
       triangleHeight: providedOptions.fulcrumHeight - FULCRUM_LINE_WIDTH,
       triangleWidth: providedOptions.fulcrumWidth,
@@ -61,10 +62,8 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
       lineDash: [ 2, 2 ],
       lineWidth: FULCRUM_LINE_WIDTH
     } );
-
     const leftCueingArrow = new ArrowNode( 0, 0, -CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
     const rightCueingArrow = new ArrowNode( 0, 0, CUEING_ARROW_LENGTH, 0, CUEING_ARROW_OPTIONS );
-
     const thumbNode = new HBox( {
       children: [
         leftCueingArrow,
@@ -77,10 +76,7 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
       phetioVisiblePropertyInstrumented: false
     } );
 
-    // sound generation
     const sliderSoundGenerator = new FulcrumSliderSoundPlayer( beamSupportsPresentProperty, meanValueProperty );
-
-    // Combine provided and default options.
     const options = optionize<MeanPredictionFulcrumSliderOptions, SelfOptions, HSliderOptions>()( {
       thumbNode: thumbNode,
       thumbYOffset: providedOptions.fulcrumHeight / 2,

@@ -97,7 +97,7 @@ export default class BalanceBeamNode extends Node {
     const triangleHeight = Math.abs( BALANCE_BEAM_TRANSFORM.modelToViewDeltaY( FULCRUM_HEIGHT ) );
     const triangleWidth = BALANCE_BEAM_TRANSFORM.modelToViewDeltaX( fulcrumWidth );
 
-    // The adjustable fulcrum that can be moved by the user.
+    // Create the adjustable fulcrum that can be moved by the user.
     const fulcrumSlider = new MeanPredictionFulcrumSlider(
       sceneModel.meanPredictionFulcrumValueProperty,
       fulcrumWasDraggedProperty,
@@ -112,7 +112,7 @@ export default class BalanceBeamNode extends Node {
       }
     );
 
-    // The fixed, non-movable fulcrum that is always at the mean and is shown in fixed fulcrum mode.
+    // Create the fixed, non-movable fulcrum that is always at the mean and is shown in fixed fulcrum mode.
     const fixedFulcrum = new TriangleNode(
       {
         fill: MeanShareAndBalanceColors.meanColorProperty,
@@ -152,6 +152,7 @@ export default class BalanceBeamNode extends Node {
       } );
     } );
 
+    // Create the line that represents the balance beam.
     const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value );
     const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value );
     const beamLineNode = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
@@ -190,9 +191,6 @@ export default class BalanceBeamNode extends Node {
       ]
     }, options );
     super( superOptions );
-
-    // Make the fulcrum slider available to methods.
-    this.fulcrumSlider = fulcrumSlider;
 
     // Align with the play area number line node, based on the tick mark values.
     const matrixBetweenProperty = new MatrixBetweenProperty(
@@ -262,7 +260,7 @@ export default class BalanceBeamNode extends Node {
         // Calculate the vectors needed to put the balls in a position such that they are directly above the
         // corresponding spot on the beam and the edge of the ball is touching the beam.  To do this, we calculate two
         // vectors, one for the minimum amount above the beam and one for the point where the edge of the ball touches
-        // the titled edge of the beam, and use the longer of the two.  These vectors are
+        // the titled edge of the beam, and use the longer of the two.
         const minOffsetVector = new Vector2( 0, -( BALL_GRAPHIC_RADIUS + MIN_BEAM_TO_BALL_BOTTOM_SPACING ) );
         const beamAngle = startToEndVector.getAngle();
         const rotatedRadiusVector = new Vector2( 0, -BALL_GRAPHIC_RADIUS ).rotated( beamAngle );
@@ -319,7 +317,7 @@ export default class BalanceBeamNode extends Node {
     } );
     ManualConstraint.create( this, [ needAtLeastOneKickMessage ], messageProxy => {
       messageProxy.centerX = BALANCE_BEAM_TRANSFORM.modelToViewX( MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getCenter() );
-      messageProxy.centerY = BALANCE_BEAM_TRANSFORM.modelToViewY( 2.1 ); // Y pos empirically determined
+      messageProxy.centerY = BALANCE_BEAM_TRANSFORM.modelToViewY( 2.1 ); // Y position empirically determined
     } );
     this.addChild( needAtLeastOneKickMessage );
 
@@ -359,6 +357,9 @@ export default class BalanceBeamNode extends Node {
         sceneModel.beamSupportsPresentProperty,
         { initialOutputLevel: 0.2 }
       ) );
+
+    // Make the fulcrum slider available to methods.
+    this.fulcrumSlider = fulcrumSlider;
   }
 
   public reset(): void {

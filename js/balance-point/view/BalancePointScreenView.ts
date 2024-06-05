@@ -57,27 +57,20 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       options.tandem.createTandem( 'sceneView' )
     );
 
+    // The play area center is calculated based on the layout bounds and the width of the controls.
     const controlsWidthOffset = ( MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH +
                                   MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
     this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
 
-    // Background
     const backgroundNode = new BackgroundNode( MeanShareAndBalanceConstants.GROUND_POSITION_Y, this.visibleBoundsProperty );
-
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,
       barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty
     } );
-
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 
-    // Controls
-    const controls = new BalancePointControls( model, {
-      tandem: options.tandem.createTandem( 'controls' )
-    } );
-
-    // Notepad
+    // Create the notepad that appears below the questionBar.
     const notepadNode = new BalancePointNotepadNode( sceneModel, this.playAreaNumberLineNode,
       model.fulcrumWasDraggedProperty, model.tickMarksVisibleProperty,
       model.meanFulcrumFixedProperty, {
@@ -87,6 +80,10 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       }
     );
 
+    // Create the controls that appear on the right side of the screen.
+    const controls = new BalancePointControls( model, {
+      tandem: options.tandem.createTandem( 'controls' )
+    } );
     const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',
@@ -123,7 +120,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 )
     } );
 
-
+    // Add children to the scene graph in correct z-order.
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
     this.addChild( kickButton );
@@ -163,16 +160,16 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     this.addChild( meanCalculationPanel );
 
+    // Set the PDOM order of the nodes in the screen.
     this.pdomPlayAreaNode.setPDOMOrder( [
-      kickButton,
-      ...notepadNode.notepadPDOMOrder,
-      sceneView.backSceneViewLayer,
-      controls.numberSpinner
-      ]
-    );
+        kickButton,
+        ...notepadNode.notepadPDOMOrder,
+        sceneView.backSceneViewLayer,
+        controls.numberSpinner
+      ] );
 
     this.pdomControlAreaNode.setPDOMOrder( [
-        ...controls.controlsPDOMOrder,
+      ...controls.controlsPDOMOrder,
       resetAllButton
     ] );
   }

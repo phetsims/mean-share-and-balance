@@ -26,7 +26,7 @@ const NUMBER_OF_KICKS_RANGE_PROPERTY = new Property( new Range( 0, MeanShareAndB
 
 export default class BalancePointModel extends SoccerModel<BalancePointSceneModel> {
 
-  // This Property determines wether the fulcrum is fixed on the current mean value, or is movable by the user.
+  // This Property determines whether the fulcrum is fixed on the current mean value, or is movable by the user.
   public readonly meanFulcrumFixedProperty: Property<boolean>;
 
   // Visible Properties
@@ -74,6 +74,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
     super( [ sceneModel ], options );
 
+    // Create Properties
     this.meanFulcrumFixedProperty = meanFulcrumFixedProperty;
     this.fulcrumWasDraggedProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'fulcrumWasDraggedProperty' ),
