@@ -4,7 +4,7 @@
  * needed to render the balance beam.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import SoccerSceneModel, { SoccerSceneModelOptions } from '../../../../soccer-common/js/model/SoccerSceneModel.js';
