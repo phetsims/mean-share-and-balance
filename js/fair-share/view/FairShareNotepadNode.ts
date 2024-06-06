@@ -34,6 +34,20 @@ export default class FairShareNotepadNode extends NotepadNode {
 
     super( providedOptions );
 
+    // Add the box that will depict the collection area, which is only shown in 'Collect' mode.
+    const collectionAreaVisibleProperty = new DerivedProperty(
+      [ appleDistributionModeProperty ],
+      mode => mode === DistributionMode.COLLECT
+    );
+    const collectionAreaNode = new Image( collectionArea_svg, {
+      initialWidth: FairShareModel.COLLECTION_AREA_SIZE.width,
+      initialHeight: FairShareModel.COLLECTION_AREA_SIZE.height,
+      centerX: this.paperStackBounds.centerX,
+      centerY: this.paperStackBounds.centerY + 5, // tweaked a bit due to be perfectly centered around the collection
+      visibleProperty: collectionAreaVisibleProperty
+    } );
+    this.addChild( collectionAreaNode );
+
     // Add the radio buttons for selecting the different modes.
     const distributionModes = [ DistributionMode.SYNC, DistributionMode.COLLECT, DistributionMode.SHARE ];
     const distributionModeItems = distributionModes.map( choice => ( {
@@ -51,24 +65,7 @@ export default class FairShareNotepadNode extends NotepadNode {
         spacing: 5,
         soundPlayers: distributionModeItems.map( () => nullSoundPlayer ), // sound generation handled below
         tandem: providedOptions.tandem.createTandem( 'distributionModeRadioButtonGroup' )
-      }
-    );
-
-    // Add the box that will depict the collection area, which is only shown in 'Collect' mode.
-    const collectionAreaVisibleProperty = new DerivedProperty(
-      [ appleDistributionModeProperty ],
-      mode => mode === DistributionMode.COLLECT
-    );
-    const collectionAreaNode = new Image( collectionArea_svg, {
-      initialWidth: FairShareModel.COLLECTION_AREA_SIZE.width,
-      initialHeight: FairShareModel.COLLECTION_AREA_SIZE.height,
-      centerX: this.paperStackBounds.centerX,
-      centerY: this.paperStackBounds.centerY + 5, // tweaked a bit due to be perfectly centered around the collection
-      visibleProperty: collectionAreaVisibleProperty
-    } );
-
-    this.addChild( collectionAreaNode );
-
+      } );
     const radioButtonGroupAlignBox = new AlignBox( distributionModeRadioButtonGroup, {
       alignBounds: this.localBounds,
       xAlign: 'center',

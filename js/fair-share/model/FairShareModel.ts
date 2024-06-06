@@ -53,7 +53,7 @@ const SORT_REFERENCE_POINT = new Vector2( PLATE_MIN_X_POSITION, 0 );
 // Size of the collection area, empirically determined. Could be derived from other constants, but didn't seem worth it.
 const COLLECTION_AREA_SIZE = new Dimension2( 410, 120 );
 
-// Enum that defines the states that the notepad can be in.
+// Enumeration that defines the states that the notepad can be in.
 export class DistributionMode extends EnumerationValue {
 
   // The plates on the notepad are in sync with those on the table, meaning they contain the same number of apples.
@@ -100,7 +100,7 @@ export default class FairShareModel extends SharingModel<Apple> {
     const createApple = ( options: SnackOptions ) => new Apple( options );
 
     // Set the top apple on a plate to the provided fraction value.  If that value is 1, it will be set to a whole
-    // value. This will have no effect on apples that are NOT the top one on a plate.
+    // value. All other apples will be set to 1 (whole).
     const handleFraction = ( plate: Plate<Apple>, fraction: Fraction ) => {
 
       assert && assert( fraction.value > 0 && fraction.value <= 1, 'invalid fraction value for this handler' );
@@ -135,7 +135,6 @@ export default class FairShareModel extends SharingModel<Apple> {
 
     // Set up plate-related behavior that is specific to the Fair Share screen.
     this.plates.forEach( plate => {
-
       plate.isActiveProperty.link( isActive => {
         if ( !isActive ) {
           plate.tableSnackNumberProperty.set( 0 );
@@ -269,11 +268,6 @@ export default class FairShareModel extends SharingModel<Apple> {
       else if ( previousDistributionMode === DistributionMode.SHARE && appleDistributionMode === DistributionMode.COLLECT ) {
 
         this.animateAddedSnacks = true;
-
-        // Make sure all apples are whole.
-        this.getAllSnacks().forEach( snack => {
-          snack.fractionProperty.value = Fraction.ONE;
-        } );
 
         // Animate the movement of the apples from the individual plates to the collection area.
         this.getActivePlates().forEach( plate => {
@@ -437,7 +431,6 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
     }
     else if ( numberOfApplesNotInCompleteGroup >= 2 ) {
-
       if ( numberOfCompleteGroups > 0 ) {
 
         // Add an amount to the total span corresponding to an additional group.
@@ -450,7 +443,6 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
     }
     const xAdjustForCentering = totalSpan / 2;
-
     const group = Math.floor( positionIndex / APPLES_PER_COLLECTION_GROUP );
     const column = positionIndex % 2;
     const row = Math.floor( ( positionIndex % APPLES_PER_COLLECTION_GROUP ) / 2 );
@@ -488,7 +480,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       // as a possible value.
       const topSnack = plate.snacksOnNotepadPlate[ plate.snacksOnNotepadPlate.length - 1 ];
       assert && assert( !Number.isInteger( this.meanProperty.value ) &&
-      topSnack.fractionProperty.value.equals( fractionValue ), 'the top snack should be a fraction' );
+      topSnack.fractionProperty.value.equals( fractionValue ), `the top snack should match the fraction value: ${fractionValue}` );
     }
   }
 

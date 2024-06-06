@@ -104,35 +104,6 @@ export default class NotepadAppleNode extends Node {
       scale: RADIUS * 2 / backgroundImage.width
     } );
   }
-
-  /**
-   * Create a non-dynamic version of the apple graphic node that doesn't require an Apple model.  This is useful for
-   * icons or graphs.
-   */
-  public static createIconNode( fraction = Fraction.ONE ): Node {
-
-    const backgroundNode = NotepadAppleNode.createBackgroundNode();
-
-    let appleIconNode;
-    if ( fraction.value === 1 ) {
-      const circle = new Circle( RADIUS, { stroke: MeanShareAndBalanceColors.appleOutlineColorProperty } );
-      appleIconNode = new Node( { children: [ backgroundNode, circle ] } );
-    }
-    else {
-      const dottedOutlineCircle = new Circle( RADIUS, {
-        stroke: MeanShareAndBalanceColors.appleOutlineColorProperty,
-        lineDash: OUTLINE_LINE_DASH
-      } );
-      const fractionalShape = NotepadAppleNode.getFractionalShape( fraction );
-      const fractionalShapeNode = new Path( fractionalShape, {
-        stroke: MeanShareAndBalanceColors.appleOutlineColorProperty
-      } );
-      backgroundNode.clipArea = fractionalShape;
-      appleIconNode = new Node( { children: [ backgroundNode, dottedOutlineCircle, fractionalShapeNode ] } );
-    }
-
-    return appleIconNode;
-  }
 }
 
 meanShareAndBalance.register( 'NotepadAppleNode', NotepadAppleNode );
