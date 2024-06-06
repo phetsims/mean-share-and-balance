@@ -33,9 +33,6 @@ const SOUND_EFFECT_OPTIONS: SoundClipOptions = {
 
 class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
 
-  // The quantity of snacks on the plate, used to adjust the pitch of the generated sound.
-  private readonly snackQuantityProperty: TReadOnlyProperty<number>;
-
   // The sound effects (e.g. apple being sliced) that are played with other sounds to create a snack-specific sound.
   private readonly soundEffects: SoundClip[];
 
@@ -43,7 +40,7 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
   private mostRecentlyPlayedSoundClip: SoundClip | null = null;
 
   public constructor( snackType: SnackType,
-                      snackQuantityProperty: TReadOnlyProperty<number>,
+                      private readonly snackQuantityProperty: TReadOnlyProperty<number>,
                       providedOptions?: SnackQuantitySoundPlayerOptions ) {
 
     const options = optionize<SnackQuantitySoundPlayerOptions, SelfOptions, SoundGeneratorOptions>()( {
@@ -65,9 +62,6 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
     for ( const soundClip of this.soundEffects ) {
       soundClip.connect( this.mainGainNode );
     }
-
-    // Make the quantity Property available to the methods.
-    this.snackQuantityProperty = snackQuantityProperty;
   }
 
   public play(): void {
@@ -110,6 +104,7 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
     this.soundEffects.forEach( soundEffect => soundEffect.stop() );
   }
 
+  // The pitch of the generated sound adjusts according to the quantity of snacks on the plate.
   private static getPlaybackRateForQuantity( numberOfSnacksOnPlate: number ): number {
     const normalizedValue = numberOfSnacksOnPlate / MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE;
     assert && assert( normalizedValue >= 0 && normalizedValue <= 1, 'unexpected value' );

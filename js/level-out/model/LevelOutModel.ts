@@ -20,7 +20,6 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
-import MeanShareAndBalanceQueryParameters from '../../common/MeanShareAndBalanceQueryParameters.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import VoidIO from '../../../../tandem/js/types/VoidIO.js';
@@ -190,10 +189,6 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       if ( numberOfCups < oldNumberOfCups && removedTableCupWaterLevel !== removedNotepadCupWaterLevel ) {
         this.matchCupWaterLevels();
       }
-      if ( !MeanShareAndBalanceQueryParameters.showAnimation ) {
-        this.stepWaterLevels( 1 );
-      }
-
       this.assertConsistentState();
     } );
 

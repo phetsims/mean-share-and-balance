@@ -72,7 +72,6 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
     const numberOfDataPointsProperty = model.selectedSceneModelProperty.value.targetNumberOfBallsProperty;
     const options = optionize<BalancePointControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup ],
-      soccerContext: true,
       numberSpinnerOptions: {
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty ),
         tandem: providedOptions.tandem.createTandem( 'numberOfBallsSpinner' )

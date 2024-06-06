@@ -38,15 +38,12 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     const controlsWidthOffset = ( MeanShareAndBalanceConstants.CONTROLS_PREFERRED_WIDTH +
                                   MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN ) / 2;
+
     this.playAreaCenterX = this.layoutBounds.centerX - controlsWidthOffset;
-
     this.notepad = notepadNode;
-
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: questionBarStringProperty,
       barFill: questionBarColor,
-
-      // phet-io
       tandem: options.tandem.createTandem( 'questionBar' )
     } );
 
@@ -58,8 +55,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       },
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN,
-
-      // phet-io
       tandem: options.tandem.createTandem( 'resetAllButton' )
     } );
 
@@ -71,9 +66,15 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
    * Resets the view.
    */
   public reset(): void {
-    // May be used for future screens
+    // Overwritten in subclasses.
   }
 
+  /**
+   * Set the traversal order for the screen.
+   * @param notepadInteractionNodes
+   * @param tableInteractionNodes
+   * @param controlNodes
+   */
   protected msabSetPDOMOrder( notepadInteractionNodes: Node[], tableInteractionNodes: Node[], controlNodes: Node[] ): void {
     this.pdomPlayAreaNode.setPDOMOrder( [
       ...notepadInteractionNodes,

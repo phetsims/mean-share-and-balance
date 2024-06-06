@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * A vertical checkbox group that controls visibility for predictMean, Mean, tickMarks, and cupWaterLevel.
+ * A vertical checkbox group that controls visibility for various sim features.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  */
@@ -45,8 +45,6 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
         } ),
         property: options.predictMeanVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.predictMeanStringProperty },
-
-        // phet-io
         tandemName: 'predictMeanCheckbox'
       } );
     }
@@ -58,12 +56,9 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
         } ),
         property: options.tickMarksVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.tickMarksStringProperty },
-
-        // phet-io
         tandemName: 'tickMarksCheckbox'
       } );
     }
-
     if ( options.totalVisibleProperty ) {
       checkboxItems.push( {
         createNode: () => new Text( MeanShareAndBalanceStrings.totalStringProperty, {
@@ -72,8 +67,6 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
         } ),
         property: options.totalVisibleProperty,
         options: { accessibleName: MeanShareAndBalanceStrings.totalStringProperty },
-
-        // phet-io
         tandemName: 'totalCheckbox'
       } );
     }

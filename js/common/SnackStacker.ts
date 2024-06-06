@@ -7,7 +7,7 @@
  */
 
 import meanShareAndBalance from '../meanShareAndBalance.js';
-import { Image, Node } from '../../../scenery/js/imports.js';
+import { Image } from '../../../scenery/js/imports.js';
 import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
@@ -38,34 +38,6 @@ class SnackStacker {
       // The apples are stacked in two columns with a little overlap in both the horizontal and vertical directions.
       snackNode.x = ( positionInStack % 2 ) * snackNode.width * 0.8;
       snackNode.bottom = -Math.floor( positionInStack / 2 ) * snackNode.height * 0.8;
-    }
-  }
-
-  /**
-   * Position the graphical node that is being used to depict all or part of a snack.  This method is used to position
-   * the nodes that are *not* represented as images in the view.  The position is set in
-   */
-  public static setSnackGraphicPosition( snackNode: Node, snackType: SnackType, positionInStack: number ): void {
-
-    assert && assert( snackType === 'candyBars' || snackType === 'apples', 'unknown snack type' );
-
-    if ( snackType === 'candyBars' ) {
-
-      // The candy bar graphic Nodes are stacked in a single column with a little space between each.
-      snackNode.centerX = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH / 2;
-      snackNode.centerY = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height +
-                             MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT / 2 +
-                             positionInStack * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
-                             MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
-    }
-    else {
-
-      // The apples are stacked in two columns with some space between them in both the x and y dimensions.
-      snackNode.centerX = positionInStack % 2 === 0 ?
-                          MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2 - snackNode.width / 2 - HORIZONTAL_SPACE_BETWEEN_APPLES / 2 :
-                          MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2 + snackNode.width / 2 + HORIZONTAL_SPACE_BETWEEN_APPLES / 2;
-      snackNode.bottom = -Math.floor( positionInStack / 2 ) * ( snackNode.width + VERTICAL_SPACE_BETWEEN_APPLES ) -
-                         VERTICAL_SPACE_BETWEEN_APPLES;
     }
   }
 

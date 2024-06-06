@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Shows the table at the bottom of the screen
+ * Shows the table at the bottom of the screen. A rectangle extends the bottom of the table in narrow aspect ratios.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)

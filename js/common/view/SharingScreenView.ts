@@ -2,10 +2,10 @@
 /**
  * The base screen view for the Distribute Screen and the Fair Share Screen.
  * Both screens have:
- * - A table with people, each of whom have a plate with a snack on them.
+ * - A table with people, each of whom have a plate with snack(s) on them.
  * - A notepad that also shows plates and snacks
- * - A mean calculation dialog that shows the mean calculation of the snacks in the play area
- * - A control panel that allows the user to change the number of people
+ * - A mean calculation info panel that shows the mean calculation of the snacks in the play area
+ * - A number spinner that allows the user to change the number of people
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  *
@@ -54,7 +54,6 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
 
   // Layers upon which other nodes will be placed.
   protected notepadSnackLayerNode: Node;
-  private readonly peopleLayerNode: Node;
 
   // Various nodes used to depict visual elements in the view.
   protected readonly tablePlateNodes: Node[];
@@ -100,7 +99,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       ...model.plates.map( plate => plate.tableSnackNumberProperty )
     ];
 
-    // Create the dialog that will show the various ways to calculate the mean.
+    // Create the info panel that will show the various ways to calculate the mean.
     const meanCalculationPanel = new MeanCalculationPanel(
       calculationDependencies,
       () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
@@ -143,7 +142,6 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     } );
 
     this.tablePlateNodes = tablePlateNodes;
-    this.peopleLayerNode = peopleLayerNode;
     this.notepadSnackLayerNode = notepadSnackLayerNode;
 
     // Don't include the questionBar in the usable bounds.
@@ -166,7 +164,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       this.interruptSubtreeInput();
     } );
 
-    // Add all the children.  This is done all at once so that the layering of apparent and easily adjusted.
+    // Add all the children.  This is done all at once so that the z-order is apparent and easily adjusted.
     const children = [
       notepadNode,
       peopleLayerNode,

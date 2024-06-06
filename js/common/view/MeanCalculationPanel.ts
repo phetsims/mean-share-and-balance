@@ -35,8 +35,8 @@ export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 
 type SelfOptions = {
 
-  // One of the items in this dialog can be displayed as either a decimal number or a mixed fraction, and this option
-  // controls which.
+  // One of the items in this dialog can be displayed as either a remainder, decimal number, and/or mixed fraction.
+  // This option controls which.
   calculatedMeanDisplayMode?: MeanDisplayType;
   zeroDataMessageProperty?: LocalizedStringProperty | null;
 };
@@ -215,7 +215,8 @@ export default class MeanCalculationPanel extends Panel {
         vinculumLineWidth: VINCULUM_LINE_WIDTH
       } );
 
-      // The value can be represented as either a decimal & mixed fraction, mixed fraction, or a whole number with a remainder.
+      // The value can be represented as either a decimal & mixed fraction, mixed fraction,
+      // or a whole number with a remainder.
       let valueRepresentation: Node | null = null;
       let decimalRepresentationText: Node | null = null;
       let decimalRepresentation: Node | null = null;
@@ -238,7 +239,7 @@ export default class MeanCalculationPanel extends Panel {
           vinculumLineWidth: VINCULUM_LINE_WIDTH
         } );
 
-
+        // Update the equal sign based on whether the mean is an integer or not.
         const equalSign = mean > Math.floor( mean ) ? '≈' : '=';
         const decimalTextPatternStringProperty = new PatternStringProperty(
           MeanShareAndBalanceStrings.meanEqualSignPatternStringProperty,

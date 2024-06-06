@@ -27,8 +27,11 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = {
   numberSpinnerOptions: WithRequired<NumberSpinnerOptions, 'tandem'>;
+
+  // Define the traversal order of controls.
   controlsPDOMOrder: Node[];
-  soccerContext?: boolean;
+
+  // When provided the info button will be displayed and will toggle the visibility of the info panel.
   infoPanelVisibleProperty?: Property<boolean> | null;
 };
 
@@ -51,7 +54,6 @@ export default class MeanShareAndBalanceControls extends Node {
   ) {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
-      soccerContext: false,
       infoPanelVisibleProperty: null,
       isDisposable: false
     }, providedOptions );
@@ -112,6 +114,9 @@ export default class MeanShareAndBalanceControls extends Node {
   }
 }
 
+/**
+ * We are overriding the sound player for the info button to play the dialog open and close sounds.
+ */
 class InfoButtonSoundPlayer implements TSoundPlayer {
   public constructor( private readonly dialogVisibleProperty: Property<boolean> ) {
   }

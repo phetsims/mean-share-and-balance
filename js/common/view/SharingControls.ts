@@ -28,6 +28,8 @@ import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
 
 type SelfOptions = {
   showSyncButton?: boolean;
+
+  // When the predictMeanVisibleProperty is provided the predict mean tool can be toggled on and off.
   predictMeanVisibleProperty?: Property<boolean> | null;
   vBoxOptions?: StrictOmit<VBoxOptions, 'children' | 'align'>;
 };

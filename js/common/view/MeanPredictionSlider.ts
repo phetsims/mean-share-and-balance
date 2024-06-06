@@ -81,8 +81,6 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
     const dragListener = new DragListener( {
       positionProperty: predictMeanPositionProperty,
       transform: modelViewTransform,
-
-      // phet-io
       tandem: options.tandem.createTandem( 'dragListener' )
     } );
 
@@ -117,6 +115,11 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
   }
 
+  /**
+   * Update the length of the line based on the provided start and end x values.
+   * @param lineStart
+   * @param lineEnd
+   */
   public updateLine( lineStart: number, lineEnd: number ): void {
     const x1 = lineStart - LINE_X_MARGIN;
     const x2 = lineEnd + LINE_X_MARGIN * 2;

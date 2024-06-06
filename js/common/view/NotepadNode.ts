@@ -41,6 +41,9 @@ const NOTEPAD_RING_BOTTOM = 33.5;
 const PAPER_PAGE_SIZE = new Dimension2( 720, 240 );
 const LABEL_MARGIN = 15;
 const TOTAL_MARGIN = 5;
+const PAPER_STACK_HEIGHT = 4;
+const STACK_OFFSET = 3;
+const NUMBER_OF_RINGS = 8;
 
 export default class NotepadNode extends Node {
 
@@ -66,12 +69,10 @@ export default class NotepadNode extends Node {
     const paperStackNode = new Node();
     const paperWidth = PAPER_PAGE_SIZE.width;
     const paperHeight = PAPER_PAGE_SIZE.height;
-    const paperStackHeight = 4;
-    const stackOffset = 3;
 
-    for ( let i = paperStackHeight; i > 0; i-- ) {
-      const xOffset = i * -stackOffset;
-      const yOffset = i * stackOffset;
+    for ( let i = PAPER_STACK_HEIGHT; i > 0; i-- ) {
+      const xOffset = i * -STACK_OFFSET;
+      const yOffset = i * STACK_OFFSET;
       const paper = new Rectangle( xOffset, yOffset, paperWidth, paperHeight, {
         fill: MeanShareAndBalanceColors.notepadColorProperty,
         stroke: 'black',
@@ -82,9 +83,8 @@ export default class NotepadNode extends Node {
 
     // Create the set of notebook ring images.
     const ringsNode = new Node();
-    const numberOfRings = 8;
-    _.times( numberOfRings, ( i: number ) => {
-      const x = i * ( ( paperWidth - 20 ) / numberOfRings ) + 30;
+    _.times( NUMBER_OF_RINGS, ( i: number ) => {
+      const x = i * ( ( paperWidth - 20 ) / NUMBER_OF_RINGS ) + 30;
       const image = new Image( notepadRing_svg, { x: x, bottom: NOTEPAD_RING_BOTTOM, maxHeight: 55 } );
       ringsNode.addChild( image );
     } );
@@ -97,10 +97,6 @@ export default class NotepadNode extends Node {
 
     // Make a copy of the paper stack bounds available to subclasses for positioning of child nodes.
     this.paperStackBounds = paperStackNode.bounds.copy();
-
-    // Make the rings node available to subclasses for layering adjustments.
-    this.ringsNode = ringsNode;
-
     this.readoutNode = null;
 
     if ( options.readoutPatternStringProperty ) {
@@ -129,6 +125,9 @@ export default class NotepadNode extends Node {
       this.addChild( readoutAlignBox );
       this.readoutNode = readoutAlignBox;
     }
+
+    // Make the rings node available to subclasses for layering adjustments.
+    this.ringsNode = ringsNode;
   }
 }
 
