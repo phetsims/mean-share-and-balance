@@ -129,10 +129,10 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   /**
    * A pattern is used for the outline of the candy bar. Because of this, the pattern must be rotated and translated to
    * match the bounds of the rectangle. This method returns the nodes that make up the outline of the candy bar.
-   *
-   * When creating partial candy bars the width and rightYTranslation may need to adjust accordingly.
    */
-  public static getSketchOutline( candyBarWidth = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH, rightYTranslation = 0.975 ): Node[ ] {
+  public static getSketchOutline( candyBarWidth = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH ): Node[ ] {
+
+    const rightYTranslation = 0.975;
     const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
       Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
     );

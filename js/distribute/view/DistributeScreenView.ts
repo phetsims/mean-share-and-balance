@@ -2,7 +2,7 @@
 
 /**
  * Representation for the Distribute Screen. Contains a table with people, each of whom have a plate with candy bars
- * on them.  It also includes a notepad that also show plates and candy bars that can be dragged and 'leveled out'.
+ * on them. It also includes a notepad that also show plates and candy bars that can be dragged and 'leveled out'.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -142,6 +142,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     model.stackChangedEmitter.addListener( this.updateMouseSortCueNode.bind( this ) );
     model.stackChangedEmitter.addListener( this.updateKeyboardSortCueNode.bind( this ) );
 
+    // Create the notepad plates and candy bars.
     const notepadPlateNodes = model.plates.map( plate => {
       plate.xPositionProperty.link( this.updateMouseSortCueNode.bind( this ) );
       plate.xPositionProperty.link( this.updateKeyboardSortCueNode.bind( this ) );
@@ -163,7 +164,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         }
       )
     );
-    const notepadCandyBarsNode = new InteractiveHighlightingNode( {
+    const notepadCandyBarsHighlightNode = new InteractiveHighlightingNode( {
       focusable: true,
       tagName: 'div',
       children: notepadCandyBarNodes,
@@ -171,7 +172,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     } );
 
     this.notepadSnackLayerNode.addChild( this.cueingHighlight );
-    this.notepadSnackLayerNode.addChild( notepadCandyBarsNode );
+    this.notepadSnackLayerNode.addChild( notepadCandyBarsHighlightNode );
     this.notepadSnackLayerNode.addChild( mouseSortCueNode );
     this.notepadSnackLayerNode.addChild( this.keyboardSortCueNode );
 
@@ -258,12 +259,11 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
         lastPlate.xPositionProperty.value + MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2
       );
     } );
-
     this.notepadSnackLayerNode.addChild( meanPredictionSlider );
 
     this.groupSortInteractionView = new GroupSortInteractionView(
       model.groupSortInteractionModel,
-      notepadCandyBarsNode,
+      notepadCandyBarsHighlightNode,
       {
         getNextSelectedGroupItem: ( delta, candyBar ) => {
           const platesWithSnacks = model.getPlatesWithSnacks();
@@ -331,7 +331,9 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     } );
   }
 
-  // Handle a candy bar being dropped in the notepad.
+  /**
+   * Handle a candy bar being dropped in the notepad by mouse or touch.
+   */
   private candyBarDropped( candyBarNode: NotepadCandyBarNode ): void {
     const candyBar = candyBarNode.candyBar;
 
@@ -416,6 +418,9 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
     }
   }
 
+  /**
+   * Update the visibility and position of the keyboard sort cue node based on the model's state.
+   */
   private updateKeyboardSortCueNode(): void {
     const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
     if ( !this.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value && selectedCandyBar ) {

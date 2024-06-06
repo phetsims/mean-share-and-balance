@@ -1,8 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Model for the Distribute Screen which includes people, candy bars, visual mean snackType, and a numerical
- * mean snackType.
+ * Model for the Distribute Screen which includes people, candy bars, and mean prediction.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -52,8 +51,6 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   public readonly meanPredictionProperty: Property<number>;
   public readonly predictMeanDragRange = new Range( 0, MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE );
 
-  public readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
-
   // Tracks whether the snacks are distributed evenly across the plates or at least distributed as much as is possible
   // with the data provided.
   public readonly snacksDistributedProperty: TReadOnlyProperty<boolean>;
@@ -65,6 +62,11 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
+
+  // TODO: This is does not need to be a class member, but I'm not sure how to get around linting errors since
+    // it is needed for PhET-iO studio. https://github.com/phetsims/mean-share-and-balance/issues/258
+  public readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
+
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 
@@ -94,7 +96,6 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
-
     this.meanPredictionProperty = new NumberProperty( 0, {
       range: this.predictMeanDragRange,
       tandem: options.tandem.createTandem( 'meanPredictionProperty' )
@@ -124,7 +125,6 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
     // Initialize the plates and set up plate-related behavior that is specific to the Distribute screen.
     this.plates.forEach( plate => {
-
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
         snack.isActiveProperty.value = true;
         const index = plate.snacksOnNotepadPlate.indexOf( snack );
@@ -165,9 +165,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
 
           // Remove notepad snacks from this plate, or from another if this plate is empty.
           _.times( Math.abs( delta ), () => {
-
-            // REVIEW: We should probably be checking the min number of snacks on a plate, not hard coding 0.
-            if ( plate.getNumberOfNotepadSnacks() > 0 ) {
+            if ( plate.getNumberOfNotepadSnacks() > MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE ) {
               plate.removeTopSnack();
             }
             else {
@@ -177,19 +175,16 @@ export default class DistributeModel extends SharingModel<CandyBar> {
             }
           } );
         }
-
         this.stackChangedEmitter.emit();
       } );
 
       // Monitor the isActiveProperty for each plate and do any redistribution of candy bars that is necessary when
       // changes occur.
       plate.isActiveProperty.link( isActive => {
-
         if ( !isActive ) {
 
           // Handle the situation where this plate went inactive and had excess candy bars on it.  The inverse
           // situation, i.e. when goes inactive with a deficit, is handled elsewhere.
-          // REVIEW QUESTION: Where is that handled?
           const excess = Math.max( plate.getNumberOfNotepadSnacks() - plate.tableSnackNumberProperty.value, 0 );
           if ( excess > 0 ) {
 
@@ -198,7 +193,9 @@ export default class DistributeModel extends SharingModel<CandyBar> {
               plate.removeTopSnack();
               const plateWithFewestSnacks = this.getPlateWithFewestSnacks();
 
-              // REVIEW: Should we confirm that there are indeed plates with space before adding a snack?
+              assert && assert( plateWithFewestSnacks &&
+              plateWithFewestSnacks.snacksOnNotepadPlate.length < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
+              'A plate should have space to add another snack.' );
               plateWithFewestSnacks!.addASnack();
             } );
           }
@@ -210,6 +207,8 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       } );
     } );
 
+    // Track whether the snacks are distributed evenly across the plates or at least distributed as much as is possible
+    // to trigger success indicators for the predict mean tool.
     const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
     const notepadPlateSnackCountDependencies = this.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
     this.snacksDistributedProperty = DerivedProperty.deriveAny( [
@@ -227,6 +226,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
         phetioValueType: BooleanIO
       } );
 
+    // For phet-io client use only.
     this.meanWithRemainderProperty = new DerivedProperty( [
       this.numberOfPlatesProperty,
       this.totalSnacksProperty
@@ -241,7 +241,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       phetioValueType: ObjectLiteralIO
     } );
 
-    // For phet-io client use only.
+
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
