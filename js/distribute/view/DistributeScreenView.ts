@@ -40,6 +40,8 @@ import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.j
 import soundManager from '../../../../tambo/js/soundManager.js';
 import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
 import Snack from '../../common/model/Snack.js';
+import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
+import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -261,6 +263,16 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     } );
     this.notepadSnackLayerNode.addChild( meanPredictionSlider );
 
+    // Create sound players from grab and release during group sort interactions.
+    const grabSoundClip = new SoundClip( grabCandyBarV2_mp3, {
+      initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL
+    } );
+    soundManager.addSoundGenerator( grabSoundClip );
+    const releaseSoundClip = new SoundClip( releaseCandyBarV2_mp3, {
+      initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL
+    } );
+    soundManager.addSoundGenerator( releaseSoundClip );
+
     this.groupSortInteractionView = new GroupSortInteractionView(
       model.groupSortInteractionModel,
       notepadCandyBarsHighlightNode,
@@ -308,7 +320,9 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
           // Remove the candy bar from the current plate and add it to the top of the new plate.
           currentPlate!.removeSnack( candyBar );
           newPlate.addSnackToTop( candyBar );
-        }
+        },
+        onGrab: () => grabSoundClip.play(),
+        onRelease: () => releaseSoundClip.play()
       }
     );
 

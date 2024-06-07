@@ -87,9 +87,9 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
     this.dragListener = new RichPointerDragListener( {
       grabSound: grabCandyBarV2_mp3,
-      grabSoundClipOptions: { initialOutputLevel: 0.25 },
+      grabSoundClipOptions: { initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL },
       releaseSound: releaseCandyBarV2_mp3,
-      releaseSoundClipOptions: { initialOutputLevel: 0.25 },
+      releaseSoundClipOptions: { initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL },
       transform: modelViewTransform,
       positionProperty: this.candyBar.positionProperty,
       offsetPosition: ( viewPoint, dragListener ) => {
