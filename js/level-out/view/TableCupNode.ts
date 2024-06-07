@@ -48,7 +48,6 @@ export default class TableCupNode extends Node {
     // The CUP_HEIGHT is the height of the notepad cups.  The table cups have to be adjusted accordingly because of the
     // top and bottom ellipses, so they don't seem disproportionately tall.
     const beakerHeight = MeanShareAndBalanceConstants.CUP_HEIGHT - 10;
-
     const beakerLineWidth = 2;
     const waterCupNode = new BeakerNode( waterCup.waterLevelProperty, {
       lineWidth: beakerLineWidth,
@@ -62,7 +61,6 @@ export default class TableCupNode extends Node {
     } );
 
     const showingTickMarksListener = ( showingTickMarks: boolean ) => waterCupNode.setTicksVisible( showingTickMarks );
-
     tickMarksVisibleProperty.link( showingTickMarksListener );
 
     waterCup.waterLevelProperty.link( ( waterLevel, oldWaterLevel ) => {

@@ -4,7 +4,7 @@
  * Class for table and notepad cup models.
  * A water cup holds a certain level of water that can be manipulated by the user.
  * A cup is empty when waterLevelProperty.value = 0, and full when waterLevelProperty.value = 1
- * Water level is controlled in the table view snackType through a vertical slider.
+ * Water level is controlled in the table view through a vertical slider.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -25,10 +25,10 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import Disposable from '../../../../axon/js/Disposable.js';
 
 type SelfOptions = {
-  position: Vector2; // the cups x & y position in the view
+  position: Vector2; // the cup's x & y position in the view
   isActive: boolean;
-  waterHeightRange?: Range;
-  waterLevel?: number;
+  waterHeightRange?: Range; // The range of water the cup can hold.
+  waterLevel?: number; // Initial water level
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
   linePlacement: number;
   isTableCup: boolean;
@@ -74,7 +74,6 @@ export default class Cup {
     }, options.waterLevelPropertyOptions ) );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
-      // phet-io
       tandem: tandem.createTandem( 'isActiveProperty' ),
       phetioReadOnly: true
     } );

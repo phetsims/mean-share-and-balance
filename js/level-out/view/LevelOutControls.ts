@@ -2,9 +2,9 @@
 
 /**
  * Control panel for the level out screen that contains:
- *   - a checkbox group with visibility toggling for: predictMean, mean, and tickMarks
+ *   - a checkbox group with visibility toggling for: predictMean and tickMarks
  *   - an AB switch to toggle between the pipe open/closed states
- *   - a number spinner connected to the numberOfCups per snackType on the screen
+ *   - a number spinner connected to the numberOfCups on the screen
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -40,14 +40,11 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
                       pipesEnabledProperty: Property<boolean>,
                       providedOptions: LevelOutControlPanelOptions ) {
 
-    // Checkbox Group
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
       tickMarksVisibleProperty: tickMarksVisibleProperty,
       predictMeanVisibleProperty: predictMeanVisibleProperty,
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );
-
-    // Pipe Switch
     const pipeSwitch = new PipeSwitch(
       pipesOpenProperty,
       pipesEnabledProperty,
@@ -72,13 +69,13 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       vBoxOptions: {}
     }, providedOptions );
 
-    const combinedOptions = combineOptions<VBoxOptions>( {
+    const vBoxOptions = combineOptions<VBoxOptions>( {
         children: [ checkboxGroup, pipeSwitch ],
         minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
         spacing: 20
       },
       options.vBoxOptions );
-    const vBox = new VBox( combinedOptions );
+    const vBox = new VBox( vBoxOptions );
     super( vBox, numberOfCupsProperty, numberOfCupsRangeProperty, MeanShareAndBalanceStrings.numberOfCupsStringProperty, options );
   }
 }

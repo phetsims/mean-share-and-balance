@@ -35,18 +35,25 @@ const NUMBER_OF_CUPS_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_
 
 export default class LevelOutModel extends PhetioObject implements TModel {
 
-  public readonly numberOfCupsRangeProperty: Property<Range>;
-  public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
 
+  // The range controls the drag range of the slider control
+  public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
+  public readonly numberOfCupsRangeProperty: Property<Range>;
   public readonly numberOfCupsProperty: Property<number>;
+
   public readonly meanPredictionProperty: Property<number>;
   public readonly meanProperty: TReadOnlyProperty<number>;
 
   public readonly tableCups: Cup[];
   public readonly notepadCups: Cup[];
+
   public readonly pipeArray: Pipe[];
+
+  // When pipes are open water will flow through and evenly level out.
   public readonly pipesOpenProperty: Property<boolean>;
   public readonly pipesEnabledProperty: Property<boolean>;
+
+  // Tracks whether the water levels in the notepadCups match the mean.
   public readonly waterLevelsMatchMeanProperty: TReadOnlyProperty<boolean>;
 
   // visible Properties
@@ -70,11 +77,9 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     // Visibility properties
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
-      // phet-io
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
-      // phet-io
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
 
@@ -93,12 +98,14 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       numberType: 'Integer',
       range: this.numberOfCupsRangeProperty,
 
-      // phetio
+      // phet-io
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' )
     } );
 
     this.maxCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       range: NUMBER_OF_CUPS_RANGE,
+
+      // phet-io
       tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
 
@@ -155,14 +162,11 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       }
     }
 
-    const dependencies = [
+    const meanDependencies = [
       ...this.tableCups.map( waterCup => waterCup.waterLevelProperty ),
       ...this.tableCups.map( waterCup => waterCup.isActiveProperty )
     ];
-
-    // The implementation of DerivedProperty requires that any dependencies array passed has 15 or fewer elements.
-    // .map() does not preserve a property of .length, requiring the usage of deriveAny.
-    this.meanProperty = DerivedProperty.deriveAny( dependencies,
+    this.meanProperty = DerivedProperty.deriveAny( meanDependencies,
       () => {
         const mean = calculateMean( this.getActiveTableCups().map( tableCup => tableCup.waterLevelProperty.value ) );
         assert && assert( mean >= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN && mean <= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX, 'mean out of bounds: ' + mean );
@@ -207,7 +211,6 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
-
     this.maxCupsProperty.lazyLink( max => {
       this.resetData();
       this.numberOfCupsProperty.value = Math.min( this.numberOfCupsProperty.value, max );
@@ -322,7 +325,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
   }
 
   /**
-   * For use by PhET-iO clients. Sets thee waterLevelProperty of the table cups to the provided array
+   * For use by PhET-iO clients. Sets the waterLevelProperty of the table cups to the provided array
    * of numbers. If the array is longer than the number of table cups, the excess values are ignored.
    */
   private setDataPoints( dataPoints: number[] ): void {
@@ -377,6 +380,8 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
 
   /**
+   * Increase or decrease water levels for the notepadCup according to the water levels of the tableCup
+   * and the state of the model.
    * @param tableCup - The model for the affected table cup
    * @param waterLevel - the new water level from the table cup's listener
    * @param oldWaterLevel - the old water level from the table cup's listener

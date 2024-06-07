@@ -1,7 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * Sound generator for the water cup levels.  The pitch of the tone is scaled based on the mean value of all the cups,
+ * Sound generator for the water cup levels. The pitch of the tone is scaled based on the mean value of all the cups,
  * and a lowpass filter is applied that passes more frequencies as the cups get closer to the mean value and less as
  * they get further away.
  *

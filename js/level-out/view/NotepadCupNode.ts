@@ -46,7 +46,8 @@ export default class NotepadCupNode extends Node {
 
     const topStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
     const bottomStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0 ) );
-    const verticalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
+    const verticalStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
       0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
 
     const cupStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.CUP_HEIGHT, { lineWidth: 1.95, stroke: verticalStrokePattern } );

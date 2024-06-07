@@ -20,12 +20,12 @@ const LINE_WIDTH = 1;
 export default class ValveNode extends Node {
 
   public constructor( parentCenter: Vector2, rotationProperty: Property<number> ) {
-    // Valve drawing
+
+    // Draw the valve, a circle with a rectangle cut out of the center.
     const valveGradient = new RadialGradient( 0, 0, 0, 0, 0, MeanShareAndBalanceConstants.VALVE_RADIUS + 2 )
       .addColorStop( 0.5, MeanShareAndBalanceColors.pipeGradientLightColorProperty )
       .addColorStop( 1, MeanShareAndBalanceColors.pipeGradientDarkColorProperty );
 
-    // Function to create circle with center rectangle cut out.
     const createInnerCircle = ( radius: number, rectangleWidth: number ): Shape => {
       const circle = Shape.circle( radius - 1 );
       const rectangle = Shape.rectangle( -rectangleWidth / 2, -radius - 5, rectangleWidth, ( radius + 5 ) * 2 );
@@ -35,7 +35,6 @@ export default class ValveNode extends Node {
     const createOuterCircle = ( radius: number ): Shape => {
       const outerCircle = Shape.circle( radius + 2 );
       const innerCircle = Shape.circle( radius - 1 );
-
       return outerCircle.shapeDifference( innerCircle );
     };
 

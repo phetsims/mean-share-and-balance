@@ -30,7 +30,7 @@ export default class NotepadCupTickMarksNode extends Node {
     } );
   }
 
-  //creates and adds tick mark to node
+  // Creates and adds tick mark to node
   private addTickMark( fraction: number ): void {
     const tickMark = new Line( 0, fraction, 5, fraction, {
       stroke: 'black',

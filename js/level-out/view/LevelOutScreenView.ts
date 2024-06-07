@@ -55,7 +55,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
       new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
-    // Create the sound that will be played when the mean prediction become correct.
+    // Create the sound that will be played when the mean prediction becomes correct.
     const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
     soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
 
@@ -171,14 +171,13 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const notepadNode = new NotepadNode( {
       tandem: options.tandem.createTandem( 'notepadNode' )
     } );
-
-    const tableNode = new LabTableNode( { centerX: waterCupLayerNode.centerX } );
+    const tableNode = new LabTableNode( {
+      centerX: waterCupLayerNode.centerX
+    } );
 
     const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
       children: [ notepadNode, tableNode, waterCupLayerNode, meanPredictionSlider ]
     } );
-
-    // Instantiate Parent
     super(
       model,
 
@@ -191,14 +190,13 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       superOptions
     );
 
+    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
+      this.layoutBounds.maxX, this.layoutBounds.maxY );
+
     // Controls on Right side of screen
     const controls = new LevelOutControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
       model.numberOfCupsProperty, model.numberOfCupsRangeProperty,
       model.pipesOpenProperty, model.pipesEnabledProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
-
-    const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
-      this.layoutBounds.maxX, this.layoutBounds.maxY );
-
     const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',
@@ -206,7 +204,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       rightMargin: MeanShareAndBalanceConstants.CONTROLS_HORIZONTAL_MARGIN,
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
-
     this.addChild( controlsAlignBox );
 
     notepadNode.centerX = this.playAreaCenterX;
@@ -244,12 +241,15 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         pipesOpen ? switchToRightSoundPlayer.play() : switchToLeftSoundPlayer.play();
       }
     } );
-
     model.numberOfCupsProperty.link( () => {
       this.interruptSubtreeInput();
     } );
 
-    this.msabSetPDOMOrder( [ pipeNodes[ 0 ], meanPredictionSlider ], [ ...tableCupNodes, controls.numberSpinner ], controls.controlsPDOMOrder );
+    this.msabSetPDOMOrder(
+      [ pipeNodes[ 0 ], meanPredictionSlider ],
+      [ ...tableCupNodes, controls.numberSpinner ],
+      controls.controlsPDOMOrder
+    );
   }
 
   public override reset(): void {

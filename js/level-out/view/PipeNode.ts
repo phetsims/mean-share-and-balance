@@ -39,15 +39,17 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
       isDisposable: false
     }, providedOptions );
 
-    // Pipe & valve dimensions
     const pipeCenter = new Vector2( MeanShareAndBalanceConstants.PIPE_LENGTH / 2, MeanShareAndBalanceConstants.PIPE_WIDTH / 2 );
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH,
       { fill: MeanShareAndBalanceConstants.PIPE_GRADIENT } );
 
-    const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
-    const leftStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
+    const horizontalStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
+    const leftStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
       0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
-    const rightStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0,
+    const rightStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0,
       0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
 
     const pipeStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.PIPE_WIDTH, { lineWidth: 1.95, stroke: leftStrokePattern } );
@@ -65,7 +67,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     } );
 
 
-    // Function to create pipe clip area when valve is closed
+    // Create the pipe clip area when valve is closed
     const createPipeClipArea = ( bounds: Bounds2, radius: number ): Shape => {
       const clipAreaRectangle = Shape.bounds( bounds );
       const clipAreaCircle = Shape.circle( new Vector2( bounds.centerX, bounds.centerY ), radius );
@@ -82,7 +84,6 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     const handleFire = () => {
       pipesOpenProperty.set( !pipe.pipesOpenProperty.value );
-
       pipe.isCurrentlyClickedProperty.set( true );
       pipe.isCurrentlyClickedProperty.set( false );
     };
@@ -105,7 +106,6 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     }, options );
     super( combinedOptions );
 
-    this.valveNode = valveNode;
     // Set position related to associated cup
     this.x = pipe.position.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH;
     this.y = modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.PIPE_WIDTH;
@@ -123,6 +123,8 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     pipesEnabledProperty.link( enabled => {
       enabled ? this.opacity = 1 : this.opacity = 0.5;
     } );
+
+    this.valveNode = valveNode;
   }
 }
 

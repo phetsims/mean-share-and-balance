@@ -3,8 +3,6 @@
 /**
  * Representation for the triangle that adjusts the water level in table cups.
  *
- * The triangle code in this Node is duplicated. Transferring to scenery-phet: https://github.com/phetsims/scenery-phet/issues/748
- *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  */
@@ -25,7 +23,7 @@ import WaterLevelSoundPlayer from './WaterLevelSoundPlayer.js';
 type SelfOptions = {
 
   // The cross-fade mix between the two sounds that are combined for the sound generation used for the water level. This
-  // value must be between 0 and 1, inclusive.  A value of 0 indication 100% sound A, 1 indicates 100% sound be, and
+  // value must be between 0 and 1, inclusive.  A value of 0 indication 100% sound A, 1 indicates 100% sound B, and
   // values in between represent a proportionate mix.
   soundPlayerCrossFade?: number;
 };
