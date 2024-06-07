@@ -235,7 +235,8 @@ export default class DistributeModel extends SharingModel<Snack> {
     }, {
       tandem: options.tandem.createTandem( 'meanWithRemainderProperty' ),
       phetioState: false,
-      phetioValueType: ObjectLiteralIO
+      phetioValueType: ObjectLiteralIO,
+      phetioDocumentation: 'Mean as a whole number and a remainder value.'
     } );
 
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
