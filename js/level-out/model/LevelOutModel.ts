@@ -413,7 +413,11 @@ export default class LevelOutModel extends PhetioObject implements TModel {
         implementation: function( this: LevelOutModel, dataPoints: number[] ) {
 
           // Validate data points
-          if ( dataPoints.length > this.maxCupsProperty.value ) {
+          // If a client passes through an empty array of data points, ignore and return early.
+          if ( dataPoints.length === 0 ) {
+            return;
+          }
+          else if ( dataPoints.length > this.maxCupsProperty.value ) {
             dataPoints = dataPoints.slice( 0, this.maxCupsProperty.value );
           }
           dataPoints.forEach( ( dataPoint, i ) => {

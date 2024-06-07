@@ -287,7 +287,11 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
         implementation: function( this: SharingModel<Snack>, dataPoints: number[] ) {
 
           // Validate data points
-          if ( dataPoints.length > this.maxPlatesProperty.value ) {
+          // If a client passes through an empty array of data points, ignore and return early.
+          if ( dataPoints.length === 0 ) {
+            return;
+          }
+          else if ( dataPoints.length > this.maxPlatesProperty.value ) {
             dataPoints = dataPoints.slice( 0, this.maxPlatesProperty.value );
           }
           dataPoints.forEach( ( dataPoint, i ) => {
