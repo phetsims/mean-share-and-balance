@@ -26,8 +26,10 @@ import VoidIO from '../../../../tandem/js/types/VoidIO.js';
 import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import TModel from '../../../../joist/js/TModel.js';
+import EnabledProperty from '../../../../axon/js/EnabledProperty.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
-type LevelOutModelOptions = EmptySelfOptions & PhetioObjectOptions;
+type LevelOutModelOptions = EmptySelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
 // constants
 const INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
@@ -109,19 +111,19 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
 
-    this.pipesOpenProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'pipesOpenProperty' )
-    } );
-    this.pipesEnabledProperty = new BooleanProperty( true, {
-      tandem: options.tandem.createTandem( 'pipesEnabledProperty' )
-    } );
-
     // The tableCups are the "ground truth" and the notepadCups mirror them.
     this.tableCups = [];
     this.notepadCups = [];
     this.pipeArray = [];
 
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
+
+    this.pipesOpenProperty = new BooleanProperty( false, {
+      tandem: pipesParentTandem.createTandem( 'pipesOpenProperty' )
+    } );
+    this.pipesEnabledProperty = new EnabledProperty( true, {
+      tandem: pipesParentTandem.createTandem( EnabledProperty.TANDEM_NAME )
+    } );
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
 
@@ -328,7 +330,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
    * For use by PhET-iO clients. Sets the waterLevelProperty of the table cups to the provided array
    * of numbers. If the array is longer than the number of table cups, the excess values are ignored.
    */
-  private setDataPoints( dataPoints: number[] ): void {
+  public setDataPoints( dataPoints: number[] ): void {
     this.resetData();
     this.numberOfCupsProperty.value = dataPoints.length;
     dataPoints.forEach( ( dataPoint, index ) => {
