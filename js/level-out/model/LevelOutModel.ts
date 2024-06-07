@@ -62,7 +62,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
-  private readonly maxCupsProperty: Property<number>;
+  public readonly maxCupsProperty: Property<number>;
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 

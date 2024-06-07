@@ -65,7 +65,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   protected readonly unusedSnacks: ObservableArray<T>;
 
   // Allows PhET-iO clients to modify the max number of plates in the screen.
-  private readonly maxPlatesProperty: Property<number>;
+  public readonly maxPlatesProperty: Property<number>;
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
