@@ -20,7 +20,7 @@ Before reading this document, please read:
 In all screens, there is a notepad shown towards the top of the screen that contains "sketches" of things shown towards
 the bottom of the screen. The term "sketch" is used in the comments and in class/variable names to indicate items that
 appear in this notepad.  The term "table" is often used in comments and class names for things that appear on or relate
-to the table at the bottom of the screen, and the term "notepad" is used similar for things relating to the notepad.
+to the table at the bottom of the screen, and the term "notepad" is used similarly for things relating to the notepad.
 
 ### Model-View Transform
 
@@ -51,8 +51,8 @@ the diameter (in view coordinates) of a data point is different in each.
 ### Model
 See [model.md](https://github.com/phetsims/mean-share-and-balance/blob/main/doc/model.md)
 
-The central model is for the "Level Out" screen is `LevelOutModel`. `LevelOutModel` tracks water levels across cups,
-ensures water levels change according to restrictions on space, and calculates mean across the data set.
+The central model for the "Level Out" screen is `LevelOutModel`. `LevelOutModel` tracks water levels across cups,
+ensures water levels change according to restrictions on space, and calculates the mean across the data set.
 
 ### View
 
