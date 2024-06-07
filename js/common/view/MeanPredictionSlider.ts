@@ -52,7 +52,7 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
 
     const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), {
       lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN_WIDTH,
-      stroke: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN,
+      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN,
       lineDash: [ 5, 3 ]
     } );
 

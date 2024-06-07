@@ -75,7 +75,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           // the default pattern, and return early.
           if ( !successIndicatorsOperating ) {
             successRectangle.visible = false;
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
             return;
           }
           const meanTolerance = 0.05;
@@ -91,7 +91,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
           }
           else {
             successRectangle.visible = pipesOpen && doWaterLevelsMatchMean && closeToMean;
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
           }
 
           // If one of the success indicators was just activated, play the "successful prediction" sound.

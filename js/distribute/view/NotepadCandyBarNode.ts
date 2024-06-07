@@ -9,7 +9,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Image, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { DragListener, Image, InteractiveHighlighting, Line, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -19,8 +19,6 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import CandyBar from '../model/CandyBar.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
-import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import RichPointerDragListener from '../../../../scenery-phet/js/RichPointerDragListener.js';
 import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
@@ -130,54 +128,32 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
    * A pattern is used for the outline of the candy bar. Because of this, the pattern must be rotated and translated to
    * match the bounds of the rectangle. This method returns the nodes that make up the outline of the candy bar.
    */
-  public static getSketchOutline( candyBarWidth = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH ): Node[ ] {
-
-    const rightYTranslation = 0.975;
-    const horizontalStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
-      Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 )
-    );
-    const leftStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
-      Matrix3.affine(
-        0.15 * Math.cos( Math.PI / 2 ),
-        -0.15 * Math.sin( Math.PI / 2 ),
-        0.975,
-        0.15 * Math.sin( Math.PI / 2 ),
-        0.15 * Math.cos( Math.PI / 2 ),
-        0
-      ) );
-    const rightStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix(
-      Matrix3.affine(
-        0.15 * Math.cos( Math.PI / 2 ),
-        -0.15 * Math.sin( Math.PI / 2 ),
-        rightYTranslation,
-        0.15 * Math.sin( Math.PI / 2 ),
-        0.15 * Math.cos( Math.PI / 2 ),
-        0
-      ) );
-
+  public static getSketchOutline(): Node[ ] {
+    const candyBarWidth = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH;
+    const candyBarHeight = MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT;
     const candyBarStrokeLeft = new Line(
-      0, 0, 0, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
+      0, 0, 0, candyBarHeight,
       {
         lineWidth: 1.95,
-        stroke: leftStrokePattern
+        stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
       } );
     const candyBarStrokeRight = new Line(
-      candyBarWidth, 0, candyBarWidth, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
+      candyBarWidth, 0, candyBarWidth, candyBarHeight,
       {
         lineWidth: 1.95,
-        stroke: rightStrokePattern
+        stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
       } );
     const candyBarStrokeTop = new Line(
       0, 0, candyBarWidth, 0,
       {
         lineWidth: 1.95,
-        stroke: horizontalStrokePattern
+        stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
       } );
     const candyBarStrokeBottom = new Line(
-      0, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT, candyBarWidth, MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT,
+      0, candyBarHeight, candyBarWidth, candyBarHeight,
       {
         lineWidth: 1.95,
-        stroke: horizontalStrokePattern
+        stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
       } );
 
     return [ candyBarStrokeLeft, candyBarStrokeRight, candyBarStrokeTop, candyBarStrokeBottom ];

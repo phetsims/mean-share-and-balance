@@ -201,7 +201,7 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
           // the default pattern, and return early.
           if ( !successIndicatorsOperating ) {
             successRectangle.visible = false;
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
             return;
           }
           const successRectangleWasVisible = successRectangle.visible;
@@ -215,11 +215,11 @@ export default class DistributeScreenView extends SharingScreenView<CandyBar> {
 
             predictMeanLine.stroke = roundedPrediction === roundedMean ?
                                      MeanShareAndBalanceColors.meanColorProperty :
-                                     MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+                                     MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
             successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
           }
           else {
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN;
+            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
             successRectangle.visible = false;
           }
 

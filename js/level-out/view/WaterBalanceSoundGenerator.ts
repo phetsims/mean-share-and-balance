@@ -2,7 +2,7 @@
 
 /**
  * Sound generator for the water cup levels. The pitch of the tone is scaled based on the mean value of all the cups,
- * and a lowpass filter is applied that passes more frequencies as the cups get closer to the mean value and less as
+ * and a low pass filter is applied that passes more frequencies as the cups get closer to the mean value and less as
  * they get further away.
  *
  * @author John Blanco (PhET Interactive Simulations)
@@ -169,7 +169,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
     meanProperty.link( updateMaxPossibleDeviation );
 
     // Create a closure function that maps the current max deviation from the mean for the notepad cups to a cutoff
-    // frequency for the lowpass filter.  This uses a piecewise function defined by two points in a unit square.  It's
+    // frequency for the low pass filter.  This uses a piecewise function defined by two points in a unit square.  It's
     // hard to describe in a comment, so please see
     // https://github.com/phetsims/mean-share-and-balance/issues/171#issuecomment-2099127519, which includes a diagram.
     const getFrequencyFromMaxDeviationFromMean = ( deviationFromMean: number ) => {
@@ -236,7 +236,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
             this.startOrContinueSoundProduction();
           }
 
-          // Set the cutoff frequency of the lowpass filter based on the max deviation from the mean.  The intent here
+          // Set the cutoff frequency of the low pass filter based on the max deviation from the mean.  The intent here
           // is to produce a more filtered sound when far from the mean and less filtered when all cups are close to it.
           const filterFrequency = getFrequencyFromMaxDeviationFromMean( maxDeviationFromMean );
           lowPassFilter.frequency.cancelScheduledValues( 0 );

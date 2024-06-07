@@ -29,7 +29,7 @@ const simOptions: SimOptions = {
   }
 };
 
-// launch the sim - beware that scenery Image nodes created outside of simLauncher.launch() will have zero bounds
+// launch the sim - beware that scenery Image nodes created outside simLauncher.launch() will have zero bounds
 // until the images are fully loaded, see https://github.com/phetsims/coulombs-law/issues/70
 simLauncher.launch( () => {
   const sim = new Sim( MeanShareAndBalanceStrings[ 'mean-share-and-balance' ].titleStringProperty, [

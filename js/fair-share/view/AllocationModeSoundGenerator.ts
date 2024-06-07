@@ -71,8 +71,8 @@ class AllocationModeSoundGenerator extends SoundGenerator {
     shareCompleteLargeAmountSoundClip.connect( this.mainGainNode );
     const shareCompleteMediumAmountSoundClip = new SoundClip( shareCompleteMediumAmount_mp3 );
     shareCompleteMediumAmountSoundClip.connect( this.mainGainNode );
-    const shareCompleteSmallAmoungSoundClip = new SoundClip( shareCompleteSmallAmount_mp3 );
-    shareCompleteSmallAmoungSoundClip.connect( this.mainGainNode );
+    const shareCompleteSmallAmountSoundClip = new SoundClip( shareCompleteSmallAmount_mp3 );
+    shareCompleteSmallAmountSoundClip.connect( this.mainGainNode );
     const shareFractionalizeSoundClip = new SoundClip( shareFractionalizeSound_mp3 );
     shareFractionalizeSoundClip.connect( this.mainGainNode );
 
@@ -84,7 +84,7 @@ class AllocationModeSoundGenerator extends SoundGenerator {
 
 
       if ( totalApplesProperty.value < MAX_APPLES / 3 ) {
-        shareCompleteSmallAmoungSoundClip.play();
+        shareCompleteSmallAmountSoundClip.play();
       }
       else if ( totalApplesProperty.value < 2 * MAX_APPLES / 3 ) {
         shareCompleteMediumAmountSoundClip.play();

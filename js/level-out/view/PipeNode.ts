@@ -10,7 +10,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { FireListener, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, InteractiveHighlighting, Line, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -20,8 +20,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ValveNode from './ValveNode.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
-import Matrix3 from '../../../../dot/js/Matrix3.js';
 
 type SelfOptions = EmptySelfOptions;
 type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement' | 'children' | 'visibleProperty'> & PickRequired<NodeOptions, 'tandem'>;
@@ -43,27 +41,23 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH,
       { fill: MeanShareAndBalanceConstants.PIPE_GRADIENT } );
 
-    const horizontalStrokePattern = new Pattern( graphiteTexture_png )
-      .setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.9 ) );
-    const leftStrokePattern = new Pattern( graphiteTexture_png )
-      .setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0.975,
-      0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
-    const rightStrokePattern = new Pattern( graphiteTexture_png )
-      .setTransformMatrix( Matrix3.affine( 0.15 * Math.cos( Math.PI / 2 ), -0.15 * Math.sin( Math.PI / 2 ), 0,
-      0.15 * Math.sin( Math.PI / 2 ), 0.15 * Math.cos( Math.PI / 2 ), 0 ) );
-
-    const pipeStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.PIPE_WIDTH, { lineWidth: 1.95, stroke: leftStrokePattern } );
-    const pipeStrokeRight = new Line( MeanShareAndBalanceConstants.PIPE_LENGTH, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
+    const pipeStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.PIPE_WIDTH, {
       lineWidth: 1.95,
-      stroke: rightStrokePattern
+      stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+    } );
+    const pipeStrokeRight = new Line( MeanShareAndBalanceConstants.PIPE_LENGTH, 0,
+      MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
+      lineWidth: 1.95,
+      stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
     } );
     const pipeStrokeTop = new Line( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, 0, {
       lineWidth: 1.95,
-      stroke: horizontalStrokePattern
+      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
     } );
-    const pipeStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.PIPE_WIDTH, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
+    const pipeStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.PIPE_WIDTH,
+      MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
       lineWidth: 1.95,
-      stroke: horizontalStrokePattern
+      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
     } );
 
 
