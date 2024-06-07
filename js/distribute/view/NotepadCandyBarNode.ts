@@ -85,8 +85,6 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       }
     );
 
-    // TODO: This only adds sound for mouse interactions. We will need to play the sound separately for keyboard.
-    //  See: https://github.com/phetsims/mean-share-and-balance/issues/190
     this.dragListener = new RichPointerDragListener( {
       grabSound: grabCandyBarV2_mp3,
       grabSoundClipOptions: { initialOutputLevel: 0.25 },
