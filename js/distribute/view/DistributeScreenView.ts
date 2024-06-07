@@ -25,7 +25,6 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import GroupSortInteractionView from '../../../../scenery-phet/js/accessibility/group-sort/view/GroupSortInteractionView.js';
-import CandyBar from '../model/CandyBar.js';
 import Utils from '../../../../dot/js/Utils.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import { Shape } from '../../../../kite/js/imports.js';
@@ -40,6 +39,7 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
+import Snack from '../../common/model/Snack.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -49,12 +49,12 @@ const CANDY_BAR_FOCUS_X_MARGIN = 10; // in screen coords, empirically determined
 const CUEING_ARROW_SCALE = 0.7;
 export const CUEING_ARROW_MARGIN = 2; // in screen coords, empirically determined
 
-export default class DistributeScreenView extends SharingScreenView<CandyBar> {
+export default class DistributeScreenView extends SharingScreenView<Snack> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
 
   // class members needed for the group sort interaction
-  private readonly groupSortInteractionView: GroupSortInteractionView<CandyBar, NotepadCandyBarNode>;
-  private readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
+  private readonly groupSortInteractionView: GroupSortInteractionView<Snack, NotepadCandyBarNode>;
+  private readonly groupSortInteractionModel: GroupSortInteractionModel<Snack>;
   private readonly keyboardSortCueNode: Node;
   private readonly mouseSortIndicatorArrowNode: Node;
   private readonly cueingHighlight: Node;

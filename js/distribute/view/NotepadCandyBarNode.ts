@@ -16,7 +16,6 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import CandyBar from '../model/CandyBar.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
@@ -26,6 +25,7 @@ import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import Snack from '../../common/model/Snack.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -33,10 +33,10 @@ type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOpti
 export default class NotepadCandyBarNode extends InteractiveHighlighting( Node ) {
 
   public readonly dragListener: DragListener;
-  public readonly candyBar: CandyBar;
+  public readonly candyBar: Snack;
 
-  public constructor( candyBar: CandyBar,
-                      groupSortInteractionModel: GroupSortInteractionModel<CandyBar>,
+  public constructor( candyBar: Snack,
+                      groupSortInteractionModel: GroupSortInteractionModel<Snack>,
                       modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,

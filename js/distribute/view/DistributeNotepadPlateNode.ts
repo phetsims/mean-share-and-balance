@@ -16,8 +16,8 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../../common/model/Plate.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
-import CandyBar from '../model/CandyBar.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Snack from '../../common/model/Snack.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'>;
 
@@ -26,7 +26,7 @@ const PLATE_X_OFFSET = 2; // The plate can appear off center since there is empt
 
 export default class DistributeNotepadPlateNode extends Node {
 
-  public constructor( plate: Plate<CandyBar>,
+  public constructor( plate: Plate<Snack>,
                       mvt: ModelViewTransform2, providedOptions?: NotepadPlateNodeOptions ) {
 
     const plateNode = new Image( notepadPlateSketch_svg, {

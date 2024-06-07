@@ -13,7 +13,7 @@ import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import { CUEING_ARROW_MARGIN } from '../distribute/view/DistributeScreenView.js';
-import CandyBar from '../distribute/model/CandyBar.js';
+import Snack from '../common/model/Snack.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined
@@ -82,7 +82,7 @@ class SnackStacker {
     return new Vector2( xPosition, yPosition );
   }
 
-  public static getCueingArrowPosition( plate: Plate<CandyBar>, plateHeight: number ): Vector2 {
+  public static getCueingArrowPosition( plate: Plate<Snack>, plateHeight: number ): Vector2 {
     const topSnackIndex = plate.snacksOnNotepadPlate.length - 1;
     const plateXPosition = plate.xPositionProperty.value;
     return SnackStacker.getStackedCandyBarPosition( plateXPosition, topSnackIndex )

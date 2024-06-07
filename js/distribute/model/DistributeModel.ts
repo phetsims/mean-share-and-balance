@@ -13,14 +13,13 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
-import CandyBar from './CandyBar.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 import Range from '../../../../dot/js/Range.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
-import { SnackOptions } from '../../common/model/Snack.js';
+import Snack, { SnackOptions } from '../../common/model/Snack.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 import Property from '../../../../axon/js/Property.js';
@@ -40,10 +39,10 @@ type DistributeModelOptions = SelfOptions & PickRequired<SharingModelOptions, 't
 const INITIAL_PLATE_VALUES = [ 3, 1, 5, 3, 8, 10, 5 ];
 export const NOTEPAD_PLATE_BOTTOM_Y = 330;
 
-export default class DistributeModel extends SharingModel<CandyBar> {
+export default class DistributeModel extends SharingModel<Snack> {
 
   // Class properties needed for alt-input group sort interaction.
-  public readonly groupSortInteractionModel: GroupSortInteractionModel<CandyBar>;
+  public readonly groupSortInteractionModel: GroupSortInteractionModel<Snack>;
   public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
 
   // Properties for the mean prediction tool.
@@ -63,14 +62,13 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
 
-  // TODO: This is does not need to be a class member, but I'm not sure how to get around linting errors since
-    // it is needed for PhET-iO studio. https://github.com/phetsims/mean-share-and-balance/issues/258
-  public readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
-
+  // A Property Object that holds the mean value as a whole number and a remainder.  For instance, if there are two
+  // plates and five snacks, the whole portion would be 2 and the remainder 1.  This is for phet-io client use only.
+  private readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 
-    const createCandyBar = ( options: SnackOptions ) => new CandyBar( options );
+    const createCandyBar = ( options: SnackOptions ) => new Snack( options );
 
     const options = optionize<DistributeModelOptions, SelfOptions, SharingModelOptions>()( {
       initialPlateValues: INITIAL_PLATE_VALUES,
@@ -80,7 +78,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
     super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );
 
     // Create and define the keyboard interaction for candy bars.
-    this.groupSortInteractionModel = new GroupSortInteractionModel<CandyBar>( {
+    this.groupSortInteractionModel = new GroupSortInteractionModel<Snack>( {
       getGroupItemValue: candyBar => {
         const plate = this.getPlateForSnack( candyBar );
         return plate ? plate.linePlacement : null;
@@ -226,7 +224,6 @@ export default class DistributeModel extends SharingModel<CandyBar> {
         phetioValueType: BooleanIO
       } );
 
-    // For phet-io client use only.
     this.meanWithRemainderProperty = new DerivedProperty( [
       this.numberOfPlatesProperty,
       this.totalSnacksProperty
@@ -241,7 +238,6 @@ export default class DistributeModel extends SharingModel<CandyBar> {
       phetioValueType: ObjectLiteralIO
     } );
 
-
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
@@ -250,7 +246,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   /**
    * This function returns an array of all active plates that have not reached full capacity.
    */
-  public getPlatesWithSpace(): Array<Plate<CandyBar>> {
+  public getPlatesWithSpace(): Array<Plate<Snack>> {
     return this.plates.filter( plate =>
       plate.isActiveProperty.value &&
       plate.getNumberOfNotepadSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE
@@ -260,7 +256,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   /**
    * This function returns an array of active plates that have at least one candy bar on them.
    */
-  public getPlatesWithSnacks(): Array<Plate<CandyBar>> {
+  public getPlatesWithSnacks(): Array<Plate<Snack>> {
     return this.plates.filter( plate => plate.isActiveProperty.value && plate.getNumberOfNotepadSnacks() > 0 );
   }
 
@@ -268,7 +264,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   /**
    * Get the plate with the most snacks, null if no plates have any.
    */
-  public getPlateWithMostSnacks(): Plate<CandyBar> | null {
+  public getPlateWithMostSnacks(): Plate<Snack> | null {
     const sortedPlatesWithSnacks = this.getPlatesWithSnacks().sort(
       ( plateA, plateB ) => plateB.getNumberOfNotepadSnacks() - plateA.getNumberOfNotepadSnacks()
     );
@@ -278,7 +274,7 @@ export default class DistributeModel extends SharingModel<CandyBar> {
   /**
    * Get the plate with the fewest snacks, null if all plates are full.
    */
-  private getPlateWithFewestSnacks(): Plate<CandyBar> | null {
+  private getPlateWithFewestSnacks(): Plate<Snack> | null {
     const sortedPlatesWithSpace = this.getPlatesWithSpace().sort(
       ( plateA, plateB ) => plateA.getNumberOfNotepadSnacks() - plateB.getNumberOfNotepadSnacks()
     );

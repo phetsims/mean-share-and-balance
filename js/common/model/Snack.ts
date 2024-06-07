@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Base class for snacks, which, in this sim, are items that can be shared between people.
+ * Snack defines attributes of an item that can be shared between people.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
