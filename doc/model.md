@@ -8,12 +8,12 @@ This document is a high-level description of the model used in PhET's *Mean: Sha
 
 The goal of this simulation is to provide users an understanding of mean as it relates to a data set. More specifically,
 how mean can be calculated and how individual data values impact the mean. The screens provide an experience of
-embodied math, allowing users to feel what the mean/average is in various qualitative scenarios, such as water
-levelling out among cups, evenly distributing candy bars across peers, or finding the balance point of a beam.
+embodied math, allowing users to feel what the mean is in various qualitative scenarios, such as water
+leveling out among cups, evenly distributing candy bars across peers, or finding the balance point of a beam.
 
 ## Data Representations
 
-All screens have a "notepad" representation and a "real world" representation. The total of the data set will always be
+All screens have a "notepad" representation in the top half and a "real world" representation in the bottom half of each screen. The total of the data set will always be
 equal between both representations. The real world representation is visualized by a lab table in the Level Out Screen,
 a party table in the Distribute and Fair Share Screens, and a soccer field in the Balance Point screen. The real world
 representations are the ground truth, determining the data set that users can interact with in the notepad
@@ -44,8 +44,7 @@ physics of the simulation, data set integrity, and UX design.
   - When pipes are closed, the notepad cup set will sync to match their table representations.
 
 - **Adding and Removing Cups**
-  - When pipes are in their open state, a cup will add on with an open pipe, leveling out the water and providing automatic feedback on mean across the cups.
-  - When a cup is removed, the table cup is the "ground truth". That is the amount of water removed from each set's water total.
+  - When a cup is removed, the table cup is the "ground truth". That is the amount of water removed from the set's water total.
   - When a cup is removed, notepad water levels reset to their corresponding table values. Pipe states remain the same, and water will level back out if the pipes remain open.
 
 ## Distribute
