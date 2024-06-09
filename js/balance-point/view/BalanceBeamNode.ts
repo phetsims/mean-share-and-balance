@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Circle, Color, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
+import { Circle, Color, Image, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -35,6 +35,7 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import BeamTiltSoundGenerator from './BeamTiltSoundGenerator.js';
+import sketchedDataPointFill_svg from '../../../images/sketchedDataPointFill_svg.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -174,9 +175,21 @@ export default class BalanceBeamNode extends Node {
 
     // Add the graphical representation of the soccer balls.  These are circles that will appear to be stacked on the
     // balance beam.
-    const soccerBallGraphics = _.times( sceneModel.soccerBalls.length, () => new Circle( BALL_GRAPHIC_RADIUS, {
-      fill: MeanShareAndBalanceColors.balanceBeamBallsColorProperty
-    } ) );
+    const soccerBallGraphics = _.times( sceneModel.soccerBalls.length, () => {
+        const dataPoint = new Circle( BALL_GRAPHIC_RADIUS, {
+          stroke: MeanShareAndBalanceColors.balanceBeamBallsColorProperty
+        } );
+        const dataPointFill = new Image( sketchedDataPointFill_svg, {
+
+          // The provided svg is smaller than we need, so max width will not work here.
+          // This is an empirically determined value, and may need to change if the image changes.
+          scale: 1.4,
+          center: dataPoint.center
+        } );
+        dataPoint.addChild( dataPointFill );
+        return dataPoint;
+      }
+    );
 
     const superOptions = combineOptions<NodeOptions>( {
       children: [

@@ -98,7 +98,7 @@ const meanShareAndBalanceColors = {
     default: '#000000'
   } ),
   balanceBeamBallsColorProperty: new ProfileColorProperty( meanShareAndBalance, 'balanceBeamBalls', {
-    default: Color.BLACK
+    default: '#4d4d4d'
   } ),
   arrowFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'arrowFill', {
     default: '#FFF383'
