@@ -10,7 +10,7 @@ The goal of this simulation is to provide users an opportunity to explore and de
 within two standard paradigms: fair share and balance point. To illustrate fair share, the first three screens lean on context of water leveling out 
 between cups, evenly distributing discrete candy bars across stacks, and collecting and dividing apples across plates. To illustrate balance point, 
 the fourth screen has a beam, fulcrum, and stacks of soccer balls. These contexts provide an embodied math experience so users can "feel" the mean before 
-being instroduced to a standard algorithm. 
+being introduced to a standard algorithm. 
 
 ## Data Representations
 
