@@ -12,7 +12,7 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
+import DerivedProperty, { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
@@ -30,6 +30,7 @@ type SelfOptions = {
     measurement: UnknownDerivedProperty<string>;
   }> | null;
   totalVisibleProperty?: Property<boolean> | null;
+  meanInfoPanelVisibleProperty?: Property<boolean> | null;
 };
 
 export type NotepadNodeOptions = SelfOptions &
@@ -62,6 +63,7 @@ export default class NotepadNode extends Node {
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
       readoutPatternStringProperty: null,
       totalVisibleProperty: null,
+      meanInfoPanelVisibleProperty: null,
       phetioVisiblePropertyInstrumented: false,
       isDisposable: false
     }, providedOptions );
@@ -124,6 +126,12 @@ export default class NotepadNode extends Node {
       } );
       this.addChild( readoutAlignBox );
       this.readoutNode = readoutAlignBox;
+    }
+
+    // The notepad is under the mean info panel, so UI components on this notepad should be removed from the
+    // traversal order when the mean info panel is visible.
+    if ( options.meanInfoPanelVisibleProperty ) {
+      this.pdomVisibleProperty = DerivedProperty.not( options.meanInfoPanelVisibleProperty );
     }
 
     // Make the rings node available to subclasses for layering adjustments.

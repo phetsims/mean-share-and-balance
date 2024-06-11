@@ -78,6 +78,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       total: model.totalSnacksProperty,
       measurement: measurementStringProperty
     } );
+
     const notepadNode = new NotepadNode( {
       readoutPatternStringProperty: totalCandyBarsPatternStringProperty,
       totalVisibleProperty: model.totalVisibleProperty,
@@ -325,6 +326,10 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         onRelease: () => releaseSoundClip.play()
       }
     );
+
+    // The candy bars are not a child of the notepad, so we have to hide them manually when the info panel is visible
+    // (overlaps the notepad).
+    notepadCandyBarsHighlightNode.pdomVisibleProperty = DerivedProperty.not( model.meanInfoPanelVisibleProperty );
 
     this.notepadSnackLayerNode.boundsProperty.link( () => {
       const focusRect = Shape.rect(

@@ -62,6 +62,7 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
       {
         readoutPatternStringProperty: totalApplesPatternStringProperty,
         totalVisibleProperty: model.totalVisibleProperty,
+        meanInfoPanelVisibleProperty: model.meanInfoPanelVisibleProperty,
         tandem: options.tandem.createTandem( 'notepadNode' )
       }
     );

@@ -76,7 +76,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       model.meanFulcrumFixedProperty, {
         totalVisibleProperty: model.totalVisibleProperty,
         tandem: options.tandem.createTandem( 'notepadNode' ),
-        centerX: this.playAreaCenterX
+        centerX: this.playAreaCenterX,
+        meanInfoPanelVisibleProperty: model.meanInfoPanelVisibleProperty
       }
     );
 
