@@ -1,6 +1,6 @@
 # Mean: Share and Balance - Model Description
 
-@author Marla Schulz (PhET Interactive Simulations)
+@author Amanda McGarry (PhET Interactive Simulations), Marla Schulz (PhET Interactive Simulations) 
 
 This document is a high-level description of the model used in PhET's *Mean: Share and Balance* simulation.
 
