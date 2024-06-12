@@ -33,6 +33,9 @@ type SelfOptions = {
 
   // When provided the info button will be displayed and will toggle the visibility of the info panel.
   infoPanelVisibleProperty?: Property<boolean> | null;
+
+  // Additional work that is done when the info button is pressed.
+  onInfoButtonPressed?: () => void;
 };
 
 export type MeanShareAndBalanceControlsOptions =
@@ -45,6 +48,9 @@ export default class MeanShareAndBalanceControls extends Node {
   public readonly controlsPDOMOrder: Node[];
   public readonly numberSpinner: Node;
 
+  // Button that opens the info panel. Public for focus management.
+  public readonly infoButton: InfoButton | null = null;
+
   public constructor(
     controlsVBox: Node,
     numberOfObjectsProperty: Property<number>,
@@ -55,6 +61,7 @@ export default class MeanShareAndBalanceControls extends Node {
 
     const options = optionize<MeanShareAndBalanceControlsOptions, SelfOptions, NodeOptions>()( {
       infoPanelVisibleProperty: null,
+      onInfoButtonPressed: _.noop,
       isDisposable: false
     }, providedOptions );
     const controlsAlignGroup = new AlignGroup( { matchVertical: false } );
@@ -69,9 +76,10 @@ export default class MeanShareAndBalanceControls extends Node {
     if ( options.infoPanelVisibleProperty ) {
 
       const infoButtonSoundPlayer = new InfoButtonSoundPlayer( options.infoPanelVisibleProperty );
-      const infoButton = new InfoButton( {
+      this.infoButton = new InfoButton( {
         listener: () => {
           options.infoPanelVisibleProperty!.value = !options.infoPanelVisibleProperty!.value;
+          options.onInfoButtonPressed();
         },
         centerY: 230,
         scale: 0.6,
@@ -80,8 +88,8 @@ export default class MeanShareAndBalanceControls extends Node {
         tandem: options.tandem.createTandem( 'infoButton' ),
         soundPlayer: infoButtonSoundPlayer
       } );
-      this.addChild( infoButton );
-      options.controlsPDOMOrder.push( infoButton );
+      this.addChild( this.infoButton );
+      options.controlsPDOMOrder.push( this.infoButton );
     }
 
     const numberSpinnerOptions = combineOptions<NumberSpinnerOptions>( {

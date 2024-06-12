@@ -53,6 +53,9 @@ const DIALOG_MAX_WIDTH_MARGIN = 50;
 
 export default class MeanCalculationPanel extends Panel {
 
+  // The button that closes this panel, public for focus management.
+  public readonly closeButton: ButtonNode;
+
   /**
    * @param calculationDependencies - A set of Properties that are monitored to cause the dialog to update.
    * @param getValues - A function that returns the set of values used to calculate the mean.
@@ -60,6 +63,7 @@ export default class MeanCalculationPanel extends Panel {
    *                                       the calculations.
    * @param visibleProperty
    * @param notebookPaperBounds
+   * @param onCloseButtonPressed - callback for when the close button is pressed
    * @param providedOptions
    */
   public constructor( calculationDependencies: Readonly<TReadOnlyProperty<unknown>[]>,
@@ -67,6 +71,7 @@ export default class MeanCalculationPanel extends Panel {
                       getNumberOfActiveDataObjects: () => number,
                       visibleProperty: Property<boolean>,
                       notebookPaperBounds: Bounds2,
+                      onCloseButtonPressed: () => void,
                       providedOptions: MeanCalculationPanelOptions ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty, {
@@ -75,7 +80,10 @@ export default class MeanCalculationPanel extends Panel {
     } );
 
     const closeButton = new CloseButton( {
-      listener: () => visibleProperty.set( false ),
+      listener: () => {
+        visibleProperty.set( false );
+        onCloseButtonPressed();
+      },
       baseColor: 'transparent',
       buttonAppearanceStrategy: ButtonNode.FlatAppearanceStrategy,
       soundPlayer: generalCloseSoundPlayer,
@@ -280,6 +288,8 @@ export default class MeanCalculationPanel extends Panel {
     const content = new Node( { children: [ titleAlignBox, closeButtonAlignBox, alignedCalculationNode ] } );
 
     super( content, options );
+
+    this.closeButton = closeButton;
   }
 }
 

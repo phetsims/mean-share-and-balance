@@ -83,6 +83,9 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     // Create the controls that appear on the right side of the screen.
     const controls = new BalancePointControls( model, {
+      onInfoButtonPressed: () => {
+        meanCalculationPanel.closeButton.focus();
+      },
       tandem: options.tandem.createTandem( 'controls' )
     } );
     const controlsAlignBox = new AlignBox( controls, {
@@ -148,6 +151,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
       () => model.selectedSceneModelProperty.value.getStackedObjects().length,
       model.meanInfoPanelVisibleProperty, notepadNodeBounds,
+      () => controls.infoButton!.focus(),
       {
         zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
@@ -163,11 +167,11 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     // Set the PDOM order of the nodes in the screen.
     this.pdomPlayAreaNode.setPDOMOrder( [
-        kickButton,
-        ...notepadNode.notepadPDOMOrder,
-        sceneView.backSceneViewLayer,
-        controls.numberSpinner
-      ] );
+      kickButton,
+      ...notepadNode.notepadPDOMOrder,
+      sceneView.backSceneViewLayer,
+      controls.numberSpinner
+    ] );
 
     this.pdomControlAreaNode.setPDOMOrder( [
       ...controls.controlsPDOMOrder,
