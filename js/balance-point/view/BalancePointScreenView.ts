@@ -175,6 +175,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     this.pdomControlAreaNode.setPDOMOrder( [
       ...controls.controlsPDOMOrder,
+      meanCalculationPanel,
       resetAllButton
     ] );
   }
