@@ -10,7 +10,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, GridBox, Line, Node, Text, TextOptions, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, KeyboardListener, Line, Node, Text, TextOptions, VBox } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
@@ -63,7 +63,7 @@ export default class MeanCalculationPanel extends Panel {
    *                                       the calculations.
    * @param visibleProperty
    * @param notebookPaperBounds
-   * @param onCloseButtonPressed - callback for when the close button is pressed
+   * @param focusInfoButton - callback for focus management that will put focus on the info button that opens this panel
    * @param providedOptions
    */
   public constructor( calculationDependencies: Readonly<TReadOnlyProperty<unknown>[]>,
@@ -71,7 +71,7 @@ export default class MeanCalculationPanel extends Panel {
                       getNumberOfActiveDataObjects: () => number,
                       visibleProperty: Property<boolean>,
                       notebookPaperBounds: Bounds2,
-                      onCloseButtonPressed: () => void,
+                      focusInfoButton: () => void,
                       providedOptions: MeanCalculationPanelOptions ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty, {
@@ -82,7 +82,7 @@ export default class MeanCalculationPanel extends Panel {
     const closeButton = new CloseButton( {
       listener: () => {
         visibleProperty.set( false );
-        onCloseButtonPressed();
+        focusInfoButton();
       },
       baseColor: 'transparent',
       buttonAppearanceStrategy: ButtonNode.FlatAppearanceStrategy,
@@ -290,6 +290,21 @@ export default class MeanCalculationPanel extends Panel {
     super( content, options );
 
     this.closeButton = closeButton;
+
+    // A global keyboard shortcut that closes the panel with the 'escape' key.
+    KeyboardListener.createGlobal( this, {
+      keys: [ 'escape' ],
+      fire: () => {
+
+        // If the closeButton if focused, return focus to the info button - otherwise we don't want to move focus
+        // because the user could be interacting with things outside of the dialog.
+        if ( closeButton.focused ) {
+          focusInfoButton();
+        }
+
+        visibleProperty.value = false;
+      }
+    } );
   }
 }
 
