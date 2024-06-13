@@ -46,18 +46,20 @@ class SnackStacker {
    * plate is in model space and the candy bar's position in the stack.
    * @param plateXPosition - the X position of the plate on which the candy bar is to be stacked
    * @param positionInStack - position in the stack for the candy bar, 0 is the bottom, and it goes up from there.
-   * @returns - a 2D vector in coordinate space that can be used to set the position of a candy
+   * @returns - A 2D vector in coordinate space that can be used to set the position of a candy bar.  The value is for
+   *            the upper left corner of the candy bar rectangle.
    */
   public static getStackedCandyBarPosition( plateXPosition: number, positionInStack: number ): Vector2 {
 
     const xPosition = plateXPosition - MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2;
 
-    // TODO: Why do I need to account for stroke now? https://github.com/phetsims/mean-share-and-balance/issues/186
+    const distanceBetweenCandyBarCenters = MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
+                                           MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING;
+
     const yPosition = -( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height +
-                         MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING -
-                         1 +
-                         ( positionInStack + 1 ) * ( MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT +
-                         MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ) );
+                         MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING / 2 +
+                         ( positionInStack + 1 ) * distanceBetweenCandyBarCenters );
+
     return new Vector2( xPosition, yPosition );
   }
 
