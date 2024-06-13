@@ -296,8 +296,8 @@ export default class MeanCalculationPanel extends Panel {
       keys: [ 'escape' ],
       fire: () => {
 
-        // If the closeButton if focused, return focus to the info button - otherwise we don't want to move focus
-        // because the user could be interacting with things outside of the dialog.
+        // If the closeButton is focused, return focus to the info button - otherwise we don't want to move focus
+        // because the user could be interacting with things outside the dialog.
         if ( closeButton.focused ) {
           focusInfoButton();
         }
