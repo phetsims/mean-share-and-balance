@@ -111,11 +111,7 @@ export default class Snack extends PhetioObject {
       } );
 
       // handlers for when the animation completes or is stopped
-      travelAnimation.finishEmitter.addListener( () => {
-        this.positionProperty.set( destination );
-        this.finishAnimation();
-      } );
-      travelAnimation.stopEmitter.addListener( () => {
+      travelAnimation.endedEmitter.addListener( () => {
         this.positionProperty.set( destination );
         this.finishAnimation();
       } );
