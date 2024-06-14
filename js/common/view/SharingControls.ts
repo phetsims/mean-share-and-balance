@@ -1,7 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Control panel for the Distribute screen that contains an accordion box, sync button, and number spinner.
+ * Control panel for the Sharing screens that contains an accordion box, sync button, and number spinner.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
