@@ -4,7 +4,6 @@
  * The FixedFulcrumIcon has a line on top of the fulcrum triangle and is fully filled in.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';

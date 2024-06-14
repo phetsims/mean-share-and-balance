@@ -5,7 +5,6 @@
  * the fulcrum can move.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';

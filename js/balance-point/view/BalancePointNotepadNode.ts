@@ -4,8 +4,8 @@
  * The BalancePointNotepadNode adds a mean readout and check button to the notepad node for the balance point screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
+
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { AlignBox, createGatedVisibleProperty, Node, Text } from '../../../../scenery/js/imports.js';

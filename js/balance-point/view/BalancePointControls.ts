@@ -1,10 +1,10 @@
 // Copyright 2024, University of Colorado Boulder
+
 /**
  * The BalancePointControls is a VBox that lays out and renders the various controls needed for the
  * BalancePointScreen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import { VBox } from '../../../../scenery/js/imports.js';

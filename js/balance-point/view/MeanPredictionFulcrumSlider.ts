@@ -1,10 +1,11 @@
 // Copyright 2024, University of Colorado Boulder
+
 /**
  * The fulcrum of the balance beam is a slider that can move discretely along the x-axis.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
+
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';

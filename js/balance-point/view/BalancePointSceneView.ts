@@ -1,9 +1,9 @@
 // Copyright 2024, University of Colorado Boulder
+
 /**
  * Displays the soccer balls and data points for at scene in the balance point screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import SoccerSceneView, { SoccerSceneViewOptions } from '../../../../soccer-common/js/view/SoccerSceneView.js';

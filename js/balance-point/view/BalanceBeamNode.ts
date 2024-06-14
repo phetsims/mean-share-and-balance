@@ -1,8 +1,8 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * The Balance Beam in the notepad representation plots data points along the x-axis and allows users to move the balance
- * point in order to find the mean.
+ * The Balance Beam in the notepad representation plots data points along the x-axis and allows users to move the
+ * balance point in order to find the mean.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)

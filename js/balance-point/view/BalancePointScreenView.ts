@@ -4,7 +4,6 @@
  * BalancePointScreenView defines the range and field size for the balance point screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import SoccerScreenView, { SoccerScreenViewOptions } from '../../../../soccer-common/js/view/SoccerScreenView.js';
@@ -43,7 +42,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       numberLineXMargin: MeanShareAndBalanceConstants.NUMBER_LINE_LEFT_X_MARGIN,
       groundPositionY: MeanShareAndBalanceConstants.GROUND_POSITION_Y
     }, providedOptions );
-
 
     super( model, options );
 
