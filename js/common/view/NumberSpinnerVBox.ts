@@ -34,7 +34,7 @@ export default class NumberSpinnerVBox extends VBox {
       isDisposable: false
     }, providedOptions );
 
-    const numberOfCupsText = new Text( stringProperty, {
+    const labelText = new Text( stringProperty, {
       fontSize: 15,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
@@ -54,7 +54,7 @@ export default class NumberSpinnerVBox extends VBox {
     );
 
     const superOptions = combineOptions<VBoxOptions>( {
-      children: [ numberOfCupsText, numberSpinner ],
+      children: [ labelText, numberSpinner ],
       align: 'left',
       justify: 'bottom',
       spacing: 10,
