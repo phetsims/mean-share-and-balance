@@ -1,4 +1,5 @@
 // Copyright 2024, University of Colorado Boulder
+
 /**
  * The BalancePointSceneModel has the soccer ball information for the balance point screen as well as the information
  * needed to render the balance beam.
@@ -137,9 +138,9 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       if ( delta > 0 ) {
         this.scheduleKicks( delta );
       }
-
-      // During reset or PhET-iO state setting the number of active balls may already match the target number value
       else if ( delta < 0 && ( this.getKickedBalls().length + this.numberOfQueuedKicksProperty.value ) !== newValue ) {
+
+        // During reset or PhET-iO state setting the number of active balls may already match the target number value
         const ballsToRemove = -delta;
         const numberOfBallsToRemoveFromQueue = Math.min( ballsToRemove, this.numberOfQueuedKicksProperty.value );
         const numberOfBallsToRemoveFromField = ballsToRemove - numberOfBallsToRemoveFromQueue;

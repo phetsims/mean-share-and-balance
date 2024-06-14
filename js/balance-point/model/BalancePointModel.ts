@@ -4,7 +4,6 @@
  * BalancePointModel contains the scene model for the balance point screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
