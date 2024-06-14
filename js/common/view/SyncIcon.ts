@@ -1,4 +1,5 @@
 // Copyright 2022-2024, University of Colorado Boulder
+
 /**
  * Sync icon takes the form of two side-by-side straight arrows, one pointing down and the other pointing up.
  * Arrows are a wireframe style with rounded caps and joins.
