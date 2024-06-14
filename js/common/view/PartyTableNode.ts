@@ -4,7 +4,6 @@
  * PartyTableNode renders an image of a table with a tablecloth over it.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
