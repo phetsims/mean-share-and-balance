@@ -21,7 +21,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 export default class FairShareNotepadPlateNode extends Image {
 
   public constructor( plate: Plate<Apple>,
-                      mvt: ModelViewTransform2,
+                      modelViewTransform: ModelViewTransform2,
                       appleDistributionModeProperty: TReadOnlyProperty<DistributionMode> ) {
 
     // The visibility of the plate is a function of whether the plate is active and the state of the notepad.
@@ -37,11 +37,11 @@ export default class FairShareNotepadPlateNode extends Image {
     } );
 
     // Set the Y position once.  It shouldn't change after construction.
-    this.centerY = mvt.transformY( 0 );
+    this.centerY = modelViewTransform.transformY( 0 );
 
     // Set position based on the plate's position.
     plate.xPositionProperty.link( xPosition => {
-      this.centerX = mvt.transformX( xPosition );
+      this.centerX = modelViewTransform.transformX( xPosition );
     } );
   }
 }

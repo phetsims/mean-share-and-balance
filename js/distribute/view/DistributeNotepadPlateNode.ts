@@ -27,7 +27,7 @@ const PLATE_X_OFFSET = 2; // The plate can appear off center since there is empt
 export default class DistributeNotepadPlateNode extends Node {
 
   public constructor( plate: Plate<Snack>,
-                      mvt: ModelViewTransform2, providedOptions?: NotepadPlateNodeOptions ) {
+                      modelViewTransform: ModelViewTransform2, providedOptions?: NotepadPlateNodeOptions ) {
 
     const plateNode = new Image( notepadPlateSketch_svg, {
       maxWidth: MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width,
@@ -44,11 +44,11 @@ export default class DistributeNotepadPlateNode extends Node {
     super( options );
 
     // Set the Y position once.  It shouldn't change after construction.
-    this.bottom = mvt.transformY( 0 );
+    this.bottom = modelViewTransform.transformY( 0 );
 
     // Set position based on the plate's position.
     plate.xPositionProperty.link( xPosition => {
-      this.centerX = mvt.transformX( xPosition ) - PLATE_X_OFFSET;
+      this.centerX = modelViewTransform.transformX( xPosition ) - PLATE_X_OFFSET;
     } );
   }
 }
