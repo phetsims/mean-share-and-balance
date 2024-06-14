@@ -139,7 +139,6 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         handProxy.top = arrowProxy.bottom + CUEING_ARROW_MARGIN;
       } );
 
-
     model.groupSortInteractionModel.registerUpdateSortCueNode( this.updateMouseSortCueNode.bind( this ) );
     model.groupSortInteractionModel.registerUpdateSortCueNode( this.updateKeyboardSortCueNode.bind( this ) );
     model.stackChangedEmitter.addListener( this.updateMouseSortCueNode.bind( this ) );
