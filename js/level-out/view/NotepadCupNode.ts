@@ -27,11 +27,10 @@ type NotepadCupNodeOptions = SelfOptions & StrictOmit<NodeOptions, keyof NodeTra
 
 export default class NotepadCupNode extends Node {
 
-  public constructor( notepadCup: Cup, modelViewTransform: ModelViewTransform2,
+  public constructor( notepadCup: Cup, notepadMVT: ModelViewTransform2,
                       showingTickMarksProperty: Property<boolean>, providedOptions?: NotepadCupNodeOptions ) {
     const options = optionize<NotepadCupNodeOptions, SelfOptions, NodeOptions>()( {
-      y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: notepadCup.position.x,
+      bottom: notepadMVT.modelToViewY( 0 ),
       visibleProperty: notepadCup.isActiveProperty,
       isDisposable: false
     }, providedOptions );
@@ -79,6 +78,11 @@ export default class NotepadCupNode extends Node {
         cupStrokeLeft, cupStrokeRight, cupStrokeTop, cupStrokeBottom, tickMarks ]
     }, options );
     super( combinedOptions );
+
+    // Set position
+    notepadCup.xPositionProperty.link( xPosition => {
+      this.left = notepadMVT.transformX( xPosition );
+    } );
   }
 }
 

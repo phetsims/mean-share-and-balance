@@ -15,7 +15,6 @@ import Pipe from './Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Cup from './Cup.js';
 import Utils from '../../../../dot/js/Utils.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Property from '../../../../axon/js/Property.js';
@@ -34,6 +33,7 @@ type LevelOutModelOptions = EmptySelfOptions & WithRequired<PhetioObjectOptions,
 // constants
 const INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
 const NUMBER_OF_CUPS_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
+const INTER_CUP_DISTANCE = MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH;
 
 export default class LevelOutModel extends PhetioObject implements TModel {
 
@@ -129,21 +129,21 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     // Statically allocate cups and pipes
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS; i++ ) {
-      const x = i * ( MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH );
-      const tableCupPosition = new Vector2( x, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y );
+      const totalSpan = Math.max( ( this.numberOfCupsProperty.value - 1 ) * ( INTER_CUP_DISTANCE ), 0 );
+      const leftCupCenterX = -( totalSpan / 2 );
+      const initialXPosition = leftCupCenterX + ( i * INTER_CUP_DISTANCE ) - MeanShareAndBalanceConstants.CUP_WIDTH / 2;
       const waterLevel = INITIAL_WATER_LEVELS[ i ];
       this.tableCups.push( new Cup( tableCupsParentTandem.createTandem( `tableCup${i + 1}` ), {
         waterLevel: waterLevel,
-        position: tableCupPosition,
+        xPosition: initialXPosition,
         isActive: i <= 1,
         linePlacement: i,
         isTableCup: true
       } ) );
 
-      const notepadCupPosition = new Vector2( x, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y );
       this.notepadCups.push( new Cup( notepadCupsParentTandem.createTandem( `notepadCup${i + 1}` ), {
         waterLevel: waterLevel,
-        position: notepadCupPosition,
+        xPosition: initialXPosition,
         isActive: i <= 1,
         linePlacement: i,
         isTableCup: false,
@@ -154,7 +154,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
       if ( i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS - 1 ) {
         const pipe = new Pipe( this.pipesOpenProperty, {
-          position: notepadCupPosition,
+          xPosition: initialXPosition + MeanShareAndBalanceConstants.CUP_WIDTH,
           isActive: i === 0,
 
           // phet-io
@@ -183,14 +183,25 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     // add/remove water cups and pipes according to number spinner
     this.numberOfCupsProperty.lazyLink( ( numberOfCups: number, oldNumberOfCups: number ) => {
+      const totalSpan = Math.max( ( numberOfCups - 1 ) * ( INTER_CUP_DISTANCE ), 0 );
+      const leftCupCenterX = -( totalSpan / 2 );
 
       // We only care about comparing water levels when a cup is removed, and need to grab the value before the cup is reset
       const removedTableCupWaterLevel = this.tableCups[ oldNumberOfCups - 1 ].waterLevelProperty.value;
       const removedNotepadCupWaterLevel = this.notepadCups[ oldNumberOfCups - 1 ].waterLevelProperty.value;
 
-      this.notepadCups.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
-      this.tableCups.forEach( ( waterCup, i ) => waterCup.isActiveProperty.set( i < numberOfCups ) );
-      this.pipeArray.forEach( ( pipe, i ) => pipe.isActiveProperty.set( i < numberOfCups - 1 ) );
+      this.notepadCups.forEach( ( waterCup, i ) => {
+        waterCup.isActiveProperty.set( i < numberOfCups );
+        waterCup.xPositionProperty.value = leftCupCenterX + ( i * INTER_CUP_DISTANCE ) - MeanShareAndBalanceConstants.CUP_WIDTH / 2;
+      } );
+      this.tableCups.forEach( ( waterCup, i ) => {
+        waterCup.isActiveProperty.set( i < numberOfCups );
+        waterCup.xPositionProperty.value = leftCupCenterX + ( i * INTER_CUP_DISTANCE ) - MeanShareAndBalanceConstants.CUP_WIDTH / 2;
+      } );
+      this.pipeArray.forEach( ( pipe, i ) => {
+        pipe.isActiveProperty.set( i < numberOfCups - 1 );
+        pipe.xPositionProperty.value = leftCupCenterX + ( i * INTER_CUP_DISTANCE ) + MeanShareAndBalanceConstants.CUP_WIDTH / 2;
+      } );
 
       if ( numberOfCups < oldNumberOfCups && removedTableCupWaterLevel !== removedNotepadCupWaterLevel ) {
         this.matchCupWaterLevels();

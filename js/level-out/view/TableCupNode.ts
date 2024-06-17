@@ -34,12 +34,11 @@ export default class TableCupNode extends Node {
 
   public constructor( tickMarksVisibleProperty: Property<boolean>,
                       model: Pick<LevelOutModel, 'changeWaterLevel'>,
-                      waterCup: Cup, modelViewTransform: ModelViewTransform2,
+                      waterCup: Cup, notepadMVT: ModelViewTransform2,
                       providedOptions?: TableCupNodeOptions ) {
 
     const options = optionize<TableCupNodeOptions, SelfOptions, NodeOptions>()( {
-      y: modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.CUP_HEIGHT,
-      left: waterCup.position.x,
+      bottom: notepadMVT.modelToViewY( 0 ),
       visibleProperty: waterCup.isActiveProperty,
       soundPlayerCrossFade: 0,
       isDisposable: false
@@ -83,6 +82,11 @@ export default class TableCupNode extends Node {
 
     const combinedOptions = combineOptions<NodeOptions>( { children: [ waterCupNode, waterLevelSlider ] }, options );
     super( combinedOptions );
+
+    // Set position
+    waterCup.xPositionProperty.link( xPosition => {
+      this.left = notepadMVT.transformX( xPosition );
+    } );
   }
 }
 

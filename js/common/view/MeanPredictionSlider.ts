@@ -34,7 +34,7 @@ type MeanPredictionSliderOptions =
   & PickRequired<ParentOptions, 'tandem'>;
 
 // Constants
-const LINE_X_MARGIN = 10;
+const LINE_X_MARGIN = 8;
 
 export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
   private readonly predictMeanLine: Line;
@@ -43,7 +43,7 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
 
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range,
                       createSuccessIndicatorMultilink: ( predictMeanLine: Path, successRectangle: Node ) => void,
-                      modelViewTransform: ModelViewTransform2,
+                      private readonly modelViewTransform: ModelViewTransform2,
                       providedOptions: MeanPredictionSliderOptions ) {
 
     const options = optionize<MeanPredictionSliderOptions, SelfOptions, ParentOptions>()( {
@@ -101,11 +101,12 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanGlow = predictMeanSuccessRectangle;
 
     this.setPointerAreas();
-    this.centerX = modelViewTransform.modelToViewX( 0 );
 
     // Add sound generation for the "predict mean" slider.
     const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( meanPredictionProperty );
     soundManager.addSoundGenerator( predictMeanSoundGenerator );
+
+    this.modelViewTransform = modelViewTransform;
   }
 
   private setPointerAreas(): void {
@@ -122,13 +123,16 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
    */
   public updateLine( lineStart: number, lineEnd: number ): void {
     const x1 = lineStart - LINE_X_MARGIN;
-    const x2 = lineEnd + LINE_X_MARGIN * 2;
+    const x2 = lineEnd + LINE_X_MARGIN;
     this.predictMeanLine.x1 = x1;
     this.predictMeanLine.x2 = x2;
     this.predictMeanGlow.setRectX( x1 );
     this.predictMeanGlow.setRectWidth( x2 - x1 );
     this.predictMeanHandle.left = this.predictMeanLine.right;
     this.setPointerAreas();
+
+    // We want the predict line to be centered not including the handle.
+    this.centerX = this.modelViewTransform.modelToViewX( 0 ) + this.predictMeanHandle.width / 2;
   }
 }
 

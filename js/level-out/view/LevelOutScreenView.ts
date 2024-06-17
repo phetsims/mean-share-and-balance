@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, ManualConstraint, Node, Path } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node, Path } from '../../../../scenery/js/imports.js';
 import LevelOutModel from '../model/LevelOutModel.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -49,11 +49,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
   public constructor( model: LevelOutModel, providedOptions: LevelOutScreenViewOptions ) {
 
     const options = providedOptions;
-
-    const modelViewTransformNotepadCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
-      new Vector2( 0, MeanShareAndBalanceConstants.NOTEPAD_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-    const modelViewTransformTableCups = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
-      new Vector2( 0, MeanShareAndBalanceConstants.TABLE_CUPS_CENTER_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
 
     // Create the sound that will be played when the mean prediction becomes correct.
     const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
@@ -102,11 +97,41 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         }
       );
     };
+
+    // This also includes the pipes that connect the notepad cups as well as the draggable water level triangle.
+    const waterCupLayerNode = new Node();
+    const notepadNode = new NotepadNode( {
+      tandem: options.tandem.createTandem( 'notepadNode' )
+    } );
+
+    const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
+      children: [ notepadNode ]
+    } );
+    super(
+      model,
+
+      // It was decided that updating the key for "introQuestionStringProperty" was not worth the effort of
+      // retaining all the translations from the prototype publication. Therefore, the key no longer matches the
+      // screen name. https://github.com/phetsims/mean-share-and-balance/issues/197
+      MeanShareAndBalanceStrings.introQuestionStringProperty,
+      MeanShareAndBalanceColors.levelOutQuestionBarColorProperty,
+      notepadNode,
+      superOptions
+    );
+
+    notepadNode.centerX = this.playAreaCenterX;
+    const tableNode = new LabTableNode( {
+      y: MeanShareAndBalanceConstants.LAB_TABLE_Y,
+      centerX: this.playAreaCenterX
+    } );
+
+    const meanPredictSliderMVT = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
+      new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.NOTEPAD_CUPS_BOTTOM_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
     const meanPredictionSlider = new MeanPredictionSlider(
       model.meanPredictionProperty,
       model.dragRange,
       createSuccessIndicatorMultilink,
-      modelViewTransformNotepadCups,
+      meanPredictSliderMVT,
       {
         visibleProperty: model.predictMeanVisibleProperty,
         valueProperty: model.meanPredictionProperty,
@@ -121,22 +146,27 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     );
     meanPredictionSlider.addLinkedElement( model.successIndicatorsOperatingProperty );
 
-    // Update line length and dilation based on the number of objects.
-    model.numberOfCupsProperty.link( () => {
-      const activeNotepadCups = model.getActiveNotepadCups();
-      const firstCup = activeNotepadCups[ 0 ];
-      const lastCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
-      meanPredictionSlider.updateLine( firstCup.position.x, lastCup.position.x + MeanShareAndBalanceConstants.CUP_WIDTH );
-    } );
+    this.addChild( tableNode );
+    this.addChild( waterCupLayerNode );
+    this.addChild( meanPredictionSlider );
 
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
 
     // Add all cup nodes to the view.
+    const modelToNotepadTransform = ModelViewTransform2.createOffsetScaleMapping(
+      new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.NOTEPAD_CUPS_BOTTOM_Y ),
+      1
+    );
+    const modelToTableTransform = ModelViewTransform2.createOffsetScaleMapping(
+      new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.TABLE_CUPS_BOTTOM_Y ),
+      1
+    );
     const notepadCupNodes: Array<NotepadCupNode> = [];
     model.notepadCups.forEach( cupModel => {
-      const cupNode = new NotepadCupNode( cupModel, modelViewTransformNotepadCups, model.tickMarksVisibleProperty,
+      const cupNode = new NotepadCupNode( cupModel, modelToNotepadTransform,
+        model.tickMarksVisibleProperty,
         { tandem: notepadCupsParentTandem.createTandem( `notepadCupNode${cupModel.linePlacement + 1}` ) } );
       notepadCupNodes.push( cupNode );
     } );
@@ -144,7 +174,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     assert && assert( model.tableCups.length > 1, 'some of the code below assumes at least 2 cups exist' );
     const tableCupNodes: Array<TableCupNode> = [];
     model.tableCups.forEach( ( cupModel, i ) => {
-      const cupNode = new TableCupNode( model.tickMarksVisibleProperty, model, cupModel, modelViewTransformTableCups, {
+      const cupNode = new TableCupNode( model.tickMarksVisibleProperty, model, cupModel, modelToTableTransform, {
         soundPlayerCrossFade: i / ( model.tableCups.length - 1 ),
         tandem: tableCupsParentTandem.createTandem( `tableCupNode${cupModel.linePlacement + 1}` )
       } );
@@ -156,39 +186,30 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     model.pipeArray.forEach( pipeModel => {
       const index = model.pipeArray.indexOf( pipeModel );
       const pipeNode = new PipeNode( pipeModel, model.pipesOpenProperty,
-        model.pipesEnabledProperty, modelViewTransformNotepadCups,
+        model.pipesEnabledProperty, modelToNotepadTransform,
         { tandem: pipesParentTandem.createTandem( `pipeNode${index + 1}` ), focusable: index === 0 } );
 
       pipeNodes.push( pipeNode );
     } );
 
-    // This also includes the pipes that connect the notepad cups as well as the draggable water level triangle.
-    const waterCupLayerNode = new Node( {
-      excludeInvisibleChildrenFromBounds: true,
-      children: [ ...notepadCupNodes, ...tableCupNodes, ...pipeNodes ]
-    } );
+    waterCupLayerNode.children = [ ...notepadCupNodes, ...tableCupNodes, ...pipeNodes ];
 
-    const notepadNode = new NotepadNode( {
-      tandem: options.tandem.createTandem( 'notepadNode' )
-    } );
-    const tableNode = new LabTableNode( {
-      centerX: waterCupLayerNode.centerX
-    } );
+    // Update line length and dilation based on the number of objects.
+    model.numberOfCupsProperty.link( () => {
+      const activeNotepadCups = model.getActiveNotepadCups();
+      const firstCup = activeNotepadCups[ 0 ];
+      const lastCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
+      meanPredictionSlider.updateLine( firstCup.xPositionProperty.value, lastCup.xPositionProperty.value + MeanShareAndBalanceConstants.CUP_WIDTH );
 
-    const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
-      children: [ notepadNode, tableNode, waterCupLayerNode, meanPredictionSlider ]
-    } );
-    super(
-      model,
+      // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal order, and
+      // they all do the same thing so this highlight indicates that there will only be one stop in the traversal order.
+      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value )
+        .map( pipe => Shape.bounds( pipe.globalBounds ) );
 
-      // It was decided that updating the key for "introQuestionStringProperty" was not worth the effort of
-      // retaining all the translations from the prototype publication. Therefore, the key no longer matches the
-      // screen name. https://github.com/phetsims/mean-share-and-balance/issues/197
-      MeanShareAndBalanceStrings.introQuestionStringProperty,
-      MeanShareAndBalanceColors.levelOutQuestionBarColorProperty,
-      notepadNode,
-      superOptions
-    );
+      // Focus highlight is set on the valveNode because it is what receives focus (not the PipeNode).
+      pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes )
+        .transformed( pipeNodes[ 0 ].getGlobalToLocalMatrix() );
+    } );
 
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + this.questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
@@ -205,25 +226,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
     this.addChild( controlsAlignBox );
-
-    notepadNode.centerX = this.playAreaCenterX;
-
-    ManualConstraint.create( this, [ waterCupLayerNode ], waterCupLayerProxy => {
-      waterCupLayerProxy.centerX = this.playAreaCenterX;
-      meanPredictionSlider.x = waterCupLayerProxy.x - 12.5;
-      tableNode.centerX = waterCupLayerProxy.centerX - 10;
-
-      tableNode.y = waterCupLayerProxy.bottom - 30;
-
-      // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal order, and
-      // they all do the same thing so this highlight indicates that there will only be one stop in the traversal order.
-      const pipeBoundsShapes = pipeNodes.filter( pipe => pipe.visibleProperty.value )
-        .map( pipe => Shape.bounds( pipe.globalBounds ) );
-
-      // Focus highlight is set on the valveNode because it is what receives focus (not the PipeNode).
-      pipeNodes[ 0 ].focusHighlight = Shape.union( pipeBoundsShapes )
-        .transformed( pipeNodes[ 0 ].getGlobalToLocalMatrix() );
-    } );
 
     // Add sound generation for the water cup levels.
     this.waterBalanceSoundGenerator = new WaterBalanceSoundGenerator(

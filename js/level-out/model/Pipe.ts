@@ -13,7 +13,6 @@
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
@@ -21,7 +20,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Disposable from '../../../../axon/js/Disposable.js';
 
 type SelfOptions = {
-  position: Vector2; // the x & y-position of the pipe in the view
+  xPosition: number; // the x position of the pipe in the view
   isActive?: boolean;
 };
 
@@ -35,8 +34,8 @@ export default class Pipe {
   // Property tracks if the pipe's valve is in a clicked state.
   public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
 
-  // The x and y positions of the pipe in the view.
-  public readonly position: Vector2;
+  // The x position of the pipe in the view.
+  public readonly xPositionProperty: Property<number>;
 
   // Holds the valve node rotation value. Closed is 0, and open is Pi/2
   public readonly rotationProperty = new NumberProperty( 0 );
@@ -53,7 +52,7 @@ export default class Pipe {
       phetioReadOnly: true
     } );
 
-    this.position = options.position;
+    this.xPositionProperty = new NumberProperty( options.xPosition );
   }
 
   public reset(): void {

@@ -20,12 +20,11 @@ import PickOptional from '../../../../phet-core/js/types/PickOptional.js';
 import Property from '../../../../axon/js/Property.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import Disposable from '../../../../axon/js/Disposable.js';
 
 type SelfOptions = {
-  position: Vector2; // the cup's x & y position in the view
+  xPosition: number; // the cup's x position in the view
   isActive: boolean;
   waterHeightRange?: Range; // The range of water the cup can hold.
   waterLevel?: number; // Initial water level
@@ -41,8 +40,8 @@ export default class Cup {
   // Whether the cup is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
 
-  // The x and y positions for the cup in the view.
-  public readonly position: Vector2;
+  // The left x position for the cup in the view.
+  public readonly xPositionProperty: Property<number>;
 
   // The amount of water contained in the cup. 0 is empty, and 1 is full.
   public readonly waterLevelProperty: NumberProperty;
@@ -59,7 +58,7 @@ export default class Cup {
       waterLevel: MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT
     }, providedOptions );
 
-    this.position = options.position;
+    this.xPositionProperty = new NumberProperty( options.xPosition );
     this.linePlacement = options.linePlacement;
 
     // When a table cup's slider is changed enabledRangeProperty is updated accordingly.

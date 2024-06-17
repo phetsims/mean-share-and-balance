@@ -257,7 +257,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       const firstPlate = activePlates[ 0 ];
       const lastPlate = activePlates[ activePlates.length - 1 ];
       meanPredictionSlider.updateLine(
-        firstPlate.xPositionProperty.value,
+        firstPlate.xPositionProperty.value - MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2,
         lastPlate.xPositionProperty.value + MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2
       );
     } );

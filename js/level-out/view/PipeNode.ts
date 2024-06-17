@@ -32,7 +32,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
   public readonly valveNode: ValveNode;
 
   public constructor( pipe: Pipe, pipesOpenProperty: Property<boolean>, pipesEnabledProperty: Property<boolean>,
-                      modelViewTransform: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
+                      notepadMVT: ModelViewTransform2, providedOptions: PipeNodeOptions ) {
     const options = optionize<PipeNodeOptions, SelfOptions, NodeOptions>()( {
       isDisposable: false
     }, providedOptions );
@@ -100,9 +100,11 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     }, options );
     super( combinedOptions );
 
-    // Set position related to associated cup
-    this.x = pipe.position.x + MeanShareAndBalanceConstants.CUP_WIDTH + LINE_WIDTH;
-    this.y = modelViewTransform.modelToViewY( 0 ) - MeanShareAndBalanceConstants.PIPE_WIDTH;
+    // Set position
+    this.centerY = notepadMVT.modelToViewY( 0 ) - MeanShareAndBalanceConstants.PIPE_WIDTH / 2 - LINE_WIDTH;
+    pipe.xPositionProperty.link( xPosition => {
+      this.left = notepadMVT.transformX( xPosition );
+    } );
 
     // pdom - add to traversal order and add a listener so that it responds to clicks from assistive technology.
     this.tagName = 'button';
