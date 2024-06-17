@@ -17,6 +17,10 @@ import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
+import IOType from '../../../../tandem/js/types/IOType.js';
+import VoidIO from '../../../../tandem/js/types/VoidIO.js';
+import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointModelOptions = SelfOptions & WithRequired<SoccerModelOptions<BalancePointSceneModel>, 'tandem'>;
@@ -53,7 +57,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
         );
       },
       isDisposable: false,
-      phetioState: false
+      phetioState: false,
+      phetioType: BalancePointModelIO
     }, providedOptions );
 
     const meanFulcrumFixedProperty = new BooleanProperty( false, {
@@ -105,5 +110,29 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
   public static numberOfKicksRangeProperty = NUMBER_OF_KICKS_RANGE_PROPERTY;
 }
+
+const BalancePointModelIO = new IOType( 'BalancePointModelIO', {
+  valueType: BalancePointModel,
+  methods: {
+    setDataPoints: {
+      returnType: VoidIO,
+      parameterTypes: [ ArrayIO( NumberIO ) ],
+      implementation: function( this: BalancePointModel, dataPoints: number[] ) {
+        this.selectedSceneModelProperty.value.setDataPoints( dataPoints );
+      },
+      documentation: 'Sets the data points for the selected scene model. Array lengths that exceed maxKicks will ignore excess values.'
+    },
+
+    getDataPoints: {
+      returnType: ArrayIO( NumberIO ),
+      parameterTypes: [],
+      implementation: function( this: BalancePointModel ) {
+        return this.selectedSceneModelProperty.value
+          .getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value );
+      },
+      documentation: 'Gets the data points for the selected scene model.'
+    }
+  }
+} );
 
 meanShareAndBalance.register( 'BalancePointModel', BalancePointModel );
