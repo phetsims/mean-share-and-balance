@@ -309,16 +309,37 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
           }
         },
         sortGroupItem: ( candyBar, newPlateIndex ) => {
-          const currentPlate = model.getPlateForSnack( candyBar );
-          const newPlate = model.plates[ newPlateIndex ];
+          const parentPlate = model.getPlateForSnack( candyBar );
+          const parentPlateIndex = model.plates.indexOf( parentPlate! );
+          const platesWithSpace = model.getPlatesWithSpace();
+          let newPlate = model.plates[ newPlateIndex ];
 
           if ( assert ) {
-            const topCandyBar = currentPlate!.getTopSnack();
+            const topCandyBar = parentPlate!.getTopSnack();
             assert && assert( topCandyBar === candyBar, 'the selected candy bar should be the top one' );
           }
 
+          // If the new plate is full, find the next plate with space.
+          if ( !platesWithSpace.includes( newPlate ) ) {
+            const sortDirection = Math.sign( newPlateIndex - model.plates.indexOf( parentPlate! ) );
+            newPlate = _.reduce( platesWithSpace, ( closestPlate, plate, i ) => {
+              const closestPlateIndex = model.plates.indexOf( closestPlate );
+
+              // Find the closest plate in the direction of the sort that is not the parent plate.
+              if ( Math.sign( i - parentPlateIndex ) === sortDirection
+                   && plate !== parentPlate
+                   && ( Math.abs( i - parentPlateIndex ) < Math.abs( closestPlateIndex - parentPlateIndex )
+                        || closestPlate === parentPlate ) ) {
+                closestPlate = plate;
+              }
+              return closestPlate;
+
+              // If there are no other plates with space, the candy bar should return to the plate it came from.
+            }, parentPlate! );
+          }
+
           // Remove the candy bar from the current plate and add it to the top of the new plate.
-          currentPlate!.removeSnack( candyBar );
+          parentPlate!.removeSnack( candyBar );
           newPlate.addSnackToTop( candyBar );
         },
         onGrab: () => grabSoundClip.play(),
