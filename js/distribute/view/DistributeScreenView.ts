@@ -322,13 +322,14 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
           // If the new plate is full, find the next plate with space.
           if ( !platesWithSpace.includes( newPlate ) ) {
             const sortDirection = Math.sign( newPlateIndex - model.plates.indexOf( parentPlate! ) );
-            newPlate = _.reduce( platesWithSpace, ( closestPlate, plate, i ) => {
+            newPlate = _.reduce( platesWithSpace, ( closestPlate, plate ) => {
               const closestPlateIndex = model.plates.indexOf( closestPlate );
+              const indexOfPlate = model.plates.indexOf( plate );
 
               // Find the closest plate in the direction of the sort that is not the parent plate.
-              if ( Math.sign( i - parentPlateIndex ) === sortDirection
+              if ( Math.sign( indexOfPlate - parentPlateIndex ) === sortDirection
                    && plate !== parentPlate
-                   && ( Math.abs( i - parentPlateIndex ) < Math.abs( closestPlateIndex - parentPlateIndex )
+                   && ( Math.abs( indexOfPlate - parentPlateIndex ) < Math.abs( closestPlateIndex - parentPlateIndex )
                         || closestPlate === parentPlate ) ) {
                 closestPlate = plate;
               }
