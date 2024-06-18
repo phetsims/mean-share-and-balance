@@ -259,6 +259,15 @@ export default class LevelOutModel extends PhetioObject implements TModel {
    * @param waterDelta - the amount of water added or removed
    */
   private distributeWaterRipple( connectedCups: Array<Cup>, targetCup: Cup, waterDelta: number ): void {
+
+    // Define the callback function outside of the loop
+    const updateNeighborWaterLevel = ( neighbor: Cup, fraction: number ) => {
+      waterDelta -= fraction;
+
+      const proposedValue = neighbor.waterLevelProperty.value + fraction;
+      neighbor.waterLevelProperty.value = Utils.clamp( proposedValue, 0, 1 );
+    };
+
     // Loop through neighbors with target cup at center
     for ( let i = 1; i < 7; i++ ) {
       const neighbors = connectedCups.filter( cup => Math.abs( targetCup.linePlacement - cup.linePlacement ) === i );
@@ -266,13 +275,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       // the larger the denominator the more subtle the ripple
       const fraction = waterDelta / ( i * 5 );
 
-      // eslint-disable-next-line @typescript-eslint/no-loop-func
-      neighbors.forEach( neighbor => {
-        waterDelta -= fraction;
-
-        const proposedValue = neighbor.waterLevelProperty.value + fraction;
-        neighbor.waterLevelProperty.value = Utils.clamp( proposedValue, 0, 1 );
-      } );
+      neighbors.forEach( neighbor => updateNeighborWaterLevel( neighbor, fraction ) );
     }
   }
 
