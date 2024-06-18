@@ -15,11 +15,11 @@ import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
-import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 import { Image } from '../../../scenery/js/imports.js';
 import levelOutHomeScreenIcon_svg from '../../images/levelOutHomeScreenIcon_svg.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import levelOutNavBarIcon_svg from '../../images/levelOutNavBarIcon_svg.js';
+import LevelOutKeyboardHelpNode from './view/LevelOutKeyboardHelpNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -38,7 +38,7 @@ export default class LevelOutScreen extends Screen<LevelOutModel, LevelOutScreen
         maxIconHeightProportion: 1
       } ),
       backgroundColorProperty: MeanShareAndBalanceColors.levelOutScreenBackgroundColorProperty,
-      createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
+      createKeyboardHelpNode: () => new LevelOutKeyboardHelpNode()
     }, providedOptions );
     super(
       () => new LevelOutModel( { tandem: options.tandem.createTandem( 'model' ) } ),
