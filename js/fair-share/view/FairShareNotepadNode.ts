@@ -1,7 +1,7 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * Adds a RectangularRadioButtonGroup to the NotepadNode for the Fair Share screen.
+ * Adds a RectangularRadioButtonGroup and other visual decorations to the NotepadNode for the Fair Share screen.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
