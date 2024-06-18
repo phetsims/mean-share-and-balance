@@ -13,12 +13,12 @@ import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
-import SliderControlsAndBasicActionsKeyboardHelpContent from '../../../scenery-phet/js/keyboard/help/SliderControlsAndBasicActionsKeyboardHelpContent.js';
 import FairShareModel from './model/FairShareModel.js';
 import { Image } from '../../../scenery/js/imports.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import fairShareHomeScreenIcon_svg from '../../images/fairShareHomeScreenIcon_svg.js';
 import fairShareNavBarIcon_svg from '../../images/fairShareNavBarIcon_svg.js';
+import FairShareKeyboardHelpNode from './view/FairShareKeyboardHelpNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -37,7 +37,7 @@ export default class FairShareScreen extends Screen<FairShareModel, FairShareScr
         maxIconHeightProportion: 1
       } ),
       backgroundColorProperty: MeanShareAndBalanceColors.fairShareScreenColorProperty,
-      createKeyboardHelpNode: () => new SliderControlsAndBasicActionsKeyboardHelpContent()
+      createKeyboardHelpNode: () => new FairShareKeyboardHelpNode()
     }, providedOptions );
     super(
       () => new FairShareModel( { tandem: options.tandem.createTandem( 'model' ) } ),
