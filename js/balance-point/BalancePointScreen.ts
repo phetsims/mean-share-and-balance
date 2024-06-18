@@ -15,11 +15,11 @@ import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import BalancePointScreenView from './view/BalancePointScreenView.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import BalancePointModel from './model/BalancePointModel.js';
-import BasicActionsKeyboardHelpSection from '../../../scenery-phet/js/keyboard/help/BasicActionsKeyboardHelpSection.js';
 import { Image } from '../../../scenery/js/imports.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import balancePointHomeScreenIcon_svg from '../../images/balancePointHomeScreenIcon_svg.js';
 import balancePointNavBarIcon_svg from '../../images/balancePointNavBarIcon_svg.js';
+import BalancePointKeyboardHelpNode from './view/BalancePointKeyboardHelpNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -38,7 +38,7 @@ export default class BalancePointScreen extends Screen<BalancePointModel, Balanc
         maxIconHeightProportion: 1
       } ),
       backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty,
-      createKeyboardHelpNode: () => new BasicActionsKeyboardHelpSection()
+      createKeyboardHelpNode: () => new BalancePointKeyboardHelpNode()
     }, providedOptions );
     super(
       () => new BalancePointModel( { tandem: options.tandem.createTandem( 'model' ) } ),

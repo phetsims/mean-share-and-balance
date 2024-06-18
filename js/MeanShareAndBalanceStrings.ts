@@ -45,6 +45,37 @@ type StringsType = {
   'kickStringProperty': LocalizedStringProperty;
   'remainderPatternStringProperty': LocalizedStringProperty;
   'totalStringProperty': LocalizedStringProperty;
+  'keyboardHelpDialog': {
+    'balancePointScreen': {
+      'sliderControlHeadingStringProperty': LocalizedStringProperty;
+      'sliderVerbStringProperty': LocalizedStringProperty;
+      'sliderNounStringProperty': LocalizedStringProperty;
+      'grabOrReleaseItemHeadingStringProperty': LocalizedStringProperty;
+      'grabOrReleaseItemStringProperty': LocalizedStringProperty;
+      'moveHeadingStringProperty': LocalizedStringProperty;
+      'moveDescriptionStringProperty': LocalizedStringProperty;
+      'numberSpinnerHeadingStringProperty': LocalizedStringProperty;
+    };
+    'numberSpinnerVerbStringProperty': LocalizedStringProperty;
+    'numberSpinnerNounStringProperty': LocalizedStringProperty;
+    'fairShareScreen': {
+      'numberSpinnerHeadingStringProperty': LocalizedStringProperty;
+    };
+    'distributeScreen': {
+      'numberSpinnerHeadingStringProperty': LocalizedStringProperty;
+      'sliderControlHeadingStringProperty': LocalizedStringProperty;
+      'sliderControlNounStringProperty': LocalizedStringProperty;
+      'grabOrReleaseItemHeadingStringProperty': LocalizedStringProperty;
+      'grabOrReleaseItemStringProperty': LocalizedStringProperty;
+      'moveHeadingStringProperty': LocalizedStringProperty;
+      'moveDescriptionStringProperty': LocalizedStringProperty;
+    };
+    'levelOutScreen': {
+      'numberSpinnerHeadingStringProperty': LocalizedStringProperty;
+      'sliderControlHeadingStringProperty': LocalizedStringProperty;
+      'sliderControlNounStringProperty': LocalizedStringProperty;
+    }
+  }
 };
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
