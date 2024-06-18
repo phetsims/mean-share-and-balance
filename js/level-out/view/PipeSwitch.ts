@@ -4,7 +4,6 @@
  * VBox that contains the AB Switch that toggles between pipe Open/Closed states
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
