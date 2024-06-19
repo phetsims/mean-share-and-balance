@@ -146,6 +146,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const meanCalculationPanel = new MeanCalculationPanel(
       calculationDependencies,
+      model.selectedSceneModelProperty.value.meanValueProperty,
       () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
       () => model.selectedSceneModelProperty.value.getStackedObjects().length,
       model.meanInfoPanelVisibleProperty, notepadNodeBounds,

@@ -28,7 +28,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import BooleanIO from '../../../../tandem/js/types/BooleanIO.js';
 import ObjectLiteralIO from '../../../../tandem/js/types/ObjectLiteralIO.js';
 
-type MeanWithRemainder = {
+export type MeanWithRemainder = {
   wholeNumber: number;
   remainder: number;
 };
@@ -64,7 +64,7 @@ export default class DistributeModel extends SharingModel<Snack> {
 
   // A Property Object that holds the mean value as a whole number and a remainder.  For instance, if there are two
   // plates and five snacks, the whole portion would be 2 and the remainder 1.  This is for phet-io client use only.
-  private readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
+  public readonly meanWithRemainderProperty: TReadOnlyProperty<MeanWithRemainder>;
 
   public constructor( providedOptions?: DistributeModelOptions ) {
 

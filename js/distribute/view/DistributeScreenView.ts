@@ -42,6 +42,7 @@ import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicator
 import Snack from '../../common/model/Snack.js';
 import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = EmptySelfOptions;
 type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
@@ -64,9 +65,10 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
 
   public constructor( private readonly model: DistributeModel, providedOptions: DistributeScreenViewOptions ) {
 
-    const options = optionize<DistributeScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
+    const options = optionize<DistributeScreenViewOptions, SelfOptions, WithRequired<SharingScreenViewOptions, 'meanWithRemainderProperty'>>()( {
       snackType: 'candyBars',
-      predictMeanVisibleProperty: model.predictMeanVisibleProperty
+      predictMeanVisibleProperty: model.predictMeanVisibleProperty,
+      meanWithRemainderProperty: model.meanWithRemainderProperty
     }, providedOptions );
 
     // Create the notepad and necessary pattern strings.

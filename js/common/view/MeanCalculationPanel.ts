@@ -30,6 +30,7 @@ import CloseButton from '../../../../scenery-phet/js/buttons/CloseButton.js';
 import ButtonNode from '../../../../sun/js/buttons/ButtonNode.js';
 import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import ToggleNode from '../../../../sun/js/ToggleNode.js';
+import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 
@@ -39,6 +40,7 @@ type SelfOptions = {
   // This option controls which.
   calculatedMeanDisplayMode?: MeanDisplayType;
   zeroDataMessageProperty?: LocalizedStringProperty | null;
+  meanWithRemainderProperty?: TReadOnlyProperty<MeanWithRemainder> | null;
 };
 export type MeanCalculationPanelOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
 
@@ -58,6 +60,7 @@ export default class MeanCalculationPanel extends Panel {
 
   /**
    * @param calculationDependencies - A set of Properties that are monitored to cause the dialog to update.
+   * @param meanValueProperty - A Property that tracks the mean value of the data set.
    * @param getValues - A function that returns the set of values used to calculate the mean.
    * @param getNumberOfActiveDataObjects - A function to get the number of items to divide by, i.e. the denominator for
    *                                       the calculations.
@@ -67,6 +70,7 @@ export default class MeanCalculationPanel extends Panel {
    * @param providedOptions
    */
   public constructor( calculationDependencies: Readonly<TReadOnlyProperty<unknown>[]>,
+                      meanValueProperty: TReadOnlyProperty<number | null>,
                       getValues: () => number[],
                       getNumberOfActiveDataObjects: () => number,
                       visibleProperty: Property<boolean>,
@@ -101,8 +105,14 @@ export default class MeanCalculationPanel extends Panel {
       resize: false,
       calculatedMeanDisplayMode: 'decimal',
       zeroDataMessageProperty: null,
-      isDisposable: false
+      isDisposable: false,
+      meanWithRemainderProperty: null
     }, providedOptions );
+
+    if ( options.calculatedMeanDisplayMode === 'remainder' ) {
+      assert && assert( options.meanWithRemainderProperty !== null,
+        'If calculatedMeanDisplayMode is "remainder" then we must provide a meanWithRemainderProperty.' );
+    }
 
     const calculationsVisibleProperty = DerivedProperty.deriveAny( [ ...calculationDependencies ], () => {
       return getNumberOfActiveDataObjects() > 0;
@@ -190,15 +200,61 @@ export default class MeanCalculationPanel extends Panel {
       alignBounds: alignBounds
     } );
 
+    // Create the pattern string Properties.
+    let remainderPatternStringProperty: TReadOnlyProperty<string> | null = null;
+    if ( options.calculatedMeanDisplayMode === 'remainder' ) {
+      const wholeNumberProperty = new DerivedProperty( [ options.meanWithRemainderProperty! ], meanWithRemainder =>
+        meanWithRemainder.wholeNumber );
+      const remainderNumberProperty = new DerivedProperty( [ options.meanWithRemainderProperty! ], meanWithRemainder =>
+        meanWithRemainder.remainder );
+      remainderPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.remainderPatternStringProperty, {
+        wholeNumber: wholeNumberProperty,
+        remainder: remainderNumberProperty
+      } );
+    }
+
+    // Update the equal sign based on whether the mean is an integer or not.
+    const equalSignProperty = new DerivedProperty( [ meanValueProperty ], ( meanValue: number | null ) =>
+
+      // If the mean value does not exist we do not care which sign is chosen since
+      // the visibility of the text will be false.
+      meanValue && Utils.toFixedNumber( meanValue, 4 ) === Utils.toFixedNumber( meanValue, 1 ) ? '=' : '≈' );
+
+    const decimalTextPatternStringProperty = new PatternStringProperty(
+      MeanShareAndBalanceStrings.meanEqualSignPatternStringProperty,
+      {
+        equals: equalSignProperty
+      }
+    );
+
+    let valueRepresentation: Node | null = null;
+    let decimalRepresentationText: Node | null = null;
+    let decimalRepresentation: Node | null = null;
+
     // Monitor the dependencies and update the equations as changes occur.
     Multilink.multilinkAny( [ ...calculationDependencies ], () => {
+
+      valueRepresentation?.dispose();
+      valueRepresentation = null;
+      decimalRepresentationText?.dispose();
+      decimalRepresentationText = null;
+      decimalRepresentation?.dispose();
+      decimalRepresentation = null;
+
+      // We do not need to calculate anything if no data points are active.
+      if ( meanValueProperty.value === null ) {
+        return;
+      }
 
       // Assemble the various numbers needed to create the equations.
       const values = getValues();
 
       const numberOfActiveDataObjects = getNumberOfActiveDataObjects();
       const totalValues = _.sum( values );
-      const mean = totalValues / numberOfActiveDataObjects;
+      const mean = meanValueProperty.value;
+
+      // Not all the screens that have a MeanCalculationPanel have a meanWithRemainderProperty, so we calculate
+      // the meanWholePart and meanRemainder manually here.
       const meanWholePart = Math.floor( mean );
       const meanRemainder = totalValues - ( meanWholePart * numberOfActiveDataObjects );
 
@@ -225,9 +281,6 @@ export default class MeanCalculationPanel extends Panel {
 
       // The value can be represented as either a decimal & mixed fraction, mixed fraction,
       // or a whole number with a remainder.
-      let valueRepresentation: Node | null = null;
-      let decimalRepresentationText: Node | null = null;
-      let decimalRepresentation: Node | null = null;
       if ( options.calculatedMeanDisplayMode === 'decimal' || options.calculatedMeanDisplayMode === 'mixedFraction' ) {
 
         // Calculate the fractional portion, if present.
@@ -247,30 +300,17 @@ export default class MeanCalculationPanel extends Panel {
           vinculumLineWidth: VINCULUM_LINE_WIDTH
         } );
 
-        // Update the equal sign based on whether the mean is an integer or not.
-        const equalSign = mean > Math.floor( mean ) ? '≈' : '=';
-        const decimalTextPatternStringProperty = new PatternStringProperty(
-          MeanShareAndBalanceStrings.meanEqualSignPatternStringProperty,
-          {
-            equals: equalSign
-          }
-        );
         decimalRepresentationText = new Text( decimalTextPatternStringProperty,
           calculationsTextOptions );
         const decimalOptions = {
           font: NUMBER_FONT
         };
         decimalRepresentation = new Text( Utils.toFixedNumber( mean, 1 ), decimalOptions );
-
-
       }
       else if ( options.calculatedMeanDisplayMode === 'remainder' ) {
-        const wholeNumber = Math.floor( mean );
-        const patternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.remainderPatternStringProperty, {
-          wholeNumber: wholeNumber,
-          remainder: meanRemainder
-        } );
-        valueRepresentation = new Text( patternStringProperty, {
+        assert && assert( remainderPatternStringProperty,
+          'If the calculatedMeanDisplayMode is "remainder" the remainderPatternStringProperty must exist.' );
+        valueRepresentation = new Text( remainderPatternStringProperty!, {
           font: NUMBER_FONT,
           maxWidth: TEXT_MAX_WIDTH
         } );

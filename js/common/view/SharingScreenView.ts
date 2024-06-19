@@ -29,6 +29,7 @@ import PartyTableNode from './PartyTableNode.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
+import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -36,6 +37,7 @@ type SelfOptions = {
   snackType: SnackType;
   showSyncButton?: boolean;
   predictMeanVisibleProperty?: Property<boolean> | null;
+  meanWithRemainderProperty?: TReadOnlyProperty<MeanWithRemainder> | null;
 };
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
@@ -66,7 +68,8 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
 
     const options = optionize<SharingScreenViewOptions, SelfOptions, MeanShareAndBalanceScreenViewOptions>()( {
         showSyncButton: true,
-        predictMeanVisibleProperty: null
+        predictMeanVisibleProperty: null,
+        meanWithRemainderProperty: null
       },
       providedOptions
     );
@@ -105,6 +108,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     // Create the info panel that will show the various ways to calculate the mean.
     const meanCalculationPanel = new MeanCalculationPanel(
       calculationDependencies,
+      model.meanProperty,
       () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
       () => model.getActivePlates().length,
       model.meanInfoPanelVisibleProperty,
@@ -112,6 +116,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       () => controls.infoButton!.focus(),
       {
         calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'remainder' : 'mixedFraction',
+        meanWithRemainderProperty: options.meanWithRemainderProperty,
         centerX: this.playAreaCenterX,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         tandem: providedOptions.tandem.createTandem( 'meanCalculationPanel' )
