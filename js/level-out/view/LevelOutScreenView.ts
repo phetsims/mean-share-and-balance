@@ -73,20 +73,23 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
             predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
             return;
           }
-          const meanTolerance = 0.05;
-          const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
-          const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
-          const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
+
           const successRectangleWasVisible = successRectangle.visible;
           const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
 
-          if ( pipesOpen && doWaterLevelsMatchMean && roundedPrediction === roundedMean ) {
-            predictMeanLine.stroke = MeanShareAndBalanceColors.meanColorProperty;
-            successRectangle.visible = false;
+          if ( pipesOpen && doWaterLevelsMatchMean ) {
+            const meanTolerance = 0.05;
+            const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
+            const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
+            const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
+            predictMeanLine.stroke = roundedPrediction === roundedMean ?
+                                     MeanShareAndBalanceColors.meanColorProperty :
+                                     MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+            successRectangle.visible = closeToMean;
           }
           else {
-            successRectangle.visible = pipesOpen && doWaterLevelsMatchMean && closeToMean;
             predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+            successRectangle.visible = false;
           }
 
           // If one of the success indicators was just activated, play the "successful prediction" sound.

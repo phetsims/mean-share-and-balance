@@ -220,7 +220,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
             predictMeanLine.stroke = roundedPrediction === roundedMean ?
                                      MeanShareAndBalanceColors.meanColorProperty :
                                      MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            successRectangle.visible = roundedPrediction !== roundedMean && closeToMean;
+            successRectangle.visible = closeToMean;
           }
           else {
             predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
