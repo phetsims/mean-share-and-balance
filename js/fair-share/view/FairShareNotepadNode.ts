@@ -63,6 +63,7 @@ export default class FairShareNotepadNode extends NotepadNode {
       {
         orientation: 'horizontal',
         spacing: 5,
+        touchAreaYDilation: 8,
         soundPlayers: distributionModeItems.map( () => nullSoundPlayer ), // sound generation handled below
         tandem: providedOptions.tandem.createTandem( 'distributionModeRadioButtonGroup' )
       } );
