@@ -1,4 +1,4 @@
-// Copyright 2023, University of Colorado Boulder
+// Copyright 2024, University of Colorado Boulder
 /**
  * Creates the keyboard help content for all the screens. All screens will contain a BasicActionsKeyboardHelpSection.
  *
