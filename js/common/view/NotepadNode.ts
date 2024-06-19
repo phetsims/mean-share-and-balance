@@ -111,7 +111,7 @@ export default class NotepadNode extends Node {
         xMargin: TOTAL_MARGIN,
         yMargin: TOTAL_MARGIN,
         rectangleOptions: {
-          opacity: 0.5,
+          opacity: 0.7,
           cornerRadius: 5
         }
       } );
