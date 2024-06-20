@@ -14,7 +14,7 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import NotepadCupNode from './NotepadCupNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import MeanPredictionSlider from '../../common/view/MeanPredictionSlider.js';
+import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
 import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -129,7 +129,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     const meanPredictSliderModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
       new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.NOTEPAD_CUPS_BOTTOM_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
-    const meanPredictionSlider = new MeanPredictionSlider(
+    const meanPredictionLine = new MeanPredictionLine(
       model.meanPredictionProperty,
       model.dragRange,
       createSuccessIndicatorMultilink,
@@ -138,15 +138,15 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         visibleProperty: model.predictMeanVisibleProperty,
 
         // phet-io
-        tandem: options.tandem.createTandem( 'meanPredictionSlider' ),
+        tandem: options.tandem.createTandem( 'meanPredictionLine' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
-    meanPredictionSlider.addLinkedElement( model.successIndicatorsOperatingProperty );
+    meanPredictionLine.addLinkedElement( model.successIndicatorsOperatingProperty );
 
     this.addChild( tableNode );
     this.addChild( waterCupLayerNode );
-    this.addChild( meanPredictionSlider );
+    this.addChild( meanPredictionLine );
 
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
@@ -197,7 +197,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       const activeNotepadCups = model.getActiveNotepadCups();
       const firstCup = activeNotepadCups[ 0 ];
       const lastCup = activeNotepadCups[ activeNotepadCups.length - 1 ];
-      meanPredictionSlider.updateLine( firstCup.xPositionProperty.value, lastCup.xPositionProperty.value + MeanShareAndBalanceConstants.CUP_WIDTH );
+      meanPredictionLine.updateLine( firstCup.xPositionProperty.value, lastCup.xPositionProperty.value + MeanShareAndBalanceConstants.CUP_WIDTH );
 
       // Create a focus highlight that surrounds all the valves. Only the first valve is in the traversal order, and
       // they all do the same thing so this highlight indicates that there will only be one stop in the traversal order.
@@ -246,7 +246,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     } );
 
     this.msabSetPDOMOrder(
-      [ pipeNodes[ 0 ], meanPredictionSlider ],
+      [ pipeNodes[ 0 ], meanPredictionLine ],
       [ ...tableCupNodes, controls.numberSpinner ],
       controls.controlsPDOMOrder
     );

@@ -31,7 +31,7 @@ import { Shape } from '../../../../kite/js/imports.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import MeanPredictionSlider from '../../common/view/MeanPredictionSlider.js';
+import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
@@ -235,7 +235,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         } );
     };
 
-    const meanPredictionSlider = new MeanPredictionSlider(
+    const meanPredictionLine = new MeanPredictionLine(
       model.meanPredictionProperty, model.predictMeanDragRange,
       createSuccessIndicatorMultilink,
       predictMeanModelViewTransform,
@@ -243,23 +243,23 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         visibleProperty: model.predictMeanVisibleProperty,
 
         // phet-io
-        tandem: options.tandem.createTandem( 'meanPredictionSlider' ),
+        tandem: options.tandem.createTandem( 'meanPredictionLine' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
       }
     );
-    meanPredictionSlider.addLinkedElement( model.successIndicatorsOperatingProperty );
+    meanPredictionLine.addLinkedElement( model.successIndicatorsOperatingProperty );
 
     // Update line length and dilation based on the number of objects.
     model.numberOfPlatesProperty.link( () => {
       const activePlates = model.getActivePlates();
       const firstPlate = activePlates[ 0 ];
       const lastPlate = activePlates[ activePlates.length - 1 ];
-      meanPredictionSlider.updateLine(
+      meanPredictionLine.updateLine(
         firstPlate.xPositionProperty.value - MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2,
         lastPlate.xPositionProperty.value + MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2
       );
     } );
-    this.notepadSnackLayerNode.addChild( meanPredictionSlider );
+    this.notepadSnackLayerNode.addChild( meanPredictionLine );
 
     // Create sound players from grab and release during group sort interactions.
     const grabSoundClip = new SoundClip( grabCandyBarV2_mp3, {

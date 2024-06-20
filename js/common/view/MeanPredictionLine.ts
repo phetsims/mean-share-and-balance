@@ -3,7 +3,6 @@
 /**
  * Representation for the draggable predict mean line.
  * Users are able to manipulate line to predict what they believe the mean is across visible objects.
- * Extends AccessibleSlider for alternative input.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -30,7 +29,7 @@ type MeanPredictionLineOptions = SelfOptions & WithRequired<ParentOptions, 'tand
 // Constants
 const LINE_X_MARGIN = 8;
 
-export default class MeanPredictionSlider extends Node {
+export default class MeanPredictionLine extends Node {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Node;
   private readonly predictMeanGlow: Rectangle;
@@ -103,4 +102,4 @@ export default class MeanPredictionSlider extends Node {
   }
 }
 
-meanShareAndBalance.register( 'MeanPredictionSlider', MeanPredictionSlider );
+meanShareAndBalance.register( 'MeanPredictionLine', MeanPredictionLine );
