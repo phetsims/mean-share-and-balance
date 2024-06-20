@@ -9,34 +9,28 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { DragListener, Image, Line, Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import { Line, ManualConstraint, Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
-import pencil_png from '../../../images/pencil_png.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import MeanPredictionHandle from './MeanPredictionHandle.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = EmptySelfOptions;
-type ParentOptions = AccessibleSliderOptions & NodeOptions;
-type MeanPredictionSliderOptions =
-  SelfOptions
-  & StrictOmit<ParentOptions, 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'children'>
-  & PickRequired<ParentOptions, 'tandem'>;
+type ParentOptions = NodeOptions;
+type MeanPredictionLineOptions = SelfOptions & WithRequired<ParentOptions, 'tandem'>;
 
 // Constants
 const LINE_X_MARGIN = 8;
 
-export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
+export default class MeanPredictionSlider extends Node {
   private readonly predictMeanLine: Line;
   private readonly predictMeanHandle: Node;
   private readonly predictMeanGlow: Rectangle;
@@ -44,9 +38,9 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
   public constructor( meanPredictionProperty: Property<number>, dragRange: Range,
                       createSuccessIndicatorMultilink: ( predictMeanLine: Path, successRectangle: Node ) => void,
                       private readonly modelViewTransform: ModelViewTransform2,
-                      providedOptions: MeanPredictionSliderOptions ) {
+                      providedOptions: MeanPredictionLineOptions ) {
 
-    const options = optionize<MeanPredictionSliderOptions, SelfOptions, ParentOptions>()( {
+    const options = optionize<MeanPredictionLineOptions, SelfOptions, ParentOptions>()( {
       isDisposable: false
     }, providedOptions );
 
@@ -54,12 +48,6 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
       lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN_WIDTH,
       stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN,
       lineDash: [ 5, 3 ]
-    } );
-
-    const predictMeanHandle = new Image( pencil_png, {
-      scale: 0.04,
-      rotation: Math.PI / 4,
-      centerY: predictMeanLine.centerY
     } );
 
     // Create elements that indicate a successful prediction of the mean.
@@ -72,48 +60,28 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
     } );
     createSuccessIndicatorMultilink( predictMeanLine, predictMeanSuccessRectangle );
 
-    // Track predictMeanLine drag position.  This needs to be a Vector2, and creates the linkage to the Y value.
-    const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, meanPredictionProperty.value ) );
-    predictMeanPositionProperty.link( predictMeanPosition => {
-      meanPredictionProperty.value = dragRange.constrainValue( predictMeanPosition.y );
+    const predictMeanHandle = new MeanPredictionHandle( meanPredictionProperty, dragRange, modelViewTransform, {
+      tandem: options.tandem.createTandem( 'predictMeanHandle' )
     } );
-
-    const dragListener = new DragListener( {
-      positionProperty: predictMeanPositionProperty,
-      transform: modelViewTransform,
-      tandem: options.tandem.createTandem( 'dragListener' )
-    } );
-
     const combinedOptions = combineOptions<ParentOptions>( {
-      children: [ predictMeanSuccessRectangle, predictMeanLine, predictMeanHandle ],
-      cursor: 'ns-resize'
+      children: [ predictMeanSuccessRectangle, predictMeanLine, predictMeanHandle ]
     }, options );
     super( combinedOptions );
     this.addLinkedElement( meanPredictionProperty );
-
-    meanPredictionProperty.link( prediction => {
-      this.centerY = modelViewTransform.modelToViewY( prediction );
-    } );
-
-    this.addInputListener( dragListener );
+    ManualConstraint.create( this, [ predictMeanHandle, predictMeanLine, predictMeanSuccessRectangle ],
+      ( handleProxy, lineProxy, rectangleProxy ) => {
+        lineProxy.centerY = handleProxy.centerY;
+        rectangleProxy.centerY = handleProxy.centerY;
+      } );
     this.predictMeanLine = predictMeanLine;
     this.predictMeanHandle = predictMeanHandle;
     this.predictMeanGlow = predictMeanSuccessRectangle;
-
-    this.setPointerAreas();
 
     // Add sound generation for the "predict mean" slider.
     const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( meanPredictionProperty );
     soundManager.addSoundGenerator( predictMeanSoundGenerator );
 
     this.modelViewTransform = modelViewTransform;
-  }
-
-  private setPointerAreas(): void {
-    this.predictMeanLine.mouseArea = this.predictMeanLine.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
-    this.predictMeanLine.touchArea = this.predictMeanLine.mouseArea;
-    this.predictMeanHandle.mouseArea = this.predictMeanHandle.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
-    this.predictMeanHandle.touchArea = this.predictMeanHandle.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
   }
 
   /**
@@ -129,7 +97,6 @@ export default class MeanPredictionSlider extends AccessibleSlider( Node, 0 ) {
     this.predictMeanGlow.setRectX( x1 );
     this.predictMeanGlow.setRectWidth( x2 - x1 );
     this.predictMeanHandle.left = this.predictMeanLine.right;
-    this.setPointerAreas();
 
     // We want the predict line to be centered not including the handle.
     this.centerX = this.modelViewTransform.modelToViewX( 0 ) + this.predictMeanHandle.width / 2;

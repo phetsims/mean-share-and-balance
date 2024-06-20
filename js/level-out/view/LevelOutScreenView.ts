@@ -9,7 +9,6 @@
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import { AlignBox, Node, Path } from '../../../../scenery/js/imports.js';
 import LevelOutModel from '../model/LevelOutModel.js';
-import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
@@ -137,10 +136,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       meanPredictSliderModelViewTransform,
       {
         visibleProperty: model.predictMeanVisibleProperty,
-        valueProperty: model.meanPredictionProperty,
-
-        // Constant range
-        enabledRangeProperty: new Property( model.dragRange ),
 
         // phet-io
         tandem: options.tandem.createTandem( 'meanPredictionSlider' ),

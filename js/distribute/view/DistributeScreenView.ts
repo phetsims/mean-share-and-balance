@@ -241,10 +241,6 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       predictMeanModelViewTransform,
       {
         visibleProperty: model.predictMeanVisibleProperty,
-        valueProperty: model.meanPredictionProperty,
-
-        // Constant range
-        enabledRangeProperty: new Property( model.predictMeanDragRange ),
 
         // phet-io
         tandem: options.tandem.createTandem( 'meanPredictionSlider' ),
