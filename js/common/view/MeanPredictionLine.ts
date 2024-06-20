@@ -59,21 +59,21 @@ export default class MeanPredictionLine extends Node {
     } );
     createSuccessIndicatorMultilink( predictMeanLine, predictMeanSuccessRectangle );
 
-    const predictMeanHandle = new MeanPredictionHandle( meanPredictionProperty, dragRange, modelViewTransform, {
-      tandem: options.tandem.createTandem( 'predictMeanHandle' )
+    const meanPredictionHandle = new MeanPredictionHandle( meanPredictionProperty, dragRange, modelViewTransform, {
+      tandem: options.tandem.createTandem( 'meanPredictionHandle' )
     } );
     const combinedOptions = combineOptions<ParentOptions>( {
-      children: [ predictMeanSuccessRectangle, predictMeanLine, predictMeanHandle ]
+      children: [ predictMeanSuccessRectangle, predictMeanLine, meanPredictionHandle ]
     }, options );
     super( combinedOptions );
     this.addLinkedElement( meanPredictionProperty );
-    ManualConstraint.create( this, [ predictMeanHandle, predictMeanLine, predictMeanSuccessRectangle ],
+    ManualConstraint.create( this, [ meanPredictionHandle, predictMeanLine, predictMeanSuccessRectangle ],
       ( handleProxy, lineProxy, rectangleProxy ) => {
         lineProxy.centerY = handleProxy.centerY;
         rectangleProxy.centerY = handleProxy.centerY;
       } );
     this.predictMeanLine = predictMeanLine;
-    this.predictMeanHandle = predictMeanHandle;
+    this.predictMeanHandle = meanPredictionHandle;
     this.predictMeanGlow = predictMeanSuccessRectangle;
 
     // Add sound generation for the "predict mean" slider.
