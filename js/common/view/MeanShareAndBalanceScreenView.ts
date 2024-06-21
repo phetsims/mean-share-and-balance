@@ -14,9 +14,9 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Node, TColor } from '../../../../scenery/js/imports.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import TModel from '../../../../joist/js/TModel.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 
 export type MeanShareAndBalanceScreenViewOptions = WithRequired<ScreenViewOptions, 'tandem'>;
 
@@ -28,7 +28,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
   protected constructor(
     model: TModel,
-    questionBarStringProperty: TReadOnlyProperty<string>,
+    questionBarStringProperty: LocalizedStringProperty,
     questionBarColor: TColor,
     notepadNode: Node,
     providedOptions: MeanShareAndBalanceScreenViewOptions ) {
@@ -49,6 +49,7 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
       visiblePropertyOptions: { phetioFeatured: true },
       tandem: options.tandem.createTandem( 'questionBar' )
     } );
+    this.questionBar.addLinkedElement( questionBarStringProperty );
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {

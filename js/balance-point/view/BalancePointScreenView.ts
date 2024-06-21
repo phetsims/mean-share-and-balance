@@ -63,8 +63,13 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     const backgroundNode = new BackgroundNode( MeanShareAndBalanceConstants.GROUND_POSITION_Y, this.visibleBoundsProperty );
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,
-      barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty
+      barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty,
+      tandem: options.tandem.createTandem( 'questionBar' ),
+      phetioFeatured: true,
+      phetioVisiblePropertyInstrumented: true,
+      visiblePropertyOptions: { phetioFeatured: true }
     } );
+    questionBar.addLinkedElement( MeanShareAndBalanceStrings.balancePointQuestionStringProperty );
     const playAreaBounds = new Bounds2( this.layoutBounds.minX, this.layoutBounds.minY + questionBar.height,
       this.layoutBounds.maxX, this.layoutBounds.maxY );
 

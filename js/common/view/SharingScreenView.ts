@@ -30,6 +30,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -61,7 +62,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
   protected readonly tablePlateNodes: Node[];
 
   public constructor( model: SharingModel<T>,
-                      questionBarStringProperty: TReadOnlyProperty<string>,
+                      questionBarStringProperty: LocalizedStringProperty,
                       questionBarColor: TColor,
                       notepadNode: NotepadNode,
                       providedOptions: SharingScreenViewOptions ) {
