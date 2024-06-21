@@ -114,6 +114,9 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
       numberType: 'Integer',
       range: BalancePointModel.numberOfKicksRangeProperty,
+
+      // phet-io
+      phetioDocumentation: 'This NumberProperty is tied to the number of balls spinner and displays the desired number of balls on the field. Due to animation, this number may not reflect the number of balls that are actually on the field.',
       phetioReadOnly: true,
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );

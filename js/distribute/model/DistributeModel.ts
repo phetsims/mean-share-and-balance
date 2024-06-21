@@ -243,6 +243,7 @@ export default class DistributeModel extends SharingModel<Snack> {
     } );
 
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
+      phetioDocumentation: 'A Property that controls whether visual and audio elements are activated to indicate success when a user has gotten close to or matched the mean with the meanPredictionLine.',
       phetioFeatured: true,
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );

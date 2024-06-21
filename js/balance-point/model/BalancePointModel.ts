@@ -70,7 +70,10 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       numberType: 'Integer',
       range: BalancePointModel.numberOfKicksRangeProperty.value,
+
+      // phet-io
       tandem: options.tandem.createTandem( 'maxKicksProperty' ),
+      phetioDocumentation: 'The maximum number of balls that can be kicked in the simulation. The simulation will reset when the number of max kicks is changed.',
       phetioFeatured: true
     } );
 

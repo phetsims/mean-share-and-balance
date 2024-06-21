@@ -86,12 +86,17 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     this.maxPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       numberType: 'Integer',
       range: NUMBER_OF_PLATES_RANGE,
+
+      // phet-io
       phetioFeatured: true,
+      phetioDocumentation: 'The maximum number of plates that can be displayed in the simulation. The simulation will reset when the number of max plates is changed.',
       tandem: options.tandem.createTandem( 'maxPlatesProperty' )
     } );
     this.numberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
       range: this.numberOfPlatesRangeProperty,
+
+      // phet-io
       phetioFeatured: true,
       tandem: options.tandem.createTandem( 'numberOfPlatesProperty' )
     } );

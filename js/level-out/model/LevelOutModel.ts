@@ -112,6 +112,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       range: NUMBER_OF_CUPS_RANGE,
 
       // phet-io
+      phetioDocumentation: 'The maximum number of cups that can be displayed in the simulation. The simulation will reset when the number of max cups is changed.',
       phetioFeatured: true,
       tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
@@ -229,6 +230,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     // For phet-io client use only.
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
+      phetioDocumentation: 'A Property that controls whether visual and audio elements are activated to indicate success when a user has gotten close to or matched the mean with the meanPredictionLine.',
       phetioFeatured: true,
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
