@@ -83,8 +83,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
 
     const notepadNode = new NotepadNode( {
       readoutPatternStringProperty: totalCandyBarsPatternStringProperty,
-      totalVisibleProperty: model.totalVisibleProperty,
-      tandem: options.tandem.createTandem( 'notepadNode' )
+      totalVisibleProperty: model.totalVisibleProperty
     } );
 
     super(

@@ -22,8 +22,9 @@ import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
 import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
-type FairShareNotepadNodeOptions = EmptySelfOptions & NotepadNodeOptions;
+type FairShareNotepadNodeOptions = EmptySelfOptions & WithRequired<NotepadNodeOptions, 'tandem'>;
 export default class FairShareNotepadNode extends NotepadNode {
 
   public constructor( appleDistributionModeProperty: Property<DistributionMode>,

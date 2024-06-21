@@ -102,9 +102,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     // This also includes the pipes that connect the notepad cups as well as the draggable water level triangle.
     const waterCupLayerNode = new Node();
-    const notepadNode = new NotepadNode( {
-      tandem: options.tandem.createTandem( 'notepadNode' )
-    } );
+    const notepadNode = new NotepadNode();
 
     const superOptions = combineOptions<MeanShareAndBalanceScreenViewOptions>( options, {
       children: [ notepadNode ]

@@ -16,8 +16,6 @@ import DerivedProperty, { UnknownDerivedProperty } from '../../../../axon/js/Der
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import notepadRing_svg from '../../../images/notepadRing_svg.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
@@ -34,8 +32,7 @@ type SelfOptions = {
 };
 
 export type NotepadNodeOptions = SelfOptions &
-  StrictOmit<NodeOptions, 'children' | 'centerY'> &
-  PickRequired<PhetioObjectOptions, 'tandem'>;
+  StrictOmit<NodeOptions, 'children' | 'centerY'>;
 
 // Constants
 const NOTEPAD_RING_BOTTOM = 33.5;
@@ -58,13 +55,12 @@ export default class NotepadNode extends Node {
   // The parent node for the readout text and background.
   protected readonly readoutNode: Node | null;
 
-  public constructor( providedOptions: NotepadNodeOptions ) {
+  public constructor( providedOptions?: NotepadNodeOptions ) {
 
     const options = optionize<NotepadNodeOptions, SelfOptions, NodeOptions>()( {
       readoutPatternStringProperty: null,
       totalVisibleProperty: null,
       meanInfoPanelVisibleProperty: null,
-      phetioVisiblePropertyInstrumented: false,
       isDisposable: false
     }, providedOptions );
 
