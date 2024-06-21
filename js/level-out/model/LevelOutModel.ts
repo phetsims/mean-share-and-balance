@@ -79,9 +79,11 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     // Visibility properties
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
 
@@ -101,6 +103,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       range: this.numberOfCupsRangeProperty,
 
       // phet-io
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'numberOfCupsProperty' )
     } );
 
@@ -108,6 +111,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       range: NUMBER_OF_CUPS_RANGE,
 
       // phet-io
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
 
@@ -119,6 +123,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
 
     this.pipesOpenProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: pipesParentTandem.createTandem( 'pipesOpenProperty' )
     } );
     this.pipesEnabledProperty = new EnabledProperty( true, {
@@ -176,6 +181,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       },
       {
         // phet-io
+        phetioFeatured: true,
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioDocumentation: 'The ground-truth water-level mean.',
         phetioValueType: NumberIO
@@ -222,6 +228,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
     // For phet-io client use only.
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
     this.maxCupsProperty.lazyLink( max => {

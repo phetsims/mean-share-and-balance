@@ -28,13 +28,14 @@ export default class PipeSwitch extends ABSwitch<boolean> {
       justify: 'left',
       enabledProperty: pipesEnabledProperty,
       tandem: tandem,
-
       toggleSwitchOptions: {
         size: new Dimension2( 40, 20 ),
 
         // Turn off default sound production for switch - sounds for the pipes changing are handled elsewhere.
         switchToLeftSoundPlayer: nullSoundPlayer,
-        switchToRightSoundPlayer: nullSoundPlayer
+        switchToRightSoundPlayer: nullSoundPlayer,
+        phetioFeatured: false,
+        visiblePropertyOptions: { phetioFeatured: false }
       },
       isDisposable: false
     };

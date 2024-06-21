@@ -103,7 +103,7 @@ export default class MeanShareAndBalanceControls extends Node {
       }
     }, options.numberSpinnerOptions );
     const numberSpinnerVBoxOptions = {
-      tandem: options.tandem,
+      tandem: options.tandem.createTandem( 'numberSpinnerVBox' ),
       numberSpinnerOptions: numberSpinnerOptions
     };
 

@@ -34,6 +34,7 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
       layoutOptions: { align: 'left' },
       isDisposable: false,
       phetioVisiblePropertyInstrumented: true,
+      visiblePropertyOptions: { phetioFeatured: true },
       phetioFeatured: true
     }, providedOptions );
 

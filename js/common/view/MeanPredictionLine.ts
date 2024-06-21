@@ -40,6 +40,7 @@ export default class MeanPredictionLine extends Node {
                       providedOptions: MeanPredictionLineOptions ) {
 
     const options = optionize<MeanPredictionLineOptions, SelfOptions, ParentOptions>()( {
+      phetioFeatured: true,
       isDisposable: false
     }, providedOptions );
 

@@ -14,13 +14,13 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = {
-  minContentHeight?: number;
   numberSpinnerOptions: NumberSpinnerOptions;
 };
 
-export type NumberSpinnerVBoxOptions = SelfOptions & VBoxOptions;
+export type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
 
 export default class NumberSpinnerVBox extends VBox {
 
@@ -30,7 +30,9 @@ export default class NumberSpinnerVBox extends VBox {
                       providedOptions: NumberSpinnerVBoxOptions ) {
 
     const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {
-      minContentHeight: 100,
+      layoutOptions: {
+        minContentHeight: 100
+      },
       isDisposable: false
     }, providedOptions );
 
@@ -66,10 +68,9 @@ export default class NumberSpinnerVBox extends VBox {
       align: 'left',
       justify: 'bottom',
       spacing: 10,
-      layoutOptions: {
-        minContentHeight: options.minContentHeight
-      }
-    } );
+      phetioVisiblePropertyInstrumented: true,
+      visiblePropertyOptions: { phetioFeatured: true }
+    }, options );
     super( superOptions );
   }
 }
