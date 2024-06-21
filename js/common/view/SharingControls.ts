@@ -69,35 +69,39 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       tandem: options.tandem.createTandem( 'checkboxGroup' )
     } );
 
-    const syncButton = new SyncButton( {
-      listener: () => model.syncData(),
-      enabledProperty: DerivedProperty.not( model.activePlatesInSyncProperty ),
-      touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      soundPlayer: new SoundClipPlayer( erase_mp3, {
-        soundClipOptions: { initialOutputLevel: 0.22 }
-      } ),
-      tandem: options.tandem.createTandem( 'syncButton' )
-    } );
+    let buttonAlignBox;
+    if ( options.showSyncButton ) {
+      const syncButton = new SyncButton( {
+        listener: () => model.syncData(),
+        enabledProperty: DerivedProperty.not( model.activePlatesInSyncProperty ),
+        touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+        touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+        soundPlayer: new SoundClipPlayer( erase_mp3, {
+          soundClipOptions: { initialOutputLevel: 0.22 }
+        } ),
+        tandem: options.tandem.createTandem( 'syncButton' )
+      } );
 
-    // We need to wrap the syncButton in a Node so that it does not stretch to the minContentWidth of the VBox.
-    // The align box gives us some added flexibility to adjust horizontal alignment of the sync button.
-    const buttonAlignBox = new AlignBox( syncButton, {
-      layoutOptions: {
-        align: 'left'
-      },
-      visible: options.showSyncButton  // Fair Share Screen does not have a SyncButton
-    } );
+      // We need to wrap the syncButton in a Node so that it does not stretch to the minContentWidth of the VBox.
+      // The align box gives us some added flexibility to adjust horizontal alignment of the sync button.
+      buttonAlignBox = new AlignBox( syncButton, {
+        layoutOptions: {
+          align: 'left'
+        },
+        visible: options.showSyncButton  // Fair Share Screen does not have a SyncButton
+      } );
+    }
+
 
     const vBoxOptions = combineOptions<VBoxOptions>( {
-      children: [ checkboxGroup, buttonAlignBox ],
+      children: [ checkboxGroup, ...( buttonAlignBox ? [ buttonAlignBox ] : [] ) ],
       minContentWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH + 25,
       spacing: 20
     }, options.vBoxOptions );
     const vBox = new VBox( vBoxOptions );
 
     const superOptions = combineOptions<MeanShareAndBalanceControlsOptions>( {
-      controlsPDOMOrder: [ checkboxGroup, buttonAlignBox ]
+      controlsPDOMOrder: [ checkboxGroup, ...( buttonAlignBox ? [ buttonAlignBox ] : [] ) ]
     }, options );
 
     super( vBox, model.numberOfPlatesProperty, model.numberOfPlatesRangeProperty,
