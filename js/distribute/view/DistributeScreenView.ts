@@ -162,7 +162,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         this.notepadBoundsProperty,
         this.candyBarDropped.bind( this ),
         {
-          tandem: candyBarsParentTandem.createTandem( `notepadCandyBar${i + 1}` ),
+          tandem: candyBarsParentTandem.createTandem( `candyBar${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
       )

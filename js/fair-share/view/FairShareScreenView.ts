@@ -89,7 +89,7 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
     const appleNodesParentTandem = options.tandem.createTandem( 'appleNodes' );
     model.getAllSnacks().forEach( ( apple, i ) => {
       this.notepadSnackLayerNode.addChild( new NotepadAppleNode( apple, modelToNotepadTransform, {
-        tandem: appleNodesParentTandem.createTandem( `notepadAppleNode${i + 1}` ),
+        tandem: appleNodesParentTandem.createTandem( `appleNode${i + 1}` ),
         visibleProperty: apple.isActiveProperty
       } ) );
     } );
