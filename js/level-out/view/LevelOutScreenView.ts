@@ -146,7 +146,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     this.addChild( waterCupLayerNode );
     this.addChild( meanPredictionLine );
 
-    const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
 
@@ -162,8 +161,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const notepadCupNodes: Array<NotepadCupNode> = [];
     model.notepadCups.forEach( cupModel => {
       const cupNode = new NotepadCupNode( cupModel, modelToNotepadTransform,
-        model.tickMarksVisibleProperty,
-        { tandem: notepadCupsParentTandem.createTandem( `notepadCupNode${cupModel.linePlacement + 1}` ) } );
+        model.tickMarksVisibleProperty );
       notepadCupNodes.push( cupNode );
     } );
 
