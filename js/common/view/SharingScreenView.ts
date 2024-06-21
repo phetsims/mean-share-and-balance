@@ -109,7 +109,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     // Create the info panel that will show the various ways to calculate the mean.
     const meanInfoPanel = new MeanInfoPanel(
       calculationDependencies,
-      model.meanProperty,
+      model.meanValueProperty,
       () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
       () => model.getActivePlates().length,
       model.meanInfoPanelVisibleProperty,

@@ -50,7 +50,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   public readonly plates: Plate<T>[];
   public readonly meanInfoPanelVisibleProperty: Property<boolean>;
   public readonly totalVisibleProperty: Property<boolean>;
-  public readonly meanProperty: TReadOnlyProperty<number>;
+  public readonly meanValueProperty: TReadOnlyProperty<number>;
 
   // Tracks whether all active notepad plates are in sync with their ground truth (table) values.
   public readonly activePlatesInSyncProperty: TReadOnlyProperty<boolean>;
@@ -178,11 +178,11 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     );
 
     // Calculates the mean based on the "ground-truth" snacks on the table.
-    this.meanProperty = new DerivedProperty(
+    this.meanValueProperty = new DerivedProperty(
       [ this.totalSnacksProperty, this.numberOfPlatesProperty ],
       ( totalSnacks, numberOfPlates ) => totalSnacks / numberOfPlates, {
         phetioFeatured: true,
-        tandem: options.tandem.createTandem( 'meanProperty' ),
+        tandem: options.tandem.createTandem( 'meanValueProperty' ),
         phetioValueType: NumberIO
       }
     );

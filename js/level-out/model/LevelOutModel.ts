@@ -44,7 +44,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
   public readonly numberOfCupsProperty: Property<number>;
 
   public readonly meanPredictionProperty: Property<number>;
-  public readonly meanProperty: TReadOnlyProperty<number>;
+  public readonly meanValueProperty: TReadOnlyProperty<number>;
 
   public readonly tableCups: Cup[];
   public readonly notepadCups: Cup[];
@@ -174,7 +174,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       ...this.tableCups.map( waterCup => waterCup.waterLevelProperty ),
       ...this.tableCups.map( waterCup => waterCup.isActiveProperty )
     ];
-    this.meanProperty = DerivedProperty.deriveAny( meanDependencies,
+    this.meanValueProperty = DerivedProperty.deriveAny( meanDependencies,
       () => {
         const mean = calculateMean( this.getActiveTableCups().map( tableCup => tableCup.waterLevelProperty.value ) );
         assert && assert( mean >= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN && mean <= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX, 'mean out of bounds: ' + mean );
@@ -183,7 +183,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       {
         // phet-io
         phetioFeatured: true,
-        tandem: options.tandem.createTandem( 'meanProperty' ),
+        tandem: options.tandem.createTandem( 'meanValueProperty' ),
         phetioDocumentation: 'The ground-truth water-level mean.',
         phetioValueType: NumberIO
       } );
@@ -221,10 +221,10 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     this.waterLevelsMatchMeanProperty = DerivedProperty.deriveAny( [
       ...waterLevelDependencies,
       ...activeCupsDependencies,
-      this.meanProperty
+      this.meanValueProperty
     ], () => {
       return _.every( this.getActiveNotepadCups(), notepadCup =>
-        Utils.roundToInterval( notepadCup.waterLevelProperty.value, 0.1 ) === Utils.roundToInterval( this.meanProperty.value, 0.1 ) );
+        Utils.roundToInterval( notepadCup.waterLevelProperty.value, 0.1 ) === Utils.roundToInterval( this.meanValueProperty.value, 0.1 ) );
     } );
 
     // For phet-io client use only.
@@ -296,16 +296,16 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       const currentWaterLevel = notepadCup.waterLevelProperty.value;
       let newWaterLevel;
       if ( this.pipesOpenProperty.value ) {
-        const delta = this.meanProperty.value - currentWaterLevel;
+        const delta = this.meanValueProperty.value - currentWaterLevel;
 
         let discrepancy = 4;
 
         // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
-        if ( this.meanProperty.value >= 0.9 ) {
-          discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanProperty.value );
+        if ( this.meanValueProperty.value >= 0.9 ) {
+          discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanValueProperty.value );
         }
-        else if ( this.meanProperty.value <= 0.1 ) {
-          discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanProperty.value );
+        else if ( this.meanValueProperty.value <= 0.1 ) {
+          discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanValueProperty.value );
         }
 
         // Animate water non-linearly. Higher discrepancy means the water will flow faster.
@@ -313,11 +313,11 @@ export default class LevelOutModel extends PhetioObject implements TModel {
         newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
 
         // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
-        if ( this.meanProperty.value > currentWaterLevel ) {
-          newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanProperty.value );
+        if ( this.meanValueProperty.value > currentWaterLevel ) {
+          newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanValueProperty.value );
         }
         else {
-          newWaterLevel = Utils.clamp( newWaterLevel, this.meanProperty.value, currentWaterLevel );
+          newWaterLevel = Utils.clamp( newWaterLevel, this.meanValueProperty.value, currentWaterLevel );
         }
       }
       else {

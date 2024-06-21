@@ -194,7 +194,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
       Multilink.multilink( [
           model.meanPredictionProperty,
-          model.meanProperty,
+          model.meanValueProperty,
           model.snacksDistributedProperty,
           model.successIndicatorsOperatingProperty
         ],

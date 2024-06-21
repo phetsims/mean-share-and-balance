@@ -211,11 +211,11 @@ export default class DistributeModel extends SharingModel<Snack> {
     const activePlateDependencies = this.plates.map( plate => plate.isActiveProperty );
     const notepadPlateSnackCountDependencies = this.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
     this.snacksDistributedProperty = DerivedProperty.deriveAny( [
-        ...activePlateDependencies, ...notepadPlateSnackCountDependencies, this.meanProperty
+        ...activePlateDependencies, ...notepadPlateSnackCountDependencies, this.meanValueProperty
       ],
       () => {
-        const meanFloor = Math.floor( this.meanProperty.value );
-        const meanCeil = Math.ceil( this.meanProperty.value );
+        const meanFloor = Math.floor( this.meanValueProperty.value );
+        const meanCeil = Math.ceil( this.meanValueProperty.value );
 
         return _.every( this.getActivePlates(), plate =>
           plate.snacksOnNotepadPlate.length === meanFloor || plate.snacksOnNotepadPlate.length === meanCeil

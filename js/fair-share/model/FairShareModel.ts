@@ -202,7 +202,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       }
       else if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SHARE ) {
         this.animateAddedSnacks = true;
-        const numberOfWholeApplesPerActivePlate = Math.floor( this.meanProperty.value );
+        const numberOfWholeApplesPerActivePlate = Math.floor( this.meanValueProperty.value );
         const applesAtTop: Apple[] = [];
 
         // We want to identify the index of the middle apple traveling to the top of the collection area so that
@@ -479,7 +479,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       // We do not want to use the function plate.getTopSnack() here because it will not include our animating snack
       // as a possible value.
       const topSnack = plate.snacksOnNotepadPlate[ plate.snacksOnNotepadPlate.length - 1 ];
-      assert && assert( !Number.isInteger( this.meanProperty.value ) &&
+      assert && assert( !Number.isInteger( this.meanValueProperty.value ) &&
       topSnack.fractionProperty.value.equals( fractionValue ), `the top snack should match the fraction value: ${fractionValue}` );
     }
   }
@@ -524,7 +524,7 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.fractionDistributionListenerMap.set( apple, stepTimer.setTimeout( () => {
 
           // Verify the state is consistent.
-          assert && assert( !Number.isInteger( this.meanProperty.value ) && plate.hasSnack( apple ),
+          assert && assert( !Number.isInteger( this.meanValueProperty.value ) && plate.hasSnack( apple ),
             'invalid state: there must be apples available for fractionalization if the mean value is not an integer.'
           );
 
