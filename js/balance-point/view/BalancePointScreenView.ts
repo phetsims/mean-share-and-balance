@@ -22,7 +22,7 @@ import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
 import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
-import MeanCalculationPanel from '../../common/view/MeanCalculationPanel.js';
+import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';
@@ -87,7 +87,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     // Create the controls that appear on the right side of the screen.
     const controls = new BalancePointControls( model, {
       onInfoButtonPressed: () => {
-        meanCalculationPanel.closeButton.focus();
+        meanInfoPanel.closeButton.focus();
       },
       tandem: options.tandem.createTandem( 'controls' )
     } );
@@ -149,7 +149,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
     ];
 
-    const meanCalculationPanel = new MeanCalculationPanel(
+    const meanInfoPanel = new MeanInfoPanel(
       calculationDependencies,
       model.selectedSceneModelProperty.value.meanValueProperty,
       () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
@@ -160,14 +160,14 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
         zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         centerX: this.playAreaCenterX,
-        tandem: options.tandem.createTandem( 'meanCalculationPanel' )
+        tandem: options.tandem.createTandem( 'meanInfoPanel' )
       }
     );
 
     sceneView.groupSortInteractionView.setGroupFocusHighlightTop( notepadNodeBounds.bottom,
       MeanShareAndBalanceConstants.SOCCER_BALL_RANGE );
 
-    this.addChild( meanCalculationPanel );
+    this.addChild( meanInfoPanel );
 
     // Set the PDOM order of the nodes in the screen.
     this.pdomPlayAreaNode.setPDOMOrder( [
@@ -179,7 +179,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     this.pdomControlAreaNode.setPDOMOrder( [
       ...controls.controlsPDOMOrder,
-      meanCalculationPanel,
+      meanInfoPanel,
       resetAllButton
     ] );
   }

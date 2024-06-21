@@ -53,7 +53,7 @@ const NUMBER_FONT = new PhetFont( 16 );
 const VINCULUM_LINE_WIDTH = 1;
 const DIALOG_MAX_WIDTH_MARGIN = 50;
 
-export default class MeanCalculationPanel extends Panel {
+export default class MeanInfoPanel extends Panel {
 
   // The button that closes this panel, public for focus management.
   public readonly closeButton: ButtonNode;
@@ -253,7 +253,7 @@ export default class MeanCalculationPanel extends Panel {
       const totalValues = _.sum( values );
       const mean = meanValueProperty.value;
 
-      // Not all the screens that have a MeanCalculationPanel have a meanWithRemainderProperty, so we calculate
+      // Not all the screens that have a MeanInfoPanel have a meanWithRemainderProperty, so we calculate
       // the meanWholePart and meanRemainder manually here.
       const meanWholePart = Math.floor( mean );
       const meanRemainder = totalValues - ( meanWholePart * numberOfActiveDataObjects );
@@ -348,4 +348,4 @@ export default class MeanCalculationPanel extends Panel {
   }
 }
 
-meanShareAndBalance.register( 'MeanCalculationPanel', MeanCalculationPanel );
+meanShareAndBalance.register( 'MeanInfoPanel', MeanInfoPanel );

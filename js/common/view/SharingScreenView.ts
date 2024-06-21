@@ -20,7 +20,7 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { AlignBox, Node, TColor } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import SharingControls from './SharingControls.js';
-import MeanCalculationPanel from './MeanCalculationPanel.js';
+import MeanInfoPanel from './MeanInfoPanel.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import PersonImage from '../../distribute/view/PersonImage.js';
 import TablePlateNode from './TablePlateNode.js';
@@ -87,7 +87,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       showSyncButton: options.showSyncButton,
       predictMeanVisibleProperty: options.predictMeanVisibleProperty,
       onInfoButtonPressed: () => {
-        meanCalculationPanel.closeButton.focus();
+        meanInfoPanel.closeButton.focus();
       }
     } );
 
@@ -107,7 +107,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     ];
 
     // Create the info panel that will show the various ways to calculate the mean.
-    const meanCalculationPanel = new MeanCalculationPanel(
+    const meanInfoPanel = new MeanInfoPanel(
       calculationDependencies,
       model.meanProperty,
       () => model.getActivePlates().map( plate => plate.tableSnackNumberProperty.value ),
@@ -120,7 +120,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
         meanWithRemainderProperty: options.meanWithRemainderProperty,
         centerX: this.playAreaCenterX,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
-        tandem: providedOptions.tandem.createTandem( 'meanCalculationPanel' )
+        tandem: providedOptions.tandem.createTandem( 'meanInfoPanel' )
       }
     );
 
@@ -182,7 +182,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       tableSnackLayerNode,
       notepadSnackLayerNode,
       controlsAlignBox,
-      meanCalculationPanel
+      meanInfoPanel
     ];
     children.forEach( childNode => { this.addChild( childNode ); } );
 
@@ -190,7 +190,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     this.msabSetPDOMOrder(
       [ notepadSnackLayerNode ],
       [ ...this.tablePlateNodes, controls.numberSpinner ],
-      [ ...controls.controlsPDOMOrder, meanCalculationPanel ]
+      [ ...controls.controlsPDOMOrder, meanInfoPanel ]
     );
   }
 }
