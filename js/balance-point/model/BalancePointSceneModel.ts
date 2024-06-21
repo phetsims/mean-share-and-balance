@@ -107,7 +107,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       tandem: options.tandem.createTandem( 'totalKickDistanceProperty' ),
       phetioValueType: NumberIO,
       phetioReadOnly: true,
-      phetioState: false
+      phetioState: false,
+      phetioFeatured: true
     } );
 
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
@@ -116,6 +117,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )
     } );
     this.meanPredictionFulcrumValueProperty = new NumberProperty( MeanShareAndBalanceConstants.FULCRUM_DEFAULT_POSITION, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'meanPredictionFulcrumValueProperty' ),
       range: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE
     } );

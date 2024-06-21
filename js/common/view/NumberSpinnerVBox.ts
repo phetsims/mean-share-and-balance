@@ -44,7 +44,15 @@ export default class NumberSpinnerVBox extends VBox {
       layoutOptions: {
         align: 'left'
       },
-      accessibleName: stringProperty
+      accessibleName: stringProperty,
+      phetioFeatured: true,
+      phetioVisiblePropertyInstrumented: true,
+      numberDisplayOptions: {
+        phetioFeatured: false
+      },
+      visiblePropertyOptions: {
+        phetioFeatured: true
+      }
     }, options.numberSpinnerOptions );
 
     const numberSpinner = new NumberSpinner(

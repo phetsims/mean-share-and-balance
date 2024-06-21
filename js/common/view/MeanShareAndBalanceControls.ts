@@ -69,7 +69,11 @@ export default class MeanShareAndBalanceControls extends Node {
     const vBoxAlignBox = controlsAlignGroup.createBox( controlsVBox, { xAlign: 'left' } );
 
     const superOptions = combineOptions<NodeOptions>( {
-      children: [ vBoxAlignBox ]
+      children: [ vBoxAlignBox ],
+      phetioVisiblePropertyInstrumented: true,
+      visiblePropertyOptions: {
+        phetioFeatured: true
+      }
     }, options );
     super( superOptions );
 

@@ -32,7 +32,9 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       align: 'left',
       layoutOptions: { align: 'left' },
-      isDisposable: false
+      isDisposable: false,
+      phetioVisiblePropertyInstrumented: true,
+      phetioFeatured: true
     }, providedOptions );
 
     const checkboxItems: VerticalCheckboxGroupItem[] = [];

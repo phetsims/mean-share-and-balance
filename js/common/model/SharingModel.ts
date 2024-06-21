@@ -86,17 +86,21 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     this.maxPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
       numberType: 'Integer',
       range: NUMBER_OF_PLATES_RANGE,
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'maxPlatesProperty' )
     } );
     this.numberOfPlatesProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_PEOPLE, {
       numberType: 'Integer',
       range: this.numberOfPlatesRangeProperty,
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'numberOfPlatesProperty' )
     } );
     this.meanInfoPanelVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'meanInfoPanelVisibleProperty' )
     } );
     this.totalVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'totalVisibleProperty' )
     } );
 
@@ -167,6 +171,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
         return _.sum( snackAmounts );
       },
       {
+        phetioFeatured: true,
         tandem: options.tandem.createTandem( 'totalSnacksProperty' ),
         phetioValueType: NumberIO
       }
@@ -176,6 +181,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     this.meanProperty = new DerivedProperty(
       [ this.totalSnacksProperty, this.numberOfPlatesProperty ],
       ( totalSnacks, numberOfPlates ) => totalSnacks / numberOfPlates, {
+        phetioFeatured: true,
         tandem: options.tandem.createTandem( 'meanProperty' ),
         phetioValueType: NumberIO
       }

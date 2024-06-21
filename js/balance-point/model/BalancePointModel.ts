@@ -62,6 +62,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     }, providedOptions );
 
     const meanFulcrumFixedProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'meanFulcrumFixedProperty' )
     } );
 
@@ -85,12 +86,15 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       phetioReadOnly: true
     } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
     } );
     this.meanInfoPanelVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'meanInfoPanelVisibleProperty' )
     } );
     this.totalVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'totalVisibleProperty' )
     } );
 

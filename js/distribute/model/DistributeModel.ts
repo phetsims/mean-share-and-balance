@@ -92,6 +92,7 @@ export default class DistributeModel extends SharingModel<Snack> {
     );
 
     this.predictMeanVisibleProperty = new BooleanProperty( false, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'predictMeanVisibleProperty' )
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
@@ -193,7 +194,7 @@ export default class DistributeModel extends SharingModel<Snack> {
 
               assert && assert( plateWithFewestSnacks &&
               plateWithFewestSnacks.snacksOnNotepadPlate.length < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
-              'A plate should have space to add another snack.' );
+                'A plate should have space to add another snack.' );
               plateWithFewestSnacks!.addASnack();
             } );
           }
@@ -220,6 +221,7 @@ export default class DistributeModel extends SharingModel<Snack> {
           plate.snacksOnNotepadPlate.length === meanFloor || plate.snacksOnNotepadPlate.length === meanCeil
         );
       }, {
+        phetioFeatured: true,
         tandem: options.tandem.createTandem( 'snacksDistributedProperty' ),
         phetioValueType: BooleanIO
       } );
@@ -234,12 +236,14 @@ export default class DistributeModel extends SharingModel<Snack> {
       return { wholeNumber: meanFloor, remainder: remainder };
     }, {
       tandem: options.tandem.createTandem( 'meanWithRemainderProperty' ),
+      phetioFeatured: true,
       phetioState: false,
       phetioValueType: ObjectLiteralIO,
       phetioDocumentation: 'Mean as a whole number and a remainder value.'
     } );
 
     this.successIndicatorsOperatingProperty = new BooleanProperty( true, {
+      phetioFeatured: true,
       tandem: options.tandem.createTandem( 'successIndicatorsOperatingProperty' )
     } );
   }

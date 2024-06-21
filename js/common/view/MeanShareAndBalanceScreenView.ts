@@ -44,6 +44,9 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
     this.questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: questionBarStringProperty,
       barFill: questionBarColor,
+      phetioFeatured: true,
+      phetioVisiblePropertyInstrumented: true,
+      visiblePropertyOptions: { phetioFeatured: true },
       tandem: options.tandem.createTandem( 'questionBar' )
     } );
 
