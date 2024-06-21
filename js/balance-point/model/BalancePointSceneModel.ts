@@ -112,6 +112,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     } );
 
     this.targetNumberOfBallsProperty = new NumberProperty( MeanShareAndBalanceConstants.INITIAL_NUMBER_OF_SOCCER_BALLS, {
+      numberType: 'Integer',
       range: BalancePointModel.numberOfKicksRangeProperty,
       phetioReadOnly: true,
       tandem: options.tandem.createTandem( 'targetNumberOfBallsProperty' )

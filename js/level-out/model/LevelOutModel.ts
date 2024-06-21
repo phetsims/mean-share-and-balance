@@ -108,6 +108,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     } );
 
     this.maxCupsProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+      numberType: 'Integer',
       range: NUMBER_OF_CUPS_RANGE,
 
       // phet-io

@@ -68,6 +68,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
     // Allows PhET-iO clients to modify the max number of kicks.
     const maxKicksProperty = new NumberProperty( MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS, {
+      numberType: 'Integer',
       range: BalancePointModel.numberOfKicksRangeProperty.value,
       tandem: options.tandem.createTandem( 'maxKicksProperty' ),
       phetioFeatured: true

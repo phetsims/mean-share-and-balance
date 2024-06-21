@@ -117,6 +117,7 @@ export default class Plate<T extends Snack> extends PhetioObject {
     const initialTableSnackNumber = options.initiallyActive ? options.startingNumberOfSnacks : 0;
     this.tableSnackNumberProperty = new NumberProperty( initialTableSnackNumber, {
       range: new Range( 0, 10 ),
+      numberType: 'Integer',
       tandem: options.tandem.createTandem( 'tableSnackNumberProperty' )
     } );
 
