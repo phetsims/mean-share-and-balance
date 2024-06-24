@@ -23,10 +23,9 @@ import generalOpenSoundPlayer from '../../../../tambo/js/shared-sound-players/ge
 import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = {
-  numberSpinnerOptions: WithRequired<NumberSpinnerOptions, 'tandem'>;
+  numberSpinnerOptions: NumberSpinnerOptions;
 
   // Define the traversal order of controls.
   controlsPDOMOrder: Node[];

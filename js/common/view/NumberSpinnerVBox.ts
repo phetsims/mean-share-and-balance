@@ -47,6 +47,8 @@ export default class NumberSpinnerVBox extends VBox {
         align: 'left'
       },
       accessibleName: stringProperty,
+
+      // phet-io
       phetioFeatured: true,
       phetioVisiblePropertyInstrumented: true,
       numberDisplayOptions: {
@@ -54,7 +56,8 @@ export default class NumberSpinnerVBox extends VBox {
       },
       visiblePropertyOptions: {
         phetioFeatured: true
-      }
+      },
+      tandem: options.tandem.createTandem( 'numberSpinner' )
     }, options.numberSpinnerOptions );
 
     const numberSpinner = new NumberSpinner(

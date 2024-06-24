@@ -62,8 +62,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
           numberOfCupsProperty,
           numberOfPlatesV6_mp3,
           { initialOutputLevel: 0.15 }
-        ),
-        tandem: providedOptions.tandem.createTandem( 'numberOfCupsSpinner' )
+        )
       },
       controlsPDOMOrder: [ checkboxGroup, pipeSwitch ],
       vBoxOptions: {}

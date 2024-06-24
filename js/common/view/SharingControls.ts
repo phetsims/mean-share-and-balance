@@ -58,8 +58,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
           model.numberOfPlatesProperty,
           numberOfPlatesV6_mp3,
           { initialOutputLevel: 0.15 }
-        ),
-        tandem: providedOptions.tandem.createTandem( 'numberOfPlatesSpinner' )
+        )
       }
     }, providedOptions );
 

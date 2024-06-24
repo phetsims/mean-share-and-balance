@@ -73,8 +73,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
     const options = optionize<BalancePointControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup ],
       numberSpinnerOptions: {
-        arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty ),
-        tandem: providedOptions.tandem.createTandem( 'numberOfBallsSpinner' )
+        arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty )
       },
       infoPanelVisibleProperty: model.meanInfoPanelVisibleProperty
     }, providedOptions );
