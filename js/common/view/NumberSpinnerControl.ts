@@ -22,7 +22,7 @@ type SelfOptions = {
 
 export type NumberSpinnerVBoxOptions = SelfOptions & WithRequired<VBoxOptions, 'tandem'>;
 
-export default class NumberSpinnerVBox extends VBox {
+export default class NumberSpinnerControl extends VBox {
 
   public constructor( numberProperty: Property<number>,
                       rangeProperty: Property<Range>,
@@ -78,4 +78,4 @@ export default class NumberSpinnerVBox extends VBox {
   }
 }
 
-meanShareAndBalance.register( 'NumberSpinnerVBox', NumberSpinnerVBox );
+meanShareAndBalance.register( 'NumberSpinnerControl', NumberSpinnerControl );

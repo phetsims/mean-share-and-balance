@@ -10,7 +10,7 @@
 
 import { AlignGroup, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import NumberSpinnerVBox from './NumberSpinnerVBox.js';
+import NumberSpinnerControl from './NumberSpinnerControl.js';
 import Property from '../../../../axon/js/Property.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -102,11 +102,11 @@ export default class MeanShareAndBalanceControls extends Node {
       }
     }, options.numberSpinnerOptions );
     const numberSpinnerVBoxOptions = {
-      tandem: options.tandem.createTandem( 'numberSpinnerVBox' ),
+      tandem: options.tandem.createTandem( 'numberSpinnerControl' ),
       numberSpinnerOptions: numberSpinnerOptions
     };
 
-    const numberSpinner = new NumberSpinnerVBox(
+    const numberSpinner = new NumberSpinnerControl(
       numberOfObjectsProperty,
       numberOfObjectsRangeProperty,
       numberOfObjectsStringProperty,
