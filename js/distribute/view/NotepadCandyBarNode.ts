@@ -19,7 +19,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import RichPointerDragListener from '../../../../scenery-phet/js/RichPointerDragListener.js';
+import SoundDragListener from '../../../../scenery-phet/js/SoundDragListener.js';
 import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
@@ -83,7 +83,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       }
     );
 
-    this.dragListener = new RichPointerDragListener( {
+    this.dragListener = new SoundDragListener( {
       grabSound: grabCandyBarV2_mp3,
       grabSoundClipOptions: { initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL },
       releaseSound: releaseCandyBarV2_mp3,
