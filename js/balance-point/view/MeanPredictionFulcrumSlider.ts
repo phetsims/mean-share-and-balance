@@ -71,7 +71,7 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
         fulcrumNode,
         rightCueingArrow
       ],
-      excludeInvisibleChildrenFromBounds: false,
+      excludeInvisibleChildrenFromBounds: false, // we do not want the bounds to change when the arrows are hidden
       align: 'bottom',
       tandem: providedOptions.tandem.createTandem( 'thumbNode' ),
       phetioVisiblePropertyInstrumented: false

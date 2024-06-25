@@ -49,7 +49,6 @@ export default class SharingControls extends MeanShareAndBalanceControls {
     const options = optionize<SharingControlsOptions, SelfOptions,
       StrictOmit<MeanShareAndBalanceControlsOptions, 'controlsPDOMOrder'>>()( {
       showSyncButton: true,
-      excludeInvisibleChildrenFromBounds: false,
       vBoxOptions: {},
       predictMeanVisibleProperty: null,
       infoPanelVisibleProperty: meanInfoPanelVisibleProperty,

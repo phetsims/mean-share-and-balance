@@ -36,7 +36,6 @@ export default class DistributeNotepadPlateNode extends Node {
 
     const options = optionize<NotepadPlateNodeOptions, EmptySelfOptions, NodeOptions>()( {
       visibleProperty: plate.isActiveProperty,
-      excludeInvisibleChildrenFromBounds: false,
       children: [ plateNode ],
       isDisposable: false
     }, providedOptions );
