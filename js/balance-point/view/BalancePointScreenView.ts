@@ -21,7 +21,6 @@ import BalancePointControls from './BalancePointControls.js';
 import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
-import isResettingProperty from '../../../../soccer-common/js/model/isResettingProperty.js';
 import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -101,12 +100,10 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const resetAllButton = new ResetAllButton( {
       listener: () => {
-        assert && assert( !isResettingProperty.value, 'cannot reset while already resetting' );
-        isResettingProperty.value = true;
+        assert && assert( !ResetAllButton.isResettingAllProperty.value, 'cannot reset while already resetting' );
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
         notepadNode.reset();
-        isResettingProperty.value = false;
       },
       right: this.layoutBounds.maxX - MeanShareAndBalanceConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - MeanShareAndBalanceConstants.SCREEN_VIEW_Y_MARGIN,
