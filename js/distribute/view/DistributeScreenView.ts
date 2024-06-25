@@ -50,7 +50,8 @@ type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOpt
 // constants
 const CANDY_BAR_FOCUS_X_MARGIN = 10; // in screen coords, empirically determined
 const CUEING_ARROW_SCALE = 0.7;
-export const CUEING_ARROW_MARGIN = 2; // in screen coords, empirically determined
+export const MOUSE_CUEING_ARROW_MARGIN = 2; // in screen coords, empirically determined
+export const KEYBOARD_CUEING_ARROW_MARGIN = -2; // in screen coords, empirically determined
 
 export default class DistributeScreenView extends SharingScreenView<Snack> {
   private readonly notepadBoundsProperty: Property<Bounds2>;
@@ -137,7 +138,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
 
         // Pixel adjustments needed with rotation option on mouseSortHandCueNode and empirically determined to match design
         handProxy.right = arrowProxy.left + 22;
-        handProxy.top = arrowProxy.bottom + CUEING_ARROW_MARGIN;
+        handProxy.top = arrowProxy.bottom + MOUSE_CUEING_ARROW_MARGIN;
       } );
 
     model.groupSortInteractionModel.registerUpdateSortCueNode( this.updateMouseSortCueNode.bind( this ) );
@@ -430,7 +431,8 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         this.cueingHighlight.x = highlightPosition.x;
         this.cueingHighlight.y = highlightPosition.y;
         this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-          SnackStacker.getCueingArrowPosition( plate, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height )
+          SnackStacker.getCueingArrowPosition( plate, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
+            MOUSE_CUEING_ARROW_MARGIN )
         );
       }
       else {
@@ -450,7 +452,8 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       this.cueingHighlight.y = highlightPosition.y;
       this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
       this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height )
+        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
+          MOUSE_CUEING_ARROW_MARGIN )
       );
     }
   }
@@ -460,11 +463,12 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
    */
   private updateKeyboardSortCueNode(): void {
     const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
-    if ( !this.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value && selectedCandyBar ) {
+    if ( !this.groupSortInteractionModel.hasKeyboardSortedGroupItemProperty.value && selectedCandyBar ) {
       const plate = this.model.getPlateForSnack( selectedCandyBar );
       assert && assert( plate, 'selected candy bar must be on a plate' );
       this.keyboardSortCueNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height )
+        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
+          KEYBOARD_CUEING_ARROW_MARGIN )
       );
     }
   }

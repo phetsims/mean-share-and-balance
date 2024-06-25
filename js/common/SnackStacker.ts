@@ -12,7 +12,6 @@ import { SnackType } from './view/SharingScreenView.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import Vector2 from '../../../dot/js/Vector2.js';
-import { CUEING_ARROW_MARGIN } from '../distribute/view/DistributeScreenView.js';
 import Snack from '../common/model/Snack.js';
 
 // constants
@@ -84,11 +83,11 @@ class SnackStacker {
     return new Vector2( xPosition, yPosition );
   }
 
-  public static getCueingArrowPosition( plate: Plate<Snack>, plateHeight: number ): Vector2 {
+  public static getCueingArrowPosition( plate: Plate<Snack>, plateHeight: number, cueingArrowMargin: number ): Vector2 {
     const topSnackIndex = plate.snacksOnNotepadPlate.length - 1;
     const plateXPosition = plate.xPositionProperty.value;
     return SnackStacker.getStackedCandyBarPosition( plateXPosition, topSnackIndex )
-      .plusXY( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2, -plateHeight + CUEING_ARROW_MARGIN );
+      .plusXY( MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width / 2, -plateHeight + cueingArrowMargin );
   }
 }
 
