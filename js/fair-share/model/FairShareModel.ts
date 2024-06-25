@@ -149,229 +149,8 @@ export default class FairShareModel extends SharingModel<Apple> {
       } );
     } );
 
-    // Handle a change in the mode setting for the notepad.  This is a complex process that moves apples around between
-    // plates and the collection area, and some of this motion is animated.
-    const handleModeChange = ( appleDistributionMode: DistributionMode, previousDistributionMode: DistributionMode | null ): void => {
-
-      // Make sure any leftover animations from previous mode changes are cleared.
-      this.finishInProgressAnimations();
-
-      // Make sure animation is initially turned off. It will be set below for the state transitions that need it.
-      this.animateAddedSnacks = false;
-
-      // So that we're in a consistent state, make sure all apples are whole.
-      this.getAllSnacks().forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
-
-      // Handle each of the six possible start transitions.
-      if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SYNC ) {
-        this.animateAddedSnacks = true;
-
-        // Move each of the apples in the collection area to a notepad plate based on how many are on the associated
-        // table plate.
-        while ( this.appleCollection.length > 0 ) {
-          this.getActivePlates().forEach( plate => {
-
-            _.times( plate.tableSnackNumberProperty.value, () => {
-
-              // Get an apple from the collection.  The `shift` method is used here because it leads to better apple
-              // movement (shorter distances to travel) versus `pop`.
-              const apple = this.appleCollection.shift();
-
-              assert && assert( apple, 'there should be enough apples to put on the plates' );
-              plate.addSnackToTop( apple! );
-            } );
-          } );
-        }
-        assert && assert( this.appleCollection.length === 0, 'All apples should be on plates.' );
-
-        // Check plate state after all apples in collection have been handled.
-        this.getActivePlates().forEach( plate => this.confirmPlateValues( plate ) );
-      }
-      else if ( previousDistributionMode === DistributionMode.SYNC && appleDistributionMode === DistributionMode.COLLECT ) {
-        this.animateAddedSnacks = true;
-
-        // Move all apples from their current, synced up locations to the collection area.
-        this.plates.forEach( plate => {
-          while ( plate.getNumberOfNotepadSnacks() > 0 ) {
-            const apple = plate.getTopSnackForTransfer();
-
-            assert && assert( apple, 'there should be enough apples to transfer to the collection' );
-            this.appleCollection.push( apple! );
-          }
-        } );
-      }
-      else if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SHARE ) {
-        this.animateAddedSnacks = true;
-        const numberOfWholeApplesPerActivePlate = Math.floor( this.meanValueProperty.value );
-        const applesAtTop: Apple[] = [];
-
-        // We want to identify the index of the middle apple traveling to the top of the collection area so that
-        // the apples at top are centered.
-        const numberOfRemainingApples = this.appleCollection.length -
-                                        ( numberOfWholeApplesPerActivePlate * this.numberOfPlatesProperty.value );
-        const middleAppleIndex = Math.floor( numberOfRemainingApples / 2 );
-
-        // Sort the apples by their distance from the left side to minimize the distance they need to travel.
-        this.appleCollection.sort( ( a1, a2 ) =>
-          a2.positionProperty.value.distance( SORT_REFERENCE_POINT ) -
-          a1.positionProperty.value.distance( SORT_REFERENCE_POINT )
-        );
-
-        // Move the whole apples to the active plates.
-        this.getActivePlates().forEach( plate => {
-          while ( plate.snacksOnNotepadPlate.length < numberOfWholeApplesPerActivePlate ) {
-            const apple = this.appleCollection.pop();
-            assert && assert( apple, 'There should be enough apples to add the wholes ones to each plate.' );
-            plate.addSnackToTop( apple! );
-          }
-        } );
-
-        // The remaining apples, if any, are moved in an animation to the top of the notepad.
-        this.appleCollection.forEach( apple => {
-          applesAtTop.push( apple );
-          apple.moveTo( new Vector2(
-              ( applesAtTop.length - middleAppleIndex - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
-              -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
-            ),
-            true
-          );
-        } );
-
-        // Mark the collection as empty now that the apples have all been moved out of the collection.
-        this.appleCollection.length = 0;
-
-        // Any apples that were moved to the top are subsequently turned into fractional representations and distributed
-        // to the plates.
-        if ( applesAtTop.length > 0 ) {
-
-          // Add the number of additional apples needed for fractionalization and distribution.
-          const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value -
-                                                 applesAtTop.length;
-
-          const rightmostAppleAtTop = applesAtTop.length - middleAppleIndex - 1;
-          _.times( numberOfAdditionalApplesNeeded, i => {
-            const appleToAdd = this.getUnusedSnack();
-            assert && assert( appleToAdd, 'there should be unused apples available to add' );
-            appleToAdd!.moveTo( new Vector2(
-              ( rightmostAppleAtTop + i ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
-              -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
-            ) );
-            applesAtTop.push( appleToAdd! );
-          } );
-
-          // Add the soon-to-be fractionalized apples to the plates.
-          applesAtTop.forEach( ( apple, i ) => {
-            this.plates[ i ].addSnackToTop( apple );
-          } );
-        }
-      }
-      else if ( previousDistributionMode === DistributionMode.SHARE && appleDistributionMode === DistributionMode.COLLECT ) {
-
-        this.animateAddedSnacks = true;
-
-        // Animate the movement of the apples from the individual plates to the collection area.
-        this.getActivePlates().forEach( plate => {
-          _.times( plate.getNumberOfNotepadSnacks(), () => {
-            if ( this.appleCollection.length < this.totalSnacksProperty.value ) {
-
-              const apple = plate.getTopSnackForTransfer();
-              assert && assert( apple, 'there should be enough apples to transfer to the collection' );
-
-              this.appleCollection.push( apple! );
-            }
-            else {
-
-              // Enough apples have been added to the collection, so just remove the next one.
-              plate.removeTopSnack();
-            }
-          } );
-        } );
-      }
-      else if ( ( previousDistributionMode === DistributionMode.SHARE || previousDistributionMode === null ) &&
-                appleDistributionMode === DistributionMode.SYNC ) {
-
-        // In the Sync mode the number of apples on the notepad plates match those shown on the table plates. There is
-        // no animation needed for this mode change.
-        this.getActivePlates().forEach( plate => plate.syncNotepadToTable() );
-      }
-      else if ( previousDistributionMode === DistributionMode.SYNC && appleDistributionMode === DistributionMode.SHARE ) {
-
-        // In the Share mode the total number of apples is split evenly over all active plates, so each plate ends up
-        // with the mean value, which could include a fractional part. There is no animation for this transition.
-        this.getActivePlates().forEach( plate => {
-          plate.setNotepadSnacksToValue( new Fraction( this.totalSnacksProperty.value, this.numberOfPlatesProperty.value ) );
-        } );
-      }
-      else {
-        assert && assert( false, `Unhandled state transition - from ${previousDistributionMode} to ${appleDistributionMode}` );
-      }
-
-      // Clear the flag that controls whether apple motion is animated - it is set at the start of each state change.
-      this.animateAddedSnacks = false;
-    };
-
-    // Handler function that is invoked when the total number of active apples changes.  This will activate and position
-    // apples based on the current mode.
-    const handleNumberOfSnacksChanged = () => {
-
-      // Force any in-progress animations to finish before doing anything so that the model doesn't end up in a wierd
-      // state.  These animations, if present, would have been instigated by changes to the notebook mode.
-      this.finishInProgressAnimations();
-
-      // We cannot count on the totalSnacks value to be accurate because it comes from a derivedProperty that may
-      // not be updated yet during phet-io state setting.
-      const actualTotalSnacks = this.plates.reduce( ( sum, plate ) => sum + plate.tableSnackNumberProperty.value, 0 );
-
-      const distributionMode = this.appleDistributionModeProperty.value;
-      if ( distributionMode === DistributionMode.SYNC ) {
-
-        // Sync up the notepad plates with the table plates.
-        this.plates.forEach( plate => {
-          plate.syncNotepadToTable();
-        } );
-      }
-      else if ( distributionMode === DistributionMode.SHARE ) {
-        this.plates.forEach( plate => {
-          if ( plate.isActiveProperty.value ) {
-            plate.setNotepadSnacksToValue( new Fraction( actualTotalSnacks, this.numberOfPlatesProperty.value ) );
-          }
-          else {
-
-            // This plate isn't active, so if it has any snacks they need to be released.
-            plate.removeAllSnacks();
-          }
-        } );
-      }
-      else if ( distributionMode === DistributionMode.COLLECT ) {
-
-        const delta = actualTotalSnacks - this.appleCollection.length;
-        if ( delta > 0 ) {
-
-          // Add apples to the collection.
-          _.times( delta, () => {
-            const appleToAdd = this.getUnusedSnack();
-            assert && assert( appleToAdd, 'there should be apples available to add' );
-            this.appleCollection.push( appleToAdd! );
-          } );
-        }
-        else if ( delta < 0 ) {
-
-          // Remove apples from the collection.
-          _.times( Math.abs( delta ), () => {
-            const appleToRemove = this.appleCollection.pop();
-            assert && assert( appleToRemove, 'there should be enough apples in the collection to support this' );
-            this.releaseSnack( appleToRemove! );
-          } );
-        }
-        this.updateCollectedApplePositions();
-      }
-      else {
-        assert && assert( false, `unhandled notepad mode: ${distributionMode}` );
-      }
-    };
-
     // Hook up the handler for changes to the notepad mode.
-    this.appleDistributionModeProperty.link( handleModeChange );
+    this.appleDistributionModeProperty.link( this.handleModeChange.bind( this ) );
 
     // Hook up the handler for changes to the number of apples that are on the table.
     Multilink.multilinkAny(
@@ -379,8 +158,233 @@ export default class FairShareModel extends SharingModel<Apple> {
         this.totalSnacksProperty,
         ...this.plates.map( plate => plate.isActiveProperty )
       ],
-      handleNumberOfSnacksChanged
+      this.handleNumberOfSnacksChanged.bind( this )
     );
+  }
+
+  /**
+   * Handle a change in the mode setting for the notepad.  This is a complex process that moves apples around between
+   * plates and the collection area, and some of this motion is animated.
+   * @param appleDistributionMode
+   * @param previousDistributionMode
+   */
+  private handleModeChange( appleDistributionMode: DistributionMode, previousDistributionMode: DistributionMode | null ): void {
+
+    // Make sure any leftover animations from previous mode changes are cleared.
+    this.finishInProgressAnimations();
+
+    // Make sure animation is initially turned off. It will be set below for the state transitions that need it.
+    this.animateAddedSnacks = false;
+
+    // So that we're in a consistent state, make sure all apples are whole.
+    this.getAllSnacks().forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
+
+    // Handle each of the six possible start transitions.
+    if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SYNC ) {
+      this.animateAddedSnacks = true;
+
+      // Move each of the apples in the collection area to a notepad plate based on how many are on the associated
+      // table plate.
+      while ( this.appleCollection.length > 0 ) {
+        this.getActivePlates().forEach( plate => {
+
+          _.times( plate.tableSnackNumberProperty.value, () => {
+
+            // Get an apple from the collection.  The `shift` method is used here because it leads to better apple
+            // movement (shorter distances to travel) versus `pop`.
+            const apple = this.appleCollection.shift();
+
+            assert && assert( apple, 'there should be enough apples to put on the plates' );
+            plate.addSnackToTop( apple! );
+          } );
+        } );
+      }
+      assert && assert( this.appleCollection.length === 0, 'All apples should be on plates.' );
+
+      // Check plate state after all apples in collection have been handled.
+      this.getActivePlates().forEach( plate => this.confirmPlateValues( plate ) );
+    }
+    else if ( previousDistributionMode === DistributionMode.SYNC && appleDistributionMode === DistributionMode.COLLECT ) {
+      this.animateAddedSnacks = true;
+
+      // Move all apples from their current, synced up locations to the collection area.
+      this.plates.forEach( plate => {
+        while ( plate.getNumberOfNotepadSnacks() > 0 ) {
+          const apple = plate.getTopSnackForTransfer();
+
+          assert && assert( apple, 'there should be enough apples to transfer to the collection' );
+          this.appleCollection.push( apple! );
+        }
+      } );
+    }
+    else if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SHARE ) {
+      this.animateAddedSnacks = true;
+      const numberOfWholeApplesPerActivePlate = Math.floor( this.meanValueProperty.value );
+      const applesAtTop: Apple[] = [];
+
+      // We want to identify the index of the middle apple traveling to the top of the collection area so that
+      // the apples at top are centered.
+      const numberOfRemainingApples = this.appleCollection.length -
+                                      ( numberOfWholeApplesPerActivePlate * this.numberOfPlatesProperty.value );
+      const middleAppleIndex = Math.floor( numberOfRemainingApples / 2 );
+
+      // Sort the apples by their distance from the left side to minimize the distance they need to travel.
+      this.appleCollection.sort( ( a1, a2 ) =>
+        a2.positionProperty.value.distance( SORT_REFERENCE_POINT ) -
+        a1.positionProperty.value.distance( SORT_REFERENCE_POINT )
+      );
+
+      // Move the whole apples to the active plates.
+      this.getActivePlates().forEach( plate => {
+        while ( plate.snacksOnNotepadPlate.length < numberOfWholeApplesPerActivePlate ) {
+          const apple = this.appleCollection.pop();
+          assert && assert( apple, 'There should be enough apples to add the wholes ones to each plate.' );
+          plate.addSnackToTop( apple! );
+        }
+      } );
+
+      // The remaining apples, if any, are moved in an animation to the top of the notepad.
+      this.appleCollection.forEach( apple => {
+        applesAtTop.push( apple );
+        apple.moveTo( new Vector2(
+            ( applesAtTop.length - middleAppleIndex - 1 ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+            -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
+          ),
+          true
+        );
+      } );
+
+      // Mark the collection as empty now that the apples have all been moved out of the collection.
+      this.appleCollection.length = 0;
+
+      // Any apples that were moved to the top are subsequently turned into fractional representations and distributed
+      // to the plates.
+      if ( applesAtTop.length > 0 ) {
+
+        // Add the number of additional apples needed for fractionalization and distribution.
+        const numberOfAdditionalApplesNeeded = this.numberOfPlatesProperty.value - applesAtTop.length;
+
+        const rightmostAppleAtTop = applesAtTop.length - middleAppleIndex - 1;
+        _.times( numberOfAdditionalApplesNeeded, i => {
+          const appleToAdd = this.getUnusedSnack();
+          assert && assert( appleToAdd, 'there should be unused apples available to add' );
+          appleToAdd!.moveTo( new Vector2(
+            ( rightmostAppleAtTop + i ) * ( MeanShareAndBalanceConstants.APPLE_GRAPHIC_RADIUS * 2 + HORIZONTAL_SPACE_BETWEEN_APPLES_IN_COLLECTION ),
+            -( COLLECTION_AREA_SIZE.height + COLLECTION_BOTTOM_Y )
+          ) );
+          applesAtTop.push( appleToAdd! );
+        } );
+
+        // Add the soon-to-be fractionalized apples to the plates.
+        applesAtTop.forEach( ( apple, i ) => {
+          this.plates[ i ].addSnackToTop( apple );
+        } );
+      }
+    }
+    else if ( previousDistributionMode === DistributionMode.SHARE && appleDistributionMode === DistributionMode.COLLECT ) {
+
+      this.animateAddedSnacks = true;
+
+      // Animate the movement of the apples from the individual plates to the collection area.
+      this.getActivePlates().forEach( plate => {
+        _.times( plate.getNumberOfNotepadSnacks(), () => {
+          if ( this.appleCollection.length < this.totalSnacksProperty.value ) {
+
+            const apple = plate.getTopSnackForTransfer();
+            assert && assert( apple, 'there should be enough apples to transfer to the collection' );
+
+            this.appleCollection.push( apple! );
+          }
+          else {
+
+            // Enough apples have been added to the collection, so just remove the next one.
+            plate.removeTopSnack();
+          }
+        } );
+      } );
+    }
+    else if ( ( previousDistributionMode === DistributionMode.SHARE || previousDistributionMode === null ) &&
+              appleDistributionMode === DistributionMode.SYNC ) {
+
+      // In the Sync mode the number of apples on the notepad plates match those shown on the table plates. There is
+      // no animation needed for this mode change.
+      this.getActivePlates().forEach( plate => plate.syncNotepadToTable() );
+    }
+    else if ( previousDistributionMode === DistributionMode.SYNC && appleDistributionMode === DistributionMode.SHARE ) {
+
+      // In the Share mode the total number of apples is split evenly over all active plates, so each plate ends up
+      // with the mean value, which could include a fractional part. There is no animation for this transition.
+      this.getActivePlates().forEach( plate => {
+        plate.setNotepadSnacksToValue( new Fraction( this.totalSnacksProperty.value, this.numberOfPlatesProperty.value ) );
+      } );
+    }
+    else {
+      assert && assert( false, `Unhandled state transition - from ${previousDistributionMode} to ${appleDistributionMode}` );
+    }
+
+    // Clear the flag that controls whether apple motion is animated - it is set at the start of each state change.
+    this.animateAddedSnacks = false;
+  }
+
+  /**
+   * Handler function that is invoked when the total number of active apples changes.  This will activate and position
+   * apples based on the current mode.
+   */
+  private handleNumberOfSnacksChanged(): void {
+    // Force any in-progress animations to finish before doing anything so that the model doesn't end up in a wierd
+    // state.  These animations, if present, would have been instigated by changes to the notebook mode.
+    this.finishInProgressAnimations();
+
+    // We cannot count on the totalSnacks value to be accurate because it comes from a derivedProperty that may
+    // not be updated yet during phet-io state setting.
+    const actualTotalSnacks = this.plates.reduce( ( sum, plate ) => sum + plate.tableSnackNumberProperty.value, 0 );
+
+    const distributionMode = this.appleDistributionModeProperty.value;
+    if ( distributionMode === DistributionMode.SYNC ) {
+
+      // Sync up the notepad plates with the table plates.
+      this.plates.forEach( plate => {
+        plate.syncNotepadToTable();
+      } );
+    }
+    else if ( distributionMode === DistributionMode.SHARE ) {
+      this.plates.forEach( plate => {
+        if ( plate.isActiveProperty.value ) {
+          plate.setNotepadSnacksToValue( new Fraction( actualTotalSnacks, this.numberOfPlatesProperty.value ) );
+        }
+        else {
+
+          // This plate isn't active, so if it has any snacks they need to be released.
+          plate.removeAllSnacks();
+        }
+      } );
+    }
+    else if ( distributionMode === DistributionMode.COLLECT ) {
+
+      const delta = actualTotalSnacks - this.appleCollection.length;
+      if ( delta > 0 ) {
+
+        // Add apples to the collection.
+        _.times( delta, () => {
+          const appleToAdd = this.getUnusedSnack();
+          assert && assert( appleToAdd, 'there should be apples available to add' );
+          this.appleCollection.push( appleToAdd! );
+        } );
+      }
+      else if ( delta < 0 ) {
+
+        // Remove apples from the collection.
+        _.times( Math.abs( delta ), () => {
+          const appleToRemove = this.appleCollection.pop();
+          assert && assert( appleToRemove, 'there should be enough apples in the collection to support this' );
+          this.releaseSnack( appleToRemove! );
+        } );
+      }
+      this.updateCollectedApplePositions();
+    }
+    else {
+      assert && assert( false, `unhandled notepad mode: ${distributionMode}` );
+    }
   }
 
   /**
