@@ -115,9 +115,9 @@ export default class NotepadNode extends Node {
 
       const readoutAlignBox = new AlignBox( readoutBackground, {
         alignBounds: this.paperStackBounds.dilatedX( -LABEL_MARGIN ),
-        xAlign: 'center',
+        xAlign: 'right',
         yAlign: 'top',
-        yMargin: NOTEPAD_RING_BOTTOM + 5,
+        yMargin: NOTEPAD_RING_BOTTOM,
         visibleProperty: options.totalVisibleProperty
       } );
       this.addChild( readoutAlignBox );
