@@ -169,7 +169,11 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     this.addChild( meanInfoPanel );
 
-    // Set the PDOM order of the nodes in the screen.
+    /**
+     * BalancePointScreenView must explicitly set the traversal order for the screen here since it must
+     * extend SoccerScreenView to take advantage of the code in the soccer-common repo. We do not have access
+     * to msabSetPDOMOrder because of this necessary relationship.
+     */
     this.pdomPlayAreaNode.setPDOMOrder( [
       kickButton,
       ...notepadNode.notepadPDOMOrder,
