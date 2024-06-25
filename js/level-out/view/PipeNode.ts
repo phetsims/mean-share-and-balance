@@ -47,18 +47,18 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     } );
     const pipeStrokeRight = new Line( MeanShareAndBalanceConstants.PIPE_LENGTH, 0,
       MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
-      lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
-    } );
+        lineWidth: 1.95,
+        stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+      } );
     const pipeStrokeTop = new Line( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, 0, {
       lineWidth: 1.95,
       stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
     } );
     const pipeStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.PIPE_WIDTH,
       MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
-      lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
-    } );
+        lineWidth: 1.95,
+        stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
+      } );
 
 
     // Create the pipe clip area when valve is closed
@@ -78,8 +78,6 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     const handleFire = () => {
       pipesOpenProperty.set( !pipe.pipesOpenProperty.value );
-      pipe.isCurrentlyClickedProperty.set( true );
-      pipe.isCurrentlyClickedProperty.set( false );
     };
 
     // Valve rotation event listener

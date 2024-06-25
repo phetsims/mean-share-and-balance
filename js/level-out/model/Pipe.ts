@@ -31,9 +31,6 @@ export default class Pipe {
   // Whether pipe is enabled in view and data calculations
   public readonly isActiveProperty: Property<boolean>;
 
-  // Property tracks if the pipe's valve is in a clicked state.
-  public readonly isCurrentlyClickedProperty = new BooleanProperty( false );
-
   // The x position of the pipe in the view.
   public readonly xPositionProperty: Property<number>;
 
