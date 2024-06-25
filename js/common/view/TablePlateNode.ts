@@ -76,12 +76,21 @@ export default class TablePlateNode<T extends Snack> extends Node {
         color: MeanShareAndBalanceColors.numberPickerColorProperty,
         valueChangedSoundPlayer: snackQuantitySoundPlayer,
         boundarySoundPlayer: snackQuantitySoundPlayer,
-        tandem: options.tandem.createTandem( 'numberPicker' ),
+        decrementFunction: value => {
+
+          // A user's interaction with a snack should be interrupted in case it is being removed from the screen
+          // in multitouch scenarios.
+          this.interruptSubtreeInput();
+          return value - 1;
+        },
 
         // These options create a "displayMode" for the Number Picker when it is disabled.
         disabledOpacity: 1,
         arrowDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
-        backgroundDisabledOpacity: SceneryConstants.DISABLED_OPACITY
+        backgroundDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
+
+        // phet-io
+        tandem: options.tandem.createTandem( 'numberPicker' )
       }
     );
 

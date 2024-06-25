@@ -97,6 +97,9 @@ export default class MeanShareAndBalanceControls extends Node {
 
     const numberSpinnerOptions = combineOptions<NumberSpinnerOptions>( {
       decrementFunction: value => {
+
+        // A user's interaction with an interactive component should be interrupted in case it
+        // is being removed from the screen in multitouch scenarios.
         this.interruptSubtreeInput();
         return value - 1;
       }
