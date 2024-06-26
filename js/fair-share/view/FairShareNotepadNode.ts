@@ -14,7 +14,6 @@ import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import { AlignBox, Image, Text } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
@@ -23,6 +22,7 @@ import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & WithRequired<NotepadNodeOptions, 'tandem'>;
 export default class FairShareNotepadNode extends NotepadNode {
@@ -52,7 +52,7 @@ export default class FairShareNotepadNode extends NotepadNode {
     // Add the radio buttons for selecting the different modes.
     const distributionModes = [ DistributionMode.SYNC, DistributionMode.COLLECT, DistributionMode.SHARE ];
     const distributionModeItems = distributionModes.map( choice => ( {
-      createNode: () => new Text( choice.stringProperty, { font: new PhetFont( 12 ), maxWidth: 120 } ),
+      createNode: () => new Text( choice.stringProperty, { font: MeanShareAndBalanceConstants.DEFAULT_FONT, maxWidth: 120 } ),
       value: choice,
       tandemName: `${choice.name.toLowerCase()}RadioButton`,
       options: { minWidth: 80 }

@@ -26,11 +26,12 @@ export default class SyncButton extends RectangularPushButton {
       children: [
         syncIcon,
         new Text( MeanShareAndBalanceStrings.syncStringProperty, {
-          fontSize: 15,
+          font: MeanShareAndBalanceConstants.DEFAULT_FONT,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH - syncIcon.width
         } )
       ],
-      stretch: false
+      stretch: false,
+      spacing: 4
     } );
 
     const options = optionize<SyncButtonOptions, SelfOptions, RectangularPushButtonOptions>()( {

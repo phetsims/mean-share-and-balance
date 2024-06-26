@@ -13,7 +13,6 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import BalanceBeamNode from './BalanceBeamNode.js';
@@ -62,12 +61,12 @@ export default class BalancePointNotepadNode extends NotepadNode {
     // Create the check push button. The color and text switches depending on if the supports are present or not.
     const buttonTextMaxWidth = 80;
     const checkText = new Text( MeanShareAndBalanceStrings.checkStringProperty, {
-      font: new PhetFont( 16 ),
+      font: MeanShareAndBalanceConstants.DEFAULT_FONT,
       visibleProperty: sceneModel.beamSupportsPresentProperty,
       maxWidth: buttonTextMaxWidth
     } );
     const resetText = new Text( MeanShareAndBalanceStrings.resetStringProperty, {
-      font: new PhetFont( 16 ),
+      font: MeanShareAndBalanceConstants.DEFAULT_FONT,
       visibleProperty: DerivedProperty.not( sceneModel.beamSupportsPresentProperty ),
       maxWidth: buttonTextMaxWidth
     } );

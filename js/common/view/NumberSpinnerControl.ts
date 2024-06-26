@@ -37,7 +37,7 @@ export default class NumberSpinnerControl extends VBox {
     }, providedOptions );
 
     const labelText = new Text( stringProperty, {
-      fontSize: 15,
+      font: MeanShareAndBalanceConstants.DEFAULT_FONT,
       maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
     } );
 

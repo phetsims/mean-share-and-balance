@@ -13,7 +13,6 @@ import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty, { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import notepadRing_svg from '../../../images/notepadRing_svg.js';
@@ -99,7 +98,7 @@ export default class NotepadNode extends Node {
 
     if ( options.readoutPatternStringProperty ) {
       const readoutText = new Text( options.readoutPatternStringProperty, {
-        font: new PhetFont( 16 ),
+        font: MeanShareAndBalanceConstants.DEFAULT_FONT,
         maxWidth: 200,
         fill: 'black'
       } );

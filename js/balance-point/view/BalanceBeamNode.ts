@@ -27,7 +27,6 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -324,7 +323,7 @@ export default class BalanceBeamNode extends Node {
     // Add the prompt message that is shown when no balls have been kicked.
     const promptMessageVisibleProperty = new DerivedProperty( [ sceneModel.meanValueProperty ], mean => mean === null );
     const needAtLeastOneKickMessage = new Text( MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty, {
-      font: new PhetFont( 16 ),
+      font: MeanShareAndBalanceConstants.DEFAULT_FONT,
       visibleProperty: promptMessageVisibleProperty,
       maxWidth: this.bounds.width
     } );

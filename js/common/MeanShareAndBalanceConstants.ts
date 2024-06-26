@@ -16,6 +16,7 @@ import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
+import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 
 const DEFAULT_MARGIN = 15;
 const CONTROLS_MAX_TEXT_WIDTH = 175;
@@ -109,7 +110,8 @@ const MeanShareAndBalanceConstants = {
                     - NUMBER_LINE_LEFT_X_MARGIN - NUMBER_LINE_RIGHT_X_MARGIN,
   FULCRUM_DEFAULT_POSITION: 5,
   FULCRUM_ICON_TRIANGLE_DIMENSIONS: { triangleHeight: 22, triangleWidth: 24 },
-  GRAB_RELEASE_SOUND_LEVEL: 0.25
+  GRAB_RELEASE_SOUND_LEVEL: 0.25,
+  DEFAULT_FONT: new PhetFont( 16 )
 };
 
 meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );
