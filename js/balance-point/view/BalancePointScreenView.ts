@@ -101,7 +101,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const resetAllButton = new ResetAllButton( {
       listener: () => {
-        assert && assert( !ResetAllButton.isResettingAllProperty.value, 'cannot reset while already resetting' );
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
         notepadNode.reset();
