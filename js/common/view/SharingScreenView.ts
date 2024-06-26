@@ -82,7 +82,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     notepadNode.centerY = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y;
 
     // Create the controls.
-    const controls = new SharingControls( model, model.meanInfoPanelVisibleProperty, {
+    const controls = new SharingControls( model, model.meanInfoPanelVisibleProperty, notepadNode.bottom, {
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
       predictMeanVisibleProperty: options.predictMeanVisibleProperty,

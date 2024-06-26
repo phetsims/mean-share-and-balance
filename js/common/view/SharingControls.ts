@@ -44,6 +44,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
                         'totalVisibleProperty' |
                         'syncData' | 'activePlatesInSyncProperty'>,
                       meanInfoPanelVisibleProperty: Property<boolean>,
+                      notepadNodeBottom: number,
                       providedOptions: SharingControlsOptions ) {
 
     const options = optionize<SharingControlsOptions, SelfOptions,
@@ -103,7 +104,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
     }, options );
 
     super( vBox, model.numberOfPlatesProperty, model.numberOfPlatesRangeProperty,
-      MeanShareAndBalanceStrings.numberOfPeopleStringProperty, superOptions );
+      MeanShareAndBalanceStrings.numberOfPeopleStringProperty, notepadNodeBottom, superOptions );
   }
 }
 

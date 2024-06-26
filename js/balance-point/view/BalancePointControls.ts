@@ -31,7 +31,7 @@ type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceC
 
 export default class BalancePointControls extends MeanShareAndBalanceControls {
 
-  public constructor( model: BalancePointModel, providedOptions: BalancePointControlsOptions ) {
+  public constructor( model: BalancePointModel, notepadNodeBottom: number, providedOptions: BalancePointControlsOptions ) {
 
     const meanFulcrumRadioButtonGroup = new RectangularRadioButtonGroup( model.meanFulcrumFixedProperty, [
       {
@@ -77,7 +77,8 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       },
       infoPanelVisibleProperty: model.meanInfoPanelVisibleProperty
     }, providedOptions );
-    super( vBox, numberOfDataPointsProperty, BalancePointModel.numberOfKicksRangeProperty, MeanShareAndBalanceStrings.numberOfBallsStringProperty, options );
+    super( vBox, numberOfDataPointsProperty, BalancePointModel.numberOfKicksRangeProperty,
+      MeanShareAndBalanceStrings.numberOfBallsStringProperty, notepadNodeBottom, options );
   }
 }
 

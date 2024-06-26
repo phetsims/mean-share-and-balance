@@ -63,6 +63,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     const questionBar = new QuestionBar( this.layoutBounds, this.visibleBoundsProperty, {
       questionString: MeanShareAndBalanceStrings.balancePointQuestionStringProperty,
       barFill: MeanShareAndBalanceColors.balancePointQuestionBarColorProperty,
+      barHeight: MeanShareAndBalanceConstants.QUESTION_BAR_HEIGHT,
       tandem: options.tandem.createTandem( 'questionBar' ),
       phetioFeatured: true,
       phetioVisiblePropertyInstrumented: true,
@@ -84,7 +85,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     );
 
     // Create the controls that appear on the right side of the screen.
-    const controls = new BalancePointControls( model, {
+    const controls = new BalancePointControls( model, notepadNode.bottom, {
       onInfoButtonPressed: () => {
         meanInfoPanel.closeButton.focus();
       },

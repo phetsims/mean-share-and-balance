@@ -38,6 +38,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
                       numberOfCupsRangeProperty: Property<Range>,
                       pipesOpenProperty: Property<boolean>,
                       pipesEnabledProperty: Property<boolean>,
+                      notepadNodeBottom: number,
                       providedOptions: LevelOutControlPanelOptions ) {
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
@@ -75,7 +76,8 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       },
       options.vBoxOptions );
     const vBox = new VBox( vBoxOptions );
-    super( vBox, numberOfCupsProperty, numberOfCupsRangeProperty, MeanShareAndBalanceStrings.numberOfCupsStringProperty, options );
+    super( vBox, numberOfCupsProperty, numberOfCupsRangeProperty,
+      MeanShareAndBalanceStrings.numberOfCupsStringProperty, notepadNodeBottom, options );
   }
 }
 

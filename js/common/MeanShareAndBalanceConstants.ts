@@ -32,6 +32,7 @@ const MeanShareAndBalanceConstants = {
     maxIconWidthProportion: 1,
     maxIconHeightProportion: 1
   },
+  QUESTION_BAR_HEIGHT: 70,
 
   // The interval to which the mean value is rounded when shown to the user.  For example, 5.666667 would be 5.7.
   MEAN_ROUNDING_INTERVAL: 0.1,

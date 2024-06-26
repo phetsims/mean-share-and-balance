@@ -210,8 +210,8 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
 
     // Controls on Right side of screen
     const controls = new LevelOutControls( model.tickMarksVisibleProperty, model.predictMeanVisibleProperty,
-      model.numberOfCupsProperty, model.numberOfCupsRangeProperty,
-      model.pipesOpenProperty, model.pipesEnabledProperty, { tandem: options.tandem.createTandem( 'controls' ) } );
+      model.numberOfCupsProperty, model.numberOfCupsRangeProperty, model.pipesOpenProperty,
+      model.pipesEnabledProperty, notepadNode.bottom, { tandem: options.tandem.createTandem( 'controls' ) } );
     const controlsAlignBox = new AlignBox( controls, {
       alignBounds: playAreaBounds,
       xAlign: 'right',

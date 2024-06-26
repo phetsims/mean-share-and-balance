@@ -23,6 +23,7 @@ import generalOpenSoundPlayer from '../../../../tambo/js/shared-sound-players/ge
 import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {
   numberSpinnerOptions: NumberSpinnerOptions;
@@ -55,6 +56,7 @@ export default class MeanShareAndBalanceControls extends Node {
     numberOfObjectsProperty: Property<number>,
     numberOfObjectsRangeProperty: Property<Range>,
     numberOfObjectsStringProperty: LocalizedStringProperty,
+    notepadNodeBottom: number,
     providedOptions: MeanShareAndBalanceControlsOptions
   ) {
 
@@ -78,13 +80,17 @@ export default class MeanShareAndBalanceControls extends Node {
 
     if ( options.infoPanelVisibleProperty ) {
 
+      // We need to account for the vertical margin above the controls AlignBox, as well as the height of the question bar
+      // to properly align the info button to the bottom of the notepad.
+      const infoButtonBottom = notepadNodeBottom - MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
+                               - MeanShareAndBalanceConstants.QUESTION_BAR_HEIGHT;
       const infoButtonSoundPlayer = new InfoButtonSoundPlayer( options.infoPanelVisibleProperty );
       this.infoButton = new InfoButton( {
         listener: () => {
           options.infoPanelVisibleProperty!.value = !options.infoPanelVisibleProperty!.value;
           options.onInfoButtonPressed();
         },
-        centerY: 230,
+        bottom: infoButtonBottom,
         scale: 0.6,
         left: vBoxAlignBox.left,
         iconFill: MeanShareAndBalanceColors.infoIconFillColorProperty,
@@ -117,7 +123,7 @@ export default class MeanShareAndBalanceControls extends Node {
     );
 
     this.numberSpinner = controlsAlignGroup.createBox( numberSpinner, {
-      top: 350,
+      top: 350, // empirically determined for control proportions
       xAlign: 'left'
     } );
     this.addChild( this.numberSpinner );
