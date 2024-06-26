@@ -119,9 +119,10 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
         maxWidth: 60
       } ),
       multiKick: false,
-      tandem: options.tandem.createTandem( 'kickButton' ),
       listener: () => model.selectedSceneModelProperty.value.targetNumberOfBallsProperty.value++,
-      leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 )
+      leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 ),
+      accessibleName: MeanShareAndBalanceStrings.kickStringProperty,
+      tandem: options.tandem.createTandem( 'kickButton' )
     } );
 
     // Add children to the scene graph in correct z-order.

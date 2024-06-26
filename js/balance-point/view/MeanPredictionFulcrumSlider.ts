@@ -93,6 +93,7 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
 
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
       pdomMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
+      accessibleName: 'Mean Prediction Fulcrum',
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
       drag: () => { fulcrumWasDraggedProperty.value = true; },
       isDisposable: false

@@ -91,6 +91,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
       },
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
+      accessibleName: 'Check',
       tandem: checkAndResetButtonTandem
     } );
     sceneModel.beamSupportsPresentProperty.link( supportsPresent => {
