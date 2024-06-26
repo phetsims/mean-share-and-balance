@@ -20,6 +20,7 @@ import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import balancePointHomeScreenIcon_svg from '../../images/balancePointHomeScreenIcon_svg.js';
 import balancePointNavBarIcon_svg from '../../images/balancePointNavBarIcon_svg.js';
 import BalancePointKeyboardHelpNode from './view/BalancePointKeyboardHelpNode.js';
+import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -29,14 +30,8 @@ export default class BalancePointScreen extends Screen<BalancePointModel, Balanc
   public constructor( providedOptions: BalancePointScreenOptions ) {
     const options = optionize<BalancePointScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.balancePointStringProperty,
-      homeScreenIcon: new ScreenIcon( new Image( balancePointHomeScreenIcon_svg ), {
-        maxIconWidthProportion: 1,
-        maxIconHeightProportion: 1
-      } ),
-      navigationBarIcon: new ScreenIcon( new Image( balancePointNavBarIcon_svg ), {
-        maxIconWidthProportion: 1,
-        maxIconHeightProportion: 1
-      } ),
+      homeScreenIcon: new ScreenIcon( new Image( balancePointHomeScreenIcon_svg ), MeanShareAndBalanceConstants.SCREEN_ICON_OPTIONS ),
+      navigationBarIcon: new ScreenIcon( new Image( balancePointNavBarIcon_svg ), MeanShareAndBalanceConstants.SCREEN_ICON_OPTIONS ),
       backgroundColorProperty: MeanShareAndBalanceColors.balancePointScreenColorProperty,
       createKeyboardHelpNode: () => new BalancePointKeyboardHelpNode()
     }, providedOptions );

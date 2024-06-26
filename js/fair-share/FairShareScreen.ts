@@ -19,6 +19,7 @@ import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import fairShareHomeScreenIcon_svg from '../../images/fairShareHomeScreenIcon_svg.js';
 import fairShareNavBarIcon_svg from '../../images/fairShareNavBarIcon_svg.js';
 import FairShareKeyboardHelpNode from './view/FairShareKeyboardHelpNode.js';
+import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -28,14 +29,8 @@ export default class FairShareScreen extends Screen<FairShareModel, FairShareScr
   public constructor( providedOptions: FairShareScreenOptions ) {
     const options = optionize<FairShareScreenOptions, SelfOptions, ScreenOptions>()( {
       name: MeanShareAndBalanceStrings.screen.fairShareStringProperty,
-      homeScreenIcon: new ScreenIcon( new Image( fairShareHomeScreenIcon_svg ), {
-        maxIconWidthProportion: 1,
-        maxIconHeightProportion: 1
-      } ),
-      navigationBarIcon: new ScreenIcon( new Image( fairShareNavBarIcon_svg ), {
-        maxIconWidthProportion: 1,
-        maxIconHeightProportion: 1
-      } ),
+      homeScreenIcon: new ScreenIcon( new Image( fairShareHomeScreenIcon_svg ), MeanShareAndBalanceConstants.SCREEN_ICON_OPTIONS ),
+      navigationBarIcon: new ScreenIcon( new Image( fairShareNavBarIcon_svg ), MeanShareAndBalanceConstants.SCREEN_ICON_OPTIONS ),
       backgroundColorProperty: MeanShareAndBalanceColors.fairShareScreenColorProperty,
       createKeyboardHelpNode: () => new FairShareKeyboardHelpNode()
     }, providedOptions );

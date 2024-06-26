@@ -27,6 +27,10 @@ const NUMBER_LINE_RIGHT_X_MARGIN = 215;
 const PLATE_WIDTH = 45;
 
 const MeanShareAndBalanceConstants = {
+  SCREEN_ICON_OPTIONS: {
+    maxIconWidthProportion: 1,
+    maxIconHeightProportion: 1
+  },
 
   // The interval to which the mean value is rounded when shown to the user.  For example, 5.666667 would be 5.7.
   MEAN_ROUNDING_INTERVAL: 0.1,
