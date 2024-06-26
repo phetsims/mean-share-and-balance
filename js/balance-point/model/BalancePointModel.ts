@@ -58,7 +58,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       },
       isDisposable: false,
       phetioState: false,
-      phetioType: BalancePointModelIO
+      phetioType: BalancePointModel.BalancePointModelIO
     }, providedOptions );
 
     const meanFulcrumFixedProperty = new BooleanProperty( false, {
@@ -116,31 +116,31 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     this.fulcrumWasDraggedProperty.reset();
   }
 
-  public static numberOfKicksRangeProperty = NUMBER_OF_KICKS_RANGE_PROPERTY;
-}
+  public static readonly numberOfKicksRangeProperty = NUMBER_OF_KICKS_RANGE_PROPERTY;
 
-const BalancePointModelIO = new IOType( 'BalancePointModelIO', {
-  valueType: BalancePointModel,
-  methods: {
-    setDataPoints: {
-      returnType: VoidIO,
-      parameterTypes: [ ArrayIO( NumberIO ) ],
-      implementation: function( this: BalancePointModel, dataPoints: number[] ) {
-        this.selectedSceneModelProperty.value.setDataPoints( dataPoints );
+  private static readonly BalancePointModelIO = new IOType( 'BalancePointModelIO', {
+    valueType: BalancePointModel,
+    methods: {
+      setDataPoints: {
+        returnType: VoidIO,
+        parameterTypes: [ ArrayIO( NumberIO ) ],
+        implementation: function( this: BalancePointModel, dataPoints: number[] ) {
+          this.selectedSceneModelProperty.value.setDataPoints( dataPoints );
+        },
+        documentation: 'Sets the data points for the selected scene model. Array lengths that exceed maxKicks will ignore excess values.'
       },
-      documentation: 'Sets the data points for the selected scene model. Array lengths that exceed maxKicks will ignore excess values.'
-    },
 
-    getDataPoints: {
-      returnType: ArrayIO( NumberIO ),
-      parameterTypes: [],
-      implementation: function( this: BalancePointModel ) {
-        return this.selectedSceneModelProperty.value
-          .getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value );
-      },
-      documentation: 'Gets the data points for the selected scene model.'
+      getDataPoints: {
+        returnType: ArrayIO( NumberIO ),
+        parameterTypes: [],
+        implementation: function( this: BalancePointModel ) {
+          return this.selectedSceneModelProperty.value
+            .getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value );
+        },
+        documentation: 'Gets the data points for the selected scene model.'
+      }
     }
-  }
-} );
+  } );
+}
 
 meanShareAndBalance.register( 'BalancePointModel', BalancePointModel );

@@ -64,7 +64,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
-  public readonly maxCupsProperty: Property<number>;
+  private readonly maxCupsProperty: Property<number>;
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 
@@ -428,35 +428,43 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
   }
 
-  private static LevelOutModelIO = new IOType( 'LevelOutModelIO', {
+  /**
+   * For use by PhET-iO clients. Set the water levels of the notepadCups.
+   * @param waterLevels
+   */
+  private setWaterLevels( waterLevels: number[] ): void {
+
+    // Validate water level array
+    // If a client passes through an empty array of data points, ignore and return early.
+    if ( waterLevels.length === 0 ) {
+      return;
+    }
+    else if ( waterLevels.length > this.maxCupsProperty.value ) {
+      waterLevels = waterLevels.slice( 0, this.maxCupsProperty.value );
+    }
+    waterLevels.forEach( ( dataPoint, i ) => {
+      const tableCup = this.tableCups[ i ];
+      const error = tableCup.waterLevelProperty.getValidationError( dataPoint );
+      if ( error ) {
+        throw new Error( error );
+      }
+    } );
+
+    this.resetData();
+    this.numberOfCupsProperty.value = waterLevels.length;
+    waterLevels.forEach( ( dataPoint, index ) => {
+      this.tableCups[ index ].waterLevelProperty.set( dataPoint );
+    } );
+  }
+
+  private static readonly LevelOutModelIO = new IOType( 'LevelOutModelIO', {
     valueType: LevelOutModel,
     methods: {
       setDataPoints: {
         returnType: VoidIO,
         parameterTypes: [ ArrayIO( NumberIO ) ],
         implementation: function( this: LevelOutModel, dataPoints: number[] ) {
-
-          // Validate data points
-          // If a client passes through an empty array of data points, ignore and return early.
-          if ( dataPoints.length === 0 ) {
-            return;
-          }
-          else if ( dataPoints.length > this.maxCupsProperty.value ) {
-            dataPoints = dataPoints.slice( 0, this.maxCupsProperty.value );
-          }
-          dataPoints.forEach( ( dataPoint, i ) => {
-            const tableCup = this.tableCups[ i ];
-            const error = tableCup.waterLevelProperty.getValidationError( dataPoint );
-            if ( error ) {
-              throw new Error( error );
-            }
-          } );
-
-          this.resetData();
-          this.numberOfCupsProperty.value = dataPoints.length;
-          dataPoints.forEach( ( dataPoint, index ) => {
-            this.tableCups[ index ].waterLevelProperty.set( dataPoint );
-          } );
+          this.setWaterLevels( dataPoints );
         },
         documentation: 'Sets the data points for the scene model. Array lengths that exceed maxCups will ignore excess values.'
       },

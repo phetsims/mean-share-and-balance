@@ -65,7 +65,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   protected readonly unusedSnacks: ObservableArray<T>;
 
   // Allows PhET-iO clients to modify the max number of plates in the screen.
-  public readonly maxPlatesProperty: Property<number>;
+  private readonly maxPlatesProperty: Property<number>;
 
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
@@ -287,39 +287,46 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     this.resetData();
   }
 
+  /**
+   * For use by PhET-iO clients to set the number of snacks on each plate for the scene model.
+   * @param plateValues
+   */
+  private setPlateValues( plateValues: number[] ): void {
+    // Validate data points
+    // If a client passes through an empty array of data points, ignore and return early.
+    if ( plateValues.length === 0 ) {
+      return;
+    }
+    else if ( plateValues.length > this.maxPlatesProperty.value ) {
+      plateValues = plateValues.slice( 0, this.maxPlatesProperty.value );
+    }
+    plateValues.forEach( ( plateValue, i ) => {
+      const plate = this.plates[ i ];
+      const error = plate.tableSnackNumberProperty.getValidationError( plateValue );
+      if ( error ) {
+        throw new Error( error );
+      }
+    } );
+
+    // Restore the state of the data before setting the new data points.
+    this.resetData();
+    this.numberOfPlatesProperty.value = plateValues.length;
+
+    plateValues.forEach( ( plateValue, index ) => {
+      this.plates[ index ].tableSnackNumberProperty.set( plateValue );
+    } );
+  }
+
   public static readonly INTER_PLATE_DISTANCE = INTER_PLATE_DISTANCE;
 
-  private static SharingModelIO = new IOType( 'SharingModelIO', {
+  private static readonly SharingModelIO = new IOType( 'SharingModelIO', {
     valueType: SharingModel,
     methods: {
       setDataPoints: {
         returnType: VoidIO,
         parameterTypes: [ ArrayIO( NumberIO ) ],
         implementation: function( this: SharingModel<Snack>, dataPoints: number[] ) {
-
-          // Validate data points
-          // If a client passes through an empty array of data points, ignore and return early.
-          if ( dataPoints.length === 0 ) {
-            return;
-          }
-          else if ( dataPoints.length > this.maxPlatesProperty.value ) {
-            dataPoints = dataPoints.slice( 0, this.maxPlatesProperty.value );
-          }
-          dataPoints.forEach( ( dataPoint, i ) => {
-            const plate = this.plates[ i ];
-            const error = plate.tableSnackNumberProperty.getValidationError( dataPoint );
-            if ( error ) {
-              throw new Error( error );
-            }
-          } );
-
-          // Restore the state of the data before setting the new data points.
-          this.resetData();
-          this.numberOfPlatesProperty.value = dataPoints.length;
-
-          dataPoints.forEach( ( dataPoint, index ) => {
-            this.plates[ index ].tableSnackNumberProperty.set( dataPoint );
-          } );
+          this.setPlateValues( dataPoints );
         },
         documentation: 'Sets the data points for the scene model. Array lengths that exceed maxPlates will ignore excess values.'
       },
