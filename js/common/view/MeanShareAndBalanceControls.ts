@@ -123,7 +123,7 @@ export default class MeanShareAndBalanceControls extends Node {
     );
 
     this.numberSpinner = controlsAlignGroup.createBox( numberSpinner, {
-      top: 350, // empirically determined for control proportions
+      top: 350, // empirically determined to appear next to the "real world" representation
       xAlign: 'left'
     } );
     this.addChild( this.numberSpinner );
