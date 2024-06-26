@@ -28,7 +28,6 @@ import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js'
 import Panel, { PanelOptions } from '../../../../sun/js/Panel.js';
 import CloseButton from '../../../../scenery-phet/js/buttons/CloseButton.js';
 import ButtonNode from '../../../../sun/js/buttons/ButtonNode.js';
-import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import ToggleNode from '../../../../sun/js/ToggleNode.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 
@@ -90,7 +89,6 @@ export default class MeanInfoPanel extends Panel {
       },
       baseColor: 'transparent',
       buttonAppearanceStrategy: ButtonNode.FlatAppearanceStrategy,
-      soundPlayer: generalCloseSoundPlayer,
       pathOptions: {
         stroke: 'black'
       },
