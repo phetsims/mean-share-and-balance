@@ -12,22 +12,24 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 
+type PipeSwitchOptions = WithRequired<ABSwitchOptions, 'tandem'>;
 export default class PipeSwitch extends ABSwitch<boolean> {
 
-  public constructor( pipesOpenProperty: Property<boolean>, pipesEnabledProperty: Property<boolean>, tandem: Tandem ) {
+  public constructor( pipesOpenProperty: Property<boolean>, pipesEnabledProperty: Property<boolean>, providedOptions: PipeSwitchOptions ) {
 
     const closedValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( 0 ) );
 
     const openValveIcon = new ValveNode( new Vector2( 0, 0 ), new Property( Math.PI / 2 ) );
 
-    const options: ABSwitchOptions = {
+    const options = optionize<PipeSwitchOptions, EmptySelfOptions, ABSwitchOptions>()( {
       align: 'top',
       justify: 'left',
       enabledProperty: pipesEnabledProperty,
-      tandem: tandem,
+      accessibleName: 'Pipe Switch',
       toggleSwitchOptions: {
         size: new Dimension2( 40, 20 ),
 
@@ -38,7 +40,7 @@ export default class PipeSwitch extends ABSwitch<boolean> {
         visiblePropertyOptions: { phetioFeatured: false }
       },
       isDisposable: false
-    };
+    }, providedOptions );
 
     super( pipesOpenProperty, false, closedValveIcon, true, openValveIcon, options );
   }

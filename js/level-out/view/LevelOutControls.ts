@@ -49,7 +49,12 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
     const pipeSwitch = new PipeSwitch(
       pipesOpenProperty,
       pipesEnabledProperty,
-      providedOptions.tandem.createTandem( 'pipeSwitch' )
+      {
+        tandem: providedOptions.tandem.createTandem( 'pipeSwitch' ),
+        toggleSwitchOptions: {
+          accessibleName: 'Pipe Switch'
+        }
+      }
     );
 
     // Hook up Number Spinner callbacks.
