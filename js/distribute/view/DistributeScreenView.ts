@@ -172,7 +172,9 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       focusable: true,
       tagName: 'div',
       children: notepadCandyBarNodes,
-      excludeInvisibleChildrenFromBounds: true
+      excludeInvisibleChildrenFromBounds: true,
+      accessibleName: 'Candy Bars',
+      ariaRole: 'application'
     } );
 
     this.notepadSnackLayerNode.addChild( this.cueingHighlight );

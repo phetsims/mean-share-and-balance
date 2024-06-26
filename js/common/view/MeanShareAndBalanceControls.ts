@@ -94,8 +94,9 @@ export default class MeanShareAndBalanceControls extends Node {
         scale: 0.6,
         left: vBoxAlignBox.left,
         iconFill: MeanShareAndBalanceColors.infoIconFillColorProperty,
-        tandem: options.tandem.createTandem( 'infoButton' ),
-        soundPlayer: infoButtonSoundPlayer
+        soundPlayer: infoButtonSoundPlayer,
+        accessibleName: 'Info',
+        tandem: options.tandem.createTandem( 'infoButton' )
       } );
       this.addChild( this.infoButton );
       options.controlsPDOMOrder.push( this.infoButton );
