@@ -18,7 +18,6 @@ import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
 import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
 import shareCompleteLargeAmount_mp3 from '../../../sounds/shareCompleteLargeAmount_mp3.js';
 import shareCompleteMediumAmount_mp3 from '../../../sounds/shareCompleteMediumAmount_mp3.js';
 import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmount_mp3.js';
@@ -26,6 +25,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import { TimerListener } from '../../../../axon/js/Timer.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
+import TEmitter from '../../../../axon/js/TEmitter.js';
 
 type SelfOptions = EmptySelfOptions;
 type AllocationModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
@@ -49,7 +49,7 @@ const SHARE_COMPLETE_DELAY_FUNCTION = new LinearFunction(
 class AllocationModeSoundGenerator extends SoundGenerator {
 
   public constructor( allocationModeProperty: TReadOnlyProperty<DistributionMode>,
-                      applesAnimationStateEmitter: TinyEmitter<ApplesAnimationState>,
+                      applesAnimationStateEmitter: TEmitter<[ApplesAnimationState]>,
                       totalApplesProperty: TReadOnlyProperty<number>,
                       numberOfActivePlatesProperty: TReadOnlyProperty<number>,
                       providedOptions?: AllocationModeSoundPlayerOptions ) {

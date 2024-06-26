@@ -36,7 +36,7 @@ import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
-export type ApplesAnimationState = [ 'split' ] | [ 'land' ];
+export type ApplesAnimationState = 'split' | 'land';
 
 // constants
 const APPLES_PER_COLLECTION_GROUP = 10;
@@ -88,7 +88,7 @@ export default class FairShareModel extends SharingModel<Apple> {
   // The array where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
 
-  public readonly applesAnimationStateEmitter = new TinyEmitter<ApplesAnimationState>();
+  public readonly applesAnimationStateEmitter = new TinyEmitter<[ApplesAnimationState]>();
 
   public constructor( providedOptions: FairShareModelOptions ) {
 

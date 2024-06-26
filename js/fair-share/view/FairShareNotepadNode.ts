@@ -17,18 +17,18 @@ import Property from '../../../../axon/js/Property.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
-import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
 import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import TEmitter from '../../../../axon/js/TEmitter.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & WithRequired<NotepadNodeOptions, 'tandem'>;
 export default class FairShareNotepadNode extends NotepadNode {
 
   public constructor( appleDistributionModeProperty: Property<DistributionMode>,
-                      applesAnimationStateEmitter: TinyEmitter<ApplesAnimationState>,
+                      applesAnimationStateEmitter: TEmitter<[ ApplesAnimationState ]>,
                       totalApplesProperty: TReadOnlyProperty<number>,
                       numberOfActivePlatesProperty: TReadOnlyProperty<number>,
                       providedOptions: FairShareNotepadNodeOptions ) {
