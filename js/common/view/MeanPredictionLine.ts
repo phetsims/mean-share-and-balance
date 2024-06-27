@@ -34,7 +34,8 @@ export default class MeanPredictionLine extends Node {
   private readonly predictMeanHandle: Node;
   private readonly predictMeanGlow: Rectangle;
 
-  public constructor( meanPredictionProperty: Property<number>, dragRange: Range,
+  public constructor( meanPredictionProperty: Property<number>,
+                      dragRange: Range,
                       createSuccessIndicatorMultilink: ( predictMeanLine: Path, successRectangle: Node ) => void,
                       private readonly modelViewTransform: ModelViewTransform2,
                       providedOptions: MeanPredictionLineOptions ) {

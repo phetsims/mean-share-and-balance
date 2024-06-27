@@ -1,12 +1,10 @@
 // Copyright 2024, University of Colorado Boulder
 /**
- * A pencil image creates the handle for the draggable predict mean line. The drag listener
- * is defined and added in this class as well.
+ * A pencil image creates the handle for the draggable "predict mean" line. The drag listener is defined and added in
+ * this class as well.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
- *
  */
-
 
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import { DragListener, Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
@@ -26,8 +24,11 @@ type MeanPredictionHandleOptions = StrictOmit<ParentOptions, 'children' | 'picka
   & PickRequired<ParentOptions, 'tandem'>;
 export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
 
-  public constructor( valueProperty: Property<number>, dragRange: Range,
-                      modelViewTransform: ModelViewTransform2, providedOptions: MeanPredictionHandleOptions ) {
+  public constructor( valueProperty: Property<number>,
+                      dragRange: Range,
+                      modelViewTransform: ModelViewTransform2,
+                      providedOptions: MeanPredictionHandleOptions ) {
+
     const predictMeanHandle = new Image( pencil_png, {
       scale: 0.04,
       rotation: Math.PI / 4
