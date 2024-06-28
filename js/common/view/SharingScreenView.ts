@@ -176,8 +176,10 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       topMargin: MeanShareAndBalanceConstants.CONTROLS_VERTICAL_MARGIN
     } );
 
+    // Interrupt dragging of the snacks if the number of plates changes, since it could mean that the snack being
+    // dragged has ceased to exist.
     model.numberOfPlatesProperty.link( () => {
-      this.interruptSubtreeInput();
+      interruptSnackDragging();
     } );
 
     // Add all the children.  This is done all at once so that the z-order is apparent and easily adjusted.
