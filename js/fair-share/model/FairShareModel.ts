@@ -32,7 +32,7 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import Plate from '../../common/model/Plate.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import TinyEmitter from '../../../../axon/js/TinyEmitter.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;
@@ -88,7 +88,9 @@ export default class FairShareModel extends SharingModel<Apple> {
   // The array where the apples reside when they are in the collection, since they can't be on plates.
   private appleCollection: ObservableArray<Apple>;
 
-  public readonly applesAnimationStateEmitter = new TinyEmitter<[ApplesAnimationState]>();
+  public readonly applesAnimationStateEmitter = new Emitter<[ ApplesAnimationState ]>( {
+    parameters: [ { valueType: 'string' } ]
+  } );
 
   public constructor( providedOptions: FairShareModelOptions ) {
 
