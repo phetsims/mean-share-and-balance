@@ -170,10 +170,10 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     );
     const notepadCandyBarsHighlightNode = new InteractiveHighlightingNode( {
       focusable: true,
-      tagName: 'div',
+      tagName: 'button',
       children: notepadCandyBarNodes,
       excludeInvisibleChildrenFromBounds: true,
-      accessibleName: 'Candy Bars',
+      accessibleName: 'Grab Candy Bar',
       ariaRole: 'application'
     } );
 

@@ -50,10 +50,7 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       pipesOpenProperty,
       pipesEnabledProperty,
       {
-        tandem: providedOptions.tandem.createTandem( 'pipeSwitch' ),
-        toggleSwitchOptions: {
-          accessibleName: 'Pipe Switch'
-        }
+        tandem: providedOptions.tandem.createTandem( 'pipeSwitch' )
       }
     );
 

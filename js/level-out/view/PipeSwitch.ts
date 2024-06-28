@@ -29,7 +29,6 @@ export default class PipeSwitch extends ABSwitch<boolean> {
       align: 'top',
       justify: 'left',
       enabledProperty: pipesEnabledProperty,
-      accessibleName: 'Pipe Switch',
       toggleSwitchOptions: {
         size: new Dimension2( 40, 20 ),
 
@@ -37,7 +36,8 @@ export default class PipeSwitch extends ABSwitch<boolean> {
         switchToLeftSoundPlayer: nullSoundPlayer,
         switchToRightSoundPlayer: nullSoundPlayer,
         phetioFeatured: false,
-        visiblePropertyOptions: { phetioFeatured: false }
+        visiblePropertyOptions: { phetioFeatured: false },
+        accessibleName: 'Pipe Switch'
       },
       isDisposable: false
     }, providedOptions );

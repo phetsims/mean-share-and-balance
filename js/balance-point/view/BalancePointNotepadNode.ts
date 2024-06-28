@@ -20,7 +20,6 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import RectangularPushButton from '../../../../sun/js/buttons/RectangularPushButton.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
@@ -28,6 +27,7 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 import pillarsRemoved_mp3 from '../../../sounds/pillarsRemoved_mp3.js';
 import pillarsAdded_mp3 from '../../../sounds/pillarsAdded_mp3.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
+import BooleanRectangularToggleButton from '../../../../sun/js/buttons/BooleanRectangularToggleButton.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -62,40 +62,34 @@ export default class BalancePointNotepadNode extends NotepadNode {
     const buttonTextMaxWidth = 80;
     const checkText = new Text( MeanShareAndBalanceStrings.checkStringProperty, {
       font: MeanShareAndBalanceConstants.DEFAULT_FONT,
-      visibleProperty: sceneModel.beamSupportsPresentProperty,
       maxWidth: buttonTextMaxWidth
     } );
     const resetText = new Text( MeanShareAndBalanceStrings.resetStringProperty, {
       font: MeanShareAndBalanceConstants.DEFAULT_FONT,
-      visibleProperty: DerivedProperty.not( sceneModel.beamSupportsPresentProperty ),
       maxWidth: buttonTextMaxWidth
     } );
-
-    const checkButtonSoundPlayer = new PillarSoundPlayer(
-      sceneModel.beamSupportsPresentProperty,
-      sceneModel.targetNumberOfBallsProperty
-    );
 
     const checkAndResetButtonTandem = options.tandem.createTandem( 'checkAndResetButton' );
     const gatedVisibleProperty = createGatedVisibleProperty( DerivedProperty.not( meanFulcrumFixedProperty ),
       checkAndResetButtonTandem );
 
-    const checkAndResetButton = new RectangularPushButton( {
+    const pillarsRemovedSoundPlayer = new PillarsRemovedSoundPlayer( sceneModel.targetNumberOfBallsProperty );
+    const pillarsAddedSoundClip = new SoundClip( pillarsAdded_mp3, { initialOutputLevel: 0.1 } );
+    soundManager.addSoundGenerator( pillarsAddedSoundClip );
+
+    const checkAndResetButton = new BooleanRectangularToggleButton( sceneModel.beamSupportsPresentProperty, checkText, resetText, {
 
       // The check button is not visible when the fulcrum is fixed.
       visibleProperty: gatedVisibleProperty,
-      content: new Node( { children: [ checkText, resetText ] } ),
-      soundPlayer: checkButtonSoundPlayer,
-      listener: () => {
-        sceneModel.beamSupportsPresentProperty.toggle();
-      },
+      valueOnSoundPlayer: pillarsAddedSoundClip,
+      valueOffSoundPlayer: pillarsRemovedSoundPlayer,
       touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
       touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-      accessibleName: 'Check',
       tandem: checkAndResetButtonTandem
     } );
     sceneModel.beamSupportsPresentProperty.link( supportsPresent => {
       checkAndResetButton.baseColor = supportsPresent ? MeanShareAndBalanceColors.checkButtonColorProperty : 'white';
+      checkAndResetButton.accessibleName = supportsPresent ? 'Check' : 'Reset';
     } );
 
     // The meanReadoutText should be vertically centered in the notepad node.
@@ -140,36 +134,23 @@ export default class BalancePointNotepadNode extends NotepadNode {
   }
 }
 
-class PillarSoundPlayer implements TSoundPlayer {
+class PillarsRemovedSoundPlayer implements TSoundPlayer {
 
-  private readonly pillarsAddedSoundClip = new SoundClip( pillarsAdded_mp3, { initialOutputLevel: 0.1 } );
   private readonly pillarsRemovedSoundClip = new SoundClip( pillarsRemoved_mp3, { initialOutputLevel: 0.1 } );
 
-  public constructor( private readonly beamSupportsPresentProperty: TReadOnlyProperty<boolean>,
-                      private readonly numberOfBallsKickedProperty: TReadOnlyProperty<number>
-  ) {
-    soundManager.addSoundGenerator( this.pillarsAddedSoundClip );
+  public constructor( private readonly numberOfBallsKickedProperty: TReadOnlyProperty<number> ) {
     soundManager.addSoundGenerator( this.pillarsRemovedSoundClip );
   }
 
   public play(): void {
-    if ( this.beamSupportsPresentProperty.value ) {
+    if ( this.numberOfBallsKickedProperty.value === 0 ) {
 
-      if ( this.numberOfBallsKickedProperty.value === 0 ) {
-
-        // Play the sound that is associated with the check button.
-        this.pillarsRemovedSoundClip.play();
-      }
-    }
-    else {
-
-      // Play the sound that is associated with the reset button.
-      this.pillarsAddedSoundClip.play();
+      // Play the sound that is associated with the check button.
+      this.pillarsRemovedSoundClip.play();
     }
   }
 
   public stop(): void {
-    this.pillarsAddedSoundClip.stop();
     this.pillarsRemovedSoundClip.stop();
   }
 }

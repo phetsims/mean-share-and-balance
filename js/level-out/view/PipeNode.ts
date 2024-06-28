@@ -76,21 +76,6 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     valveNode.mouseArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.MOUSE_AREA_DILATION );
     valveNode.touchArea = valveNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
 
-    const handleFire = () => {
-      pipesOpenProperty.set( !pipe.pipesOpenProperty.value );
-    };
-
-    // Valve rotation event listener
-    const valveRotationFireListener = new FireListener( {
-      fire: () => {
-        handleFire();
-      },
-
-      // phet-io
-      tandem: options.tandem.createTandem( 'valveRotationFireListener' )
-    } );
-    valveNode.addInputListener( valveRotationFireListener );
-
     const combinedOptions = combineOptions<NodeOptions>( {
       visibleProperty: pipe.isActiveProperty,
       enabledProperty: pipesEnabledProperty,
@@ -104,8 +89,30 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
       this.left = notepadMVT.transformX( xPosition );
     } );
 
+    const handleFire = () => {
+      pipesOpenProperty.set( !pipe.pipesOpenProperty.value );
+      if ( pipe.pipesOpenProperty.value ) {
+        this.accessibleName = 'Close Pipe';
+      }
+      else {
+        this.accessibleName = 'Open Pipe';
+      }
+    };
+
+    // Valve rotation event listener
+    const valveRotationFireListener = new FireListener( {
+      fire: () => {
+        handleFire();
+      },
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'valveRotationFireListener' )
+    } );
+    valveNode.addInputListener( valveRotationFireListener );
+
     // pdom - add to traversal order and add a listener so that it responds to clicks from assistive technology.
     this.tagName = 'button';
+    this.accessibleName = 'Open Pipe';
     this.addInputListener( {
       click: () => handleFire()
     } );
