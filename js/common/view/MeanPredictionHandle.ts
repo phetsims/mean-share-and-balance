@@ -18,6 +18,8 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
 
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type MeanPredictionHandleOptions = StrictOmit<ParentOptions, 'children' | 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'valueProperty' | 'enabledRangeProperty'>
@@ -55,6 +57,10 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
       touchArea: predictMeanHandle.bounds.dilated( 5 )
     }, providedOptions );
     super( combinedOptions );
+
+    // Add sound generation for the "predict mean" slider.
+    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( valueProperty );
+    soundManager.addSoundGenerator( predictMeanSoundGenerator );
 
     valueProperty.link( prediction => {
       this.centerY = modelViewTransform.modelToViewY( prediction );

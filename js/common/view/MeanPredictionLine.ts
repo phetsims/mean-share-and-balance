@@ -1,8 +1,7 @@
 // Copyright 2022-2024, University of Colorado Boulder
 
 /**
- * Representation for the draggable predict mean line.
- * Users are able to manipulate line to predict what they believe the mean is across visible objects.
+ * Representation for the dashed predict mean line whose vertical position is controlled by the MeanPredictionHandle.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
@@ -17,8 +16,6 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
-import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
-import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanPredictionHandle from './MeanPredictionHandle.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
@@ -77,11 +74,6 @@ export default class MeanPredictionLine extends Node {
     this.predictMeanLine = predictMeanLine;
     this.predictMeanHandle = meanPredictionHandle;
     this.predictMeanGlow = predictMeanSuccessRectangle;
-
-    // Add sound generation for the "predict mean" slider.
-    const predictMeanSoundGenerator = new MeanPredictionChangeSoundGenerator( meanPredictionProperty );
-    soundManager.addSoundGenerator( predictMeanSoundGenerator );
-
     this.modelViewTransform = modelViewTransform;
   }
 
