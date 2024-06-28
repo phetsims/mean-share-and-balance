@@ -142,21 +142,5 @@
     "projectURL": "https://phet.colorado.edu",
     "license": "contact phethelp@colorado.edu",
     "notes": "created by Ashton Morris (PhET Interactive Simulations)"
-  },
-  "runningWater.mp3": {
-    "text": [
-      "Copyright 2024 University of Colorado Boulder"
-    ],
-    "projectURL": "https://phet.colorado.edu",
-    "license": "contact phethelp@colorado.edu",
-    "notes": "created by John Blanco (PhET Interactive Simulations)"
-  },
-  "softSineMultiOctaveLoop.mp3": {
-    "text": [
-      "Copyright 2024 University of Colorado Boulder"
-    ],
-    "projectURL": "https://phet.colorado.edu",
-    "license": "contact phethelp@colorado.edu",
-    "notes": "created by Ashton Morris (PhET Interactive Simulations)"
   }
 }

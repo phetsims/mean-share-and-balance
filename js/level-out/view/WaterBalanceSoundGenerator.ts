@@ -21,8 +21,6 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
 import Cup from '../model/Cup.js';
 import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
-import softSineMultiOctaveLoop_mp3 from '../../../sounds/softSineMultiOctaveLoop_mp3.js';
-import runningWater_mp3 from '../../../sounds/runningWater_mp3.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Utils from '../../../../dot/js/Utils.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
@@ -42,13 +40,6 @@ type SelfOptions = {
   delayBeforeStop?: number;
 };
 export type WaterBalanceSoundGeneratorOptions = SelfOptions & StrictOmit<SoundClipOptions, 'loop'>;
-
-const SOUND_SOURCES = [
-  waterBalanceFluteChordLoop_mp3,
-  runningWater_mp3,
-  softSineMultiOctaveLoop_mp3
-];
-const SOUND_INDEX = 0;
 
 // constants
 const MEAN_DEVIATION_CHANGE_THRESHOLD = 0.001; // empirically determined
@@ -135,7 +126,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
       enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
     }, providedOptions );
 
-    super( SOUND_SOURCES[ SOUND_INDEX ], options );
+    super( waterBalanceFluteChordLoop_mp3, options );
 
     // Initialize the variable that will be used to fade the sound in and out.
     this.fadeStartDelay = options.fadeStartDelay;
