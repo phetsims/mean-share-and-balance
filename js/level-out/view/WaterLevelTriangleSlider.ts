@@ -19,6 +19,7 @@ import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WaterLevelSoundPlayer from './WaterLevelSoundPlayer.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 
 type SelfOptions = {
 
@@ -44,7 +45,7 @@ export default class WaterLevelTriangleSlider extends VSlider {
                       providedOptions: WaterLevelTriangleSliderOptions ) {
 
     const thumbNode = new TriangleNode( {
-      fill: '#51CEF4',
+      fill: MeanShareAndBalanceColors.waterLevelSliderThumbFillColorProperty,
       tandem: providedOptions.tandem.createTandem( 'thumbNode' )
     } );
 

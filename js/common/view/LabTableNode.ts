@@ -12,6 +12,7 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import labDesk_svg from '../../../images/labDesk_svg.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;
 
@@ -22,7 +23,7 @@ export default class LabTableNode extends Node {
 
     const table = new Image( labDesk_svg, { maxWidth: 780 } );
     const tableBottom = new Rectangle( 34, 25, table.width - 68, 2000, {
-      fill: '#b59373',
+      fill: MeanShareAndBalanceColors.labTableFillColorProperty,
       stroke: 'black',
       lineWidth: 2
     } );

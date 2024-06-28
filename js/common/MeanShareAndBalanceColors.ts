@@ -37,6 +37,9 @@ const meanShareAndBalanceColors = {
   waterFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'tableCupWaterSideFill', {
     default: '#A5D9F2'
   } ),
+  waterLevelSliderThumbFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'waterLevelSliderThumbFill', {
+    default: '#51CEF4'
+  } ),
   notepadCupBackgroundFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'notepadCupBackgroundFill', {
     default: 'white'
   } ),
@@ -105,6 +108,9 @@ const meanShareAndBalanceColors = {
   } ),
   infoIconFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'infoIconFill', {
     default: '#286AA1'
+  } ),
+  labTableFillColorProperty: new ProfileColorProperty( meanShareAndBalance, 'labTableFill', {
+    default: '#b59373'
   } )
 };
 
