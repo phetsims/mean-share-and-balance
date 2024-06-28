@@ -88,7 +88,7 @@ export default class TablePlateNode<T extends Snack> extends Node {
         disabledOpacity: 1,
         arrowDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
         backgroundDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
-        accessibleName: `Plate ${plate.linePlacement}`,
+        accessibleName: `Plate ${plate.linePlacement + 1}`,
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberPicker' )
