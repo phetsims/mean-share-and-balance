@@ -375,45 +375,51 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
    * Handle a candy bar being dropped in the notepad by mouse or touch.
    */
   private candyBarDropped( candyBarNode: NotepadCandyBarNode ): void {
+
     const candyBar = candyBarNode.candyBar;
 
-    const platesWithSpace = this.model.getPlatesWithSpace();
-    const plateHoldingSnack = this.model.getPlateForSnack( candyBarNode.candyBar );
-    assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
+    // Only process the candy bar if it is active.  It generally will be, but in some multitouch cases where the
+    // dragging was interrupted, it may not.
+    if ( candyBar.isActiveProperty.value ) {
 
-    // Set the flag that will ensure that the candy bars animate to the top of the stacks when dropped.
-    this.model.animateAddedSnacks = true;
+      const platesWithSpace = this.model.getPlatesWithSpace();
+      const plateHoldingSnack = this.model.getPlateForSnack( candyBarNode.candyBar );
+      assert && assert( plateHoldingSnack, 'the candy bar must be on a plate' );
 
-    // Even if there are no plates with space the plate our candy bar came from should always have space for the candy
-    // bar to return.
-    !platesWithSpace.includes( plateHoldingSnack! ) && platesWithSpace.push( plateHoldingSnack! );
+      // Set the flag that will ensure that the candy bars animate to the top of the stacks when dropped.
+      this.model.animateAddedSnacks = true;
 
-    // Find the plate closest to where the candy bar was dropped.
-    const closestPlate = platesWithSpace.reduce(
-      ( previousPlate, thisPlate ) => {
-        const candyBarXPosition = candyBar.positionProperty.value.x;
-        const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
-        const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
-        return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
-      },
-      platesWithSpace[ 0 ]
-    );
+      // Even if there are no plates with space the plate our candy bar came from should always have space for the candy
+      // bar to return.
+      !platesWithSpace.includes( plateHoldingSnack! ) && platesWithSpace.push( plateHoldingSnack! );
 
-    if ( closestPlate !== plateHoldingSnack ) {
+      // Find the plate closest to where the candy bar was dropped.
+      const closestPlate = platesWithSpace.reduce(
+        ( previousPlate, thisPlate ) => {
+          const candyBarXPosition = candyBar.positionProperty.value.x;
+          const distanceToThisPlate = Math.abs( thisPlate.xPositionProperty.value - candyBarXPosition );
+          const distanceToPreviousPlate = Math.abs( previousPlate.xPositionProperty.value - candyBarXPosition );
+          return distanceToThisPlate < distanceToPreviousPlate ? thisPlate : previousPlate;
+        },
+        platesWithSpace[ 0 ]
+      );
 
-      // Move the candy bar to the new plate, since it's closer.
-      plateHoldingSnack!.removeSnack( candyBar );
-      closestPlate.addSnackToTop( candyBar );
+      if ( closestPlate !== plateHoldingSnack ) {
+
+        // Move the candy bar to the new plate, since it's closer.
+        plateHoldingSnack!.removeSnack( candyBar );
+        closestPlate.addSnackToTop( candyBar );
+      }
+      else {
+        assert && assert( plateHoldingSnack.hasSnack( candyBar ), 'this situation should be impossible' );
+
+        // Put the candy bar back on the same plate.
+        candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
+      }
+
+      // Clear the flag for animating added snacks, since any adding due to the drop action should now be complete.
+      this.model.animateAddedSnacks = false;
     }
-    else {
-      assert && assert( plateHoldingSnack.hasSnack( candyBar ), 'this situation should be impossible' );
-
-      // Put the candy bar back on the same plate.
-      candyBar.moveTo( plateHoldingSnack.getStackingPositionForSnack( candyBar ), true );
-    }
-
-    // Clear the flag for animating added snacks, since any adding due to the drop action should now be complete.
-    this.model.animateAddedSnacks = false;
   }
 
   // Update the visibility and position of the mouse sort cue node based on the model's state.
