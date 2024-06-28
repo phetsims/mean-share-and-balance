@@ -126,6 +126,11 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
 
     const tableCenter = new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.TABLE_PLATE_CENTER_Y );
 
+    // Create a closure that can be used to interrupt user interactions with the snacks if the number of snacks changes.
+    const interruptSnackDragging = () => {
+      notepadSnackLayerNode.interruptSubtreeInput();
+    };
+
     // Create the visual representation of the plates that sit on the table.
     const tablePlateParentTandem = providedOptions.tandem.createTandem( 'tablePlates' );
     const tablePlateNodes = model.plates.map( plate => new TablePlateNode<T>( plate, tableCenter, {
@@ -133,6 +138,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       snackQuantitySoundPlayerOptions: {
         initialOutputLevel: providedOptions.snackType === 'candyBars' ? 0.2 : 0.1
       },
+      interruptIncompatibleInteractions: interruptSnackDragging,
       tandem: tablePlateParentTandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
     tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );

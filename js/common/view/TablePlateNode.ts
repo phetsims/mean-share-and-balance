@@ -32,6 +32,10 @@ import optionize from '../../../../phet-core/js/optionize.js';
 type SelfOptions = {
   snackType: SnackType;
   snackQuantitySoundPlayerOptions?: SnackQuantitySoundPlayerOptions;
+
+  // A function that can be optionally supplied and that can be used to interrupt interactions that become problematic
+  // if the number of items on the plate are changed, such as dragging of one or more of those items.
+  interruptIncompatibleInteractions?: () => void;
 };
 
 type PersonNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem'>;
@@ -48,6 +52,7 @@ export default class TablePlateNode<T extends Snack> extends Node {
       snackQuantitySoundPlayerOptions: {
         initialOutputLevel: 0.2
       },
+      interruptIncompatibleInteractions: _.noop,
       isDisposable: false
     }, providedOptions );
 
@@ -76,11 +81,15 @@ export default class TablePlateNode<T extends Snack> extends Node {
         color: MeanShareAndBalanceColors.numberPickerColorProperty,
         valueChangedSoundPlayer: snackQuantitySoundPlayer,
         boundarySoundPlayer: snackQuantitySoundPlayer,
-        decrementFunction: value => {
 
-          // A user's interaction with a snack should be interrupted in case it is being removed from the screen
-          // in multitouch scenarios.
-          this.interruptSubtreeInput();
+        // Provide functions for increment and decrement that, in addition to providing the changed value, also
+        // interrupt any user interactions that could be messed up by the value change.
+        incrementFunction: ( value: number ) => {
+          options.interruptIncompatibleInteractions();
+          return value + 1;
+        },
+        decrementFunction: ( value: number ) => {
+          options.interruptIncompatibleInteractions();
           return value - 1;
         },
 
