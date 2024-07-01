@@ -22,6 +22,7 @@ import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import Disposable from '../../../../axon/js/Disposable.js';
+import LimitedResolutionNumberProperty from './LimitedResolutionNumberProperty.js';
 
 type SelfOptions = {
   xPosition: number; // the cup's x position in the view
@@ -35,6 +36,12 @@ type SelfOptions = {
 
 export type CupOptions = SelfOptions;
 
+// The rounding interval for the water level.  This exists to prevent values with many decimal places that take a very
+// long time to equilibrate (which looks weird in phet-io), and are also annoying when read out by the screen reader.
+// The value was empirically determined, please do not change without ample consideration.
+// See https://github.com/phetsims/mean-share-and-balance/issues/227.
+const WATER_LEVEL_ROUNDING_INTERVAL = 0.0001;
+
 export default class Cup {
 
   // Whether the cup is enabled in view and data calculations
@@ -44,7 +51,7 @@ export default class Cup {
   public readonly xPositionProperty: Property<number>;
 
   // The amount of water contained in the cup. 0 is empty, and 1 is full.
-  public readonly waterLevelProperty: NumberProperty;
+  public readonly waterLevelProperty: LimitedResolutionNumberProperty;
 
   // This determines the allowed drag range in the slider control
   public readonly enabledRangeProperty: Property<Range>;
@@ -65,12 +72,16 @@ export default class Cup {
     this.enabledRangeProperty = new Property<Range>( new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ), {
       valueComparisonStrategy: 'equalsFunction'
     } );
-    this.waterLevelProperty = new NumberProperty( options.waterLevel, combineOptions<NumberPropertyOptions>( {
-      range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
+    this.waterLevelProperty = new LimitedResolutionNumberProperty(
+      options.waterLevel,
+      WATER_LEVEL_ROUNDING_INTERVAL,
+      combineOptions<NumberPropertyOptions>( {
+        range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
 
-      // phet-io
-      tandem: tandem.createTandem( 'waterLevelProperty' )
-    }, options.waterLevelPropertyOptions ) );
+        // phet-io
+        tandem: tandem.createTandem( 'waterLevelProperty' )
+      }, options.waterLevelPropertyOptions )
+    );
 
     this.isActiveProperty = new BooleanProperty( options.isActive, {
       tandem: tandem.createTandem( 'isActiveProperty' ),

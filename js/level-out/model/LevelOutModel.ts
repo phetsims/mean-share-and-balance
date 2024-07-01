@@ -425,7 +425,6 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     }
 
     notepadCup.waterLevelProperty.set( notepadCupWaterLevel );
-
   }
 
   /**

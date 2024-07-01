@@ -35,7 +35,7 @@ type WaterLevelTriangleSliderOptions =
 
 // constants
 const DEFAULT_CROSS_MIX = 0;
-const NUMBER_OF_KEYBOARD_STEPS = 9;
+const NUMBER_OF_KEYBOARD_STEPS = 10;
 
 export default class WaterLevelTriangleSlider extends VSlider {
 
