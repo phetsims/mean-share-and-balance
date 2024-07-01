@@ -177,6 +177,9 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       accessibleName: 'Grab Candy Bar',
       ariaRole: 'application'
     } );
+    model.groupSortInteractionModel.isGroupItemKeyboardGrabbedProperty.link( isKeyboardGrabbed => {
+      notepadCandyBarsHighlightNode.accessibleName = isKeyboardGrabbed ? 'Move Candy Bar' : 'Grab or Select Candy Bar';
+    } );
 
     this.notepadSnackLayerNode.addChild( this.cueingHighlight );
     this.notepadSnackLayerNode.addChild( notepadCandyBarsHighlightNode );
