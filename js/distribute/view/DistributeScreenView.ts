@@ -244,6 +244,10 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       {
         visibleProperty: model.predictMeanVisibleProperty,
 
+        // We have to hide the mean prediction line manually when the info panel is visible so that we cannot navigate
+        // to it when the info panel is covering the line.
+        pdomVisibleProperty: DerivedProperty.not( model.meanInfoPanelVisibleProperty ),
+
         // phet-io
         tandem: options.tandem.createTandem( 'meanPredictionLine' ),
         phetioDocumentation: 'Line user can drag to predict water level mean.'
