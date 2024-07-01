@@ -16,7 +16,6 @@ import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import plate_svg from '../../../images/plate_svg.js';
 import { SnackType } from './SharingScreenView.js';
 import SnackStacker from '../SnackStacker.js';
@@ -28,17 +27,19 @@ import Snack from '../model/Snack.js';
 import SnackQuantitySoundPlayer, { SnackQuantitySoundPlayerOptions } from './SnackQuantitySoundPlayer.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = {
   snackType: SnackType;
   snackQuantitySoundPlayerOptions?: SnackQuantitySoundPlayerOptions;
+  numberPickerAccessibleName: string;
 
   // A function that can be optionally supplied and that can be used to interrupt interactions that become problematic
   // if the number of items on the plate are changed, such as dragging of one or more of those items.
   interruptIncompatibleInteractions?: () => void;
 };
 
-type PersonNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem'>;
+type PersonNodeOptions = SelfOptions & WithRequired<NodeOptions, 'tandem'>;
 
 // constants
 const APPLE_IMAGE_WIDTH = 25; // in screen coords
@@ -97,7 +98,7 @@ export default class TablePlateNode<T extends Snack> extends Node {
         disabledOpacity: 1,
         arrowDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
         backgroundDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
-        accessibleName: `Plate ${plate.linePlacement + 1}`,
+        accessibleName: options.numberPickerAccessibleName,
 
         // phet-io
         tandem: options.tandem.createTandem( 'numberPicker' )

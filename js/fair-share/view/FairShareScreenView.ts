@@ -25,7 +25,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Apple from '../model/Apple.js';
 
 type SelfOptions = EmptySelfOptions;
-type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
+type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType' | 'tablePlateAccessibleNameSuffix'>;
 
 export default class FairShareScreenView extends SharingScreenView<Apple> {
 
@@ -33,7 +33,8 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
 
     const options = optionize<FairShareScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
       snackType: 'apples',
-      showSyncButton: false
+      showSyncButton: false,
+      tablePlateAccessibleNameSuffix: 'apples'
     }, providedOptions );
 
     // Create the string that will be used to describe the apples on the notepad, e.g. "Total = 3 apples".

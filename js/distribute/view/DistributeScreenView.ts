@@ -45,7 +45,7 @@ import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = EmptySelfOptions;
-type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType'>;
+type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType' | 'tablePlateAccessibleNameSuffix'>;
 
 // constants
 const CANDY_BAR_FOCUS_X_MARGIN = 10; // in screen coords, empirically determined
@@ -69,7 +69,8 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     const options = optionize<DistributeScreenViewOptions, SelfOptions, WithRequired<SharingScreenViewOptions, 'meanWithRemainderProperty'>>()( {
       snackType: 'candyBars',
       predictMeanVisibleProperty: model.predictMeanVisibleProperty,
-      meanWithRemainderProperty: model.meanWithRemainderProperty
+      meanWithRemainderProperty: model.meanWithRemainderProperty,
+      tablePlateAccessibleNameSuffix: 'candy bars'
     }, providedOptions );
 
     // Create the notepad and necessary pattern strings.

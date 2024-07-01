@@ -37,19 +37,26 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       {
         createNode: () => new MovableFulcrumIcon(),
         value: false,
-        tandemName: 'movableMeanFulcrumRadioButton'
+        tandemName: 'movableMeanFulcrumRadioButton',
+        options: {
+          accessibleName: 'Manual Fulcrum'
+        }
       },
       {
         createNode: () => new FixedFulcrumIcon(),
         value: true,
-        tandemName: 'fixedMeanFulcrumRadioButton'
+        tandemName: 'fixedMeanFulcrumRadioButton',
+        options: {
+          accessibleName: 'Automatic Fulcrum'
+        }
       }
     ], {
       tandem: providedOptions.tandem.createTandem( 'meanFulcrumRadioButtonGroup' ),
       orientation: 'horizontal',
       radioButtonOptions: {
         baseColor: 'white'
-      }
+      },
+      labelContent: 'Fulcrum Options'
     } );
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {

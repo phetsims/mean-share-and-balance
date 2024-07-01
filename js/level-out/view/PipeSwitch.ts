@@ -37,7 +37,7 @@ export default class PipeSwitch extends ABSwitch<boolean> {
         switchToRightSoundPlayer: nullSoundPlayer,
         phetioFeatured: false,
         visiblePropertyOptions: { phetioFeatured: false },
-        accessibleName: 'Pipe Switch'
+        accessibleName: 'Pipe Flow'
       },
       isDisposable: false
     }, providedOptions );

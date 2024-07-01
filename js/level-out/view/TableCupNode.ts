@@ -74,7 +74,7 @@ export default class TableCupNode extends Node {
         left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
         top: waterCupNode.top + beakerLineWidth * 2,
         soundPlayerCrossFade: options.soundPlayerCrossFade,
-        accessibleName: `Water Level Cup ${waterCup.linePlacement + 1}`,
+        accessibleName: `Cup ${waterCup.linePlacement + 1} Water Level`,
 
         // phet-io
         tandem: options.tandem.createTandem( 'waterLevelSlider' )
