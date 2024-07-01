@@ -13,7 +13,7 @@ import Range from '../../../../dot/js/Range.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from './Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Cup from './Cup.js';
+import Cup, { WATER_LEVEL_ROUNDING_INTERVAL } from './Cup.js';
 import Utils from '../../../../dot/js/Utils.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -36,7 +36,6 @@ const NUMBER_OF_CUPS_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_
 const INTER_CUP_DISTANCE = MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH;
 
 export default class LevelOutModel extends PhetioObject implements TModel {
-
 
   // The range controls the drag range of the slider control
   public readonly dragRange = MeanShareAndBalanceConstants.WATER_LEVEL_RANGE;
@@ -290,44 +289,83 @@ export default class LevelOutModel extends PhetioObject implements TModel {
   }
 
   /**
-   * Called during step(), levels out the water levels for the connected cups.
-   * @param dt - time elapsed since last frame in seconds
+   * Called during step(), causes water to flow between the cups as needed based on their levels and whether the pipes
+   * are open or closed.
+   * @param dt - (delta time) - time elapsed since last step, in seconds
    */
   private stepWaterLevels( dt: number ): void {
-    this.iterateCups( ( notepadCup, tableCup ) => {
-      const currentWaterLevel = notepadCup.waterLevelProperty.value;
-      let newWaterLevel;
-      if ( this.pipesOpenProperty.value ) {
-        const delta = this.meanValueProperty.value - currentWaterLevel;
 
-        let discrepancy = 4;
+    const roundedMeanValue = Utils.roundToInterval( this.meanValueProperty.value, WATER_LEVEL_ROUNDING_INTERVAL );
 
-        // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
-        if ( this.meanValueProperty.value >= 0.9 ) {
-          discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanValueProperty.value );
-        }
-        else if ( this.meanValueProperty.value <= 0.1 ) {
-          discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanValueProperty.value );
-        }
+    // Determine whether water exchange is needed between the cups.  Exchange is needed when either the pipes are open
+    // and the notepad cups aren't all at the mean value, or when the pipes are closed and the cups don't have the same
+    // value as their counterpart table cups.
+    let waterExchangeNeeded = false;
+    this.notepadCups.forEach( ( notepadCup, index ) => {
+      if ( ( this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== roundedMeanValue ) ||
+           ( !this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== this.tableCups[ index ].waterLevelProperty.value ) ) {
+        waterExchangeNeeded = true;
+      }
+    } );
 
-        // Animate water non-linearly. Higher discrepancy means the water will flow faster.
-        // When the water levels are closer, it will slow down.
-        newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+    if ( waterExchangeNeeded ) {
 
-        // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
-        if ( this.meanValueProperty.value > currentWaterLevel ) {
-          newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanValueProperty.value );
+      const preFlowNotepadCupLevels = this.notepadCups.map( notepadCup => notepadCup.waterLevelProperty.value );
+
+      // Loop through the cups and make water flow between them based on the state of the pipe valves and the current
+      // water levels.
+      this.iterateCups( ( notepadCup, tableCup ) => {
+        const currentWaterLevel = notepadCup.waterLevelProperty.value;
+        let newWaterLevel;
+        if ( this.pipesOpenProperty.value ) {
+          const delta = this.meanValueProperty.value - currentWaterLevel;
+
+          let discrepancy = 4;
+
+          // Adjusts discrepancy so that water flows faster between cups when the mean is very low or very high.
+          if ( this.meanValueProperty.value >= 0.9 ) {
+            discrepancy = Utils.linear( 0.9, 1, 5, 50, this.meanValueProperty.value );
+          }
+          else if ( this.meanValueProperty.value <= 0.1 ) {
+            discrepancy = Utils.linear( 0.1, 0, 5, 50, this.meanValueProperty.value );
+          }
+
+          // Animate water non-linearly. Higher discrepancy means the water will flow faster.
+          // When the water levels are closer, it will slow down.
+          newWaterLevel = Math.max( 0, currentWaterLevel + delta * dt * discrepancy );
+
+          // Clamp newWaterLevel to ensure it is not outside the currentWaterLevel and waterMean range.
+          if ( this.meanValueProperty.value > currentWaterLevel ) {
+            newWaterLevel = Utils.clamp( newWaterLevel, currentWaterLevel, this.meanValueProperty.value );
+          }
+          else {
+            newWaterLevel = Utils.clamp( newWaterLevel, this.meanValueProperty.value, currentWaterLevel );
+          }
         }
         else {
-          newWaterLevel = Utils.clamp( newWaterLevel, this.meanValueProperty.value, currentWaterLevel );
+          const delta = tableCup.waterLevelProperty.value - currentWaterLevel;
+          newWaterLevel = Utils.clamp( currentWaterLevel + delta * dt * 4, 0, 1 );
         }
+        notepadCup.waterLevelProperty.set( newWaterLevel );
+      } );
+
+      // Determine whether any water actually flowed between the cups during the loop above.
+      const waterFlowOccurred = this.notepadCups.reduce(
+        ( flowOccurred, cup, i ) => flowOccurred || cup.waterLevelProperty.value !== preFlowNotepadCupLevels[ i ],
+        false
+      );
+
+      // If no water flowed, it means that the notepad cup water levels are so close to the target values that a single
+      // step doesn't cause enough water to flow to exceed the rounding threshold.  At this point, we essentially
+      // declare "close enough" and set the final values.
+      if ( !waterFlowOccurred ) {
+        this.notepadCups.forEach( ( notepadCup, i ) => {
+          notepadCup.waterLevelProperty.value = this.pipesOpenProperty.value ?
+                                                roundedMeanValue :
+                                                this.tableCups[ i ].waterLevelProperty.value;
+        } );
       }
-      else {
-        const delta = tableCup.waterLevelProperty.value - currentWaterLevel;
-        newWaterLevel = Utils.clamp( currentWaterLevel + delta * dt * 4, 0, 1 );
-      }
-      notepadCup.waterLevelProperty.set( newWaterLevel );
-    } );
+    }
   }
 
   /**

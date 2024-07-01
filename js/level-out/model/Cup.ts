@@ -40,7 +40,7 @@ export type CupOptions = SelfOptions;
 // long time to equilibrate (which looks weird in phet-io), and are also annoying when read out by the screen reader.
 // The value was empirically determined, please do not change without ample consideration.
 // See https://github.com/phetsims/mean-share-and-balance/issues/227.
-const WATER_LEVEL_ROUNDING_INTERVAL = 0.0001;
+export const WATER_LEVEL_ROUNDING_INTERVAL = 0.0001;
 
 export default class Cup {
 
