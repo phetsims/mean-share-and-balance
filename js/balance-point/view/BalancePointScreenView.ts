@@ -44,8 +44,10 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     super( model, options );
 
-    // There is only one scene in the balance point screen.
+    // By design, there is only one scene model used on this screen, and the code throughout this file assumes that this
+    // is the case.
     const sceneModel = model.selectedSceneModelProperty.value;
+
     const sceneView = new BalancePointSceneView(
       model,
       sceneModel,
@@ -113,13 +115,13 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     } );
 
     const kickButton = new KickButton( {
-      visibleProperty: model.selectedSceneModelProperty.value.hasKickableSoccerBallsProperty,
+      visibleProperty: sceneModel.hasKickableSoccerBallsProperty,
       content: new Text( MeanShareAndBalanceStrings.kickStringProperty, {
         font: KICK_BUTTON_FONT,
         maxWidth: 60
       } ),
       multiKick: false,
-      listener: () => model.selectedSceneModelProperty.value.targetNumberOfBallsProperty.value++,
+      listener: () => sceneModel.targetNumberOfBallsProperty.value++,
       leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 ),
       accessibleName: MeanShareAndBalanceStrings.kickStringProperty,
       tandem: options.tandem.createTandem( 'kickButton' )
@@ -143,15 +145,15 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     const notepadNodeBounds = notepadNode.bounds;
     const calculationDependencies = [
       model.selectedSceneModelProperty,
-      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.valueProperty ),
-      ...model.selectedSceneModelProperty.value.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
+      ...sceneModel.soccerBalls.map( ball => ball.valueProperty ),
+      ...sceneModel.soccerBalls.map( ball => ball.soccerBallPhaseProperty )
     ];
 
     const meanInfoPanel = new MeanInfoPanel(
       calculationDependencies,
-      model.selectedSceneModelProperty.value.meanValueProperty,
-      () => model.selectedSceneModelProperty.value.getStackedObjects().map( ball => ball.valueProperty.value! ),
-      () => model.selectedSceneModelProperty.value.getStackedObjects().length,
+      sceneModel.meanValueProperty,
+      () => sceneModel.getStackedObjects().map( ball => ball.valueProperty.value! ),
+      () => sceneModel.getStackedObjects().length,
       model.meanInfoPanelVisibleProperty, notepadNodeBounds,
       () => controls.infoButton!.focus(),
       {

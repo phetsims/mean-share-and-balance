@@ -125,8 +125,11 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       centerX: this.playAreaCenterX
     } );
 
-    const meanPredictSliderModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( new Vector2( 0, 0 ),
-      new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.NOTEPAD_CUPS_BOTTOM_Y ), MeanShareAndBalanceConstants.CUP_HEIGHT );
+    const meanPredictSliderModelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      new Vector2( 0, 0 ),
+      new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.NOTEPAD_CUPS_BOTTOM_Y ),
+      MeanShareAndBalanceConstants.CUP_HEIGHT
+    );
     const meanPredictionLine = new MeanPredictionLine(
       model.meanPredictionProperty,
       model.dragRange,
