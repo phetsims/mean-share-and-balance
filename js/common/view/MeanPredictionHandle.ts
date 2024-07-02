@@ -56,7 +56,7 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
       valueProperty: valueProperty,
       enabledRangeProperty: new Property( dragRange ),
       touchArea: predictMeanHandle.bounds.dilated( 5 ),
-      accessibleName: 'Predict Mean Handle'
+      accessibleName: 'Prediction Mark'
     }, providedOptions );
     super( combinedOptions );
 

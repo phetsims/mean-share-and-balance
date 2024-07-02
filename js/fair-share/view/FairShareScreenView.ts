@@ -34,7 +34,7 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
     const options = optionize<FairShareScreenViewOptions, SelfOptions, SharingScreenViewOptions>()( {
       snackType: 'apples',
       showSyncButton: false,
-      tablePlateAccessibleNameSuffix: 'apples'
+      tablePlateAccessibleNameSuffix: 'Apples'
     }, providedOptions );
 
     // Create the string that will be used to describe the apples on the notepad, e.g. "Total = 3 apples".

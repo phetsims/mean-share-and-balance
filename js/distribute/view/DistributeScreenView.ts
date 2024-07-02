@@ -70,7 +70,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       snackType: 'candyBars',
       predictMeanVisibleProperty: model.predictMeanVisibleProperty,
       meanWithRemainderProperty: model.meanWithRemainderProperty,
-      tablePlateAccessibleNameSuffix: 'candy bars'
+      tablePlateAccessibleNameSuffix: 'Candy Bars'
     }, providedOptions );
 
     // Create the notepad and necessary pattern strings.
