@@ -39,7 +39,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
         value: false,
         tandemName: 'movableMeanFulcrumRadioButton',
         options: {
-          accessibleName: 'Manual Fulcrum'
+          accessibleName: 'Predict Balance Point'
         }
       },
       {
@@ -47,7 +47,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
         value: true,
         tandemName: 'fixedMeanFulcrumRadioButton',
         options: {
-          accessibleName: 'Automatic Fulcrum'
+          accessibleName: 'Observe Balance Point'
         }
       }
     ], {

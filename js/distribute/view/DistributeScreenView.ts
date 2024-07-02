@@ -177,10 +177,21 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       accessibleName: 'Grab Candy Bar',
       ariaRole: 'application'
     } );
-    model.groupSortInteractionModel.isGroupItemKeyboardGrabbedProperty.link( isKeyboardGrabbed => {
-      notepadCandyBarsHighlightNode.accessibleName = isKeyboardGrabbed ? 'Move Candy Bar' : 'Grab or Select Candy Bar';
+    Multilink.multilink( [
+      model.groupSortInteractionModel.isGroupItemKeyboardGrabbedProperty,
+      model.groupSortInteractionModel.selectedGroupItemProperty,
+      model.totalSnacksProperty
+    ], ( isGrabbed, selectedItem, totalSnacks ) => {
+      const stackValue = selectedItem === null ? 0 : model.groupSortInteractionModel.getGroupItemValue( selectedItem );
+      if ( totalSnacks === 0 ) {
+        // TODO: Check to see if there's a way to do this with aria-role-description, https://github.com/phetsims/mean-share-and-balance/issues/307
+        notepadCandyBarsHighlightNode.accessibleName = 'No Candy Bars to Grab';
+      }
+      else {
+        const stackValueDescription = stackValue === null ? 0 : stackValue;
+        notepadCandyBarsHighlightNode.accessibleName = isGrabbed ? 'Change Stack' : `Grab Candy Bar at Stack ${stackValueDescription + 1}`;
+      }
     } );
-
     this.notepadSnackLayerNode.addChild( this.cueingHighlight );
     this.notepadSnackLayerNode.addChild( notepadCandyBarsHighlightNode );
     this.notepadSnackLayerNode.addChild( mouseSortCueNode );
