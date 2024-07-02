@@ -7,7 +7,7 @@
  */
 
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, Node, Path } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import LevelOutModel from '../model/LevelOutModel.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
@@ -30,13 +30,10 @@ import NotepadNode from '../../common/view/NotepadNode.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
-import Multilink from '../../../../axon/js/Multilink.js';
-import Utils from '../../../../dot/js/Utils.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import switchToLeftSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToLeftSoundPlayer.js';
 import switchToRightSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToRightSoundPlayer.js';
-import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
-import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
@@ -48,57 +45,6 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
   public constructor( model: LevelOutModel, providedOptions: LevelOutScreenViewOptions ) {
 
     const options = providedOptions;
-
-    // Create the sound that will be played when the mean prediction becomes correct.
-    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
-    soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
-
-    // Predict Mean Line that acts as a slider for alternative input.
-    const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
-      Multilink.multilink(
-        [
-          model.pipesOpenProperty,
-          model.meanPredictionProperty,
-          model.meanValueProperty,
-          model.waterLevelsMatchMeanProperty,
-          model.successIndicatorsOperatingProperty
-        ],
-        ( pipesOpen, meanPrediction, meanValue, doWaterLevelsMatchMean, successIndicatorsOperating ) => {
-
-          // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
-          // the default pattern, and return early.
-          if ( !successIndicatorsOperating ) {
-            successRectangle.visible = false;
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            return;
-          }
-
-          const successRectangleWasVisible = successRectangle.visible;
-          const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
-
-          if ( pipesOpen && doWaterLevelsMatchMean ) {
-            const meanTolerance = 0.05;
-            const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.01 );
-            const roundedMean = Utils.roundToInterval( meanValue, 0.01 );
-            const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
-            predictMeanLine.stroke = roundedPrediction === roundedMean ?
-                                     MeanShareAndBalanceColors.meanColorProperty :
-                                     MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            successRectangle.visible = closeToMean;
-          }
-          else {
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            successRectangle.visible = false;
-          }
-
-          // If one of the success indicators was just activated, play the "successful prediction" sound.
-          if ( model.predictMeanVisibleProperty.value && !successRectangleWasVisible && !successStrokeColorWasSet &&
-               ( successRectangle.visible || predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty ) ) {
-            meanPredictionSuccessSoundClip.play();
-          }
-        }
-      );
-    };
 
     // This also includes the pipes that connect the notepad cups as well as the draggable water level triangle.
     const waterCupLayerNode = new Node();
@@ -130,13 +76,19 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
       new Vector2( this.playAreaCenterX, MeanShareAndBalanceConstants.NOTEPAD_CUPS_BOTTOM_Y ),
       MeanShareAndBalanceConstants.CUP_HEIGHT
     );
+
+    const successIndicatorsEnabledProperty = DerivedProperty.and( [ model.pipesOpenProperty, model.waterLevelsMatchMeanProperty ] );
     const meanPredictionLine = new MeanPredictionLine(
       model.meanPredictionProperty,
       model.dragRange,
-      createSuccessIndicatorMultilink,
+      successIndicatorsEnabledProperty,
+      model.meanValueProperty,
+      model.successIndicatorsOperatingProperty,
       meanPredictSliderModelViewTransform,
       {
         visibleProperty: model.predictMeanVisibleProperty,
+        meanTolerance: 0.05,
+        roundingInterval: 0.01,
 
         // phet-io
         tandem: options.tandem.createTandem( 'meanPredictionLine' ),

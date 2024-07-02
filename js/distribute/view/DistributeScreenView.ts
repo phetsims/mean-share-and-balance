@@ -11,7 +11,7 @@
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import DistributeModel, { NOTEPAD_PLATE_BOTTOM_Y } from '../model/DistributeModel.js';
-import { HighlightPath, Image, InteractiveHighlightingNode, ManualConstraint, Node, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { HighlightPath, Image, InteractiveHighlightingNode, ManualConstraint, Node, Rectangle } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -34,9 +34,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
 import SnackStacker from '../../common/SnackStacker.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
-import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
 import Snack from '../../common/model/Snack.js';
@@ -204,60 +202,18 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         NOTEPAD_PLATE_BOTTOM_Y - MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height - MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING ),
       MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT + MeanShareAndBalanceConstants.NOTEPAD_CANDY_BAR_VERTICAL_SPACING
     );
-    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, {
-      initialOutputLevel: 0.1,
-      enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
-    } );
-    soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
-    const createSuccessIndicatorMultilink = ( predictMeanLine: Path, successRectangle: Node ) => {
-      Multilink.multilink( [
-          model.meanPredictionProperty,
-          model.meanValueProperty,
-          model.snacksDistributedProperty,
-          model.successIndicatorsOperatingProperty
-        ],
-        ( meanPrediction, meanValue, snacksDistributed, successIndicatorsOperating ) => {
-
-          // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
-          // the default pattern, and return early.
-          if ( !successIndicatorsOperating ) {
-            successRectangle.visible = false;
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            return;
-          }
-          const successRectangleWasVisible = successRectangle.visible;
-          const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
-
-          if ( snacksDistributed ) {
-            const meanTolerance = 0.5;
-            const roundedPrediction = Utils.roundToInterval( meanPrediction, 0.1 );
-            const roundedMean = Utils.roundToInterval( meanValue, 0.1 );
-            const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
-
-            predictMeanLine.stroke = roundedPrediction === roundedMean ?
-                                     MeanShareAndBalanceColors.meanColorProperty :
-                                     MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            successRectangle.visible = closeToMean;
-          }
-          else {
-            predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
-            successRectangle.visible = false;
-          }
-
-          // If one of the success indicators was just activated, play the "successful prediction" sound.
-          if ( model.predictMeanVisibleProperty.value && !successRectangleWasVisible && !successStrokeColorWasSet &&
-               ( successRectangle.visible || predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty ) ) {
-            meanPredictionSuccessSoundClip.play();
-          }
-        } );
-    };
 
     const meanPredictionLine = new MeanPredictionLine(
-      model.meanPredictionProperty, model.predictMeanDragRange,
-      createSuccessIndicatorMultilink,
+      model.meanPredictionProperty,
+      model.predictMeanDragRange,
+      model.snacksDistributedProperty,
+      model.meanValueProperty,
+      model.successIndicatorsOperatingProperty,
       predictMeanModelViewTransform,
       {
         visibleProperty: model.predictMeanVisibleProperty,
+        meanTolerance: 0.5,
+        roundingInterval: 0.1,
 
         // We have to hide the mean prediction line manually when the info panel is visible so that we cannot navigate
         // to it when the info panel is covering the line.

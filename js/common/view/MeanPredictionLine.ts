@@ -7,19 +7,31 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Line, ManualConstraint, Node, NodeOptions, Path, Rectangle } from '../../../../scenery/js/imports.js';
+import { Line, ManualConstraint, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
-import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Property from '../../../../axon/js/Property.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanPredictionHandle from './MeanPredictionHandle.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import Multilink from '../../../../axon/js/Multilink.js';
+import Utils from '../../../../dot/js/Utils.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 
-type SelfOptions = EmptySelfOptions;
+type SelfOptions = {
+  meanTolerance: number;
+  roundingInterval: number;
+};
+
 type ParentOptions = NodeOptions;
 type MeanPredictionLineOptions = SelfOptions & WithRequired<ParentOptions, 'tandem'>;
 
@@ -33,7 +45,9 @@ export default class MeanPredictionLine extends Node {
 
   public constructor( meanPredictionProperty: Property<number>,
                       dragRange: Range,
-                      createSuccessIndicatorMultilink: ( predictMeanLine: Path, successRectangle: Node ) => void,
+                      successIndicatorsEnabledProperty: TReadOnlyProperty<boolean>,
+                      meanValueProperty: TReadOnlyProperty<number>,
+                      successIndicatorsOperatingProperty: TReadOnlyProperty<boolean>,
                       private readonly modelViewTransform: ModelViewTransform2,
                       providedOptions: MeanPredictionLineOptions ) {
 
@@ -56,7 +70,6 @@ export default class MeanPredictionLine extends Node {
       visible: false,
       centerY: predictMeanLine.centerY
     } );
-    createSuccessIndicatorMultilink( predictMeanLine, predictMeanSuccessRectangle );
 
     const meanPredictionHandle = new MeanPredictionHandle( meanPredictionProperty, dragRange, modelViewTransform, {
       tandem: options.tandem.createTandem( 'meanPredictionHandle' )
@@ -65,12 +78,62 @@ export default class MeanPredictionLine extends Node {
       children: [ predictMeanSuccessRectangle, predictMeanLine, meanPredictionHandle ]
     }, options );
     super( combinedOptions );
+
+    // Create the sound that will be played when the mean prediction becomes correct.
+    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, {
+      initialOutputLevel: 0.1,
+      enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
+    } );
+    soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
+
+    Multilink.multilink( [
+        successIndicatorsEnabledProperty,
+        successIndicatorsOperatingProperty,
+        meanValueProperty,
+        meanPredictionProperty
+      ],
+      ( successEnabled, successIndicatorsOperating, meanValue, meanPrediction ) => {
+        // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
+        // the default pattern, and return early.
+        if ( !successIndicatorsOperating ) {
+          predictMeanSuccessRectangle.visible = false;
+          predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+          return;
+        }
+        const successRectangleWasVisible = predictMeanSuccessRectangle.visible;
+        const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
+
+        if ( successEnabled ) {
+          const meanTolerance = options.meanTolerance;
+          const roundingInterval = options.roundingInterval;
+          const roundedPrediction = Utils.roundToInterval( meanPrediction, roundingInterval );
+          const roundedMean = Utils.roundToInterval( meanValue, roundingInterval );
+          const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
+          predictMeanLine.stroke = roundedPrediction === roundedMean ?
+                                   MeanShareAndBalanceColors.meanColorProperty :
+                                   MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+          predictMeanSuccessRectangle.visible = closeToMean;
+        }
+        else {
+          predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+          predictMeanSuccessRectangle.visible = false;
+        }
+
+        // If one of the success indicators was just activated, play the "successful prediction" sound.
+        if ( this.visible && !successRectangleWasVisible && !successStrokeColorWasSet &&
+             ( predictMeanSuccessRectangle.visible || predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty ) ) {
+          meanPredictionSuccessSoundClip.play();
+        }
+      }
+    );
+
     this.addLinkedElement( meanPredictionProperty );
     ManualConstraint.create( this, [ meanPredictionHandle, predictMeanLine, predictMeanSuccessRectangle ],
       ( handleProxy, lineProxy, rectangleProxy ) => {
         lineProxy.centerY = handleProxy.centerY;
         rectangleProxy.centerY = handleProxy.centerY;
       } );
+
     this.predictMeanLine = predictMeanLine;
     this.predictMeanHandle = meanPredictionHandle;
     this.predictMeanGlow = predictMeanSuccessRectangle;
