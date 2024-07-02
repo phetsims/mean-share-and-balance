@@ -54,7 +54,9 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
         fill: 'black',
         opacity: 0.2,
         cornerRadius: 1,
-        visibleProperty: candyBar.draggingProperty
+        visibleProperty: candyBar.draggingProperty,
+        left: candyBarNode.left + 5,
+        top: candyBarNode.top + 6
       } );
 
     const children: Array<Node> = [ candyBarShadowRectangle, candyBarNode ];
