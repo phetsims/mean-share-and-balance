@@ -22,7 +22,8 @@ import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGener
 import soundManager from '../../../../tambo/js/soundManager.js';
 
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
-type MeanPredictionHandleOptions = StrictOmit<ParentOptions, 'children' | 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'valueProperty' | 'enabledRangeProperty'>
+type MeanPredictionHandleOptions = StrictOmit<ParentOptions,
+    'children' | 'pickable' | 'inputEnabled' | 'focusable' | 'cursor' | 'valueProperty' | 'enabledRangeProperty'>
   & PickRequired<ParentOptions, 'tandem'>;
 export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
 

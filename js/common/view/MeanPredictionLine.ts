@@ -24,7 +24,7 @@ type ParentOptions = NodeOptions;
 type MeanPredictionLineOptions = SelfOptions & WithRequired<ParentOptions, 'tandem'>;
 
 // Constants
-const LINE_X_MARGIN = 8;
+const LINE_X_MARGIN = 5;
 
 export default class MeanPredictionLine extends Node {
   private readonly predictMeanLine: Line;

@@ -35,7 +35,7 @@ export type NotepadNodeOptions = SelfOptions &
 
 // Constants
 const NOTEPAD_RING_BOTTOM = 33.5;
-const PAPER_PAGE_SIZE = new Dimension2( 720, 240 );
+const PAPER_PAGE_SIZE = new Dimension2( 732, 240 );
 const LABEL_MARGIN = 15;
 const TOTAL_MARGIN = 5;
 const PAPER_STACK_HEIGHT = 4;
