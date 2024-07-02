@@ -234,6 +234,9 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       }
     );
 
+    // Adjust the level of the sound played when the soccer balls are dragged on the field.
+    NumberTone.setValueOutputLevel( 0.1 );
+
     this.soccerBalls.forEach( soccerBall => {
       soccerBall.toneEmitter.addListener( value => {
         NumberTone.playValue( value );
