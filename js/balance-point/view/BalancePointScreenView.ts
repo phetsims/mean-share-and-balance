@@ -25,6 +25,7 @@ import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
 import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';
+import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;
@@ -116,14 +117,14 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const kickButton = new KickButton( {
       visibleProperty: sceneModel.hasKickableSoccerBallsProperty,
-      content: new Text( MeanShareAndBalanceStrings.kickStringProperty, {
+      content: new Text( SoccerCommonStrings.kickStringProperty, {
         font: KICK_BUTTON_FONT,
         maxWidth: 60
       } ),
       multiKick: false,
       listener: () => sceneModel.targetNumberOfBallsProperty.value++,
       leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 ),
-      accessibleName: MeanShareAndBalanceStrings.kickStringProperty,
+      accessibleName: SoccerCommonStrings.kickStringProperty,
       tandem: options.tandem.createTandem( 'kickButton' )
     } );
 
@@ -157,7 +158,7 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       model.meanInfoPanelVisibleProperty, notepadNodeBounds,
       () => controls.infoButton!.focus(),
       {
-        zeroDataMessageProperty: MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty,
+        zeroDataMessageProperty: SoccerCommonStrings.needAtLeastOneKickStringProperty,
         centerY: MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y,
         centerX: this.playAreaCenterX,
         tandem: options.tandem.createTandem( 'meanInfoPanel' )

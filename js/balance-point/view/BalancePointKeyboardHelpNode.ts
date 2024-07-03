@@ -15,6 +15,7 @@ import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import GrabReleaseKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/GrabReleaseKeyboardHelpSection.js';
 import MoveKeyboardHelpSection from '../../common/view/MoveKeyboardHelpSection.js';
 import SpinnerControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/SpinnerControlsKeyboardHelpSection.js';
+import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
 
 export default class BalancePointKeyboardHelpNode extends MeanShareAndBalanceKeyboardHelpNode {
 
@@ -25,11 +26,11 @@ export default class BalancePointKeyboardHelpNode extends MeanShareAndBalanceKey
           verbStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.sliderVerbStringProperty,
           sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.sliderNounStringProperty
         } ),
-        new GrabReleaseKeyboardHelpSection( MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.grabOrReleaseItemHeadingStringProperty,
-          MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.grabOrReleaseItemStringProperty ),
+        new GrabReleaseKeyboardHelpSection( SoccerCommonStrings.keyboardHelpDialog.grabOrReleaseItemHeadingStringProperty,
+          SoccerCommonStrings.keyboardHelpDialog.grabOrReleaseItemStringProperty ),
         new MoveKeyboardHelpSection( {
-          headingStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.moveHeadingStringProperty,
-          moveDescriptionStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.moveDescriptionStringProperty
+          headingStringProperty: SoccerCommonStrings.keyboardHelpDialog.moveHeadingStringProperty,
+          moveDescriptionStringProperty: SoccerCommonStrings.keyboardHelpDialog.moveDescriptionStringProperty
         } )
       ],
       new SpinnerControlsKeyboardHelpSection( {

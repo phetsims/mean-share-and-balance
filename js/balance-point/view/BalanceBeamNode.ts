@@ -26,7 +26,6 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import Multilink from '../../../../axon/js/Multilink.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import { Shape } from '../../../../kite/js/imports.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -35,6 +34,7 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import BeamTiltSoundGenerator from './BeamTiltSoundGenerator.js';
 import sketchedDataPointFill_svg from '../../../images/sketchedDataPointFill_svg.js';
+import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();
@@ -322,7 +322,7 @@ export default class BalanceBeamNode extends Node {
 
     // Add the prompt message that is shown when no balls have been kicked.
     const promptMessageVisibleProperty = new DerivedProperty( [ sceneModel.meanValueProperty ], mean => mean === null );
-    const needAtLeastOneKickMessage = new Text( MeanShareAndBalanceStrings.needAtLeastOneKickStringProperty, {
+    const needAtLeastOneKickMessage = new Text( SoccerCommonStrings.needAtLeastOneKickStringProperty, {
       font: MeanShareAndBalanceConstants.DEFAULT_FONT,
       visibleProperty: promptMessageVisibleProperty,
       maxWidth: this.bounds.width

@@ -41,8 +41,6 @@ type StringsType = {
   'numberOfBallsStringProperty': LocalizedStringProperty;
   'checkStringProperty': LocalizedStringProperty;
   'resetStringProperty': LocalizedStringProperty;
-  'needAtLeastOneKickStringProperty': LocalizedStringProperty;
-  'kickStringProperty': LocalizedStringProperty;
   'remainderPatternStringProperty': LocalizedStringProperty;
   'totalStringProperty': LocalizedStringProperty;
   'keyboardHelpDialog': {
@@ -50,10 +48,6 @@ type StringsType = {
       'sliderControlHeadingStringProperty': LocalizedStringProperty;
       'sliderVerbStringProperty': LocalizedStringProperty;
       'sliderNounStringProperty': LocalizedStringProperty;
-      'grabOrReleaseItemHeadingStringProperty': LocalizedStringProperty;
-      'grabOrReleaseItemStringProperty': LocalizedStringProperty;
-      'moveHeadingStringProperty': LocalizedStringProperty;
-      'moveDescriptionStringProperty': LocalizedStringProperty;
       'numberSpinnerHeadingStringProperty': LocalizedStringProperty;
     };
     'numberSpinnerVerbStringProperty': LocalizedStringProperty;
