@@ -50,12 +50,8 @@ export default class NumberSpinnerControl extends VBox {
 
       // phet-io
       phetioFeatured: true,
-      phetioVisiblePropertyInstrumented: true,
       numberDisplayOptions: {
         phetioFeatured: false
-      },
-      visiblePropertyOptions: {
-        phetioFeatured: true
       },
       tandem: options.tandem.createTandem( 'numberSpinner' )
     }, options.numberSpinnerOptions );
