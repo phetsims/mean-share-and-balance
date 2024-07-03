@@ -92,7 +92,7 @@ export default class MeanPredictionLine extends Node {
         meanValueProperty,
         meanPredictionProperty
       ],
-      ( successEnabled, successIndicatorsOperating, meanValue, meanPrediction ) => {
+      ( successIndicatorsEnabled, successIndicatorsOperating, meanValue, meanPrediction ) => {
         // If a phet-io client turns off successIndicator operation, hide the success rectangle, set the line to
         // the default pattern, and return early.
         if ( !successIndicatorsOperating ) {
@@ -103,7 +103,7 @@ export default class MeanPredictionLine extends Node {
         const successRectangleWasVisible = predictMeanSuccessRectangle.visible;
         const successStrokeColorWasSet = predictMeanLine.stroke === MeanShareAndBalanceColors.meanColorProperty;
 
-        if ( successEnabled ) {
+        if ( successIndicatorsEnabled ) {
           const meanTolerance = options.meanTolerance;
           const roundingInterval = options.roundingInterval;
           const roundedPrediction = Utils.roundToInterval( meanPrediction, roundingInterval );
