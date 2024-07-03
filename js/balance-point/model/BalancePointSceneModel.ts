@@ -43,8 +43,16 @@ const BEAM_ROTATION_RATE = Math.PI / 4; // in radians/sec, empirically determine
 
 export default class BalancePointSceneModel extends SoccerSceneModel {
 
+  // The total kick distance is the sum of the values of all the soccer balls that have been kicked and have landed
+  // on the field.
   public readonly totalKickDistanceProperty: TReadOnlyProperty<number>;
+
+  // The target number of balls property is tied to the number of balls spinner and displays the desired number of
+  // balls that a user wants to have on the field. Due to animation, this number may not reflect the number of balls
+  // actually on the field.
   public readonly targetNumberOfBallsProperty: Property<number>;
+
+  // The mean prediction fulcrum value property is the value that the fulcrum is at when being controlled by a user.
   public readonly meanPredictionFulcrumValueProperty: Property<number>;
 
   // Controls whether the column supports for the beam are present or not, fixing the beam in a horizontal position
@@ -62,6 +70,13 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   // of the beam in some situations.
   private targetLeftBalanceBeamYValue = FULCRUM_HEIGHT;
 
+  /**
+   * @param isMeanFulcrumFixedProperty - Property that determines whether the fulcrum auto updates to the mean value,
+   * or is controlled by the user.
+   *
+   * @param maxKicksProperty - Property that determines the maximum number of kicks that can be made.
+   * @param providedOptions
+   */
   public constructor( isMeanFulcrumFixedProperty: BooleanProperty,
                       maxKicksProperty: Property<number>,
                       providedOptions: BalancePointSceneModelOptions ) {
@@ -75,6 +90,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       null,
       'right',
       {
+        // The distribution of values for the soccer balls is right skewed.
         rightSkewedData: [ 0, 25, 45, 30, 18, 12, 10, 5, 4, 4, 4 ],
         valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
         tandem: options.tandem.createTandem( 'kickDistributionStrategy' )

@@ -67,6 +67,13 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   // Allows PhET-iO clients to modify the max number of plates in the screen.
   private readonly maxPlatesProperty: Property<number>;
 
+  /**
+   *
+   * @param snackCreator - A function that creates a new snack based on the specific needs of each model.
+   * @param snackStackingFunction - A function that determines how snacks should stack on a plate.
+   * @param handleFraction - A function that determines how to handle fractional values for plates.
+   * @param providedOptions
+   */
   public constructor( snackCreator: ( options: SnackOptions ) => T,
                       snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2,
                       handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void,

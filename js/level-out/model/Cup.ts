@@ -30,6 +30,8 @@ type SelfOptions = {
   waterHeightRange?: Range; // The range of water the cup can hold.
   waterLevel?: number; // Initial water level
   waterLevelPropertyOptions?: PickOptional<NumberPropertyOptions, 'phetioReadOnly'>;
+
+  // 0-indexed, this is primarily used for debugging and tandem names.
   linePlacement: number;
   isTableCup: boolean;
 };

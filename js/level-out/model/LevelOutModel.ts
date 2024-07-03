@@ -210,6 +210,8 @@ export default class LevelOutModel extends PhetioObject implements TModel {
         pipe.xPositionProperty.value = leftCupCenterX + ( i * INTER_CUP_DISTANCE ) + MeanShareAndBalanceConstants.CUP_WIDTH / 2;
       } );
 
+      // When we remove a cup and the water levels are different between the notepad and table representations
+      // we need to synchronize the values first
       if ( numberOfCups < oldNumberOfCups && removedTableCupWaterLevel !== removedNotepadCupWaterLevel ) {
         this.matchCupWaterLevels();
       }

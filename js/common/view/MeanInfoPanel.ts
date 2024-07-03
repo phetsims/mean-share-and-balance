@@ -38,10 +38,12 @@ type SelfOptions = {
   // One of the items in this dialog can be displayed as either a remainder, decimal number, and/or mixed fraction.
   // This option controls which.
   calculatedMeanDisplayMode?: MeanDisplayType;
+
+  // If the data set is empty, this message will be displayed instead of the calculations.
   zeroDataMessageProperty?: LocalizedStringProperty | null;
   meanWithRemainderProperty?: TReadOnlyProperty<MeanWithRemainder> | null;
 };
-export type MeanCalculationPanelOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
+export type MeanInfoPanelOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;
 
 // constants
 const TEXT_MAX_WIDTH = 300;
@@ -75,7 +77,7 @@ export default class MeanInfoPanel extends Panel {
                       visibleProperty: Property<boolean>,
                       notebookPaperBounds: Bounds2,
                       focusInfoButton: () => void,
-                      providedOptions: MeanCalculationPanelOptions ) {
+                      providedOptions: MeanInfoPanelOptions ) {
 
     const meanTitleText = new Text( MeanShareAndBalanceStrings.meanStringProperty, {
       font: new PhetFont( 20 ),
@@ -98,7 +100,7 @@ export default class MeanInfoPanel extends Panel {
       phetioState: false
     } );
 
-    const options = optionize<MeanCalculationPanelOptions, SelfOptions, PanelOptions>()( {
+    const options = optionize<MeanInfoPanelOptions, SelfOptions, PanelOptions>()( {
       visibleProperty: visibleProperty,
       resize: false,
       calculatedMeanDisplayMode: 'decimal',

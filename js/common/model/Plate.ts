@@ -31,7 +31,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 type SelfOptions<T extends Snack> = {
   initiallyActive?: boolean;
   initialXPosition?: number;
-  linePlacement: number;
+  linePlacement: number; // 0-indexed, this is primarily used for debugging and tandem names.
   startingNumberOfSnacks?: number;
 
   // The function used to position the snacks on the snack stack.

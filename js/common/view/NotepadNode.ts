@@ -22,11 +22,17 @@ import Property from '../../../../axon/js/Property.js';
 import BackgroundNode from '../../../../scenery-phet/js/BackgroundNode.js';
 
 type SelfOptions = {
+
+  // The pattern string property for the readout text, which is displayed at the top of the notepad.
   readoutPatternStringProperty?: PatternStringProperty<{
     total: TReadOnlyProperty<number>;
     measurement: UnknownDerivedProperty<string>;
   }> | null;
+
+  // The property that determines whether the total readout is visible.
   totalVisibleProperty?: Property<boolean> | null;
+
+  // The property that determines whether the mean info panel is visible.
   meanInfoPanelVisibleProperty?: Property<boolean> | null;
 };
 
