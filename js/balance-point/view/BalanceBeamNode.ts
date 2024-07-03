@@ -153,8 +153,12 @@ export default class BalanceBeamNode extends Node {
     } );
 
     // Create the line that represents the balance beam.
-    const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value );
-    const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value );
+    const transformedLeftYValue = BALANCE_BEAM_TRANSFORM.modelToViewY(
+      sceneModel.balanceBeamEndpointYValuesProperty.value.left
+    );
+    const transformedRightYValue = BALANCE_BEAM_TRANSFORM.modelToViewY(
+      sceneModel.balanceBeamEndpointYValuesProperty.value.right
+    );
     const beamLineNode = new Line( lineStartX, transformedLeftYValue, lineEndX, transformedRightYValue, {
       stroke: MeanShareAndBalanceColors.meanColorProperty,
       lineWidth: 2
@@ -232,20 +236,22 @@ export default class BalanceBeamNode extends Node {
     // model that could require an update.
     Multilink.multilinkAny(
       [
-        sceneModel.leftBalanceBeamYValueProperty,
-        sceneModel.rightBalanceBeamYValueProperty,
+        sceneModel.balanceBeamEndpointYValuesProperty,
         ...sceneModel.soccerBalls.map( soccerBall => soccerBall.valueProperty )
       ],
       () => {
 
+        const leftEdgeYValue = sceneModel.balanceBeamEndpointYValuesProperty.value.left;
+        const rightEdgeYValue = sceneModel.balanceBeamEndpointYValuesProperty.value.right;
+
         // Calculate the start and end points of the balance beam line in view coordinates.
         const viewStartPoint = new Vector2(
           lineStartX,
-          BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.leftBalanceBeamYValueProperty.value )
+          BALANCE_BEAM_TRANSFORM.modelToViewY( leftEdgeYValue )
         );
         const viewEndPoint = new Vector2(
           lineEndX,
-          BALANCE_BEAM_TRANSFORM.modelToViewY( sceneModel.rightBalanceBeamYValueProperty.value )
+          BALANCE_BEAM_TRANSFORM.modelToViewY( rightEdgeYValue )
         );
 
         // Update the balance beam line.
@@ -265,8 +271,8 @@ export default class BalanceBeamNode extends Node {
         const modelBeamLineFunction = new LinearFunction(
           sceneModel.leftBalanceBeamXValue,
           sceneModel.rightBalanceBeamXValue,
-          sceneModel.leftBalanceBeamYValueProperty.value,
-          sceneModel.rightBalanceBeamYValueProperty.value
+          leftEdgeYValue,
+          rightEdgeYValue
         );
 
         // Calculate the vectors needed to put the balls in a position such that they are directly above the
@@ -354,21 +360,21 @@ export default class BalanceBeamNode extends Node {
 
     // sound generation
     const beamAngleProperty = new DerivedProperty(
-      [ sceneModel.leftBalanceBeamYValueProperty, sceneModel.rightBalanceBeamYValueProperty ],
-      ( leftEdgeY, rightEdgeY ) => {
-        const leftPoint = new Vector2( sceneModel.leftBalanceBeamXValue, leftEdgeY );
-        const rightPoint = new Vector2( sceneModel.rightBalanceBeamXValue, rightEdgeY );
+      [ sceneModel.balanceBeamEndpointYValuesProperty ],
+      leftAndRightEdgeYValues => {
+        const leftPoint = new Vector2( sceneModel.leftBalanceBeamXValue, leftAndRightEdgeYValues.left );
+        const rightPoint = new Vector2( sceneModel.rightBalanceBeamXValue, leftAndRightEdgeYValues.right );
         return Vector2.getAngleBetweenVectors( leftPoint, rightPoint );
       }
     );
     soundManager.addSoundGenerator(
       new BeamTiltSoundGenerator(
         beamAngleProperty,
-        sceneModel.meanValueProperty,
-        sceneModel.meanPredictionFulcrumValueProperty,
-        sceneModel.beamSupportsPresentProperty,
+        fulcrumSlider.isDraggingProperty,
+        () => !sceneModel.isBeamInTargetPosition(),
         { initialOutputLevel: 0.2 }
-      ) );
+      )
+    );
 
     // Make the fulcrum slider available to methods.
     this.fulcrumSlider = fulcrumSlider;

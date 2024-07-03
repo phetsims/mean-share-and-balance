@@ -22,6 +22,7 @@ import { Color, HBox } from '../../../../scenery/js/imports.js';
 import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import FulcrumSliderSoundPlayer from './FulcrumSliderSoundPlayer.js';
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 
 type SelfOptions = {
   fulcrumHeight: number; // in screen coordinates
@@ -45,6 +46,9 @@ const CUEING_ARROW_OPTIONS = {
 };
 
 export default class MeanPredictionFulcrumSlider extends HSlider {
+
+  public readonly isDraggingProperty: BooleanProperty;
+
   public constructor(
     fulcrumValueProperty: Property<number>,
     fulcrumWasDraggedProperty: Property<boolean>,
@@ -95,10 +99,17 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
       pdomMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
       accessibleName: 'Find Balance Point',
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
+      startDrag: () => { this.isDraggingProperty.value = true; },
       drag: () => { fulcrumWasDraggedProperty.value = true; },
+      endDrag: () => { this.isDraggingProperty.value = false; },
       isDisposable: false
     }, providedOptions );
     super( fulcrumValueProperty, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, options );
+
+    this.isDraggingProperty = new BooleanProperty( false, {
+      tandem: options.tandem.createTandem( 'isDraggingProperty' ),
+      phetioReadOnly: true
+    } );
 
     // Hook up visibility control for the cueing arrows.
     const cueingArrowsVisibleProperty = new DerivedProperty(
