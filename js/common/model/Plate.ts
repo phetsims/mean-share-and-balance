@@ -118,7 +118,10 @@ export default class Plate<T extends Snack> extends PhetioObject {
     this.tableSnackNumberProperty = new NumberProperty( initialTableSnackNumber, {
       range: new Range( 0, 10 ),
       numberType: 'Integer',
-      tandem: options.tandem.createTandem( 'tableSnackNumberProperty' )
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'tableSnackNumberProperty' ),
+      phetioFeatured: true
     } );
 
     // Create the observable array that tracks the snacks a notepad plate has.

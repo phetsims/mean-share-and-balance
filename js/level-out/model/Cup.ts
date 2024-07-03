@@ -79,7 +79,8 @@ export default class Cup {
         range: new Range( MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN, MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
 
         // phet-io
-        tandem: tandem.createTandem( 'waterLevelProperty' )
+        tandem: tandem.createTandem( 'waterLevelProperty' ),
+        phetioFeatured: options.isTableCup
       }, options.waterLevelPropertyOptions )
     );
 
