@@ -39,7 +39,7 @@ type SelfOptions = {
   showSyncButton?: boolean;
   predictMeanVisibleProperty?: Property<boolean> | null;
   meanWithRemainderProperty?: TReadOnlyProperty<MeanWithRemainder> | null;
-  tablePlateAccessibleNameSuffix: string;
+  snackAccessibleNameSuffix: string;
 };
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
@@ -89,7 +89,8 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       predictMeanVisibleProperty: options.predictMeanVisibleProperty,
       onInfoButtonPressed: () => {
         meanInfoPanel.closeButton.focus();
-      }
+      },
+      accessibleNameSuffix: options.snackAccessibleNameSuffix
     } );
 
     // Create table node upon which the table plates will be shown.
@@ -140,7 +141,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
         initialOutputLevel: providedOptions.snackType === 'candyBars' ? 0.2 : 0.1
       },
       interruptIncompatibleInteractions: interruptSnackDragging,
-      numberPickerAccessibleName: `Person ${plate.linePlacement + 1} ${providedOptions.tablePlateAccessibleNameSuffix}`,
+      numberPickerAccessibleName: `Person ${plate.linePlacement + 1} ${providedOptions.snackAccessibleNameSuffix}`,
       tandem: tablePlateParentTandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
     } ) );
     tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );

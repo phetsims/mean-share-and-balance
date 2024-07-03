@@ -32,6 +32,7 @@ type SelfOptions = {
   // When the predictMeanVisibleProperty is provided the predict mean tool can be toggled on and off.
   predictMeanVisibleProperty?: Property<boolean> | null;
   vBoxOptions?: StrictOmit<VBoxOptions, 'children' | 'align'>;
+  accessibleNameSuffix: string;
 };
 type SharingControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions,
   'controlsPDOMOrder' | 'numberSpinnerOptions'>;
@@ -63,7 +64,10 @@ export default class SharingControls extends MeanShareAndBalanceControls {
     }, providedOptions );
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
-      totalVisibleProperty: model.totalVisibleProperty,
+      totalCheckboxItemOptions: {
+        property: model.totalVisibleProperty,
+        options: { accessibleName: `Total Number of ${options.accessibleNameSuffix}` }
+      },
       predictMeanVisibleProperty: options.predictMeanVisibleProperty,
       tandem: options.tandem.createTandem( 'checkboxGroup' )
     } );

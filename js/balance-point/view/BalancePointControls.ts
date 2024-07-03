@@ -61,7 +61,10 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
       tickMarksVisibleProperty: model.tickMarksVisibleProperty,
-      totalVisibleProperty: model.totalVisibleProperty,
+      totalCheckboxItemOptions: {
+        property: model.totalVisibleProperty,
+        options: { accessibleName: 'Total Distance' }
+      },
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
     } );

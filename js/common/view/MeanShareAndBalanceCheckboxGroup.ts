@@ -14,9 +14,14 @@ import Property from '../../../../axon/js/Property.js';
 import { Text } from '../../../../scenery/js/imports.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import { CheckboxOptions } from '../../../../sun/js/Checkbox.js';
 
+type totalCheckboxItemOptions = {
+  property: Property<boolean>;
+  options: CheckboxOptions;
+};
 type SelfOptions = {
-  totalVisibleProperty?: Property<boolean> | null;
+  totalCheckboxItemOptions?: totalCheckboxItemOptions | null;
   predictMeanVisibleProperty?: Property<boolean> | null;
   tickMarksVisibleProperty?: Property<boolean> | null;
 };
@@ -26,7 +31,7 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
   public constructor( providedOptions: MeanShareAndBalanceCheckboxGroupOptions ) {
 
     const options = optionize<MeanShareAndBalanceCheckboxGroupOptions, SelfOptions, VerticalCheckboxGroupOptions>()( {
-      totalVisibleProperty: null,
+      totalCheckboxItemOptions: null,
       predictMeanVisibleProperty: null,
       tickMarksVisibleProperty: null,
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
@@ -62,14 +67,14 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
         tandemName: 'tickMarksCheckbox'
       } );
     }
-    if ( options.totalVisibleProperty ) {
+    if ( options.totalCheckboxItemOptions ) {
       checkboxItems.push( {
         createNode: () => new Text( MeanShareAndBalanceStrings.totalStringProperty, {
           fontSize: MeanShareAndBalanceConstants.CHECKBOX_FONT_SIZE,
           maxWidth: MeanShareAndBalanceConstants.MAX_CONTROLS_TEXT_WIDTH
         } ),
-        property: options.totalVisibleProperty,
-        options: { accessibleName: MeanShareAndBalanceStrings.totalStringProperty },
+        property: options.totalCheckboxItemOptions.property,
+        options: options.totalCheckboxItemOptions.options,
         tandemName: 'totalCheckbox'
       } );
     }
