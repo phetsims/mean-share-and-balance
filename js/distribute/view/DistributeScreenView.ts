@@ -179,9 +179,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     const stackValueDependencies: Property<number>[] = model.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
     const stackValueProperty = DerivedProperty.deriveAny( [ model.groupSortInteractionModel.selectedGroupItemProperty, ...stackValueDependencies ], () => {
       const selectedItem = model.groupSortInteractionModel.selectedGroupItemProperty.value;
-      return selectedItem === null ? 0 :
-      model.groupSortInteractionModel.getGroupItemValue( selectedItem ) === null ? 0 :
-      model.groupSortInteractionModel.getGroupItemValue( selectedItem );
+      return selectedItem === null ? 0 : model.groupSortInteractionModel.getGroupItemValue( selectedItem );
     } );
     const grabCandyBarPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.grabCandyBarPatternStringProperty, {
       value: stackValueProperty
