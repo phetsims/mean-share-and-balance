@@ -429,6 +429,10 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     this.tableCups.forEach( tableCup => tableCup.reset() );
     this.notepadCups.forEach( notepadCup => notepadCup.reset() );
 
+    // The maximum number of cups should still be respected after reset.
+    const max = this.maxCupsProperty.value;
+    this.numberOfCupsProperty.value = Math.min( this.numberOfCupsProperty.value, max );
+    this.numberOfCupsRangeProperty.value = new Range( NUMBER_OF_CUPS_RANGE.min, max );
     this.assertConsistentState();
   }
 
@@ -440,7 +444,6 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     this.tickMarksVisibleProperty.reset();
 
     this.resetData();
-
     this.assertConsistentState();
   }
 

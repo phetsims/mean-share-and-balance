@@ -396,11 +396,15 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
   public override clearData(): void {
     this.targetNumberOfBallsProperty.reset();
     super.clearData();
+
+    // The max number of kicks should still be respected after clearing data.
+    const max = this.maxKicksProperty.value;
+    this.targetNumberOfBallsProperty.value = Math.min( max, this.targetNumberOfBallsProperty.value );
+    BalancePointModel.NUMBER_OF_KICKS_RANGE_PROPERTY.value = new Range( BalancePointModel.NUMBER_OF_KICKS_RANGE_PROPERTY.value.min, max );
   }
 
   public override reset(): void {
     super.reset();
-    this.targetNumberOfBallsProperty.reset();
     this.meanPredictionFulcrumValueProperty.reset();
     this.beamSupportsPresentProperty.reset();
   }

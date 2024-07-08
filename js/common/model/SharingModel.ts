@@ -216,7 +216,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
       this.resetData();
       this.numberOfPlatesProperty.value = Math.min( this.numberOfPlatesProperty.value, maxNumberOfPlates );
       this.numberOfPlatesRangeProperty.value = new Range( NUMBER_OF_PLATES_RANGE.min, maxNumberOfPlates );
-
     } );
   }
 
@@ -282,6 +281,11 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
     // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
     this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
+
+    // The maximum number of plates should still be respected after reset.
+    const max = this.maxPlatesProperty.value;
+    this.numberOfPlatesProperty.value = Math.min( this.numberOfPlatesProperty.value, max );
+    this.numberOfPlatesRangeProperty.value = new Range( NUMBER_OF_PLATES_RANGE.min, max );
   }
 
   /**
@@ -290,7 +294,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   public reset(): void {
     this.meanInfoPanelVisibleProperty.reset();
     this.totalVisibleProperty.reset();
-
     this.resetData();
   }
 
