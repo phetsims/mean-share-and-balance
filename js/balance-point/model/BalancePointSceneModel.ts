@@ -91,7 +91,10 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       'right',
       {
         // The distribution of values for the soccer balls is right skewed.
-        rightSkewedData: [ 0, 25, 45, 30, 18, 12, 10, 5, 4, 4, 4 ],
+        // The values were provided by pedagogical designers.
+        rightSkewedData: [ 8, 12, 15, 18, 12, 2, 2, 2, 2, 2, 2 ],
+        probabilityByDistanceDocumentationValues: '[0,1,3,5,7,3,1,0,0,0,1]',
+        distanceByIndexDocumentationValues: '[5,9,10,2,7,3,4]',
         valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
         tandem: options.tandem.createTandem( 'kickDistributionStrategy' )
       }
