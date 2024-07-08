@@ -20,6 +20,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type MeanPredictionHandleOptions = StrictOmit<ParentOptions,
@@ -56,7 +57,7 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
       valueProperty: valueProperty,
       enabledRangeProperty: new Property( dragRange ),
       touchArea: predictMeanHandle.bounds.dilated( 5 ),
-      accessibleName: 'Prediction Mark'
+      accessibleName: MeanShareAndBalanceStrings.a11y.predictionMarkStringProperty
     }, providedOptions );
     super( combinedOptions );
 

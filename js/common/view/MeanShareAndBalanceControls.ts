@@ -24,6 +24,7 @@ import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/g
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = {
   numberSpinnerOptions: NumberSpinnerOptions;
@@ -95,7 +96,7 @@ export default class MeanShareAndBalanceControls extends Node {
         left: vBoxAlignBox.left,
         iconFill: MeanShareAndBalanceColors.infoIconFillColorProperty,
         soundPlayer: infoButtonSoundPlayer,
-        accessibleName: 'Info',
+        accessibleName: MeanShareAndBalanceStrings.a11y.infoStringProperty,
         tandem: options.tandem.createTandem( 'infoButton' )
       } );
       this.addChild( this.infoButton );

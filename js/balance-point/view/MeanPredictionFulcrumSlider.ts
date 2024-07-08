@@ -23,6 +23,7 @@ import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import FulcrumSliderSoundPlayer from './FulcrumSliderSoundPlayer.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = {
   fulcrumHeight: number; // in screen coordinates
@@ -97,7 +98,7 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
 
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
       pdomMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
-      accessibleName: 'Find Balance Point',
+      accessibleName: MeanShareAndBalanceStrings.a11y.findBalancePointStringProperty,
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
       startDrag: () => { this.isDraggingProperty.value = true; },
       drag: () => { fulcrumWasDraggedProperty.value = true; },

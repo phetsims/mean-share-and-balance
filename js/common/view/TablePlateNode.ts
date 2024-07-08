@@ -8,7 +8,7 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Image, Node, NodeOptions, SceneryConstants } from '../../../../scenery/js/imports.js';
+import { Image, Node, NodeOptions, PDOMValueType, SceneryConstants } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Plate from '../model/Plate.js';
 import NumberPicker from '../../../../sun/js/NumberPicker.js';
@@ -32,7 +32,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 type SelfOptions = {
   snackType: SnackType;
   snackQuantitySoundPlayerOptions?: SnackQuantitySoundPlayerOptions;
-  numberPickerAccessibleName: string;
+  numberPickerAccessibleName: PDOMValueType;
 
   // A function that can be optionally supplied and that can be used to interrupt interactions that become problematic
   // if the number of items on the plate are changed, such as dragging of one or more of those items.

@@ -20,6 +20,7 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ValveNode from './ValveNode.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = EmptySelfOptions;
 type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement' | 'children' | 'visibleProperty'> & PickRequired<NodeOptions, 'tandem'>;
@@ -92,10 +93,10 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     const handleFire = () => {
       pipesOpenProperty.set( !pipe.pipesOpenProperty.value );
       if ( pipe.pipesOpenProperty.value ) {
-        this.accessibleName = 'Close Pipe';
+        this.accessibleName = MeanShareAndBalanceStrings.a11y.closePipeStringProperty;
       }
       else {
-        this.accessibleName = 'Open Pipe';
+        this.accessibleName = MeanShareAndBalanceStrings.a11y.openPipeStringProperty;
       }
     };
 
@@ -112,7 +113,7 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
 
     // pdom - add to traversal order and add a listener so that it responds to clicks from assistive technology.
     this.tagName = 'button';
-    this.accessibleName = 'Open Pipe';
+    this.accessibleName = MeanShareAndBalanceStrings.a11y.openPipeStringProperty;
     this.addInputListener( {
       click: () => handleFire()
     } );

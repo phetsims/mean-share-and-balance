@@ -19,6 +19,8 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import LevelOutModel from '../model/LevelOutModel.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type SelfOptions = {
 
@@ -66,6 +68,9 @@ export default class TableCupNode extends Node {
       model.changeWaterLevel( waterCup, waterLevel, oldWaterLevel );
     } );
 
+    const cupWaterLevelPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.cupWaterLevelPatternStringProperty, {
+      index: waterCup.linePlacement + 1
+    } );
     const waterLevelSlider = new WaterLevelTriangleSlider(
       waterCup.waterLevelProperty,
       waterCup.enabledRangeProperty,
@@ -74,7 +79,7 @@ export default class TableCupNode extends Node {
         left: MeanShareAndBalanceConstants.CUP_WIDTH * MeanShareAndBalanceConstants.WATER_LEVEL_DEFAULT,
         top: waterCupNode.top + beakerLineWidth * 2,
         soundPlayerCrossFade: options.soundPlayerCrossFade,
-        accessibleName: `Cup ${waterCup.linePlacement + 1} Water Level`,
+        accessibleName: cupWaterLevelPatternStringProperty,
 
         // phet-io
         tandem: options.tandem.createTandem( 'waterLevelSlider' )

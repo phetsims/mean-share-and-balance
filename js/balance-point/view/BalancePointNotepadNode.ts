@@ -89,7 +89,9 @@ export default class BalancePointNotepadNode extends NotepadNode {
     } );
     sceneModel.beamSupportsPresentProperty.link( supportsPresent => {
       checkAndResetButton.baseColor = supportsPresent ? MeanShareAndBalanceColors.checkButtonColorProperty : 'white';
-      checkAndResetButton.accessibleName = supportsPresent ? 'Check Balance' : 'Reset Pillars';
+      checkAndResetButton.accessibleName = supportsPresent ?
+                                           MeanShareAndBalanceStrings.a11y.checkBalanceStringProperty :
+                                           MeanShareAndBalanceStrings.a11y.resetPillarsStringProperty;
     } );
 
     // The meanReadoutText should be vertically centered in the notepad node.

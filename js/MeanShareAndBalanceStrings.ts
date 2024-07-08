@@ -69,6 +69,30 @@ type StringsType = {
       'sliderControlHeadingStringProperty': LocalizedStringProperty;
       'sliderControlNounStringProperty': LocalizedStringProperty;
     }
+  };
+  'a11y': {
+    'predictBalancePointStringProperty': LocalizedStringProperty;
+    'observeBalancePointStringProperty': LocalizedStringProperty;
+    'totalDistanceStringProperty': LocalizedStringProperty;
+    'findBalancePointStringProperty': LocalizedStringProperty;
+    'predictionMarkStringProperty': LocalizedStringProperty;
+    'infoStringProperty': LocalizedStringProperty;
+    'totalNumberPatternStringProperty': LocalizedStringProperty;
+    'applesStringProperty': LocalizedStringProperty;
+    'candyBarsStringProperty': LocalizedStringProperty;
+    'personSnackPatternStringProperty': LocalizedStringProperty;
+    'grabCandyBarStringProperty': LocalizedStringProperty;
+    'pipeFlowStringProperty': LocalizedStringProperty;
+    'cupWaterLevelPatternStringProperty': LocalizedStringProperty;
+    'checkBalanceStringProperty': LocalizedStringProperty;
+    'resetPillarsStringProperty': LocalizedStringProperty;
+    'noCandyBarsToGrabStringProperty': LocalizedStringProperty;
+    'changeStackStringProperty': LocalizedStringProperty;
+    'grabCandyBarPatternStringProperty': LocalizedStringProperty;
+    'closePipeStringProperty': LocalizedStringProperty;
+    'openPipeStringProperty': LocalizedStringProperty;
+    'fulcrumOptionsStringProperty': LocalizedStringProperty;
+    'appleActionsStringProperty': LocalizedStringProperty;
   }
 };
 

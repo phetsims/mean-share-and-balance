@@ -17,7 +17,7 @@ import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import { AlignBox, Node, TColor } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node, PDOMValueType, TColor } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import SharingControls from './SharingControls.js';
 import MeanInfoPanel from './MeanInfoPanel.js';
@@ -31,6 +31,8 @@ import Property from '../../../../axon/js/Property.js';
 import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 export type SnackType = 'candyBars' | 'apples';
 
@@ -39,7 +41,7 @@ type SelfOptions = {
   showSyncButton?: boolean;
   predictMeanVisibleProperty?: Property<boolean> | null;
   meanWithRemainderProperty?: TReadOnlyProperty<MeanWithRemainder> | null;
-  snackAccessibleNameSuffix: string;
+  snackAccessibleName: PDOMValueType;
 };
 
 export type SharingScreenViewOptions = SelfOptions & MeanShareAndBalanceScreenViewOptions;
@@ -90,7 +92,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       onInfoButtonPressed: () => {
         meanInfoPanel.closeButton.focus();
       },
-      accessibleNameSuffix: options.snackAccessibleNameSuffix
+      snackAccessibleName: options.snackAccessibleName
     } );
 
     // Create table node upon which the table plates will be shown.
@@ -135,15 +137,21 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
 
     // Create the visual representation of the plates that sit on the table.
     const tablePlateParentTandem = providedOptions.tandem.createTandem( 'tablePlates' );
-    const tablePlateNodes = model.plates.map( plate => new TablePlateNode<T>( plate, tableCenter, {
-      snackType: providedOptions.snackType,
-      snackQuantitySoundPlayerOptions: {
-        initialOutputLevel: providedOptions.snackType === 'candyBars' ? 0.2 : 0.1
-      },
-      interruptIncompatibleInteractions: interruptSnackDragging,
-      numberPickerAccessibleName: `Person ${plate.linePlacement + 1} ${providedOptions.snackAccessibleNameSuffix}`,
-      tandem: tablePlateParentTandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
-    } ) );
+    const tablePlateNodes = model.plates.map( plate => {
+      const personPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.personSnackPatternStringProperty, {
+        index: plate.linePlacement + 1,
+        snack: options.snackAccessibleName
+      } );
+      return new TablePlateNode<T>( plate, tableCenter, {
+        snackType: providedOptions.snackType,
+        snackQuantitySoundPlayerOptions: {
+          initialOutputLevel: providedOptions.snackType === 'candyBars' ? 0.2 : 0.1
+        },
+        interruptIncompatibleInteractions: interruptSnackDragging,
+        numberPickerAccessibleName: personPatternStringProperty,
+        tandem: tablePlateParentTandem.createTandem( `tablePlate${plate.linePlacement + 1}` )
+      } );
+    } );
     tablePlateNodes.forEach( tablePlateNode => { tableSnackLayerNode.addChild( tablePlateNode ); } );
 
     // Create the images of the people that stand near the plates.

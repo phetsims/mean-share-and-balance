@@ -139,5 +139,73 @@
   },
   "keyboardHelpDialog.levelOutScreen.sliderControlNoun": {
     "value": "water or prediction mark"
+  },
+  "a11y": {
+    "predictBalancePoint": {
+      "value": "Predict Balance Point"
+    },
+    "observeBalancePoint": {
+      "value": "Observe Balance Point"
+    },
+    "totalDistance": {
+      "value": "Total Distance"
+    },
+    "findBalancePoint": {
+      "value": "Find Balance Point"
+    },
+    "predictionMark": {
+      "value": "Prediction Mark"
+    },
+    "info": {
+      "value": "Info"
+    },
+    "totalNumberPattern": {
+      "value": "Total Number of {{snack}}"
+    },
+    "apples": {
+      "value": "Apples"
+    },
+    "candyBars": {
+      "value": "Candy Bars"
+    },
+    "personSnackPattern": {
+      "value": "Person {{index}} {{snack}}"
+    },
+    "grabCandyBar": {
+      "value": "Grab Candy Bar"
+    },
+    "pipeFlow": {
+      "value": "Pipe Flow"
+    },
+    "cupWaterLevelPattern": {
+      "value": "Cup {{index}} Water Level"
+    },
+    "checkBalance": {
+      "value": "Check Balance"
+    },
+    "resetPillars": {
+      "value": "Reset Pillars"
+    },
+    "noCandyBarsToGrab": {
+      "value": "No candy bars to grab"
+    },
+    "changeStack": {
+      "value": "Change Stack"
+    },
+    "grabCandyBarPattern": {
+      "value": "Grab Candy Bar at Stack {{value}}"
+    },
+    "closePipe": {
+      "value": "Close Pipe"
+    },
+    "openPipe": {
+      "value": "Open Pipe"
+    },
+    "fulcrumOptions": {
+      "value": "Fulcrum Options"
+    },
+    "appleActions": {
+        "value": "Apple Actions"
+    }
   }
 }

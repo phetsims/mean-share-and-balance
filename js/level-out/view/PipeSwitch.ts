@@ -15,6 +15,7 @@ import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
 import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type PipeSwitchOptions = WithRequired<ABSwitchOptions, 'tandem'>;
 export default class PipeSwitch extends ABSwitch<boolean> {
@@ -37,7 +38,7 @@ export default class PipeSwitch extends ABSwitch<boolean> {
         switchToRightSoundPlayer: nullSoundPlayer,
         phetioFeatured: false,
         visiblePropertyOptions: { phetioFeatured: false },
-        accessibleName: 'Pipe Flow'
+        accessibleName: MeanShareAndBalanceStrings.a11y.pipeFlowStringProperty
       },
       isDisposable: false
     }, providedOptions );

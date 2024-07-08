@@ -43,7 +43,7 @@ import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = EmptySelfOptions;
-type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType' | 'snackAccessibleNameSuffix'>;
+type DistributeScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType' | 'snackAccessibleName'>;
 
 // constants
 const CANDY_BAR_FOCUS_X_MARGIN = 10; // in screen coords, empirically determined
@@ -68,7 +68,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       snackType: 'candyBars',
       predictMeanVisibleProperty: model.predictMeanVisibleProperty,
       meanWithRemainderProperty: model.meanWithRemainderProperty,
-      snackAccessibleNameSuffix: 'Candy Bars'
+      snackAccessibleName: MeanShareAndBalanceStrings.a11y.candyBarsStringProperty
     }, providedOptions );
 
     // Create the notepad and necessary pattern strings.
@@ -172,22 +172,36 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       tagName: 'button',
       children: notepadCandyBarNodes,
       excludeInvisibleChildrenFromBounds: true,
-      accessibleName: 'Grab Candy Bar',
+      accessibleName: MeanShareAndBalanceStrings.a11y.grabCandyBarStringProperty,
       ariaRole: 'application'
+    } );
+
+    const stackValueDependencies: Property<number>[] = model.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
+    const stackValueProperty = DerivedProperty.deriveAny( [ model.groupSortInteractionModel.selectedGroupItemProperty, ...stackValueDependencies ], () => {
+      const selectedItem = model.groupSortInteractionModel.selectedGroupItemProperty.value;
+      return selectedItem === null ? 0 :
+      model.groupSortInteractionModel.getGroupItemValue( selectedItem ) === null ? 0 :
+      model.groupSortInteractionModel.getGroupItemValue( selectedItem );
+    } );
+    const grabCandyBarPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.grabCandyBarPatternStringProperty, {
+      value: stackValueProperty
+    }, {
+      maps: {
+
+        // If value is null there are no candy bars to grab and this string will not appear.
+        value: value => value === null ? 0 : value + 1
+      }
     } );
     Multilink.multilink( [
       model.groupSortInteractionModel.isGroupItemKeyboardGrabbedProperty,
-      model.groupSortInteractionModel.selectedGroupItemProperty,
-      model.totalSnacksProperty
-    ], ( isGrabbed, selectedItem, totalSnacks ) => {
-      const stackValue = selectedItem === null ? 0 : model.groupSortInteractionModel.getGroupItemValue( selectedItem );
+      model.totalSnacksProperty,
+      model.groupSortInteractionModel.selectedGroupItemProperty
+    ], ( isGrabbed, totalSnacks ) => {
       if ( totalSnacks === 0 ) {
-        // TODO: Check to see if there's a way to do this with aria-role-description, https://github.com/phetsims/mean-share-and-balance/issues/307
-        notepadCandyBarsHighlightNode.accessibleName = 'No Candy Bars to Grab';
+        notepadCandyBarsHighlightNode.accessibleName = MeanShareAndBalanceStrings.a11y.noCandyBarsToGrabStringProperty;
       }
       else {
-        const stackValueDescription = stackValue === null ? 0 : stackValue;
-        notepadCandyBarsHighlightNode.accessibleName = isGrabbed ? 'Change Stack' : `Grab Candy Bar at Stack ${stackValueDescription + 1}`;
+        notepadCandyBarsHighlightNode.accessibleName = isGrabbed ? MeanShareAndBalanceStrings.a11y.changeStackStringProperty : grabCandyBarPatternStringProperty;
       }
     } );
     this.notepadSnackLayerNode.addChild( this.cueingHighlight );

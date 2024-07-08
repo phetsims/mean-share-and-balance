@@ -23,6 +23,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import TEmitter from '../../../../axon/js/TEmitter.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & WithRequired<NotepadNodeOptions, 'tandem'>;
 export default class FairShareNotepadNode extends NotepadNode {
@@ -66,7 +67,7 @@ export default class FairShareNotepadNode extends NotepadNode {
         spacing: 5,
         touchAreaYDilation: 8,
         soundPlayers: distributionModeItems.map( () => nullSoundPlayer ), // sound generation handled below
-        labelContent: 'Apple Actions',
+        labelContent: MeanShareAndBalanceStrings.a11y.appleActionsStringProperty,
         tandem: providedOptions.tandem.createTandem( 'distributionModeRadioButtonGroup' )
       } );
     const radioButtonGroupAlignBox = new AlignBox( distributionModeRadioButtonGroup, {

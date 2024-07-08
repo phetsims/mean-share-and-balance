@@ -39,7 +39,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
         value: false,
         tandemName: 'movableMeanFulcrumRadioButton',
         options: {
-          accessibleName: 'Predict Balance Point'
+          accessibleName: MeanShareAndBalanceStrings.a11y.predictBalancePointStringProperty
         }
       },
       {
@@ -47,7 +47,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
         value: true,
         tandemName: 'fixedMeanFulcrumRadioButton',
         options: {
-          accessibleName: 'Observe Balance Point'
+          accessibleName: MeanShareAndBalanceStrings.a11y.observeBalancePointStringProperty
         }
       }
     ], {
@@ -56,14 +56,14 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       radioButtonOptions: {
         baseColor: 'white'
       },
-      labelContent: 'Fulcrum Options'
+      labelContent: MeanShareAndBalanceStrings.a11y.fulcrumOptionsStringProperty
     } );
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {
       tickMarksVisibleProperty: model.tickMarksVisibleProperty,
       totalCheckboxItemOptions: {
         property: model.totalVisibleProperty,
-        options: { accessibleName: 'Total Distance' }
+        options: { accessibleName: MeanShareAndBalanceStrings.a11y.totalDistanceStringProperty }
       },
       checkboxOptions: MeanShareAndBalanceConstants.CHECKBOX_OPTIONS,
       tandem: providedOptions.tandem.createTandem( 'checkboxGroup' )
