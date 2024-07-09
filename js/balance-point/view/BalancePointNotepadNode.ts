@@ -8,7 +8,7 @@
 
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, createGatedVisibleProperty, Node, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, GatedVisibleProperty, Node, Text } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
@@ -70,7 +70,7 @@ export default class BalancePointNotepadNode extends NotepadNode {
     } );
 
     const checkAndResetButtonTandem = options.tandem.createTandem( 'checkAndResetButton' );
-    const gatedVisibleProperty = createGatedVisibleProperty( DerivedProperty.not( meanFulcrumFixedProperty ),
+    const gatedVisibleProperty = new GatedVisibleProperty( DerivedProperty.not( meanFulcrumFixedProperty ),
       checkAndResetButtonTandem );
 
     const pillarsRemovedSoundPlayer = new PillarsRemovedSoundPlayer( sceneModel.targetNumberOfBallsProperty );
