@@ -183,17 +183,18 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       }
       return model.plates[ stackNumber ].snacksOnNotepadPlate.lengthProperty.value;
     } );
-    const grabCandyBarPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.grabCandyBarPatternStringProperty, {
+    const patternValues = {
       currentStack: currentStackIndexProperty,
       totalStacks: model.numberOfPlatesProperty,
       stackHeight: stackHeightProperty
-    }, {
+    };
+    const sharedOptions = {
       maps: {
-
-        // If value is null there are no candy bars to grab and this string will not appear.
-        currentStack: value => value === null ? 0 : value + 1
+        currentStack: ( value: number | null ) => value === null ? 0 : value + 1 // If value is null there are no candy bars to grab and this string will not appear.
       }
-    } );
+    };
+    const selectingCandyBarPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.selectingCandyBarPatternStringProperty, patternValues, sharedOptions );
+    const sortingCandyBarPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.sortingCandyBarPatternStringProperty, patternValues, sharedOptions );
     Multilink.multilink( [
       model.groupSortInteractionModel.isGroupItemKeyboardGrabbedProperty,
       model.totalSnacksProperty,
@@ -204,7 +205,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         notepadCandyBarsHighlightNode.accessibleName = MeanShareAndBalanceStrings.a11y.noCandyBarsToGrabStringProperty;
       }
       else {
-        notepadCandyBarsHighlightNode.accessibleName = isGrabbed ? MeanShareAndBalanceStrings.a11y.changeStackStringProperty : grabCandyBarPatternStringProperty;
+        notepadCandyBarsHighlightNode.accessibleName = isGrabbed ? sortingCandyBarPatternStringProperty : selectingCandyBarPatternStringProperty;
       }
     } );
     this.notepadSnackLayerNode.addChild( this.cueingHighlight );

@@ -87,8 +87,8 @@ type StringsType = {
     'checkBalanceStringProperty': LocalizedStringProperty;
     'resetPillarsStringProperty': LocalizedStringProperty;
     'noCandyBarsToGrabStringProperty': LocalizedStringProperty;
-    'changeStackStringProperty': LocalizedStringProperty;
-    'grabCandyBarPatternStringProperty': LocalizedStringProperty;
+    'sortingCandyBarPatternStringProperty': LocalizedStringProperty;
+    'selectingCandyBarPatternStringProperty': LocalizedStringProperty;
     'closePipeStringProperty': LocalizedStringProperty;
     'openPipeStringProperty': LocalizedStringProperty;
     'fulcrumOptionsStringProperty': LocalizedStringProperty;
