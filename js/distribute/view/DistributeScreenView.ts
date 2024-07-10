@@ -168,32 +168,37 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
       )
     );
     const notepadCandyBarsHighlightNode = new InteractiveHighlightingNode( {
-      focusable: true,
-      tagName: 'button',
       children: notepadCandyBarNodes,
-      excludeInvisibleChildrenFromBounds: true,
-      accessibleName: MeanShareAndBalanceStrings.a11y.grabCandyBarStringProperty,
-      ariaRole: 'application'
+      excludeInvisibleChildrenFromBounds: true
     } );
 
     const stackValueDependencies: Property<number>[] = model.plates.map( plate => plate.snacksOnNotepadPlate.lengthProperty );
-    const stackValueProperty = DerivedProperty.deriveAny( [ model.groupSortInteractionModel.selectedGroupItemProperty, ...stackValueDependencies ], () => {
+    const currentStackIndexProperty = DerivedProperty.deriveAny( [ model.groupSortInteractionModel.selectedGroupItemProperty, ...stackValueDependencies ], () => {
       const selectedItem = model.groupSortInteractionModel.selectedGroupItemProperty.value;
       return selectedItem === null ? 0 : model.groupSortInteractionModel.getGroupItemValue( selectedItem );
     } );
+    const stackHeightProperty = new DerivedProperty( [ currentStackIndexProperty, model.groupSortInteractionModel.selectedGroupItemProperty ], stackNumber => {
+      if ( stackNumber === null ) {
+        return 0;
+      }
+      return model.plates[ stackNumber ].snacksOnNotepadPlate.lengthProperty.value;
+    } );
     const grabCandyBarPatternStringProperty = new PatternStringProperty( MeanShareAndBalanceStrings.a11y.grabCandyBarPatternStringProperty, {
-      value: stackValueProperty
+      currentStack: currentStackIndexProperty,
+      totalStacks: model.numberOfPlatesProperty,
+      stackHeight: stackHeightProperty
     }, {
       maps: {
 
         // If value is null there are no candy bars to grab and this string will not appear.
-        value: value => value === null ? 0 : value + 1
+        currentStack: value => value === null ? 0 : value + 1
       }
     } );
     Multilink.multilink( [
       model.groupSortInteractionModel.isGroupItemKeyboardGrabbedProperty,
       model.totalSnacksProperty,
-      model.groupSortInteractionModel.selectedGroupItemProperty
+      model.groupSortInteractionModel.selectedGroupItemProperty,
+      currentStackIndexProperty
     ], ( isGrabbed, totalSnacks ) => {
       if ( totalSnacks === 0 ) {
         notepadCandyBarsHighlightNode.accessibleName = MeanShareAndBalanceStrings.a11y.noCandyBarsToGrabStringProperty;

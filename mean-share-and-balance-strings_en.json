@@ -193,7 +193,7 @@
       "value": "Change Stack"
     },
     "grabCandyBarPattern": {
-      "value": "Grab Candy Bar at Stack {{value}}"
+      "value": "Stack {{currentStack}} of {{totalStacks}}, Top of {{stackHeight}} Candy Bars"
     },
     "closePipe": {
       "value": "Close Pipe"
