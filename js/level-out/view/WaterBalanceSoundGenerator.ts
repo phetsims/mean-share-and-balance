@@ -13,8 +13,6 @@ import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generato
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import Range from '../../../../dot/js/Range.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -120,10 +118,7 @@ class WaterBalanceSoundGenerator extends SoundClip {
       fadeStartDelay: 0.1,
       fadeTime: 0.1,
       delayBeforeStop: 0.1,
-      additionalAudioNodes: [ lowPassFilter ],
-
-      // By default, sound production is disabled during "reset all" operations.
-      enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
+      additionalAudioNodes: [ lowPassFilter ]
     }, providedOptions );
 
     super( waterBalanceFluteChordLoop_mp3, options );

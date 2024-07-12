@@ -24,8 +24,6 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 
 type SelfOptions = {
   meanTolerance: number;
@@ -80,10 +78,7 @@ export default class MeanPredictionLine extends Node {
     super( combinedOptions );
 
     // Create the sound that will be played when the mean prediction becomes correct.
-    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, {
-      initialOutputLevel: 0.1,
-      enableControlProperties: [ DerivedProperty.not( ResetAllButton.isResettingAllProperty ) ]
-    } );
+    const meanPredictionSuccessSoundClip = new SoundClip( selectionArpeggio009_mp3, { initialOutputLevel: 0.1 } );
     soundManager.addSoundGenerator( meanPredictionSuccessSoundClip );
 
     Multilink.multilink( [
