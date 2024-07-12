@@ -12,7 +12,7 @@ import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
-import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
+import nullSoundPlayer from '../../../../tambo/js/nullSoundPlayer.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';

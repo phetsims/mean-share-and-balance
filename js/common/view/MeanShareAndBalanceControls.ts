@@ -19,12 +19,11 @@ import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import Range from '../../../../dot/js/Range.js';
 import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
-import generalOpenSoundPlayer from '../../../../tambo/js/shared-sound-players/generalOpenSoundPlayer.js';
-import generalCloseSoundPlayer from '../../../../tambo/js/shared-sound-players/generalCloseSoundPlayer.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 
 type SelfOptions = {
   numberSpinnerOptions: NumberSpinnerOptions;
@@ -140,21 +139,26 @@ export default class MeanShareAndBalanceControls extends Node {
  * We are overriding the sound player for the info button to play the dialog open and close sounds.
  */
 class InfoButtonSoundPlayer implements TSoundPlayer {
+
+  // Sound generators, created at construction to avoid any lag when playing.
+  private readonly generalCloseSoundPlayer = sharedSoundPlayers.get( 'generalClose' );
+  private readonly generalOpenSoundPlayer = sharedSoundPlayers.get( 'generalOpen' );
+
   public constructor( private readonly dialogVisibleProperty: Property<boolean> ) {
   }
 
   public play(): void {
     if ( this.dialogVisibleProperty.value ) {
-      generalCloseSoundPlayer.play();
+      this.generalCloseSoundPlayer.play();
     }
     else {
-      generalOpenSoundPlayer.play();
+      this.generalOpenSoundPlayer.play();
     }
   }
 
   public stop(): void {
-    generalOpenSoundPlayer.stop();
-    generalCloseSoundPlayer.stop();
+    this.generalOpenSoundPlayer.stop();
+    this.generalCloseSoundPlayer.stop();
   }
 }
 

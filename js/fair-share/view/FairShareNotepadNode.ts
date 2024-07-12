@@ -18,7 +18,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
-import nullSoundPlayer from '../../../../tambo/js/shared-sound-players/nullSoundPlayer.js';
+import nullSoundPlayer from '../../../../tambo/js/nullSoundPlayer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';

@@ -31,9 +31,8 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import switchToLeftSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToLeftSoundPlayer.js';
-import switchToRightSoundPlayer from '../../../../tambo/js/shared-sound-players/switchToRightSoundPlayer.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
@@ -187,6 +186,9 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     soundManager.addSoundGenerator( this.waterBalanceSoundGenerator );
 
     // Add sound generation for the pipes opening and closing.
+    const switchToLeftSoundPlayer = sharedSoundPlayers.get( 'switchToLeft' );
+    const switchToRightSoundPlayer = sharedSoundPlayers.get( 'switchToRight' );
+
     model.pipesOpenProperty.lazyLink( pipesOpen => {
       if ( !ResetAllButton.isResettingAllProperty.value ) {
         pipesOpen ? switchToRightSoundPlayer.play() : switchToLeftSoundPlayer.play();
