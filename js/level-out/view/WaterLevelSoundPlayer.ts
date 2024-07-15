@@ -1,8 +1,8 @@
 // Copyright 2024, University of Colorado Boulder
 
 /**
- * WaterLevelSoundPlayer is used to play the sounds for the slider that sets the water level for the cups on the first
- * screen of the mean-share-and-balance sim.
+ * WaterLevelSoundPlayer is used to play the sounds for the slider-like control that sets the water level for the cups
+ * on the first screen of the mean-share-and-balance sim.
  *
  * @author John Blanco (PhET Interactive Simulations)
  */
@@ -25,7 +25,10 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
                       numberOfMiddleThresholds: number,
                       crossFade: number ) {
 
-    const soundPlayer = new CrossFadeSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, crossFade );
+    const soundPlayer = new CrossFadeSoundClip( glassLevelSoundA_mp3, glassLevelSoundB_mp3, {
+      initialOutputLevel: 0.2,
+      initialCrossFadeValue: crossFade
+    } );
     soundManager.addSoundGenerator( soundPlayer );
 
     // Adjust the playback rate as the level changes.
