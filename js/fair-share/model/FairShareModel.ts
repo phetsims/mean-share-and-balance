@@ -333,13 +333,20 @@ export default class FairShareModel extends SharingModel<Apple> {
    * apples based on the current mode.
    */
   private handleNumberOfSnacksChanged(): void {
+
     // Force any in-progress animations to finish before doing anything so that the model doesn't end up in a wierd
     // state.  These animations, if present, would have been instigated by changes to the notebook mode.
     this.finishInProgressAnimations();
 
-    // We cannot count on the totalSnacks value to be accurate because it comes from a derivedProperty that may
-    // not be updated yet during phet-io state setting.
-    const actualTotalSnacks = this.plates.reduce( ( sum, plate ) => sum + plate.tableSnackNumberProperty.value, 0 );
+    // Calculate the current total number of snacks that are on the plates.  We cannot count on the totalSnacks value to
+    // be accurate because it comes from a derivedProperty that may not be updated yet during phet-io state setting.
+    // We also can't count on the isActiveProperty state for the plates, since they could be in transition.  Instead,
+    // we are using the numberOfPlatesProperty, which drives the values of the others.  This has, thus far, been shown
+    // to work.
+    let actualTotalSnacks = 0;
+    _.times( this.numberOfPlatesProperty.value, i => {
+      actualTotalSnacks += this.plates[ i ].tableSnackNumberProperty.value;
+    } );
 
     const distributionMode = this.appleDistributionModeProperty.value;
     if ( distributionMode === DistributionMode.SYNC ) {

@@ -225,6 +225,11 @@ export default class Plate<T extends Snack> extends PhetioObject {
     const snackFractionValue = new Fraction( targetValue.numerator % targetValue.denominator, targetValue.denominator );
     const numberOfSnacksOnPlate = numberOfWholeSnacks + ( snackFractionValue.value > 0 ? 1 : 0 );
 
+    assert && assert(
+      numberOfSnacksOnPlate <= MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE,
+      `attempt made to exceed max number of snacks on plate, value = ${numberOfSnacksOnPlate}`
+    );
+
     // Determine the fractional value of the top snack.
     let topSnackFractionValue;
     if ( targetValue.value > 0 ) {
