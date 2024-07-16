@@ -15,12 +15,12 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import Vector2Property from '../../../../dot/js/Vector2Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import DynamicProperty from '../../../../axon/js/DynamicProperty.js';
 
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type MeanPredictionHandleOptions = StrictOmit<ParentOptions,
@@ -39,9 +39,10 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
     } );
 
     // Track predictMeanLine drag position.  This needs to be a Vector2, and creates the linkage to the Y value.
-    const predictMeanPositionProperty = new Vector2Property( new Vector2( 0, valueProperty.value ) );
-    predictMeanPositionProperty.link( predictMeanPosition => {
-      valueProperty.value = dragRange.constrainValue( predictMeanPosition.y );
+    const predictMeanPositionProperty = new DynamicProperty( new Property( valueProperty ), {
+      bidirectional: true,
+      map: ( value: number ) => new Vector2( 0, value ),
+      inverseMap: ( vector: Vector2 ) => dragRange.constrainValue( vector.y )
     } );
 
     const dragListener = new DragListener( {
