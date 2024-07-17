@@ -124,14 +124,10 @@ export default class DistributeModel extends SharingModel<Snack> {
 
     // Initialize the plates and set up plate-related behavior that is specific to the Distribute screen.
     this.plates.forEach( plate => {
-
-      // Listen for when snacks are added to a plate and make sure they are active and correctly positioned.
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
         snack.isActiveProperty.value = true;
-        const positionIndex = plate.snacksOnNotepadPlate.filter(
-          snackOnPlate => snackOnPlate !== snack && !snackOnPlate.draggingProperty.value
-        ).length;
-        snack.moveTo( plate.getPositionForStackedItem( positionIndex ), this.animateAddedSnacks );
+        const index = plate.snacksOnNotepadPlate.indexOf( snack );
+        snack.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
       } );
 
       // Start off with the table and notepad quantities in sync.
