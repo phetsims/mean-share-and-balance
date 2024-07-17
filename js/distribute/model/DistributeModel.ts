@@ -97,7 +97,10 @@ export default class DistributeModel extends SharingModel<Snack> {
     } );
     this.meanPredictionProperty = new NumberProperty( 0, {
       range: this.predictMeanDragRange,
-      tandem: options.tandem.createTandem( 'meanPredictionProperty' )
+
+      // phet-io
+      tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
+      phetioFeatured: true
     } );
 
     // Update the selected item when the stack changes, since the previously selected one could now be gone or buried.

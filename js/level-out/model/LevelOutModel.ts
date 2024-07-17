@@ -92,6 +92,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
       // phet-io
       tandem: options.tandem.createTandem( 'meanPredictionProperty' ),
+      phetioFeatured: true,
       phetioDocumentation: 'Indicates where the user predicted the mean would be, or the default value at startup'
     } );
 

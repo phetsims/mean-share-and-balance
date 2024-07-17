@@ -58,7 +58,13 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
       valueProperty: valueProperty,
       enabledRangeProperty: new Property( dragRange ),
       touchArea: predictMeanHandle.bounds.dilated( 5 ),
-      accessibleName: MeanShareAndBalanceStrings.a11y.predictionMarkStringProperty
+      accessibleName: MeanShareAndBalanceStrings.a11y.predictionMarkStringProperty,
+
+      // phet-io
+      phetioVisiblePropertyInstrumented: true,
+      visiblePropertyOptions: {
+        phetioFeatured: true
+      }
     }, providedOptions );
     super( combinedOptions );
 
