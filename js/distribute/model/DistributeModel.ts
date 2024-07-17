@@ -128,7 +128,9 @@ export default class DistributeModel extends SharingModel<Snack> {
         snack.isActiveProperty.value = true;
         const index = plate.snacksOnNotepadPlate.indexOf( snack );
         snack.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
+        this.stackChangedEmitter.emit();
       } );
+      plate.snacksOnNotepadPlate.addItemRemovedListener( () => this.stackChangedEmitter.emit() );
 
       // Start off with the table and notepad quantities in sync.
       plate.syncNotepadToTable();
@@ -174,7 +176,6 @@ export default class DistributeModel extends SharingModel<Snack> {
             }
           } );
         }
-        this.stackChangedEmitter.emit();
       } );
 
       // Monitor the isActiveProperty for each plate and do any redistribution of candy bars that is necessary when
