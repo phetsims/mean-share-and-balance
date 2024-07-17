@@ -28,6 +28,8 @@ function testApproximatelyEquals( actual: number[], expected: number[], toleranc
   assert.ok( !failed, message + ', expected = ' + expected + ', actual = ' + actual );
 }
 
+// Test the distributeWaterRipple method to ensure the water levels are evenly distributing across the connected cups.
+// The closest cups will receive water first, and then the water will ripple out to the other connected cups.
 QUnit.test( 'distribute ripple', assert => {
   function testDistribution( waterLevels: number[], waterDelta: number, expectedLevels: number[], message: string ): void {
     const connectedCups = waterLevels.map( ( waterLevel, index ) => {
@@ -46,9 +48,6 @@ QUnit.test( 'distribute ripple', assert => {
   }
 
   testDistribution( [ 0, 0, 1, 0, 0 ], 1, [ 0.06, 0.2, 1, 0.2, 0.06 ], 'center cup rippling out, first pass' );
-  // testDistribution( [ 0, 0.1, 0.8, 0.1, 0 ], [ 0.01, 0.17, 0.64, 0.17, 0.01 ], 'center cup rippling out, second pass' );
-  // testDistribution( [ 0.01, 0.17, 0.64, 0.17, 0.01 ], [ 0.027, 0.217, 0.512, 0.217, 0.027 ], 'center cup rippling out, second pass' );
-
 } );
 
 qunitStart();
