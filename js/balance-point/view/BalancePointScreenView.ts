@@ -170,12 +170,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     this.addChild( meanInfoPanel );
 
-    // Interrupt any other user input that is happening if and when the number of data points changes.  This helps to
-    // void multitouch problems.  See https://github.com/phetsims/mean-share-and-balance/issues/293.
-    sceneModel.numberOfDataPointsProperty.lazyLink( () => {
-      this.interruptSubtreeInput();
-    } );
-
     /**
      * BalancePointScreenView must explicitly set the traversal order for the screen here since it must
      * extend SoccerScreenView to take advantage of the code in the soccer-common repo. We do not have access

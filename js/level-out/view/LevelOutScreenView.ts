@@ -194,8 +194,10 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
         pipesOpen ? switchToRightSoundPlayer.play() : switchToLeftSoundPlayer.play();
       }
     } );
+
+    // Interrupt input to the cups if the number of cups is changed.  This is to prevent multi-touch problems.
     model.numberOfCupsProperty.link( () => {
-      this.interruptSubtreeInput();
+      waterCupLayerNode.interruptSubtreeInput();
     } );
 
     this.msabSetPDOMOrder(

@@ -102,18 +102,9 @@ export default class MeanShareAndBalanceControls extends Node {
       options.controlsPDOMOrder.push( this.infoButton );
     }
 
-    const numberSpinnerOptions = combineOptions<NumberSpinnerOptions>( {
-      decrementFunction: value => {
-
-        // A user's interaction with an interactive component should be interrupted in case it
-        // is being removed from the screen in multitouch scenarios.
-        this.interruptSubtreeInput();
-        return value - 1;
-      }
-    }, options.numberSpinnerOptions );
     const numberSpinnerVBoxOptions = {
       tandem: options.tandem.createTandem( 'numberSpinnerControl' ),
-      numberSpinnerOptions: numberSpinnerOptions
+      numberSpinnerOptions: options.numberSpinnerOptions
     };
 
     const numberSpinner = new NumberSpinnerControl(

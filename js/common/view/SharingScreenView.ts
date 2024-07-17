@@ -64,6 +64,9 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
   // Various nodes used to depict visual elements in the view.
   protected readonly tablePlateNodes: Node[];
 
+  // Controls for view's settings.
+  protected readonly controls: SharingControls;
+
   public constructor( model: SharingModel<T>,
                       questionBarStringProperty: LocalizedStringProperty,
                       questionBarColor: TColor,
@@ -85,7 +88,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     notepadNode.centerY = MeanShareAndBalanceConstants.NOTEPAD_PAPER_CENTER_Y;
 
     // Create the controls.
-    const controls = new SharingControls( model, model.meanInfoPanelVisibleProperty, notepadNode.bottom, {
+    this.controls = new SharingControls( model, model.meanInfoPanelVisibleProperty, notepadNode.bottom, {
       tandem: providedOptions.tandem.createTandem( 'controls' ),
       showSyncButton: options.showSyncButton,
       predictMeanVisibleProperty: options.predictMeanVisibleProperty,
@@ -118,7 +121,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       () => model.getActivePlates().length,
       model.meanInfoPanelVisibleProperty,
       notepadNode.bounds,
-      () => controls.infoButton!.focus(),
+      () => this.controls.infoButton!.focus(),
       {
         calculatedMeanDisplayMode: options.snackType === 'candyBars' ? 'remainder' : 'mixedFraction',
         meanWithRemainderProperty: options.meanWithRemainderProperty,
@@ -179,7 +182,7 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
       this.layoutBounds.maxY
     );
 
-    const controlsAlignBox = new AlignBox( controls, {
+    const controlsAlignBox = new AlignBox( this.controls, {
       alignBounds: simAreaWithoutQuestionBar,
       xAlign: 'right',
       yAlign: 'top',
@@ -208,8 +211,8 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     // Set the PDOM navigation order.
     this.msabSetPDOMOrder(
       [ notepadSnackLayerNode ],
-      [ ...this.tablePlateNodes, controls.numberSpinner ],
-      [ ...controls.controlsPDOMOrder, meanInfoPanel ]
+      [ ...this.tablePlateNodes, this.controls.numberSpinner ],
+      [ ...this.controls.controlsPDOMOrder, meanInfoPanel ]
     );
   }
 }

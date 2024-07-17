@@ -94,6 +94,13 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
         visibleProperty: apple.isActiveProperty
       } ) );
     } );
+
+    // Add a handler that interrupts input to the controls that affect the number of apples when the mode changes.  This
+    // helps to prevent multi-touch issues.
+    model.appleDistributionModeProperty.lazyLink( () => {
+      this.tablePlateNodes.forEach( tablePlateNode => tablePlateNode.interruptSubtreeInput() );
+      this.controls.interruptSubtreeInput();
+    } );
   }
 }
 
