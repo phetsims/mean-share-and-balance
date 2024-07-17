@@ -114,8 +114,8 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
 
     // Hook up visibility control for the cueing arrows.
     const cueingArrowsVisibleProperty = new DerivedProperty(
-      [ fulcrumWasDraggedProperty, isMeanFulcrumFixedProperty, meanValueProperty ],
-      ( wasDragged, isMeanFulcrumFixed ) => !isMeanFulcrumFixed && !wasDragged && meanValueProperty.value !== null
+      [ fulcrumWasDraggedProperty, isMeanFulcrumFixedProperty, this.enabledProperty, meanValueProperty ],
+      ( wasDragged, isMeanFulcrumFixed, enabled ) => enabled && !isMeanFulcrumFixed && !wasDragged && meanValueProperty.value !== null
     );
     leftCueingArrow.visibleProperty = cueingArrowsVisibleProperty;
     rightCueingArrow.visibleProperty = cueingArrowsVisibleProperty;
