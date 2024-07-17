@@ -9,7 +9,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { DragListener, Image, InteractiveHighlighting, Line, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import { DragListener, Image, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -26,6 +26,7 @@ import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.j
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
 import Snack from '../../common/model/Snack.js';
+import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -127,31 +128,35 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
    * match the bounds of the rectangle. This method returns the nodes that make up the outline of the candy bar.
    */
   public static getSketchOutline(): Node[ ] {
+    const verticalStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( MeanShareAndBalanceConstants.VERTICAL_PATTERN_MATRIX );
+    const horizontalStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( MeanShareAndBalanceConstants.HORIZONTAL_PATTERN_MATRIX );
     const candyBarWidth = MeanShareAndBalanceConstants.CANDY_BAR_WIDTH;
     const candyBarHeight = MeanShareAndBalanceConstants.CANDY_BAR_HEIGHT;
     const candyBarStrokeLeft = new Line(
       0, 0, 0, candyBarHeight,
       {
         lineWidth: 1.95,
-        stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+        stroke: verticalStrokePattern
       } );
     const candyBarStrokeRight = new Line(
       candyBarWidth, 0, candyBarWidth, candyBarHeight,
       {
         lineWidth: 1.95,
-        stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+        stroke: verticalStrokePattern
       } );
     const candyBarStrokeTop = new Line(
       0, 0, candyBarWidth, 0,
       {
         lineWidth: 1.95,
-        stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
+        stroke: horizontalStrokePattern
       } );
     const candyBarStrokeBottom = new Line(
       0, candyBarHeight, candyBarWidth, candyBarHeight,
       {
         lineWidth: 1.95,
-        stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
+        stroke: horizontalStrokePattern
       } );
 
     return [ candyBarStrokeLeft, candyBarStrokeRight, candyBarStrokeTop, candyBarStrokeBottom ];

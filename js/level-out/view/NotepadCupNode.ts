@@ -44,18 +44,23 @@ export default class NotepadCupNode extends Node {
     const y = Utils.linear( 0, 1, MeanShareAndBalanceConstants.CUP_HEIGHT, 0, notepadCup.waterLevelProperty.value );
 
     // Create the outline of the notepad cup with a pattern.
-    const bottomStrokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0 ) );
+    const verticalLinePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( MeanShareAndBalanceConstants.VERTICAL_PATTERN_MATRIX );
+    const topStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( MeanShareAndBalanceConstants.HORIZONTAL_PATTERN_MATRIX );
+    const bottomStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0 ) );
     const cupStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.CUP_HEIGHT, {
       lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+      stroke: verticalLinePattern
     } );
     const cupStrokeRight = new Line( MeanShareAndBalanceConstants.CUP_WIDTH, 0, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, {
       lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+      stroke: verticalLinePattern
     } );
     const cupStrokeTop = new Line( 0, 0, MeanShareAndBalanceConstants.CUP_WIDTH, 0, {
       lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
+      stroke: topStrokePattern
     } );
     const cupStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.CUP_HEIGHT, MeanShareAndBalanceConstants.CUP_WIDTH, MeanShareAndBalanceConstants.CUP_HEIGHT, {
       lineWidth: 1.95,

@@ -10,9 +10,8 @@
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import Range from '../../../dot/js/Range.js';
 import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
-import { LinearGradient, Pattern } from '../../../scenery/js/imports.js';
+import { LinearGradient } from '../../../scenery/js/imports.js';
 import ScreenView from '../../../joist/js/ScreenView.js';
-import graphiteTexture_png from '../../images/graphiteTexture_png.js';
 import Matrix3 from '../../../dot/js/Matrix3.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
@@ -91,8 +90,8 @@ const MeanShareAndBalanceConstants = {
   MAX_NUMBER_OF_SNACKS_PER_PLATE: 10,
   MIN_NUMBER_OF_SNACKS_PER_PLATE: 0,
   NOTEPAD_PAPER_CENTER_Y: 220,
-  HORIZONTAL_SKETCH_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix( Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ) ),
-  VERTICAL_SKETCH_LINE_PATTERN: new Pattern( graphiteTexture_png ).setTransformMatrix(
+  HORIZONTAL_PATTERN_MATRIX: Matrix3.affine( 0.15, 0, 0, 0, 0.15, 0.975 ),
+  VERTICAL_PATTERN_MATRIX:
     Matrix3.affine(
       0.15 * Math.cos( Math.PI / 2 ),
       -0.15 * Math.sin( Math.PI / 2 ),
@@ -100,7 +99,7 @@ const MeanShareAndBalanceConstants = {
       0.15 * Math.sin( Math.PI / 2 ),
       0.15 * Math.cos( Math.PI / 2 ),
       0
-    ) ),
+    ),
   NOTEPAD_LINE_PATTERN_WIDTH: 1.95,
 
   SOCCER_BALL_RANGE: new Range( 0, 10 ),

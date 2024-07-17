@@ -10,7 +10,7 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { FireListener, InteractiveHighlighting, Line, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { FireListener, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Pipe from '../model/Pipe.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
@@ -21,6 +21,7 @@ import ValveNode from './ValveNode.js';
 import Property from '../../../../axon/js/Property.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 
 type SelfOptions = EmptySelfOptions;
 type PipeNodeOptions = SelfOptions & StrictOmit<NodeOptions, 'phetioDynamicElement' | 'children' | 'visibleProperty'> & PickRequired<NodeOptions, 'tandem'>;
@@ -42,23 +43,27 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     const pipeRectangle = new Rectangle( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH,
       { fill: MeanShareAndBalanceConstants.PIPE_GRADIENT } );
 
+    const verticalStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( MeanShareAndBalanceConstants.VERTICAL_PATTERN_MATRIX );
+    const horizontalStrokePattern = new Pattern( graphiteTexture_png )
+      .setTransformMatrix( MeanShareAndBalanceConstants.HORIZONTAL_PATTERN_MATRIX );
     const pipeStrokeLeft = new Line( 0, 0, 0, MeanShareAndBalanceConstants.PIPE_WIDTH, {
       lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+      stroke: verticalStrokePattern
     } );
     const pipeStrokeRight = new Line( MeanShareAndBalanceConstants.PIPE_LENGTH, 0,
       MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
         lineWidth: 1.95,
-        stroke: MeanShareAndBalanceConstants.VERTICAL_SKETCH_LINE_PATTERN
+        stroke: verticalStrokePattern
       } );
     const pipeStrokeTop = new Line( 0, 0, MeanShareAndBalanceConstants.PIPE_LENGTH, 0, {
       lineWidth: 1.95,
-      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
+      stroke: horizontalStrokePattern
     } );
     const pipeStrokeBottom = new Line( 0, MeanShareAndBalanceConstants.PIPE_WIDTH,
       MeanShareAndBalanceConstants.PIPE_LENGTH, MeanShareAndBalanceConstants.PIPE_WIDTH, {
         lineWidth: 1.95,
-        stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN
+        stroke: horizontalStrokePattern
       } );
 
 

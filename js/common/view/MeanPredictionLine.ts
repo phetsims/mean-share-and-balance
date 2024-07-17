@@ -7,7 +7,7 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Line, ManualConstraint, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
+import { Line, ManualConstraint, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Range from '../../../../dot/js/Range.js';
@@ -24,6 +24,7 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 
 type SelfOptions = {
   meanTolerance: number;
@@ -54,9 +55,10 @@ export default class MeanPredictionLine extends Node {
       isDisposable: false
     }, providedOptions );
 
+    const strokePattern = new Pattern( graphiteTexture_png ).setTransformMatrix( MeanShareAndBalanceConstants.HORIZONTAL_PATTERN_MATRIX );
     const predictMeanLine = new Line( new Vector2( 0, 0 ), new Vector2( MeanShareAndBalanceConstants.CUP_WIDTH, 0 ), {
       lineWidth: MeanShareAndBalanceConstants.NOTEPAD_LINE_PATTERN_WIDTH,
-      stroke: MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN,
+      stroke: strokePattern,
       lineDash: [ 5, 3 ]
     } );
 
@@ -92,7 +94,7 @@ export default class MeanPredictionLine extends Node {
         // the default pattern, and return early.
         if ( !successIndicatorsOperating ) {
           predictMeanSuccessRectangle.visible = false;
-          predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+          predictMeanLine.stroke = strokePattern;
           return;
         }
         const successRectangleWasVisible = predictMeanSuccessRectangle.visible;
@@ -106,11 +108,11 @@ export default class MeanPredictionLine extends Node {
           const closeToMean = Utils.equalsEpsilon( roundedPrediction, roundedMean, meanTolerance );
           predictMeanLine.stroke = roundedPrediction === roundedMean ?
                                    MeanShareAndBalanceColors.meanColorProperty :
-                                   MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+                                   strokePattern;
           predictMeanSuccessRectangle.visible = closeToMean;
         }
         else {
-          predictMeanLine.stroke = MeanShareAndBalanceConstants.HORIZONTAL_SKETCH_LINE_PATTERN;
+          predictMeanLine.stroke = strokePattern;
           predictMeanSuccessRectangle.visible = false;
         }
 
