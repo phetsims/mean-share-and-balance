@@ -103,7 +103,8 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
       startDrag: () => { this.isDraggingProperty.value = true; },
       drag: () => { fulcrumWasDraggedProperty.value = true; },
       endDrag: () => { this.isDraggingProperty.value = false; },
-      isDisposable: false
+      isDisposable: false,
+      phetioDocumentation: 'When the slider is disabled or in a fixed state the cueing arrows will not be visible.'
     }, providedOptions );
     super( fulcrumValueProperty, MeanShareAndBalanceConstants.SOCCER_BALL_RANGE, options );
 
