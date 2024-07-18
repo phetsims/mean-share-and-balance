@@ -7,7 +7,7 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import { VBox } from '../../../../scenery/js/imports.js';
+import { Node, VBox } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -31,7 +31,10 @@ type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceC
 
 export default class BalancePointControls extends MeanShareAndBalanceControls {
 
-  public constructor( model: BalancePointModel, notepadNodeBottom: number, providedOptions: BalancePointControlsOptions ) {
+  public constructor( model: BalancePointModel,
+                      notepadNodeBottom: number,
+                      kickButton: Node,
+                      providedOptions: BalancePointControlsOptions ) {
 
     const meanFulcrumRadioButtonGroup = new RectangularRadioButtonGroup( model.meanFulcrumFixedProperty, [
       {
@@ -83,6 +86,21 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
     const options = optionize<BalancePointControlsOptions, SelfOptions, MeanShareAndBalanceControlsOptions>()( {
       controlsPDOMOrder: [ meanFulcrumRadioButtonGroup, checkboxGroup ],
       numberSpinnerOptions: {
+
+        incrementFunction: value => {
+
+          // Make sure no other control is trying to kick balls at the same time as this spinner.
+          kickButton.interruptSubtreeInput();
+
+          return value + 1;
+        },
+        decrementFunction: value => {
+
+          // Make sure no other control is trying to kick balls at the same time as this spinner.
+          kickButton.interruptSubtreeInput();
+
+          return value - 1;
+        },
 
         // A custom sound player that plays a sound when the number of balls is decreased but not increased.
         arrowsSoundPlayer: new NumberSpinnerSoundPlayer( numberOfDataPointsProperty )

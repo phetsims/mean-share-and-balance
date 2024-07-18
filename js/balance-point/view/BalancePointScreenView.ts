@@ -18,7 +18,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 import BalancePointControls from './BalancePointControls.js';
-import { AlignBox, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, Node, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
 import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
@@ -87,8 +87,11 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       }
     );
 
+    // Create a parent node for the kick button so that we can pass it around for input interruption.
+    const kickButtonParent = new Node();
+
     // Create the controls that appear on the right side of the screen.
-    const controls = new BalancePointControls( model, notepadNode.bottom, {
+    const controls = new BalancePointControls( model, notepadNode.bottom, kickButtonParent, {
       onInfoButtonPressed: () => {
         meanInfoPanel.closeButton.focus();
       },
@@ -122,16 +125,24 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
         maxWidth: 60
       } ),
       multiKick: false,
-      listener: () => sceneModel.targetNumberOfBallsProperty.value++,
+      listener: () => {
+
+        // Make sure the other control that affects kicking balls isn't trying to fire at the same time.
+        controls.numberSpinner.interruptSubtreeInput();
+
+        // Kick the ball or queue it for kicking by incrementing the target number.
+        sceneModel.targetNumberOfBallsProperty.value++;
+      },
       leftTop: this.modelViewTransform.modelToViewXY( -2, 0 ).plusXY( 0, 8 ),
       accessibleName: SoccerCommonStrings.kickStringProperty,
       tandem: options.tandem.createTandem( 'kickButton' )
     } );
+    kickButtonParent.addChild( kickButton );
 
     // Add children to the scene graph in correct z-order.
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
-    this.addChild( kickButton );
+    this.addChild( kickButtonParent );
     this.addChild( notepadNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );
