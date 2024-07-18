@@ -13,7 +13,8 @@
     "requirejsNamespace": "MEAN_SHARE_AND_BALANCE",
     "phetLibs": [
       "twixt",
-      "soccer-common"
+      "soccer-common",
+      "center-and-variability"
     ],
     "simulation": true,
     "runnable": true,
