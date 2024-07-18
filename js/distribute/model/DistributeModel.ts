@@ -129,8 +129,10 @@ export default class DistributeModel extends SharingModel<Snack> {
     this.plates.forEach( plate => {
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
         snack.isActiveProperty.value = true;
-        const index = plate.snacksOnNotepadPlate.indexOf( snack );
-        snack.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
+        const nonDraggingSnacks = plate.snacksOnNotepadPlate.filter( plate => !plate.draggingProperty.value );
+        nonDraggingSnacks.forEach( ( nonDraggingSnack, index ) => {
+          nonDraggingSnack.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
+        } );
         this.stackChangedEmitter.emit();
       } );
       plate.snacksOnNotepadPlate.addItemRemovedListener( () => this.stackChangedEmitter.emit() );
