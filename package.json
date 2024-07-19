@@ -14,8 +14,7 @@
     "phetLibs": [
       "bamboo",
       "twixt",
-      "soccer-common",
-      "center-and-variability"
+      "soccer-common"
     ],
     "simulation": true,
     "runnable": true,
