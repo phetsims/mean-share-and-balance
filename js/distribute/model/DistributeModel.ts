@@ -127,34 +127,53 @@ export default class DistributeModel extends SharingModel<Snack> {
 
     // Initialize the plates and set up plate-related behavior that is specific to the Distribute screen.
     this.plates.forEach( plate => {
+
+      // Add a listener that will position each snack that is added to a plate.
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
+
+        // Start off with the table and notepad quantities in sync.
+        plate.syncNotepadToTable();
+
+        // Make sure the snack is active.
         snack.isActiveProperty.value = true;
+
+        // It's possible that one or more of the snacks that are assigned to this plate are being dragged, so we need to
+        // filter those out of the ones are being positioned.
         const nonDraggingSnacks = plate.snacksOnNotepadPlate.filter( plate => !plate.draggingProperty.value );
+
+        // Make sure each of the non-dragging snacks are positioned on the stack.
         nonDraggingSnacks.forEach( ( nonDraggingSnack, index ) => {
-          nonDraggingSnack.moveTo( plate.getPositionForStackedItem( index ), this.animateAddedSnacks );
+
+          // Only animate the movement of the newly added snacks.  If the positions of the others are being changed,
+          // which can happen in some circumstances, the motion should be instantaneous.
+          const animateMovement = nonDraggingSnack === snack ? this.animateAddedSnacks : false;
+
+          // Set the position based on the index.
+          const position = plate.getPositionForStackedItem( index );
+          if ( !nonDraggingSnack.positionProperty.value.equals( position ) ) {
+            nonDraggingSnack.moveTo( position, animateMovement );
+          }
         } );
+
         this.stackChangedEmitter.emit();
       } );
       plate.snacksOnNotepadPlate.addItemRemovedListener( () => this.stackChangedEmitter.emit() );
-
-      // Start off with the table and notepad quantities in sync.
-      plate.syncNotepadToTable();
 
       // Monitor the number of snacks on each table plate and add or remove candy bars from the notepad plate in
       // response.  In some situations this is straightforward, but in others it is not.  See the code for details.
       plate.tableSnackNumberProperty.lazyLink( ( candyBarNumber, oldCandyBarNumber ) => {
 
-        const delta = candyBarNumber - oldCandyBarNumber;
-
+        // When setting PhET-iO state, we don't want to add or remove snacks from the notepad, since that will be
+        // handled by the observable arrays.
         if ( isSettingPhetioStateProperty.value ) {
-
-          // When setting PhET-iO state, we don't want to add or remove snacks from the notepad, since that will be
-          // handled by the observable arrays.
           return;
         }
+
+        const delta = candyBarNumber - oldCandyBarNumber;
+
         if ( delta > 0 ) {
 
-          // Add notepad snacks to this plate, or to another if this plate is already full.
+          // Add notepad snack(s) to this plate, or to another if this plate is already full.
           _.times( delta, () => {
             if ( plate.getNumberOfNotepadSnacks() < MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ) {
               plate.addASnack();
@@ -169,7 +188,7 @@ export default class DistributeModel extends SharingModel<Snack> {
         }
         else {
 
-          // Remove notepad snacks from this plate, or from another if this plate is empty.
+          // Remove notepad snack(s) from this plate, or from another if this plate is empty.
           _.times( Math.abs( delta ), () => {
             if ( plate.getNumberOfNotepadSnacks() > MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE ) {
               plate.removeTopSnack();
@@ -271,7 +290,6 @@ export default class DistributeModel extends SharingModel<Snack> {
   public getPlatesWithSnacks(): Array<Plate<Snack>> {
     return this.plates.filter( plate => plate.isActiveProperty.value && plate.getNumberOfNotepadSnacks() > 0 );
   }
-
 
   /**
    * Get the plate with the most snacks, null if no plates have any.
