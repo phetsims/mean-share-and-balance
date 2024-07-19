@@ -128,11 +128,11 @@ export default class DistributeModel extends SharingModel<Snack> {
     // Initialize the plates and set up plate-related behavior that is specific to the Distribute screen.
     this.plates.forEach( plate => {
 
+      // Start off with the table and notepad quantities in sync.
+      plate.syncNotepadToTable();
+
       // Add a listener that will position each snack that is added to a plate.
       plate.snacksOnNotepadPlate.addItemAddedListener( snack => {
-
-        // Start off with the table and notepad quantities in sync.
-        plate.syncNotepadToTable();
 
         // Make sure the snack is active.
         snack.isActiveProperty.value = true;
