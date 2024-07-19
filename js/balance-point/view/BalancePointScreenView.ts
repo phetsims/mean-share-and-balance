@@ -18,7 +18,7 @@ import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 import BalancePointControls from './BalancePointControls.js';
-import { AlignBox, Node, Text } from '../../../../scenery/js/imports.js';
+import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import BalancePointSceneView from './BalancePointSceneView.js';
 import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
@@ -87,11 +87,8 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       }
     );
 
-    // Create a parent node for the kick button so that we can pass it around for input interruption.
-    const kickButtonParent = new Node();
-
     // Create the controls that appear on the right side of the screen.
-    const controls = new BalancePointControls( model, notepadNode.bottom, kickButtonParent, {
+    const controls = new BalancePointControls( model, notepadNode.bottom, {
       onInfoButtonPressed: () => {
         meanInfoPanel.closeButton.focus();
       },
@@ -137,12 +134,11 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
       accessibleName: SoccerCommonStrings.kickStringProperty,
       tandem: options.tandem.createTandem( 'kickButton' )
     } );
-    kickButtonParent.addChild( kickButton );
 
     // Add children to the scene graph in correct z-order.
     this.addChild( backgroundNode );
     this.addChild( sceneView.backSceneViewLayer );
-    this.addChild( kickButtonParent );
+    this.addChild( kickButton );
     this.addChild( notepadNode );
     this.addChild( questionBar );
     this.addChild( controlsAlignBox );
