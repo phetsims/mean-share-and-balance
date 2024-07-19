@@ -4,10 +4,11 @@
  * this class as well.
  *
  * @author Marla Schulz (PhET Interactive Simulations)
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
-import { DragListener, Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { DragListener, Image, Node, NodeOptions, SceneryEvent } from '../../../../scenery/js/imports.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import pencil_png from '../../../images/pencil_png.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -15,12 +16,10 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import DynamicProperty from '../../../../axon/js/DynamicProperty.js';
 
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type MeanPredictionHandleOptions = StrictOmit<ParentOptions,
@@ -38,17 +37,11 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
       rotation: Math.PI / 4
     } );
 
-    // Track predictMeanLine drag position.  This needs to be a Vector2, and creates the linkage to the Y value.
-    const predictMeanPositionProperty = new DynamicProperty( new Property( valueProperty ), {
-      bidirectional: true,
-      map: ( value: number ) => new Vector2( 0, value ),
-      inverseMap: ( vector: Vector2 ) => dragRange.constrainValue( vector.y )
-    } );
-
     const dragListener = new DragListener( {
-      positionProperty: predictMeanPositionProperty,
-      transform: modelViewTransform,
-      useParentOffset: true,
+      drag: ( event: SceneryEvent ) => {
+        const transformedViewPoint = this.globalToParentPoint( event.pointer.point );
+        valueProperty.value = dragRange.constrainValue( modelViewTransform.viewToModelY( transformedViewPoint.y ) );
+      },
       tandem: providedOptions.tandem.createTandem( 'dragListener' )
     } );
 
