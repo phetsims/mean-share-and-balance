@@ -466,7 +466,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
   }
 
   /**
-   * Update the visibility and position of the keyboard sort cue node based on the model's state.
+   * Update the position of the keyboard sort cue node based on the model's state.
    */
   private updateKeyboardSortCueNode(): void {
     const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
