@@ -34,7 +34,7 @@ const NOISE_OFF_TIME = 0.05; // in seconds
 
 class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
-  private changeRateUpdateTime: number | null = null;
+  private changeRateUpdateTime: number;
   private soundStartCountdown = 0;
   private motionState: MotionState = 'unchanging';
 
@@ -58,6 +58,8 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
     super( options );
 
+    this.changeRateUpdateTime = this.audioContext.currentTime;
+
     // Monitor the prediction value and update the noise output accordingly.
     meanPredictionProperty.lazyLink( ( newPrediction, oldPrediction ) => {
       const now = this.audioContext.currentTime;
@@ -70,7 +72,7 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
         this.predictionChangeRate = 0;
         this.motionState = 'unchanging';
       }
-      else if ( this.changeRateUpdateTime !== null ) {
+      else {
         this.predictionChangeRate = Utils.clamp(
           ( newPrediction - oldPrediction ) / ( now - this.changeRateUpdateTime ),
           -MAX_CHANGE_RATE,
