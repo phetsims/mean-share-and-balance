@@ -285,7 +285,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
           assert && assert( topCandyBar, 'If a plate has a snack, there must be a top candy bar' );
           return topCandyBar!;
         },
-        getGroupItemToSelect: () => model.plates[ 0 ].getTopSnack(),
+        getGroupItemToSelect: () => model.getFirstAvailableSnack(),
         getNodeFromModelItem: candyBar => {
           const node = notepadCandyBarNodes.find( candyBarNode => candyBarNode.candyBar === candyBar );
           assert && assert( node !== undefined, 'A candyBar model must have an associated node' );
@@ -443,19 +443,25 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     else {
       const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
       const plate = this.model.getPlateForSnack( selectedCandyBar );
-      assert && assert( plate, 'selected candy bar must be on a plate' );
 
-      const topCandyBarIndex = plate!.snacksOnNotepadPlate.length - 1;
-      const highlightPosition = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getStackedCandyBarPosition( plate!.xPositionProperty.value, topCandyBarIndex )
-      );
-      this.cueingHighlight.x = highlightPosition.x;
-      this.cueingHighlight.y = highlightPosition.y;
-      this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
-      this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
-          MOUSE_CUEING_ARROW_MARGIN )
-      );
+      // Update the position of the mouse cue.  Note that it's legit for the snack to not be on a plate - this can occur
+      // when the snack is moving between plates or being removed altogether from the model.
+      if ( plate ) {
+        const topCandyBarIndex = plate.snacksOnNotepadPlate.length - 1;
+        const highlightPosition = this.modelToNotepadTransform.modelToViewPosition(
+          SnackStacker.getStackedCandyBarPosition( plate.xPositionProperty.value, topCandyBarIndex )
+        );
+        this.cueingHighlight.x = highlightPosition.x;
+        this.cueingHighlight.y = highlightPosition.y;
+        this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = true;
+        this.mouseSortIndicatorArrowNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
+          SnackStacker.getCueingArrowPosition( plate, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
+            MOUSE_CUEING_ARROW_MARGIN )
+        );
+      }
+      else {
+        this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
+      }
     }
   }
 
@@ -466,11 +472,17 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     const selectedCandyBar = this.groupSortInteractionModel.selectedGroupItemProperty.value;
     if ( !this.groupSortInteractionModel.hasKeyboardSortedGroupItemProperty.value && selectedCandyBar ) {
       const plate = this.model.getPlateForSnack( selectedCandyBar );
-      assert && assert( plate, 'selected candy bar must be on a plate' );
-      this.keyboardSortCueNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
-        SnackStacker.getCueingArrowPosition( plate!, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
-          KEYBOARD_CUEING_ARROW_MARGIN )
-      );
+
+      // Note that it's possible that the candy bar won't be on a plate.  This can happen if it's being moved from one
+      // plate to another or being removed from the model altogether.
+      if ( plate ) {
+
+        // Update the position of the keyboard sort cue node to be with the selected candy bar.
+        this.keyboardSortCueNode.centerBottom = this.modelToNotepadTransform.modelToViewPosition(
+          SnackStacker.getCueingArrowPosition( plate, MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.height,
+            KEYBOARD_CUEING_ARROW_MARGIN )
+        );
+      }
     }
   }
 }

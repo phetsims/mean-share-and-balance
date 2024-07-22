@@ -108,17 +108,24 @@ export default class DistributeModel extends SharingModel<Snack> {
     this.stackChangedEmitter.addListener( () => {
       const selectedCandyBar = selectedCandyBarProperty.value;
 
-      // If the selected candy bar is not active, default back to the first top candy bar or null if there are no candy
-      // bars on any plate.
-      if ( selectedCandyBar !== null && !selectedCandyBar.isActiveProperty.value ) {
-        const platesWithSnacks = this.getPlatesWithSnacks();
-        platesWithSnacks.length > 0 ? selectedCandyBarProperty.set( platesWithSnacks[ 0 ].getTopSnack() ) :
-        selectedCandyBarProperty.set( null );
-      }
-      else if ( selectedCandyBar !== null ) {
+      if ( selectedCandyBar !== null ) {
+
+        // Get the plate to which this candy bar is assigned.  This may be null, which means that the candy bar is being
+        // moved or is in the process of being removed.
         const parentPlate = this.getPlateForSnack( selectedCandyBar );
-        assert && assert( parentPlate, 'selectedCandyBar has no parent plate, but it should' );
-        selectedCandyBarProperty.value = parentPlate!.getTopSnack();
+        if ( parentPlate ) {
+
+          // Make sure the top snack on this plate is selected, not one in the middle or at the bottom.
+          selectedCandyBarProperty.value = parentPlate.getTopSnack();
+        }
+      }
+    } );
+
+    this.unusedSnacks.addItemAddedListener( addedSnack => {
+
+      // If the currently selected snack is removed from the notepad, select a new one.
+      if ( addedSnack === selectedCandyBarProperty.value ) {
+        selectedCandyBarProperty.value = this.getFirstAvailableSnack();
       }
     } );
 
@@ -299,6 +306,16 @@ export default class DistributeModel extends SharingModel<Snack> {
       ( plateA, plateB ) => plateB.getNumberOfNotepadSnacks() - plateA.getNumberOfNotepadSnacks()
     );
     return sortedPlatesWithSnacks.length > 0 ? sortedPlatesWithSnacks[ 0 ] : null;
+  }
+
+  /**
+   * Get the first available snack, which is defined as the top snack on the leftmost plate that contains snacks.
+   */
+  public getFirstAvailableSnack(): Snack | null {
+    const platesWithSnacks = this.getPlatesWithSnacks();
+    return platesWithSnacks.length > 0 ?
+           platesWithSnacks[ 0 ].getTopSnack() :
+           null;
   }
 
   /**
