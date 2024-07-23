@@ -81,7 +81,6 @@ type StringsType = {
     'applesStringProperty': LocalizedStringProperty;
     'candyBarsStringProperty': LocalizedStringProperty;
     'personSnackPatternStringProperty': LocalizedStringProperty;
-    'grabCandyBarStringProperty': LocalizedStringProperty;
     'pipeFlowStringProperty': LocalizedStringProperty;
     'cupWaterLevelPatternStringProperty': LocalizedStringProperty;
     'checkBalanceStringProperty': LocalizedStringProperty;

@@ -171,9 +171,6 @@
     "personSnackPattern": {
       "value": "Person {{index}} {{snack}}"
     },
-    "grabCandyBar": {
-      "value": "Grab Candy Bar"
-    },
     "pipeFlow": {
       "value": "Pipe Flow"
     },
