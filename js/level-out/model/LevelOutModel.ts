@@ -304,16 +304,13 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     // and the notepad cups aren't all at the mean value, or when the pipes are closed and the cups don't have the same
     // value as their counterpart table cups.
     let waterExchangeNeeded = false;
-    this.notepadCups.forEach( ( notepadCup, index ) => {
+    this.iterateCups( ( notepadCup, tableCup ) => {
       if ( ( this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== roundedMeanValue ) ||
-           ( !this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== this.tableCups[ index ].waterLevelProperty.value ) ) {
+           !this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== tableCup.waterLevelProperty.value ) {
         waterExchangeNeeded = true;
       }
     } );
-
     if ( waterExchangeNeeded ) {
-
-      const preFlowNotepadCupLevels = this.notepadCups.map( notepadCup => notepadCup.waterLevelProperty.value );
 
       // Loop through the cups and make water flow between them based on the state of the pipe valves and the current
       // water levels.
@@ -351,23 +348,6 @@ export default class LevelOutModel extends PhetioObject implements TModel {
         }
         notepadCup.waterLevelProperty.set( newWaterLevel );
       } );
-
-      // Determine whether any water actually flowed between the cups during the loop above.
-      const waterFlowOccurred = this.notepadCups.reduce(
-        ( flowOccurred, cup, i ) => flowOccurred || cup.waterLevelProperty.value !== preFlowNotepadCupLevels[ i ],
-        false
-      );
-
-      // If no water flowed, it means that the notepad cup water levels are so close to the target values that a single
-      // step doesn't cause enough water to flow to exceed the rounding threshold.  At this point, we essentially
-      // declare "close enough" and set the final values.
-      if ( !waterFlowOccurred ) {
-        this.notepadCups.forEach( ( notepadCup, i ) => {
-          notepadCup.waterLevelProperty.value = this.pipesOpenProperty.value ?
-                                                roundedMeanValue :
-                                                this.tableCups[ i ].waterLevelProperty.value;
-        } );
-      }
     }
   }
 
