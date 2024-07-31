@@ -10,7 +10,7 @@
  */
 
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, GridBox, KeyboardListener, Line, Node, Text, TextOptions, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, GridBox, KeyboardListener, Line, Node, Text, TextOptions, VBox, HotkeyData } from '../../../../scenery/js/imports.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
@@ -333,7 +333,7 @@ export default class MeanInfoPanel extends Panel {
 
     // A global keyboard shortcut that closes the panel with the 'escape' key.
     KeyboardListener.createGlobal( this, {
-      keys: [ 'escape' ],
+      keyStringProperties: MeanInfoPanel.ESCAPE_HOTKEY_DATA.keyStringProperties,
       fire: () => {
 
         // If the closeButton is focused, return focus to the info button - otherwise we don't want to move focus
@@ -346,6 +346,13 @@ export default class MeanInfoPanel extends Panel {
       }
     } );
   }
+
+  public static readonly ESCAPE_HOTKEY_DATA = new HotkeyData( {
+    keyStringProperties: [ new Property( 'escape' ) ],
+    binderName: 'Close info panel',
+    repoName: meanShareAndBalance.name,
+    global: true
+  } );
 }
 
 meanShareAndBalance.register( 'MeanInfoPanel', MeanInfoPanel );
