@@ -406,8 +406,11 @@ export default class FairShareModel extends SharingModel<Apple> {
     // Invoke any timer callbacks now.  This will initiate any movement of the apples, which will then be forced to
     // finish at the end of this method.
     this.fractionDistributionListenerMap.forEach( ( listener, apple ) => {
-      listener( 0 );
+
+      // All apples on a plate should be active = true unless they are in an active timer.
       stepTimer.clearTimeout( listener );
+      apple.isActiveProperty.value = true;
+
       this.fractionDistributionListenerMap.delete( apple );
     } );
 
