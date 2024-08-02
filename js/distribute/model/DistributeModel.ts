@@ -234,7 +234,7 @@ export default class DistributeModel extends SharingModel<Snack> {
 
         // Set this plate's number of table snacks to zero so that it will release the snacks it has.  This must be done
         // after the redistribution above.
-        plate.tableSnackNumberProperty.value = isActive ? plate.startingNumberOfSnacks : 0;
+        plate.tableSnackNumberProperty.value = isActive ? plate.startingNumberOfSnacksProperty.value : 0;
       } );
     } );
 

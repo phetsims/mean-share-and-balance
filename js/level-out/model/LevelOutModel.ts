@@ -31,7 +31,7 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 type LevelOutModelOptions = EmptySelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 
 // constants
-const INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
+const DEFAULT_INITIAL_WATER_LEVELS = [ 0.75, 0.5, 0.2, 0.65, 0.9, 0.35, 0.75 ];
 const NUMBER_OF_CUPS_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS );
 const INTER_CUP_DISTANCE = MeanShareAndBalanceConstants.CUP_WIDTH + MeanShareAndBalanceConstants.PIPE_LENGTH;
 
@@ -64,6 +64,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
   // phet-io specific Properties
   public readonly successIndicatorsOperatingProperty: Property<boolean>;
   private readonly maxCupsProperty: Property<number>;
+  private readonly initialWaterLevelsProperty: Property<number[]>;
 
   public constructor( providedOptions: LevelOutModelOptions ) {
 
@@ -117,11 +118,6 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       tandem: options.tandem.createTandem( 'maxCupsProperty' )
     } );
 
-    // The tableCups are the "ground truth" and the notepadCups mirror them.
-    this.tableCups = [];
-    this.notepadCups = [];
-    this.pipeArray = [];
-
     const pipesParentTandem = options.tandem.createTandem( 'pipes' );
 
     this.pipesOpenProperty = new BooleanProperty( false, {
@@ -134,12 +130,30 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     const notepadCupsParentTandem = options.tandem.createTandem( 'notepadCups' );
     const tableCupsParentTandem = options.tandem.createTandem( 'tableCups' );
 
+    this.initialWaterLevelsProperty = new Property( DEFAULT_INITIAL_WATER_LEVELS, {
+      tandem: options.tandem.createTandem( 'initialWaterLevelsProperty' ),
+      isValidValue: ( waterLevels: number[] ) =>
+        waterLevels.length === MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS &&
+        _.every( waterLevels,
+          waterLevel => waterLevel >= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN
+        && waterLevel <= MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX ),
+      phetioValueType: ArrayIO( NumberIO ),
+      phetioFeatured: true,
+      phetioDocumentation: `Set the initial water levels of each cup. The array length should be equal to ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS} (the default max number of cups).` +
+                           `The water levels should be between ${MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MIN} and ${MeanShareAndBalanceConstants.WATER_LEVEL_RANGE_MAX}.` +
+                           `The default initial water levels are: ${DEFAULT_INITIAL_WATER_LEVELS}.`
+    } );
+
     // Statically allocate cups and pipes
+    // The tableCups are the "ground truth" and the notepadCups mirror them.
+    this.tableCups = [];
+    this.notepadCups = [];
+    this.pipeArray = [];
     for ( let i = 0; i < MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS; i++ ) {
       const totalSpan = Math.max( ( this.numberOfCupsProperty.value - 1 ) * ( INTER_CUP_DISTANCE ), 0 );
       const leftCupCenterX = -( totalSpan / 2 );
       const initialXPosition = leftCupCenterX + ( i * INTER_CUP_DISTANCE ) - MeanShareAndBalanceConstants.CUP_WIDTH / 2;
-      const waterLevel = INITIAL_WATER_LEVELS[ i ];
+      const waterLevel = this.initialWaterLevelsProperty.value[ i ];
       this.tableCups.push( new Cup( tableCupsParentTandem.createTandem( `tableCup${i + 1}` ), {
         waterLevel: waterLevel,
         xPosition: initialXPosition,
@@ -240,6 +254,19 @@ export default class LevelOutModel extends PhetioObject implements TModel {
       this.resetData();
       this.numberOfCupsProperty.value = Math.min( this.numberOfCupsProperty.value, max );
       this.numberOfCupsRangeProperty.value = new Range( NUMBER_OF_CUPS_RANGE.min, max );
+    } );
+    this.initialWaterLevelsProperty.link( waterLevels => {
+
+      this.iterateCups( ( notepadCup, tableCup, i ) => {
+
+        // We change both the value and initial value of each cup's waterLevelProperty because client has set initial
+        // water values and we want waterLevelProperty.reset to behave correctly.
+        notepadCup.waterLevelProperty.value = waterLevels[ i ];
+        tableCup.waterLevelProperty.value = waterLevels[ i ];
+        notepadCup.waterLevelProperty.setInitialValue( this.initialWaterLevelsProperty.value[ i ] );
+        tableCup.waterLevelProperty.setInitialValue( this.initialWaterLevelsProperty.value[ i ] );
+      } );
+      this.matchCupWaterLevels();
     } );
   }
 
@@ -363,11 +390,11 @@ export default class LevelOutModel extends PhetioObject implements TModel {
   /**
    * Visit pairs of table/notepad cups
    */
-  private iterateCups( callback: ( notepadCup: Cup, tableCup: Cup ) => void ): void {
+  private iterateCups( callback: ( notepadCup: Cup, tableCup: Cup, index: number ) => void ): void {
     this.assertConsistentState();
 
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
-      callback( this.getActiveNotepadCups()[ i ], this.getActiveTableCups()[ i ] );
+      callback( this.getActiveNotepadCups()[ i ], this.getActiveTableCups()[ i ], i );
     }
   }
 
