@@ -32,7 +32,6 @@ type SelfOptions<T extends Snack> = {
   initiallyActive?: boolean;
   initialXPosition?: number;
   linePlacement: number; // 0-indexed, this is primarily used for debugging and tandem names.
-  startingNumberOfSnacks?: number;
 
   // The function used to position the snacks on the snack stack.
   snackStackingFunction?: ( plateXPosition: number, index: number ) => Vector2;
@@ -65,9 +64,6 @@ export default class Plate<T extends Snack> extends PhetioObject {
   // The plate's index, 0-indexed.  This is primarily used for debugging.
   public readonly linePlacement: number;
 
-  // The number of snacks this plate should have on it when it becomes active.
-  public readonly startingNumberOfSnacks: number;
-
   // The function used to set the positions of the snacks on this plate to form what looks like a stack.
   private readonly snackStackingFunction: ( plateXPosition: number, index: number ) => Vector2;
 
@@ -76,20 +72,24 @@ export default class Plate<T extends Snack> extends PhetioObject {
   private readonly releaseSnack: ( snack: T ) => void;
   private readonly handleFraction: ( plate: Plate<T>, fraction: Fraction ) => void;
 
+  // The number of snacks this plate should have on it when it becomes active.
+  public readonly startingNumberOfSnacksProperty: TReadOnlyProperty<number>;
+
   /**
    * @param getAvailableSnack - a function that can be used to get an available snack from the parent model
    * @param releaseSnack - a function for releasing a snack that is no longer needed by this plate to the parent model
+   * @param initialPlateValuesProperty - the property that contains the array of initial number of snacks for the screen
    * @param providedOptions
    */
   public constructor( getAvailableSnack: () => T | null,
                       releaseSnack: ( snack: T ) => void,
+                      initialPlateValuesProperty: TReadOnlyProperty<number[]>,
                       providedOptions: PlateOptions<T> ) {
 
     const options = optionize<PlateOptions<T>, SelfOptions<T>, PhetioObjectOptions>()( {
       initiallyActive: false,
       initialXPosition: 0,
       phetioState: false,
-      startingNumberOfSnacks: 1,
       snackStackingFunction: SnackStacker.getStackedCandyBarPosition,
       handleFraction: _.noop, // By default plates _.noop snack fraction values.
       isDisposable: false
@@ -99,7 +99,6 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
     this.getAvailableSnack = getAvailableSnack;
     this.releaseSnack = releaseSnack;
-    this.startingNumberOfSnacks = options.startingNumberOfSnacks;
     this.snackStackingFunction = options.snackStackingFunction;
 
     this.isActiveProperty = new BooleanProperty( options.initiallyActive, {
@@ -112,16 +111,28 @@ export default class Plate<T extends Snack> extends PhetioObject {
 
     this.xPositionProperty = new NumberProperty( options.initialXPosition );
 
+    this.startingNumberOfSnacksProperty = new DerivedProperty( [ initialPlateValuesProperty ], initialPlateValues =>
+      initialPlateValues[ options.linePlacement ] );
+
     // So that reset of isActiveProperty and reset of tableSnackNumberProperty are in agreement, make sure their initial
     // states are compatible.
-    const initialTableSnackNumber = options.initiallyActive ? options.startingNumberOfSnacks : 0;
+    const initialTableSnackNumber = options.initiallyActive ? this.startingNumberOfSnacksProperty.value : 0;
     this.tableSnackNumberProperty = new NumberProperty( initialTableSnackNumber, {
       range: new Range( 0, 10 ),
       numberType: 'Integer',
 
       // phet-io
       tandem: options.tandem.createTandem( 'tableSnackNumberProperty' ),
-      phetioFeatured: true
+      phetioFeatured: false,
+      phetioReadOnly: true
+    } );
+
+    // We want to change the value of all active plates and the initial value of initially active plates.
+    // This is because client has set initial snack values that should be immediately represented by active plates,
+    // and additionally we want tableSnackNumberProperty.reset to behave correctly.
+    this.startingNumberOfSnacksProperty.link( startingNumberOfSnacks => {
+      this.isActiveProperty.value && ( this.tableSnackNumberProperty.value = startingNumberOfSnacks );
+      options.initiallyActive && this.tableSnackNumberProperty.setInitialValue( startingNumberOfSnacks );
     } );
 
     // Create the observable array that tracks the snacks a notepad plate has.

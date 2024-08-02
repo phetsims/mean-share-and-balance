@@ -142,7 +142,7 @@ export default class FairShareModel extends SharingModel<Apple> {
           plate.tableSnackNumberProperty.set( 0 );
         }
         else {
-          plate.tableSnackNumberProperty.value = plate.startingNumberOfSnacks;
+          plate.tableSnackNumberProperty.value = plate.startingNumberOfSnacksProperty.value;
         }
       } );
 

@@ -67,6 +67,8 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   // Allows PhET-iO clients to modify the max number of plates in the screen.
   private readonly maxPlatesProperty: Property<number>;
 
+  protected readonly initialPlateValuesProperty: Property<number[]>;
+
   /**
    *
    * @param snackCreator - A function that creates a new snack based on the specific needs of each model.
@@ -147,6 +149,19 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
     // Create the set of plates that will hold the snacks.
     assert && assert( options.initialPlateValues.length === MAX_PLATES, 'initialPlateValues must have the same length as the number of plates' );
+    this.initialPlateValuesProperty = new Property( options.initialPlateValues, {
+      phetioValueType: ArrayIO( NumberIO ),
+      isValidValue: ( snackValues: number[] ) =>
+        snackValues.length === MAX_PLATES &&
+        snackValues.every(
+          value => value >= MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE &&
+        value <= MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE ),
+      tandem: options.tandem.createTandem( 'initialPlateValuesProperty' ),
+      phetioDocumentation: `Set the initial snack value of each plate. The array length should be equal to ${MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS} (the default max number of plates).` +
+                           `The values should be between ${MeanShareAndBalanceConstants.MIN_NUMBER_OF_SNACKS_PER_PLATE} and ${MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE}.` +
+                           `The default initial values are: ${options.initialPlateValues}.`,
+      phetioFeatured: true
+    } );
     this.plates = [];
     const platesParentTandem = options.tandem.createTandem( 'plates' );
     _.times( MAX_PLATES, plateIndex => {
@@ -154,11 +169,11 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
       const plate = new Plate(
         this.getUnusedSnack.bind( this ),
         this.releaseSnack.bind( this ),
+        this.initialPlateValuesProperty,
         {
           initialXPosition: initialXPosition,
           initiallyActive: plateIndex < this.numberOfPlatesProperty.value,
           linePlacement: plateIndex,
-          startingNumberOfSnacks: options.initialPlateValues[ plateIndex ],
           handleFraction: handleFraction,
           snackStackingFunction: snackStackingFunction,
 

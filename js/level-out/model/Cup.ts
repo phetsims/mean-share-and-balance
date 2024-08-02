@@ -82,7 +82,8 @@ export default class Cup {
 
         // phet-io
         tandem: tandem.createTandem( 'waterLevelProperty' ),
-        phetioFeatured: options.isTableCup
+        phetioFeatured: false,
+        phetioReadOnly: true
       }, options.waterLevelPropertyOptions )
     );
 
