@@ -45,6 +45,11 @@ const NUMBER_OF_PLATES_RANGE = new Range( 1, MeanShareAndBalanceConstants.MAXIMU
 
 export default class SharingModel<T extends Snack> extends PhetioObject implements TModel {
 
+  // All snacks in the simulation, including those on plates and those that are not in use.
+  // We want an original list of all the snacks in the order they were created. This is set at construction
+  // and after construction should not be modified, only read.
+  public readonly allSnacks: ReadonlyArray<T>;
+
   public readonly numberOfPlatesRangeProperty: Property<Range>;
   public readonly numberOfPlatesProperty: Property<number>;
   public readonly totalSnacksProperty: TReadOnlyProperty<number>;
@@ -68,6 +73,8 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   // Allows PhET-iO clients to modify the max number of plates in the screen.
   private readonly maxPlatesProperty: Property<number>;
 
+  // Allows PhET-iO clients to set the initial number of snacks on each plate.
+  // This is respected when the simulation is reset and will update the sim instantly.
   protected readonly initialPlateValuesProperty: Property<number[]>;
 
   /**
@@ -136,17 +143,16 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     // Create and initialize all the snacks.
     const totalNumberOfSnacks = MeanShareAndBalanceConstants.MAX_NUMBER_OF_SNACKS_PER_PLATE *
                                 MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS;
-    let totalSnackCount = 0;
-    _.times( totalNumberOfSnacks, () => {
-
+    const allSnacks: T[] = [];
+    _.times( totalNumberOfSnacks, i => {
       const snack = snackCreator( {
-
-        // phet-io
-        tandem: snacksParentTandem.createTandem( `${options.snackTandemPrefix}${totalSnackCount++}` )
+        tandem: snacksParentTandem.createTandem( `${options.snackTandemPrefix}${i + 1}` )
       } );
 
+      allSnacks.push( snack );
       this.unusedSnacks.push( snack );
     } );
+    this.allSnacks = allSnacks;
 
     // Create the set of plates that will hold the snacks.
     assert && assert( options.initialPlateValues.length === MAX_PLATES, 'initialPlateValues must have the same length as the number of plates' );
@@ -217,7 +223,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
     // Monitor the number of active plates and update the plate positions to keep them centered.
     this.numberOfPlatesProperty.link( numberOfPlates => {
-      this.getAllSnacks().forEach( snack => {
+      this.allSnacks.forEach( snack => {
         snack.forceAnimationToFinish();
       } );
       this.plates.forEach( ( plate, i ) => {
@@ -262,14 +268,6 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
   public getActivePlates(): Plate<T>[] {
     return this.plates.filter( plate => plate.isActiveProperty.value );
-  }
-
-  public getAllSnacks(): T[] {
-    const allSnacks = this.unusedSnacks.getArrayCopy();
-    this.plates.forEach( plate => {
-      plate.getSnackStack().forEach( snack => allSnacks.push( snack ) );
-    } );
-    return allSnacks;
   }
 
   /**
