@@ -217,14 +217,12 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
     // Monitor the number of active plates and update the plate positions to keep them centered.
     this.numberOfPlatesProperty.link( numberOfPlates => {
-      const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
-      const leftPlateCenterX = -( totalSpan / 2 );
       this.getAllSnacks().forEach( snack => {
         snack.forceAnimationToFinish();
       } );
       this.plates.forEach( ( plate, i ) => {
         plate.isActiveProperty.value = i < numberOfPlates;
-        plate.xPositionProperty.value = leftPlateCenterX + ( i * INTER_PLATE_DISTANCE );
+        plate.xPositionProperty.value = this.getPlateXPosition( numberOfPlates, i );
       } );
     } );
 
@@ -233,6 +231,17 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
       this.numberOfPlatesProperty.value = Math.min( this.numberOfPlatesProperty.value, maxNumberOfPlates );
       this.numberOfPlatesRangeProperty.value = new Range( NUMBER_OF_PLATES_RANGE.min, maxNumberOfPlates );
     } );
+  }
+
+  /**
+   * Get the x position for a plate based on the number of plates and the index of the plate.
+   * @param numberOfPlates
+   * @param index
+   */
+  public getPlateXPosition( numberOfPlates: number, index: number ): number {
+    const totalSpan = Math.max( ( numberOfPlates - 1 ) * INTER_PLATE_DISTANCE, 0 );
+    const leftPlateCenterX = -( totalSpan / 2 );
+    return leftPlateCenterX + ( index * INTER_PLATE_DISTANCE );
   }
 
   /**

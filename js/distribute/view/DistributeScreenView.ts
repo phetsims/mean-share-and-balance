@@ -345,14 +345,19 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     // (overlaps the notepad).
     notepadCandyBarsHighlightNode.pdomVisibleProperty = DerivedProperty.not( model.meanInfoPanelVisibleProperty );
 
-    this.notepadSnackLayerNode.boundsProperty.link( () => {
+    const focusHighlightWidthProperty = new DerivedProperty( [ model.numberOfPlatesProperty ], numberOfPlates => {
+      const firstPlateXPosition = model.getPlateXPosition( numberOfPlates, 0 );
+      const lastPlateXPosition = model.getPlateXPosition( numberOfPlates, numberOfPlates - 1 );
+      return lastPlateXPosition - firstPlateXPosition + MeanShareAndBalanceConstants.NOTEPAD_PLATE_DIMENSION.width;
+    } );
+    focusHighlightWidthProperty.link( highlightWidth => {
       const focusRect = Shape.rect(
         this.notepadSnackLayerNode.visibleLocalBounds.x - CANDY_BAR_FOCUS_X_MARGIN,
 
         // Empirically determined to sit below the total readout, but have enough vertical space for 10 candy bars.
         this.notepad.boundsProperty.value.y + 80,
 
-        this.notepadSnackLayerNode.visibleLocalBounds.width + 2 * CANDY_BAR_FOCUS_X_MARGIN,
+        highlightWidth + 2 * CANDY_BAR_FOCUS_X_MARGIN,
         this.notepad.boundsProperty.value.height - 100 // empirically determined
       );
       this.groupSortInteractionView.groupSortGroupFocusHighlightPath.setShape( focusRect );
