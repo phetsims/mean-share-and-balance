@@ -38,7 +38,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
   public readonly totalVisibleProperty: Property<boolean>;
 
   // A Property that tracks whether the fulcrum has been dragged.
-  public readonly fulcrumWasDraggedProperty: Property<boolean>;
+  public readonly fulcrumWasDraggedProperty = new BooleanProperty( false );
 
   public constructor( providedOptions: BalancePointModelOptions ) {
 
@@ -85,10 +85,6 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
     // Create Properties
     this.meanFulcrumFixedProperty = meanFulcrumFixedProperty;
-    this.fulcrumWasDraggedProperty = new BooleanProperty( false, {
-      tandem: options.tandem.createTandem( 'fulcrumWasDraggedProperty' ),
-      phetioReadOnly: true
-    } );
     this.tickMarksVisibleProperty = new BooleanProperty( false, {
       phetioFeatured: true,
       tandem: options.tandem.createTandem( 'tickMarksVisibleProperty' )
