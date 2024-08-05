@@ -154,7 +154,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     notepadPlateNodes.forEach( plateNode => { this.notepadSnackLayerNode.addChild( plateNode ); } );
 
     const candyBarsParentTandem = options.tandem.createTandem( 'notepadCandyBarNodes' );
-    const notepadCandyBarNodes = model.getAllSnacks().map( ( candyBar, i ) =>
+    const notepadCandyBarNodes = model.allSnacks.map( ( candyBar, i ) =>
       new NotepadCandyBarNode(
         candyBar,
         model.groupSortInteractionModel,
@@ -162,7 +162,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
         this.notepadBoundsProperty,
         this.candyBarDropped.bind( this ),
         {
-          tandem: candyBarsParentTandem.createTandem( `candyBar${i + 1}` ),
+          tandem: candyBarsParentTandem.createTandem( `candyBarNode${i + 1}` ),
           visibleProperty: candyBar.isActiveProperty
         }
       )

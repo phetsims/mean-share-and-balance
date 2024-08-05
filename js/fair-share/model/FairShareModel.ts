@@ -179,7 +179,7 @@ export default class FairShareModel extends SharingModel<Apple> {
     this.animateAddedSnacks = false;
 
     // So that we're in a consistent state, make sure all apples are whole.
-    this.getAllSnacks().forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
+    this.allSnacks.forEach( ( apple: Apple ) => { apple.fractionProperty.value = Fraction.ONE; } );
 
     // Handle each of the six possible start transitions.
     if ( previousDistributionMode === DistributionMode.COLLECT && appleDistributionMode === DistributionMode.SYNC ) {
@@ -414,7 +414,7 @@ export default class FairShareModel extends SharingModel<Apple> {
       this.fractionDistributionListenerMap.delete( apple );
     } );
 
-    this.getAllSnacks().forEach( snack => snack.forceAnimationToFinish() );
+    this.allSnacks.forEach( snack => snack.forceAnimationToFinish() );
   }
 
   /**
