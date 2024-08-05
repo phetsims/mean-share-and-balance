@@ -30,6 +30,7 @@ import CloseButton from '../../../../scenery-phet/js/buttons/CloseButton.js';
 import ButtonNode from '../../../../sun/js/buttons/ButtonNode.js';
 import ToggleNode from '../../../../sun/js/ToggleNode.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
+import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 
@@ -341,7 +342,7 @@ export default class MeanInfoPanel extends Panel {
         if ( closeButton.focused ) {
           focusInfoButton();
         }
-
+        sharedSoundPlayers.get( 'generalClose' ).play();
         visibleProperty.value = false;
       }
     } );
