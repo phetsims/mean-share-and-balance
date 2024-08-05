@@ -411,6 +411,14 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     this.meanPredictionFulcrumValueProperty.reset();
     this.beamSupportsPresentProperty.reset();
   }
+
+  public override setDataPoints( dataPoints: number[] ): void {
+    super.setDataPoints( dataPoints );
+
+    // When phet-io clients set the data points statically there should be no animation and therefore no queued kicks.
+    this.targetNumberOfBallsProperty.value = Math.min( dataPoints.length, this.maxKicksProperty.value );
+    this.numberOfQueuedKicksProperty.value = 0;
+  }
 }
 
 type BalanceBeamEndpointYValuesStateObject = {
