@@ -329,7 +329,6 @@ export default class DistributeModel extends SharingModel<Snack> {
   }
 
   protected override resetData(): void {
-    this.syncData();
     super.resetData();
   }
 

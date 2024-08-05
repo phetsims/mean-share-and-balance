@@ -28,6 +28,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import VoidIO from '../../../../tandem/js/types/VoidIO.js';
 import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
+import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 
 type SelfOptions = {
 
@@ -289,13 +290,19 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   protected resetData(): void {
     this.numberOfPlatesProperty.reset();
 
-    // Release all snack from plates by setting their table snack number to 0.  This puts the snacks back onto the
-    // unused list so that when the plates are reset, they can grab the ones they need the same way they did during
-    // construction of the model.
-    this.plates.forEach( plate => { plate.tableSnackNumberProperty.value = 0; } );
+    // We cannot count on being in a "synced" state in phet-io state setting situations. Therefore, we will rely
+    // on the state handling of each plate's ObservableArrays to determine how snacks should be distributed.
+    if ( !isSettingPhetioStateProperty.value ) {
+      this.syncData();
 
-    // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
-    this.plates.forEach( plate => plate.isActiveProperty.value && plate.reset() );
+      // Release all snack from plates by setting their table snack number to 0.  This puts the snacks back onto the
+      // unused list so that when the plates are reset, they can grab the ones they need the same way they did during
+      // construction of the model.
+      this.plates.forEach( plate => { plate.tableSnackNumberProperty.value = 0; } );
+
+      // Reset the active plates, whereupon they will grab and position snacks to match their initial table snack number.
+      this.getActivePlates().forEach( plate => plate.reset() );
+    }
 
     // The maximum number of plates should still be respected after reset.
     const max = this.maxPlatesProperty.value;
