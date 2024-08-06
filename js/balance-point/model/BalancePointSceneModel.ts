@@ -96,7 +96,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         probabilityByDistanceDocumentationValues: '[0,1,3,5,7,3,1,0,0,0,1]',
         distanceByIndexDocumentationValues: '[5,9,10,2,7,3,4]',
         valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
-
+        maxKicks: MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS,
+        
         // phet-io
         tandem: options.tandem.createTandem( 'kickDistributionStrategy' ),
         phetioFeatured: true
