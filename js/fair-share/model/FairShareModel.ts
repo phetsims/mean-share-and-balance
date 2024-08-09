@@ -570,10 +570,10 @@ export default class FairShareModel extends SharingModel<Apple> {
   }
 
   protected override resetData(): void {
-    this.finishInProgressAnimations();
 
     // Reset the apple distribution mode to "sync" before resetting the rest of the data.
     this.appleDistributionModeProperty.reset();
+    this.finishInProgressAnimations();
     super.resetData();
   }
 
