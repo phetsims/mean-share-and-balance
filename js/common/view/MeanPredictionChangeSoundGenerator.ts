@@ -60,31 +60,36 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
 
     this.changeRateUpdateTime = this.audioContext.currentTime;
 
-    // Monitor the prediction value and update the noise output accordingly.
+    // Turn off sound generation when a reset occurs.
+    ResetAllButton.isResettingAllProperty.lazyLink( () => {
+      this.stop( this.audioContext.currentTime + NOISE_OFF_TIME );
+      this.setOutputLevel( 0, NOISE_STOP_TIME_CONSTANT );
+      this.predictionChangeRate = 0;
+      this.motionState = 'unchanging';
+    } );
+
+    // Monitor the prediction value and update the sound output accordingly.  This will often initiate the sound
+    // generation, and the step function will turn it off later once the interaction ends.
     meanPredictionProperty.lazyLink( ( newPrediction, oldPrediction ) => {
-      const now = this.audioContext.currentTime;
 
-      // Update the rate of change and determine the motion state.
-      let newMotionState: MotionState = 'unchanging';
-      if ( ResetAllButton.isResettingAllProperty.value ) {
+      if ( !ResetAllButton.isResettingAllProperty.value ) {
 
-        // This case indicates that a reset caused the change, so set the change rate to 0.
-        this.predictionChangeRate = 0;
-        this.motionState = 'unchanging';
-      }
-      else {
+        const now = this.audioContext.currentTime;
+
+        // Limit the max time change value used in the rate change calculation.  This is needed because there could be
+        // an arbitrarily long time between the start and end of a set of prediction changes, and large time values lead
+        // to small rate change values, which can cause odd behavior for things like keyboard interaction.
+        const maxDeltaTime = 0.5; // in seconds, empirically determined
+        const deltaTime = Math.min( now - this.changeRateUpdateTime, maxDeltaTime );
+
         this.predictionChangeRate = Utils.clamp(
-          ( newPrediction - oldPrediction ) / ( now - this.changeRateUpdateTime ),
+          ( newPrediction - oldPrediction ) / deltaTime,
           -MAX_CHANGE_RATE,
           MAX_CHANGE_RATE
         );
+        const newMotionState: MotionState = this.predictionChangeRate > 0 ? 'increasing' : 'decreasing';
 
-        newMotionState = this.predictionChangeRate > 0 ? 'increasing' : 'decreasing';
-      }
-
-      // Update the state of sound generation (on or off).
-      if ( newMotionState !== 'unchanging' ) {
-
+        // Update the state of sound generation.
         if ( newMotionState !== this.motionState && this.motionState !== 'unchanging' ) {
 
           // The motion changed directions without stopping in between, so set a countdown that will create a sound gap.
@@ -92,6 +97,8 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
           this.soundStartCountdown = MIN_SOUND_GAP;
         }
         else {
+
+          // Set the output level of the sound based on the change rate.  Start the sound if needed.
           if ( !this.isPlaying ) {
             this.start();
             this.setOutputLevel( mapChangeRateToOutputLevel( this.predictionChangeRate ), NOISE_START_TIME_CONSTANT );
@@ -103,29 +110,23 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
           // Set the frequency of the drag sound.
           this.setBandpassFilterCenterFrequency( mapChangeRateToFilterFrequency( this.predictionChangeRate, newMotionState ) );
         }
-      }
-      else {
-        if ( this.isPlaying ) {
-          this.stop( now + NOISE_OFF_TIME );
+
+        if ( this.motionState !== newMotionState ) {
+
+          // Set the frequency based on the direction.
+          let frequencyDelta = newMotionState === 'increasing' ? DIRECTION_FREQUENCY_DELTA : -DIRECTION_FREQUENCY_DELTA;
+
+          // Add some randomization to the frequency delta so that back-and-forth motion sounds less repetitive.
+          frequencyDelta = frequencyDelta * ( 1 - dotRandom.nextDouble() / 2 );
+
+          // Set the filter value that controls whether the upward or downward dragging sound is heard.
+          this.setBandpassFilterCenterFrequency( NOISE_CENTER_FREQUENCY + frequencyDelta, 0.01 );
         }
+
+        // Update state variable for the timer to use and for next time through this function.
+        this.changeRateUpdateTime = now;
+        this.motionState = newMotionState;
       }
-
-      // Set the filter value that controls whether the sound for increasing or decreasing values is heard.
-      if ( this.motionState !== newMotionState ) {
-
-        // Set the frequency based on the direction.
-        let frequencyDelta = newMotionState === 'increasing' ? DIRECTION_FREQUENCY_DELTA : -DIRECTION_FREQUENCY_DELTA;
-
-        // Add some randomization to the frequency delta so that back-and-forth motion sounds less repetitive.
-        frequencyDelta = frequencyDelta * ( 1 - dotRandom.nextDouble() / 2 );
-
-        // Set the filter value that controls whether the upward or downward dragging sound is heard.
-        this.setBandpassFilterCenterFrequency( NOISE_CENTER_FREQUENCY + frequencyDelta, 0.01 );
-      }
-
-      // Update state variable for the timer to use and for next time through this function.
-      this.changeRateUpdateTime = now;
-      this.motionState = newMotionState;
     } );
 
     // Hook up the time-dependent behavior to the global step timer.
