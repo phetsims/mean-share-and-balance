@@ -257,15 +257,17 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     } );
     this.initialWaterLevelsProperty.link( waterLevels => {
 
-      this.iterateCups( ( notepadCup, tableCup, i ) => {
-
-        // We change both the value and initial value of each cup's waterLevelProperty because client has set initial
-        // water values and we want waterLevelProperty.reset to behave correctly.
-        notepadCup.waterLevelProperty.value = waterLevels[ i ];
+      // We change both the value and initial value of each cup's waterLevelProperty because client has set initial
+      // water values, and we want waterLevelProperty.reset to behave correctly.
+      this.tableCups.forEach( ( tableCup, i ) => {
         tableCup.waterLevelProperty.value = waterLevels[ i ];
-        notepadCup.waterLevelProperty.setInitialValue( this.initialWaterLevelsProperty.value[ i ] );
         tableCup.waterLevelProperty.setInitialValue( this.initialWaterLevelsProperty.value[ i ] );
       } );
+      this.notepadCups.forEach( ( notepadCup, i ) => {
+        notepadCup.waterLevelProperty.value = waterLevels[ i ];
+        notepadCup.waterLevelProperty.setInitialValue( this.initialWaterLevelsProperty.value[ i ] );
+      } );
+
       this.matchCupWaterLevels();
     } );
   }
@@ -331,7 +333,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     // and the notepad cups aren't all at the mean value, or when the pipes are closed and the cups don't have the same
     // value as their counterpart table cups.
     let waterExchangeNeeded = false;
-    this.iterateCups( ( notepadCup, tableCup ) => {
+    this.iterateActiveCups( ( notepadCup, tableCup ) => {
       if ( ( this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== roundedMeanValue ) ||
            !this.pipesOpenProperty.value && notepadCup.waterLevelProperty.value !== tableCup.waterLevelProperty.value ) {
         waterExchangeNeeded = true;
@@ -341,7 +343,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
 
       // Loop through the cups and make water flow between them based on the state of the pipe valves and the current
       // water levels.
-      this.iterateCups( ( notepadCup, tableCup ) => {
+      this.iterateActiveCups( ( notepadCup, tableCup ) => {
         const currentWaterLevel = notepadCup.waterLevelProperty.value;
         let newWaterLevel;
         if ( this.pipesOpenProperty.value ) {
@@ -382,15 +384,15 @@ export default class LevelOutModel extends PhetioObject implements TModel {
    * Reset notepadCup waterLevelProperty to tableCup waterLevelProperty.
    */
   private matchCupWaterLevels(): void {
-    this.iterateCups( ( notepadCup, tableCup ) => {
+    this.iterateActiveCups( ( notepadCup, tableCup ) => {
       notepadCup.waterLevelProperty.set( tableCup.waterLevelProperty.value );
     } );
   }
 
   /**
-   * Visit pairs of table/notepad cups
+   * Visit pairs of active table/notepad cups
    */
-  private iterateCups( callback: ( notepadCup: Cup, tableCup: Cup, index: number ) => void ): void {
+  private iterateActiveCups( callback: ( notepadCup: Cup, tableCup: Cup, index: number ) => void ): void {
     this.assertConsistentState();
 
     for ( let i = 0; i < this.numberOfCupsProperty.value; i++ ) {
