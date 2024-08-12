@@ -292,7 +292,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
   }
 
   /**
-   * Resets the data in the simulation to it's initial state.
+   * Resets the data in the simulation to its initial state.
    */
   protected resetData(): void {
     this.numberOfPlatesProperty.reset();
