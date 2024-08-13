@@ -120,8 +120,19 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       setDataPoints: {
         returnType: VoidIO,
         parameterTypes: [ ArrayIO( NumberIO ) ],
-        implementation: function( this: BalancePointModel, dataPoints: number[] ) {
-          this.selectedSceneModelProperty.value.setDataPoints( dataPoints );
+        implementation: function( model: BalancePointModel, dataPoints: number[] ) {
+          const selectedSceneModel = model.selectedSceneModelProperty.value;
+          selectedSceneModel.setDataPoints( dataPoints );
+
+          // When phet-io clients set the data points statically there should be no animation and therefore no queued kicks.
+          // We do this work here because soccer-common does not inherently support of numberOfBallsProperty that drives
+          // the addition and removal of soccer balls. setDataPoints automatically adds balls to the field as desired
+          // and bypasses targetNumberOfBallsProperty. Ideally we would cancel all listeners to the targetNumberOfBallsProperty
+          // in this use case, however that is not supported. Therefore, we will zero out the numberOfQueuedKicksProperty
+          // that is the next link in the chain. We know this is inherently fragile, and should only be used by PhET-iO
+          // clients. If the listener chain changes, or QueuedKicks behaves differently this will need to be updated.
+          selectedSceneModel.targetNumberOfBallsProperty.value = Math.min( dataPoints.length, selectedSceneModel.maxKicksProperty.value );
+          selectedSceneModel.numberOfQueuedKicksProperty.value = 0;
         },
         documentation: 'Sets the data points for the selected scene model. Array lengths that exceed maxKicks will ignore excess values.'
       },
@@ -129,10 +140,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       getDataPoints: {
         returnType: ArrayIO( NumberIO ),
         parameterTypes: [],
-        implementation: function( this: BalancePointModel ) {
-          return this.selectedSceneModelProperty.value
-            .getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value );
-        },
+        implementation: ( model: BalancePointModel ) =>
+          model.selectedSceneModelProperty.value.getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value ),
         documentation: 'Gets the data points for the selected scene model.'
       }
     }
