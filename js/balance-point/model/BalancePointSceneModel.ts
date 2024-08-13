@@ -413,10 +413,20 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     this.beamSupportsPresentProperty.reset();
   }
 
+  /**
+   * Set the data points for the scene model.  This is only called by phet-io clients and should not be used by the sim
+   * itself.
+   */
   public override setDataPoints( dataPoints: number[] ): void {
     super.setDataPoints( dataPoints );
 
     // When phet-io clients set the data points statically there should be no animation and therefore no queued kicks.
+    // We do this work here because soccer-common does not inherently support of numberOfBallsPorperty that drives
+    // the addition and removal of soccer balls. super.setDataPoints automatically adds balls to the field as desired
+    // and bypasses targetNumberOfBallsProperty. Ideally we would cancel all listeners to the targetNumberOfBallsProperty
+    // in this use case, however that is not supported. Therefore, we will zero out the numberOfQueuedKicksProperty
+    // that is the next link in the chain. We know this is inherently fragile, and should only be used by PhET-iO
+    // clients. If the listener chain changes, or QueuedKicks behaves differently this will need to be updated.
     this.targetNumberOfBallsProperty.value = Math.min( dataPoints.length, this.maxKicksProperty.value );
     this.numberOfQueuedKicksProperty.value = 0;
   }
