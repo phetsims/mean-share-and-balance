@@ -571,8 +571,13 @@ export default class FairShareModel extends SharingModel<Apple> {
 
   protected override resetData(): void {
 
-    // Reset the apple distribution mode to "sync" before resetting the rest of the data.
+    // Due to the use of observable arrays for PhET-iO and snack handling, the distribution mode must be DistributionMode.SYNC
+    // prior to resetting the model. The model empties and refills plate arrays to match startup values which does not
+    // take into account state for the collect observable array or fractionalized snacks.
     this.appleDistributionModeProperty.reset();
+    assert && assert( this.appleDistributionModeProperty.value === DistributionMode.SYNC,
+      'The apple distribution mode should reset to SYNC. Any other initial value is currently not supported by the sim.' );
+
     this.finishInProgressAnimations();
     super.resetData();
   }

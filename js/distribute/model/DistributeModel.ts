@@ -328,10 +328,6 @@ export default class DistributeModel extends SharingModel<Snack> {
     return sortedPlatesWithSpace.length > 0 ? sortedPlatesWithSpace[ 0 ] : null;
   }
 
-  protected override resetData(): void {
-    super.resetData();
-  }
-
   public override reset(): void {
     this.meanPredictionProperty.reset();
     this.predictMeanVisibleProperty.reset();
