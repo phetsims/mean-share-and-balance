@@ -1,5 +1,5 @@
 {
-  "comment": "# mean-share-and-balance 1.1.0-rc.1 Tue Jul 23 2024 16:43:49 GMT-0700 (Pacific Daylight Time)",
+  "comment": "# mean-share-and-balance 1.1.0-rc.1 Tue Aug 13 2024 19:25:16 GMT-0700 (Pacific Daylight Time)",
   "assert": {
     "sha": "4eaabfefb0b88b213e98b9c7f32d6c570c3fc122",
     "branch": "HEAD"
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "45b66a0d970dac0d733647cf50414c2ab4f79a69",
+    "sha": "7e26148061a9b9eb0ba75d7240d1f5e5ed7c7e5d",
     "branch": "1.1"
   },
   "perennial-alias": {
@@ -49,8 +49,8 @@
     "branch": "HEAD"
   },
   "phet-io-sim-specific": {
-    "sha": "c75014b70a03a084c0565ca74b60ab9a3ecd2fa9",
-    "branch": "HEAD"
+    "sha": "84f84c06c627d252d7515392fa4d407cb0e928db",
+    "branch": "mean-share-and-balance-1.1"
   },
   "phet-io-wrappers": {
     "sha": "818ab4310f66719f6dcc8c788890bca1c13ae816",
@@ -69,28 +69,28 @@
     "branch": "HEAD"
   },
   "scenery": {
-    "sha": "7682889b9997e06b932cff89102c67ce92b358ae",
-    "branch": "HEAD"
+    "sha": "1e85de5581b396f06ea24e5255ef1e938745f17b",
+    "branch": "mean-share-and-balance-1.1"
   },
   "scenery-phet": {
-    "sha": "9790871cf7f8cab227bc3c5fc7081ee39840dbd8",
-    "branch": "HEAD"
+    "sha": "406b032d5b8c6dac0a76da91d7233ccd1725112c",
+    "branch": "mean-share-and-balance-1.1"
   },
   "sherpa": {
     "sha": "2a9781ad47ee67b5af54cfc40f2255b048083351",
     "branch": "HEAD"
   },
   "soccer-common": {
-    "sha": "dbfc08be7b3c9bf8d6df7fa09b1596df5560299b",
-    "branch": "HEAD"
+    "sha": "3c2b332596a3747b9b497e3c8c3aa19d3301fce5",
+    "branch": "mean-share-and-balance-1.1"
   },
   "studio": {
     "sha": "25d3b0c2f79eabb12af99e10b71701c10c629136",
     "branch": "HEAD"
   },
   "sun": {
-    "sha": "d4dffb3016349a1cb0453a14c49f192c6e1dc955",
-    "branch": "HEAD"
+    "sha": "d40b7a3c26621c34dde08d44c84425710c75e9ab",
+    "branch": "mean-share-and-balance-1.1"
   },
   "tambo": {
     "sha": "cf853d6c796ea3486e9d7f2508fec1b2bb465216",
