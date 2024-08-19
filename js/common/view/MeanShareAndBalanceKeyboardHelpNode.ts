@@ -15,7 +15,9 @@ import BasicActionsKeyboardHelpSection from '../../../../scenery-phet/js/keyboar
 export default class MeanShareAndBalanceKeyboardHelpNode extends TwoColumnKeyboardHelpContent {
 
   public constructor( leftContent: KeyboardHelpSection[], topRightContent?: KeyboardHelpSection ) {
-   super( leftContent, [ ...( topRightContent ? [ topRightContent ] : [] ), new BasicActionsKeyboardHelpSection() ] );
+   super( leftContent, [ ...( topRightContent ? [ topRightContent ] : [] ), new BasicActionsKeyboardHelpSection( {
+     withCheckboxContent: true
+   } ) ] );
   }
 }
 
