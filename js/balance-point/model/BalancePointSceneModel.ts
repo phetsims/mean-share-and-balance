@@ -196,8 +196,8 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
       const xMax = X_AXIS_RANGE.max;
 
       // The fulcrum is accurate to one tenth of a meter. Round the fulcrum and mean values to that precision.
-      const roundedFulcrumValue = Utils.roundToInterval( fulcrumValue, 0.1 );
-      const roundedMeanValue = Utils.roundToInterval( mean, 0.1 );
+      const roundedFulcrumValue = Utils.roundToInterval( fulcrumValue, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
+      const roundedMeanValue = Utils.roundToInterval( mean, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
 
       const tiltedToLeft = roundedMeanValue < roundedFulcrumValue;
 

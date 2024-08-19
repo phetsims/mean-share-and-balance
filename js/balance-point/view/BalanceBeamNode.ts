@@ -349,7 +349,7 @@ export default class BalanceBeamNode extends Node {
       () => {
         const roundedMean = sceneModel.meanValueProperty.value === null ?
                             Number.NEGATIVE_INFINITY :
-                            Utils.roundToInterval( sceneModel.meanValueProperty.value, 0.1 );
+                            Utils.roundToInterval( sceneModel.meanValueProperty.value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL );
         if ( !supportColumnsVisibleProperty.value &&
              sceneModel.meanPredictionFulcrumValueProperty.value === roundedMean &&
              !meanFulcrumFixedProperty.value ) {
