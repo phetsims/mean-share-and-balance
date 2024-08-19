@@ -422,8 +422,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
 
   // Update the visibility and position of the mouse sort cue node based on the model's state.
   private updateMouseSortCueNode(): void {
-    if ( this.groupSortInteractionModel.hasGroupItemBeenSortedProperty.value ||
-         this.groupSortInteractionModel.isKeyboardFocusedProperty.value ) {
+    if ( !this.groupSortInteractionModel.mouseSortCueShouldBeVisible() ) {
       this.groupSortInteractionModel.mouseSortCueVisibleProperty.value = false;
     }
     else if ( this.groupSortInteractionModel.selectedGroupItemProperty.value === null ) {
