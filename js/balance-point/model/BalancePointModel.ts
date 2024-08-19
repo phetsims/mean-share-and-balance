@@ -120,8 +120,8 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       setDataPoints: {
         returnType: VoidIO,
         parameterTypes: [ ArrayIO( NumberIO ) ],
-        implementation: function( model: BalancePointModel, dataPoints: number[] ) {
-          const selectedSceneModel = model.selectedSceneModelProperty.value;
+        implementation: function( this: BalancePointModel, dataPoints: number[] ) {
+          const selectedSceneModel = this.selectedSceneModelProperty.value;
           selectedSceneModel.setDataPoints( dataPoints );
 
           // When phet-io clients set the data points statically there should be no animation and therefore no queued kicks.
@@ -140,8 +140,10 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
       getDataPoints: {
         returnType: ArrayIO( NumberIO ),
         parameterTypes: [],
-        implementation: ( model: BalancePointModel ) =>
-          model.selectedSceneModelProperty.value.getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value ),
+        implementation: function( this: BalancePointModel ) {
+          return this.selectedSceneModelProperty.value
+            .getSortedStackedObjects().map( soccerBall => soccerBall.valueProperty.value );
+        },
         documentation: 'Gets the data points for the selected scene model.'
       }
     }
