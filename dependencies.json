@@ -1,5 +1,5 @@
 {
-  "comment": "# mean-share-and-balance 1.1.0-rc.2 Tue Aug 20 2024 13:33:08 GMT-0700 (Pacific Daylight Time)",
+  "comment": "# mean-share-and-balance 1.1.0-rc.2 Tue Aug 20 2024 13:52:25 GMT-0700 (Pacific Daylight Time)",
   "assert": {
     "sha": "4eaabfefb0b88b213e98b9c7f32d6c570c3fc122",
     "branch": "HEAD"
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "66e0ab2417eb8f3ece222dafa9c7250e63df1471",
+    "sha": "24c7e9d8b2bdd1408f1546894fef053bf9e032db",
     "branch": "1.1"
   },
   "perennial-alias": {
@@ -49,7 +49,7 @@
     "branch": "HEAD"
   },
   "phet-io-sim-specific": {
-    "sha": "a41ae5fc9b1ad8607b31b40cce51bf0a203534f5",
+    "sha": "677bc4345eee7ecd998fea18d19f87077255a01c",
     "branch": "mean-share-and-balance-1.1"
   },
   "phet-io-wrappers": {
@@ -74,7 +74,7 @@
   },
   "scenery-phet": {
     "sha": "80c52f5f0ffba893c95c291e40c1b2fbbe5f7331",
-    "branch": "mean-share-and-balance-1.1"
+    "branch": "HEAD"
   },
   "sherpa": {
     "sha": "2a9781ad47ee67b5af54cfc40f2255b048083351",
@@ -82,7 +82,7 @@
   },
   "soccer-common": {
     "sha": "fdd9cdbd6ac732f929b94abf62c642ac5d66d7a5",
-    "branch": "mean-share-and-balance-1.1"
+    "branch": "HEAD"
   },
   "studio": {
     "sha": "25d3b0c2f79eabb12af99e10b71701c10c629136",
