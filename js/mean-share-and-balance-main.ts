@@ -20,12 +20,13 @@ const simOptions: SimOptions = {
 
   credits: {
     leadDesign: 'Amanda McGarry',
-    softwareDevelopment: 'Marla Schulz, Sam Reid',
-    team: 'Kelly Findley, Marilyn Hartzell, Ariel Paul, Kathy Perkins, David Webb',
-    qualityAssurance: 'Clifford Hardin, Emily Miller, Nancy Salpepi, Kathryn Woessner',
-    graphicArts: 'Mariah Hermsmeyer, Amanda McGarry'
-    // soundDesign: '',
-    // thanks: ''
+    softwareDevelopment: 'John Blanco, Sam Reid, Marla Schulz',
+    team: 'Catherine Carter, Kelly Findley, Marilyn Hartzell, Ariel Paul, Kathy Perkins, Taliesin Smith, David Webb',
+    qualityAssurance: 'Jaron Droder, Clifford Hardin, Emily Miller, Matthew Moore, Ashton Morris, Nancy Salpepi, Luisa Vargas, Kathryn Woessner',
+    graphicArts: 'Mariah Hermsmeyer, Amanda McGarry',
+    soundDesign: 'Emily Moore, Ashton Morris',
+    thanks: 'Dor Abrahamson and the Embodied Design Research Lab (UC Berkeley) for their early input on the pedagogical design. '
+
   }
 };
 
