@@ -1,5 +1,5 @@
 {
-  "comment": "# mean-share-and-balance 1.1.0-rc.3 Wed Aug 21 2024 13:08:19 GMT-0700 (Pacific Daylight Time)",
+  "comment": "# mean-share-and-balance 1.1.0-rc.4 Wed Aug 21 2024 13:14:47 GMT-0700 (Pacific Daylight Time)",
   "assert": {
     "sha": "4eaabfefb0b88b213e98b9c7f32d6c570c3fc122",
     "branch": "HEAD"
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "303e872586f49f2dc264fbbc4bffca5e1282dc92",
+    "sha": "4594447578eedeb985dd428756333ebe227dbcfc",
     "branch": "1.1"
   },
   "perennial-alias": {
@@ -74,7 +74,7 @@
   },
   "scenery-phet": {
     "sha": "9daf93ebf09294335748319fa95f829aaa8f27c3",
-    "branch": "mean-share-and-balance-1.1"
+    "branch": "HEAD"
   },
   "sherpa": {
     "sha": "2a9781ad47ee67b5af54cfc40f2255b048083351",
