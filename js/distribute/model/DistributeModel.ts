@@ -116,7 +116,7 @@ export default class DistributeModel extends SharingModel<Snack> {
         if ( parentPlate ) {
 
           // Make sure the top snack on this plate is selected, not one in the middle or at the bottom.
-          selectedCandyBarProperty.value = parentPlate.getTopSnack();
+          selectedCandyBarProperty.value = parentPlate.getTopSnack( true );
         }
       }
     } );

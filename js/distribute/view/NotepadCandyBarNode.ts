@@ -106,6 +106,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
 
         // When the candy bar is grabbed with the mouse, set the mouseSortedGroupItem property to true.
         groupSortInteractionModel.setMouseSortedGroupItem( true );
+        groupSortInteractionModel.interrupt();
         candyBar.draggingProperty.value = true;
         this.moveToFront();
       },
@@ -117,6 +118,8 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
     } );
 
     this.addInputListener( this.dragListener );
+
+    groupSortInteractionModel.isKeyboardFocusedProperty.lazyLink( isKeyboardFocused => isKeyboardFocused && this.dragListener.interrupt() );
 
     this.candyBar.positionProperty.link( position =>
       this.setTranslation( modelViewTransform.modelToViewPosition( position ) )
