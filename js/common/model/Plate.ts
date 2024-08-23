@@ -304,21 +304,21 @@ export default class Plate<T extends Snack> extends PhetioObject {
   }
 
   /**
-   * Get the snack that is currently at the top of the stack.  This does NOT remove the snack from the plate.  The
-   * caller can choose whether to include or exclude dragging snacks from consideration.
+   * Get the snack that is currently at the top of the stack.  This does NOT remove the snack from the plate.  Snacks
+   * that are being dragged but are still associated with this plate are excluded, but the caller can choose whether to
+   * include or exclude animating snacks from consideration.
    */
-  public getTopSnack( includeDraggingSnacks = false ): T | null {
+  public getTopSnack( includeAnimatingSnacks = false ): T | null {
 
     let topSnack: T | null = null;
-    if ( this.snacksOnNotepadPlate.length > 0 ) {
-      if ( includeDraggingSnacks ) {
+    const nonDraggingSnacks = this.snacksOnNotepadPlate.filter( snack => !snack.draggingProperty.value );
+    if ( nonDraggingSnacks.length > 0 ) {
+      if ( includeAnimatingSnacks ) {
         topSnack = this.snacksOnNotepadPlate[ this.snacksOnNotepadPlate.length - 1 ];
       }
       else {
-        const snacksFullyOnPlate = this.snacksOnNotepadPlate.filter(
-          snack => !snack.draggingProperty.value && !snack.travelAnimationProperty.value
-        );
-        topSnack = snacksFullyOnPlate[ snacksFullyOnPlate.length - 1 ];
+        const snacksFullyOnPlate = nonDraggingSnacks.filter( snack => !snack.travelAnimationProperty.value );
+        topSnack = snacksFullyOnPlate[ snacksFullyOnPlate.length - 1 ] || null;
       }
     }
 
