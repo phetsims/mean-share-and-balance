@@ -43,7 +43,8 @@
       "MEAN_SHARE_AND_BALANCE/screen.distribute",
       "MEAN_SHARE_AND_BALANCE/screen.fairShare",
       "MEAN_SHARE_AND_BALANCE/screen.balancePoint"
-    ]
+    ],
+    "published": true
   },
   "eslintConfig": {
     "extends": "../chipper/eslint/sim_eslintrc.js"
