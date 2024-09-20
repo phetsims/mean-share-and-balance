@@ -55,7 +55,7 @@
         ],
         "parserOptions": {
           "project": [
-            "../mean-share-and-balance/tsconfig.json"
+            "../chipper/tsconfig/eslint-all/tsconfig.json"
           ]
         }
       }
