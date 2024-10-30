@@ -58,7 +58,7 @@ export default class BalancePointControls extends MeanShareAndBalanceControls {
       radioButtonOptions: {
         baseColor: 'white'
       },
-      labelContent: MeanShareAndBalanceStrings.a11y.fulcrumOptionsStringProperty
+      accessibleName: MeanShareAndBalanceStrings.a11y.fulcrumOptionsStringProperty
     } );
 
     const checkboxGroup = new MeanShareAndBalanceCheckboxGroup( {

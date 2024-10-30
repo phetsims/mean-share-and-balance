@@ -67,7 +67,7 @@ export default class FairShareNotepadNode extends NotepadNode {
         spacing: 5,
         touchAreaYDilation: 8,
         soundPlayers: distributionModeItems.map( () => nullSoundPlayer ), // sound generation handled below
-        labelContent: MeanShareAndBalanceStrings.a11y.appleActionsStringProperty,
+        accessibleName: MeanShareAndBalanceStrings.a11y.appleActionsStringProperty,
         tandem: providedOptions.tandem.createTandem( 'distributionModeRadioButtonGroup' )
       } );
     const radioButtonGroupAlignBox = new AlignBox( distributionModeRadioButtonGroup, {
