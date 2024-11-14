@@ -14,7 +14,7 @@ import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
-import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import GroupSelectModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSelectModel.js';
 import Range from '../../../../dot/js/Range.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
@@ -42,7 +42,7 @@ export const NOTEPAD_PLATE_BOTTOM_Y = 330;
 export default class DistributeModel extends SharingModel<Snack> {
 
   // Class properties needed for alt-input group sort interaction.
-  public readonly groupSortInteractionModel: GroupSortInteractionModel<Snack>;
+  public readonly groupSortInteractionModel: GroupSelectModel<Snack>;
   public readonly sortingRangeProperty: TReadOnlyProperty<Range>;
 
   // Properties for the mean prediction tool.
@@ -78,7 +78,7 @@ export default class DistributeModel extends SharingModel<Snack> {
     super( createCandyBar, SnackStacker.getStackedCandyBarPosition, _.noop, options );
 
     // Create and define the keyboard interaction for candy bars.
-    this.groupSortInteractionModel = new GroupSortInteractionModel<Snack>( {
+    this.groupSortInteractionModel = new GroupSelectModel<Snack>( {
       getGroupItemValue: candyBar => {
         const plate = this.getPlateForSnack( candyBar );
         return plate ? plate.linePlacement : null;

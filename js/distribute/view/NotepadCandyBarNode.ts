@@ -24,7 +24,7 @@ import grabCandyBarV2_mp3 from '../../../sounds/grabCandyBarV2_mp3.js';
 import releaseCandyBarV2_mp3 from '../../../sounds/releaseCandyBarV2_mp3.js';
 import sketchedCandyBarFill_svg from '../../../images/sketchedCandyBarFill_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import GroupSelectModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSelectModel.js';
 import Snack from '../../common/model/Snack.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 
@@ -37,7 +37,7 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
   public readonly candyBar: Snack;
 
   public constructor( candyBar: Snack,
-                      groupSortInteractionModel: GroupSortInteractionModel<Snack>,
+                      groupSortInteractionModel: GroupSelectModel<Snack>,
                       modelViewTransform: ModelViewTransform2,
                       notebookPaperBoundsProperty: TReadOnlyProperty<Bounds2>,
                       candyBarDropped: ( candyBarNode: NotepadCandyBarNode ) => void,

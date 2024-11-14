@@ -33,7 +33,7 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import GroupSortInteractionModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSortInteractionModel.js';
+import GroupSelectModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSelectModel.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import dragIndicatorHand_png from '../../../../scenery-phet/images/dragIndicatorHand_png.js';
@@ -56,7 +56,7 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
 
   // class members needed for the group sort interaction
   private readonly groupSortInteractionView: GroupSortInteractionView<Snack, NotepadCandyBarNode>;
-  private readonly groupSortInteractionModel: GroupSortInteractionModel<Snack>;
+  private readonly groupSortInteractionModel: GroupSelectModel<Snack>;
   private readonly keyboardSortCueNode: Node;
   private readonly mouseSortIndicatorArrowNode: Node;
   private readonly cueingHighlight: Node;
