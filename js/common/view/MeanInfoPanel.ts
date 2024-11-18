@@ -4,6 +4,8 @@
  * A custom non-modal info panel that pops up in front of the notepadNode.
  * The panel shows different mathematical representations of the mean according to the sim's current data.
  *
+ * @deprecated - PhET needs a non-modal dialog, see https://github.com/phetsims/sun/issues/916
+ *
  * @author Marla Schulz (PhET Interactive Simulations)
  * @author Sam Reid (PhET Interactive Simulations)
  * @author John Blanco (PhET Interactive Simulations)
