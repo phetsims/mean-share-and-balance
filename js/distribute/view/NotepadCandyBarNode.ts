@@ -8,6 +8,7 @@
  *
  */
 
+import soundManager from '../../../../tambo/js/soundManager.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { DragListener, Image, InteractiveHighlighting, Line, Node, NodeOptions, Pattern, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
@@ -27,6 +28,7 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import GroupSelectModel from '../../../../scenery-phet/js/accessibility/group-sort/model/GroupSelectModel.js';
 import Snack from '../../common/model/Snack.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadCandyBarNodeOptions = SelfOptions & StrictOmit<WithRequired<NodeOptions, 'tandem'>, 'children'>;
@@ -86,11 +88,15 @@ export default class NotepadCandyBarNode extends InteractiveHighlighting( Node )
       }
     );
 
+    const soundClipOptions = { initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL };
+    const grabSoundPlayer = new SoundClip( grabCandyBarV2_mp3, soundClipOptions );
+    const releaseSoundPlayer = new SoundClip( releaseCandyBarV2_mp3, soundClipOptions );
+    soundManager.addSoundGenerator( grabSoundPlayer );
+    soundManager.addSoundGenerator( releaseSoundPlayer );
+
     this.dragListener = new SoundDragListener( {
-      grabSound: grabCandyBarV2_mp3,
-      grabSoundClipOptions: { initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL },
-      releaseSound: releaseCandyBarV2_mp3,
-      releaseSoundClipOptions: { initialOutputLevel: MeanShareAndBalanceConstants.GRAB_RELEASE_SOUND_LEVEL },
+      grabSoundPlayer: grabSoundPlayer,
+      releaseSoundPlayer: releaseSoundPlayer,
       transform: modelViewTransform,
       positionProperty: this.candyBar.positionProperty,
       offsetPosition: ( viewPoint, dragListener ) => {
