@@ -6,28 +6,29 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, GatedVisibleProperty, Node, Text } from '../../../../scenery/js/imports.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
-import BalanceBeamNode from './BalanceBeamNode.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import { GatedVisibleProperty } from '../../../../axon/js/GatedBooleanProperty.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import { AlignBox, Node, Text } from '../../../../scenery/js/imports.js';
+import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
+import BooleanRectangularToggleButton from '../../../../sun/js/buttons/BooleanRectangularToggleButton.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
-import pillarsRemoved_mp3 from '../../../sounds/pillarsRemoved_mp3.js';
-import pillarsAdded_mp3 from '../../../sounds/pillarsAdded_mp3.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
-import BooleanRectangularToggleButton from '../../../../sun/js/buttons/BooleanRectangularToggleButton.js';
+import pillarsAdded_mp3 from '../../../sounds/pillarsAdded_mp3.js';
+import pillarsRemoved_mp3 from '../../../sounds/pillarsRemoved_mp3.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
+import BalanceBeamNode from './BalanceBeamNode.js';
 
 type SelfOptions = EmptySelfOptions;
 
