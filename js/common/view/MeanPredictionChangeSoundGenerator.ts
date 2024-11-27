@@ -8,14 +8,14 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
+import stepTimer from '../../../../axon/js/stepTimer.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Utils from '../../../../dot/js/Utils.js';
-import NoiseGenerator, { NoiseGeneratorOptions } from '../../../../tambo/js/sound-generators/NoiseGenerator.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import stepTimer from '../../../../axon/js/stepTimer.js';
+import NoiseGenerator, { NoiseGeneratorOptions } from '../../../../tambo/js/sound-generators/NoiseGenerator.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type MotionState = 'unchanging' | 'increasing' | 'decreasing';
 

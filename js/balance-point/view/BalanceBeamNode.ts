@@ -8,33 +8,33 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Circle, Color, Image, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import MeanPredictionFulcrumSlider from './MeanPredictionFulcrumSlider.js';
-import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
-import LevelSupportColumnNode from '../../../../scenery-phet/js/LevelSupportColumnNode.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSceneModel.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import Multilink from '../../../../axon/js/Multilink.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
-import { Shape } from '../../../../kite/js/imports.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import Utils from '../../../../dot/js/Utils.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import { Shape } from '../../../../kite/js/imports.js';
+import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import LevelSupportColumnNode from '../../../../scenery-phet/js/LevelSupportColumnNode.js';
+import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
+import { Circle, Color, Image, Line, ManualConstraint, MatrixBetweenProperty, Node, NodeOptions, Text } from '../../../../scenery/js/imports.js';
+import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
+import NumberLineNode from '../../../../soccer-common/js/view/NumberLineNode.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
-import BeamTiltSoundGenerator from './BeamTiltSoundGenerator.js';
 import sketchedDataPointFill_svg from '../../../images/sketchedDataPointFill_svg.js';
-import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSceneModel.js';
+import BeamTiltSoundGenerator from './BeamTiltSoundGenerator.js';
+import MeanPredictionFulcrumSlider from './MeanPredictionFulcrumSlider.js';
 
 const BALANCE_BEAM_GROUND_Y = 220;
 const TRANSFORM_SCALE = MeanShareAndBalanceConstants.CHART_VIEW_WIDTH / MeanShareAndBalanceConstants.SOCCER_BALL_RANGE.getLength();

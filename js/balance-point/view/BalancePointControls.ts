@@ -7,23 +7,23 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import { VBox } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import BalancePointModel from '../model/BalancePointModel.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import { VBox } from '../../../../scenery/js/imports.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
-import MovableFulcrumIcon from './MovableFulcrumIcon.js';
-import FixedFulcrumIcon from './FixedFulcrumIcon.js';
-import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
-import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
-import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import release_mp3 from '../../../../tambo/sounds/release_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
+import release_mp3 from '../../../../tambo/sounds/release_mp3.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
+import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import BalancePointModel from '../model/BalancePointModel.js';
+import FixedFulcrumIcon from './FixedFulcrumIcon.js';
+import MovableFulcrumIcon from './MovableFulcrumIcon.js';
 
 type SelfOptions = EmptySelfOptions;
 type BalancePointControlsOptions = SelfOptions & StrictOmit<MeanShareAndBalanceControlsOptions,

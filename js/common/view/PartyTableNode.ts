@@ -6,11 +6,11 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Image, ImageOptions, NodeOptions } from '../../../../scenery/js/imports.js';
-import partyTable_svg from '../../../images/partyTable_svg.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import { Image, ImageOptions, NodeOptions } from '../../../../scenery/js/imports.js';
+import partyTable_svg from '../../../images/partyTable_svg.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type PartyTableNodeOptions = SelfOptions & StrictOmit<ImageOptions, 'maxWidth'>;

@@ -6,16 +6,16 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import ValveNode from './ValveNode.js';
 import Property from '../../../../axon/js/Property.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
 import nullSoundPlayer from '../../../../tambo/js/nullSoundPlayer.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import ValveNode from './ValveNode.js';
 
 type PipeSwitchOptions = WithRequired<ABSwitchOptions, 'tandem'>;
 export default class PipeSwitch extends ABSwitch<boolean> {

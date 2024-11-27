@@ -7,13 +7,13 @@
  *
  */
 
-import MeanShareAndBalanceKeyboardHelpNode from '../../common/view/MeanShareAndBalanceKeyboardHelpNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import GrabReleaseKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/GrabReleaseKeyboardHelpSection.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MoveKeyboardHelpSection from '../../common/view/MoveKeyboardHelpSection.js';
 import SliderControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/SliderControlsKeyboardHelpSection.js';
 import SpinnerControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/SpinnerControlsKeyboardHelpSection.js';
+import MeanShareAndBalanceKeyboardHelpNode from '../../common/view/MeanShareAndBalanceKeyboardHelpNode.js';
+import MoveKeyboardHelpSection from '../../common/view/MoveKeyboardHelpSection.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 
 export default class DistributeKeyboardHelpNode extends MeanShareAndBalanceKeyboardHelpNode {

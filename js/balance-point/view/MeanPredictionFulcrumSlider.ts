@@ -6,24 +6,24 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { FULCRUM_LINE_WIDTH } from './BalanceBeamNode.js';
-import Utils from '../../../../dot/js/Utils.js';
-import HSlider, { HSliderOptions } from '../../../../sun/js/HSlider.js';
-import Property from '../../../../axon/js/Property.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import Dimension2 from '../../../../dot/js/Dimension2.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import { Color, HBox } from '../../../../scenery/js/imports.js';
-import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import FulcrumSliderSoundPlayer from './FulcrumSliderSoundPlayer.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Utils from '../../../../dot/js/Utils.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
+import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
+import { Color, HBox } from '../../../../scenery/js/imports.js';
+import HSlider, { HSliderOptions } from '../../../../sun/js/HSlider.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import { FULCRUM_LINE_WIDTH } from './BalanceBeamNode.js';
+import FulcrumSliderSoundPlayer from './FulcrumSliderSoundPlayer.js';
 
 type SelfOptions = {
   fulcrumHeight: number; // in screen coordinates

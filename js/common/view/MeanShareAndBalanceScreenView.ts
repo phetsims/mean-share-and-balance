@@ -8,15 +8,15 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import ScreenView, { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, TColor } from '../../../../scenery/js/imports.js';
-import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import TModel from '../../../../joist/js/TModel.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import ScreenView, { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
+import TModel from '../../../../joist/js/TModel.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
+import { Node, TColor } from '../../../../scenery/js/imports.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
 export type MeanShareAndBalanceScreenViewOptions = WithRequired<ScreenViewOptions, 'tandem'>;
 

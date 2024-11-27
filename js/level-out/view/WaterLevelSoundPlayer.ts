@@ -7,16 +7,16 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import ValueChangeSoundPlayer from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
-import Range from '../../../../dot/js/Range.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import soundManager from '../../../../tambo/js/soundManager.js';
-import glassLevelSoundA_mp3 from '../../../sounds/glassLevelSoundA_mp3.js';
-import glassLevelSoundB_mp3 from '../../../sounds/glassLevelSoundB_mp3.js';
-import SoundUtils from '../../../../tambo/js/SoundUtils.js';
+import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import CrossFadeSoundClip from '../../../../tambo/js/sound-generators/CrossFadeSoundClip.js';
+import ValueChangeSoundPlayer from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import SoundUtils from '../../../../tambo/js/SoundUtils.js';
+import glassLevelSoundA_mp3 from '../../../sounds/glassLevelSoundA_mp3.js';
+import glassLevelSoundB_mp3 from '../../../sounds/glassLevelSoundB_mp3.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
 

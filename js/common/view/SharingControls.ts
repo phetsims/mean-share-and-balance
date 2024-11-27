@@ -7,24 +7,24 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import SyncButton from './SyncButton.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, PDOMValueType, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
+import { AlignBox, PDOMValueType, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
+import SoundClipPlayer from '../../../../tambo/js/sound-generators/SoundClipPlayer.js';
+import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import SharingModel from '../model/SharingModel.js';
 import Snack from '../model/Snack.js';
-import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
 import MeanShareAndBalanceCheckboxGroup from './MeanShareAndBalanceCheckboxGroup.js';
-import SoundClipPlayer from '../../../../tambo/js/sound-generators/SoundClipPlayer.js';
-import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from './MeanShareAndBalanceControls.js';
 import NumberSpinnerSoundPlayer from './NumberSpinnerSoundPlayer.js';
-import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
-import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import SyncButton from './SyncButton.js';
 
 
 type SelfOptions = {

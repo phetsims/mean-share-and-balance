@@ -8,23 +8,23 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import Range from '../../../../dot/js/Range.js';
-import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
-import stepTimer from '../../../../axon/js/stepTimer.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
-import Cup from '../model/Cup.js';
-import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import Utils from '../../../../dot/js/Utils.js';
+import stepTimer from '../../../../axon/js/stepTimer.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
-import soundConstants from '../../../../tambo/js/soundConstants.js';
+import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import phetAudioContext from '../../../../tambo/js/phetAudioContext.js';
+import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
+import soundConstants from '../../../../tambo/js/soundConstants.js';
+import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
+import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Cup from '../model/Cup.js';
 
 type SelfOptions = {
 

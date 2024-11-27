@@ -7,14 +7,14 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import Range from '../../../../dot/js/Range.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import { Text, VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import NumberSpinner, { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 
 type SelfOptions = {
   numberSpinnerOptions: NumberSpinnerOptions;

@@ -7,17 +7,17 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Circle, Image, Node, NodeOptions, Path, PathOptions, Text } from '../../../../scenery/js/imports.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Apple from '../model/Apple.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Circle, Image, Node, NodeOptions, Path, PathOptions, Text } from '../../../../scenery/js/imports.js';
 import sketchedAppleFill_svg from '../../../images/sketchedAppleFill_svg.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Apple from '../model/Apple.js';
 
 type SelfOptions = EmptySelfOptions;
 type NotepadAppleNodeOptions = SelfOptions & PickRequired<NodeOptions, 'tandem' | 'visibleProperty'>;

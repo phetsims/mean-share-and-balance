@@ -10,11 +10,11 @@
 import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import MeanShareAndBalanceStrings from './MeanShareAndBalanceStrings.js';
-import LevelOutScreen from './level-out/LevelOutScreen.js';
+import BalancePointScreen from './balance-point/BalancePointScreen.js';
 import DistributeScreen from './distribute/DistributeScreen.js';
 import FairShareScreen from './fair-share/FairShareScreen.js';
-import BalancePointScreen from './balance-point/BalancePointScreen.js';
+import LevelOutScreen from './level-out/LevelOutScreen.js';
+import MeanShareAndBalanceStrings from './MeanShareAndBalanceStrings.js';
 
 const simOptions: SimOptions = {
 

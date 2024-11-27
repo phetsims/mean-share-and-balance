@@ -7,19 +7,19 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
-import { DragListener, Image, Node, NodeOptions, SceneryEvent } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import pencil_png from '../../../images/pencil_png.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
+import { DragListener, Image, Node, NodeOptions, SceneryEvent } from '../../../../scenery/js/imports.js';
+import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import pencil_png from '../../../images/pencil_png.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
 
 type ParentOptions = AccessibleSliderOptions & NodeOptions;
 type MeanPredictionHandleOptions = StrictOmit<ParentOptions,

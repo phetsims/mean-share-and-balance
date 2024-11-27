@@ -7,20 +7,20 @@
  *
  */
 
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
-import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
-import BalancePointScreenView from './view/BalancePointScreenView.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
-import BalancePointModel from './model/BalancePointModel.js';
 import { Image } from '../../../scenery/js/imports.js';
-import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import balancePointHomeScreenIcon_svg from '../../images/balancePointHomeScreenIcon_svg.js';
 import balancePointNavBarIcon_svg from '../../images/balancePointNavBarIcon_svg.js';
-import BalancePointKeyboardHelpNode from './view/BalancePointKeyboardHelpNode.js';
+import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
+import BalancePointModel from './model/BalancePointModel.js';
+import BalancePointKeyboardHelpNode from './view/BalancePointKeyboardHelpNode.js';
+import BalancePointScreenView from './view/BalancePointScreenView.js';
 
 type SelfOptions = EmptySelfOptions;
 

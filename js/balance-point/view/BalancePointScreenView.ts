@@ -6,26 +6,26 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import SoccerScreenView, { SoccerScreenViewOptions } from '../../../../soccer-common/js/view/SoccerScreenView.js';
-import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
-import BalancePointModel from '../model/BalancePointModel.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
-import BalancePointControls from './BalancePointControls.js';
-import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
-import BalancePointSceneView from './BalancePointSceneView.js';
-import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
-import BalancePointNotepadNode from './BalancePointNotepadNode.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
+import { AlignBox, Text } from '../../../../scenery/js/imports.js';
 import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
+import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
+import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';
+import SoccerScreenView, { SoccerScreenViewOptions } from '../../../../soccer-common/js/view/SoccerScreenView.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import BalancePointModel from '../model/BalancePointModel.js';
+import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
+import BalancePointControls from './BalancePointControls.js';
+import BalancePointNotepadNode from './BalancePointNotepadNode.js';
+import BalancePointSceneView from './BalancePointSceneView.js';
 
 type SelfOptions = EmptySelfOptions;
 export type BalancePointScreenViewOptions = SelfOptions & PickRequired<SoccerScreenViewOptions, 'tandem'>;

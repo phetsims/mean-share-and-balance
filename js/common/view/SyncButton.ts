@@ -7,14 +7,14 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import RectangularPushButton, { RectangularPushButtonOptions } from '../../../../sun/js/buttons/RectangularPushButton.js';
-import SyncIcon from './SyncIcon.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import { HBox, Text } from '../../../../scenery/js/imports.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import { HBox, Text } from '../../../../scenery/js/imports.js';
+import RectangularPushButton, { RectangularPushButtonOptions } from '../../../../sun/js/buttons/RectangularPushButton.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import SyncIcon from './SyncIcon.js';
 
 type SelfOptions = EmptySelfOptions;
 type SyncButtonOptions = SelfOptions & StrictOmit<RectangularPushButtonOptions, 'content' | 'baseColor' | 'accessibleName'>;

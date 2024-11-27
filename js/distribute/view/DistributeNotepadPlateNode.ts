@@ -11,13 +11,13 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../../common/model/Plate.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Image, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Plate from '../../common/model/Plate.js';
 import Snack from '../../common/model/Snack.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'>;
 

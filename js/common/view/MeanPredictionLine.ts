@@ -7,24 +7,24 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Line, ManualConstraint, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import Range from '../../../../dot/js/Range.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
-import Property from '../../../../axon/js/Property.js';
-import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
-import MeanPredictionHandle from './MeanPredictionHandle.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Line, ManualConstraint, Node, NodeOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import MeanPredictionHandle from './MeanPredictionHandle.js';
 
 type SelfOptions = {
   meanTolerance: number;

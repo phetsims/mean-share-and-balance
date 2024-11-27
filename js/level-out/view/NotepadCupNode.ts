@@ -7,19 +7,19 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
+import Property from '../../../../axon/js/Property.js';
+import Matrix3 from '../../../../dot/js/Matrix3.js';
 import Utils from '../../../../dot/js/Utils.js';
 import optionize, { combineOptions, EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { Line, Node, NodeOptions, NodeTransformOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
-import Cup from '../model/Cup.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import NotepadCupTickMarksNode from './NotepadCupTickMarksNode.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import Property from '../../../../axon/js/Property.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Line, Node, NodeOptions, NodeTransformOptions, Pattern, Rectangle } from '../../../../scenery/js/imports.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
-import Matrix3 from '../../../../dot/js/Matrix3.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Cup from '../model/Cup.js';
+import NotepadCupTickMarksNode from './NotepadCupTickMarksNode.js';
 
 type SelfOptions = EmptySelfOptions;
 

@@ -7,14 +7,14 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
-import TriangleNode, { TriangleNodeOptions } from '../../../../scenery-phet/js/TriangleNode.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import ArrowNode from '../../../../scenery-phet/js/ArrowNode.js';
+import TriangleNode, { TriangleNodeOptions } from '../../../../scenery-phet/js/TriangleNode.js';
+import { Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 // constants
 const ARROW_LENGTH = 9;

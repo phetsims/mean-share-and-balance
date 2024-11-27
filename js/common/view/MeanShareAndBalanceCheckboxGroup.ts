@@ -6,15 +6,15 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
+import Property from '../../../../axon/js/Property.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import { Text } from '../../../../scenery/js/imports.js';
+import { CheckboxOptions } from '../../../../sun/js/Checkbox.js';
 import VerticalCheckboxGroup, { VerticalCheckboxGroupItem, VerticalCheckboxGroupOptions } from '../../../../sun/js/VerticalCheckboxGroup.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import Property from '../../../../axon/js/Property.js';
-import { Text } from '../../../../scenery/js/imports.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import { CheckboxOptions } from '../../../../sun/js/Checkbox.js';
 
 type totalCheckboxItemOptions = {
   property: Property<boolean>;

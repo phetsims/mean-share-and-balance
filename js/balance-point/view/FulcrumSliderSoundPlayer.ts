@@ -8,12 +8,12 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import ValueChangeSoundPlayer, { ValueChangeSoundPlayerOptions } from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import ValueChangeSoundPlayer, { ValueChangeSoundPlayerOptions } from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type FulcrumSliderSoundPlayerOptions = SelfOptions & ValueChangeSoundPlayerOptions;

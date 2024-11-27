@@ -11,28 +11,28 @@
  *
  */
 
-import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from './MeanShareAndBalanceScreenView.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import SharingModel from '../model/SharingModel.js';
-import Snack from '../model/Snack.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import { AlignBox, Node, PDOMValueType, TColor } from '../../../../scenery/js/imports.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
-import SharingControls from './SharingControls.js';
-import MeanInfoPanel from './MeanInfoPanel.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import PersonImage from '../../distribute/view/PersonImage.js';
-import TablePlateNode from './TablePlateNode.js';
-import NotepadNode from './NotepadNode.js';
-import PartyTableNode from './PartyTableNode.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import { AlignBox, Node, PDOMValueType, TColor } from '../../../../scenery/js/imports.js';
 import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
-import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
-import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import PersonImage from '../../distribute/view/PersonImage.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import SharingModel from '../model/SharingModel.js';
+import Snack from '../model/Snack.js';
+import MeanInfoPanel from './MeanInfoPanel.js';
+import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from './MeanShareAndBalanceScreenView.js';
+import NotepadNode from './NotepadNode.js';
+import PartyTableNode from './PartyTableNode.js';
+import SharingControls from './SharingControls.js';
+import TablePlateNode from './TablePlateNode.js';
 
 export type SnackType = 'candyBars' | 'apples';
 

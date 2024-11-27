@@ -7,20 +7,20 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import LevelOutModel from './model/LevelOutModel.js';
-import LevelOutScreenView from './view/LevelOutScreenView.js';
-import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
-import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
-import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import { Image } from '../../../scenery/js/imports.js';
 import levelOutHomeScreenIcon_svg from '../../images/levelOutHomeScreenIcon_svg.js';
-import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import levelOutNavBarIcon_svg from '../../images/levelOutNavBarIcon_svg.js';
-import LevelOutKeyboardHelpNode from './view/LevelOutKeyboardHelpNode.js';
+import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
+import LevelOutModel from './model/LevelOutModel.js';
+import LevelOutKeyboardHelpNode from './view/LevelOutKeyboardHelpNode.js';
+import LevelOutScreenView from './view/LevelOutScreenView.js';
 
 type SelfOptions = EmptySelfOptions;
 

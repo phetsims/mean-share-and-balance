@@ -6,9 +6,9 @@
  *
  */
 
+import SpinnerControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/SpinnerControlsKeyboardHelpSection.js';
 import MeanShareAndBalanceKeyboardHelpNode from '../../common/view/MeanShareAndBalanceKeyboardHelpNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import SpinnerControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/SpinnerControlsKeyboardHelpSection.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 

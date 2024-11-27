@@ -7,9 +7,9 @@
  */
 
 import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
-import LevelOutModel from './level-out/model/LevelOutModel.js';
-import Cup from './level-out/model/Cup.js';
 import Tandem from '../../tandem/js/Tandem.js';
+import Cup from './level-out/model/Cup.js';
+import LevelOutModel from './level-out/model/LevelOutModel.js';
 
 const levelOutModel = new LevelOutModel( { tandem: Tandem.OPT_OUT } );
 const xPosition = 50;

@@ -7,16 +7,16 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Image } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../../common/model/Plate.js';
-import { DistributionMode } from '../model/FairShareModel.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Image } from '../../../../scenery/js/imports.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
-import Apple from '../model/Apple.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import Plate from '../../common/model/Plate.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Apple from '../model/Apple.js';
+import { DistributionMode } from '../model/FairShareModel.js';
 
 export default class FairShareNotepadPlateNode extends Image {
 

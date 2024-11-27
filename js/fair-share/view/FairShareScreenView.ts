@@ -8,21 +8,21 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import FairShareModel from '../model/FairShareModel.js';
-import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
-import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import Apple from '../model/Apple.js';
+import FairShareModel from '../model/FairShareModel.js';
 import FairShareNotepadNode from './FairShareNotepadNode.js';
 import FairShareNotepadPlateNode from './FairShareNotepadPlateNode.js';
 import NotepadAppleNode from './NotepadAppleNode.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
-import Apple from '../model/Apple.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareScreenViewOptions = SelfOptions & StrictOmit<SharingScreenViewOptions, 'children' | 'snackType' | 'snackAccessibleName'>;

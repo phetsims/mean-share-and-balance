@@ -8,26 +8,26 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import { Image, Node, NodeOptions, PDOMValueType, SceneryConstants } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Plate from '../model/Plate.js';
-import NumberPicker from '../../../../sun/js/NumberPicker.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
+import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import plate_svg from '../../../images/plate_svg.js';
-import { SnackType } from './SharingScreenView.js';
-import SnackStacker from '../SnackStacker.js';
-import candyBar_svg from '../../../images/candyBar_svg.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import greenApple_svg from '../../../images/greenApple_svg.js';
-import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
-import Snack from '../model/Snack.js';
-import SnackQuantitySoundPlayer, { SnackQuantitySoundPlayerOptions } from './SnackQuantitySoundPlayer.js';
-import soundManager from '../../../../tambo/js/soundManager.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import { Image, Node, NodeOptions, PDOMValueType, SceneryConstants } from '../../../../scenery/js/imports.js';
+import NumberPicker from '../../../../sun/js/NumberPicker.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import candyBar_svg from '../../../images/candyBar_svg.js';
+import greenApple_svg from '../../../images/greenApple_svg.js';
+import plate_svg from '../../../images/plate_svg.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import Plate from '../model/Plate.js';
+import Snack from '../model/Snack.js';
+import SnackStacker from '../SnackStacker.js';
+import { SnackType } from './SharingScreenView.js';
+import SnackQuantitySoundPlayer, { SnackQuantitySoundPlayerOptions } from './SnackQuantitySoundPlayer.js';
 
 type SelfOptions = {
   snackType: SnackType;

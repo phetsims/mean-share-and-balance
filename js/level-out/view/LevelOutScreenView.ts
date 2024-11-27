@@ -6,33 +6,33 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
-import { AlignBox, Node } from '../../../../scenery/js/imports.js';
-import LevelOutModel from '../model/LevelOutModel.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
+import { Shape } from '../../../../kite/js/imports.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import NotepadCupNode from './NotepadCupNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
+import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import { AlignBox, Node } from '../../../../scenery/js/imports.js';
+import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import LabTableNode from '../../common/view/LabTableNode.js';
 import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
+import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
+import NotepadNode from '../../common/view/NotepadNode.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import LevelOutModel from '../model/LevelOutModel.js';
+import LevelOutControls from './LevelOutControls.js';
+import NotepadCupNode from './NotepadCupNode.js';
 import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import LevelOutControls from './LevelOutControls.js';
-import LabTableNode from '../../common/view/LabTableNode.js';
-import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { Shape } from '../../../../kite/js/imports.js';
-import NotepadNode from '../../common/view/NotepadNode.js';
-import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import soundManager from '../../../../tambo/js/soundManager.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 

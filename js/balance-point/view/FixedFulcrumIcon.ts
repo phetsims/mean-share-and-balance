@@ -6,13 +6,13 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import TriangleNode, { TriangleNodeOptions } from '../../../../scenery-phet/js/TriangleNode.js';
+import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 // constants
 const LINE_WIDTH = 1.5;

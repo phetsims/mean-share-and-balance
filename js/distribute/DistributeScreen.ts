@@ -7,20 +7,20 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
-import DistributeModel from './model/DistributeModel.js';
-import DistributeScreenView from './view/DistributeScreenView.js';
-import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
-import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import { Image } from '../../../scenery/js/imports.js';
 import distributeHomeScreenIcon_svg from '../../images/distributeHomeScreenIcon_svg.js';
 import distributeNavBarIcon_svg from '../../images/distributeNavBarIcon_svg.js';
-import DistributeKeyboardHelpNode from './view/DistributeKeyboardHelpNode.js';
+import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
+import DistributeModel from './model/DistributeModel.js';
+import DistributeKeyboardHelpNode from './view/DistributeKeyboardHelpNode.js';
+import DistributeScreenView from './view/DistributeScreenView.js';
 
 type SelfOptions = EmptySelfOptions;
 

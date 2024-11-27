@@ -7,20 +7,20 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { SnackType } from './SharingScreenView.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
-import candyBarWrapper01_mp3 from '../../../sounds/candyBarWrapper01_mp3.js';
-import candyBarWrapper03_mp3 from '../../../sounds/candyBarWrapper03_mp3.js';
-import candyBarWrapper02_mp3 from '../../../sounds/candyBarWrapper02_mp3.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Range from '../../../../dot/js/Range.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
+import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
+import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
 import hollowThud_mp3 from '../../../../tambo/sounds/hollowThud_mp3.js';
+import candyBarWrapper01_mp3 from '../../../sounds/candyBarWrapper01_mp3.js';
+import candyBarWrapper02_mp3 from '../../../sounds/candyBarWrapper02_mp3.js';
+import candyBarWrapper03_mp3 from '../../../sounds/candyBarWrapper03_mp3.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
+import { SnackType } from './SharingScreenView.js';
 
 type SelfOptions = EmptySelfOptions;
 export type SnackQuantitySoundPlayerOptions = SoundGeneratorOptions & SelfOptions;

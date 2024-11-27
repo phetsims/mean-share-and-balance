@@ -8,28 +8,28 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import SoccerSceneModel, { SoccerSceneModelOptions } from '../../../../soccer-common/js/model/SoccerSceneModel.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDistributionStrategy.js';
-import Range from '../../../../dot/js/Range.js';
-import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
-import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import Property from '../../../../axon/js/Property.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Multilink from '../../../../axon/js/Multilink.js';
-import Utils from '../../../../dot/js/Utils.js';
-import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
+import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import BalancePointModel from './BalancePointModel.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDistributionStrategy.js';
+import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
+import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
+import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
+import SoccerSceneModel, { SoccerSceneModelOptions } from '../../../../soccer-common/js/model/SoccerSceneModel.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import BalancePointModel from './BalancePointModel.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
 

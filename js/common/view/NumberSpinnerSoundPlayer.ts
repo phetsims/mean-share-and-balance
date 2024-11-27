@@ -8,11 +8,11 @@
  *
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
-import WrappedAudioBuffer from '../../../../tambo/js/WrappedAudioBuffer.js';
 import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
+import WrappedAudioBuffer from '../../../../tambo/js/WrappedAudioBuffer.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 export default class NumberSpinnerSoundPlayer {
   private readonly soundClip: SoundClip;

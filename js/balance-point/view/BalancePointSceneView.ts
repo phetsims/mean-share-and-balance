@@ -6,16 +6,16 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import SoccerSceneView, { SoccerSceneViewOptions } from '../../../../soccer-common/js/view/SoccerSceneView.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
-import BalancePointModel from '../model/BalancePointModel.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import Tandem from '../../../../tandem/js/Tandem.js';
 import { Node } from '../../../../scenery/js/imports.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 import KickerImageSets from '../../../../soccer-common/js/view/KickerImageSets.js';
+import SoccerSceneView, { SoccerSceneViewOptions } from '../../../../soccer-common/js/view/SoccerSceneView.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import BalancePointModel from '../model/BalancePointModel.js';
+import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 
 
 export default class BalancePointSceneView extends SoccerSceneView<BalancePointSceneModel> {

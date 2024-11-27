@@ -7,25 +7,25 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
-import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import stepTimer from '../../../../axon/js/stepTimer.js';
+import TEmitter from '../../../../axon/js/TEmitter.js';
+import { TimerListener } from '../../../../axon/js/Timer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
-import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
-import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
-import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
-import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
+import LinearFunction from '../../../../dot/js/LinearFunction.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
+import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
 import shareCompleteLargeAmount_mp3 from '../../../sounds/shareCompleteLargeAmount_mp3.js';
 import shareCompleteMediumAmount_mp3 from '../../../sounds/shareCompleteMediumAmount_mp3.js';
 import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmount_mp3.js';
+import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
+import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import { TimerListener } from '../../../../axon/js/Timer.js';
-import stepTimer from '../../../../axon/js/stepTimer.js';
-import LinearFunction from '../../../../dot/js/LinearFunction.js';
-import TEmitter from '../../../../axon/js/TEmitter.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
 
 type SelfOptions = EmptySelfOptions;
 type AllocationModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;

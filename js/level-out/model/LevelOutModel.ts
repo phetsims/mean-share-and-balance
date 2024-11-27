@@ -8,25 +8,25 @@
  */
 
 import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
-import NumberProperty from '../../../../axon/js/NumberProperty.js';
-import Range from '../../../../dot/js/Range.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Pipe from './Pipe.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Cup, { WATER_LEVEL_ROUNDING_INTERVAL } from './Cup.js';
-import Utils from '../../../../dot/js/Utils.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import Property from '../../../../axon/js/Property.js';
-import NumberIO from '../../../../tandem/js/types/NumberIO.js';
-import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
-import IOType from '../../../../tandem/js/types/IOType.js';
-import VoidIO from '../../../../tandem/js/types/VoidIO.js';
-import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import TModel from '../../../../joist/js/TModel.js';
 import EnabledProperty from '../../../../axon/js/EnabledProperty.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Range from '../../../../dot/js/Range.js';
+import Utils from '../../../../dot/js/Utils.js';
+import TModel from '../../../../joist/js/TModel.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
+import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
+import IOType from '../../../../tandem/js/types/IOType.js';
+import NumberIO from '../../../../tandem/js/types/NumberIO.js';
+import VoidIO from '../../../../tandem/js/types/VoidIO.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import Cup, { WATER_LEVEL_ROUNDING_INTERVAL } from './Cup.js';
+import Pipe from './Pipe.js';
 
 type LevelOutModelOptions = EmptySelfOptions & WithRequired<PhetioObjectOptions, 'tandem'>;
 

@@ -6,20 +6,20 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, Image, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
-import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
-import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import DerivedProperty, { UnknownDerivedProperty } from '../../../../axon/js/DerivedProperty.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import notepadRing_svg from '../../../images/notepadRing_svg.js';
-import Dimension2 from '../../../../dot/js/Dimension2.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
+import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import BackgroundNode from '../../../../scenery-phet/js/BackgroundNode.js';
+import { AlignBox, Image, Node, NodeOptions, Rectangle, Text } from '../../../../scenery/js/imports.js';
+import notepadRing_svg from '../../../images/notepadRing_svg.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {
 

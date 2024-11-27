@@ -7,14 +7,14 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
-import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
 import Range from '../../../../dot/js/Range.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
+import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
+import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type BeamTiltSoundGeneratorOptions = SoundGeneratorOptions & SelfOptions;

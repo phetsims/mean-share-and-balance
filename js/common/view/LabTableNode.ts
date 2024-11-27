@@ -7,11 +7,11 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import { Image, Node, NodeOptions, Rectangle } from '../../../../scenery/js/imports.js';
 import labDesk_svg from '../../../images/labDesk_svg.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;

@@ -7,20 +7,20 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Node, NodeOptions, NodeTransformOptions } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import Cup from '../model/Cup.js';
-import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import WaterLevelTriangleSlider from './WaterLevelTriangleSlider.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
-import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import Property from '../../../../axon/js/Property.js';
-import LevelOutModel from '../model/LevelOutModel.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
+import { Node, NodeOptions, NodeTransformOptions } from '../../../../scenery/js/imports.js';
+import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import Cup from '../model/Cup.js';
+import LevelOutModel from '../model/LevelOutModel.js';
+import WaterLevelTriangleSlider from './WaterLevelTriangleSlider.js';
 
 type SelfOptions = {
 

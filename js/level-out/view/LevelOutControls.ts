@@ -10,19 +10,19 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Property from '../../../../axon/js/Property.js';
+import Range from '../../../../dot/js/Range.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
-import PipeSwitch from './PipeSwitch.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
+import { VBox, VBoxOptions } from '../../../../scenery/js/imports.js';
 import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
-import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Range from '../../../../dot/js/Range.js';
+import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
+import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
+import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import PipeSwitch from './PipeSwitch.js';
 
 type SelfOptions = {
   vBoxOptions?: StrictOmit<VBoxOptions, 'children'>;

@@ -6,13 +6,13 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../meanShareAndBalance.js';
+import Vector2 from '../../../dot/js/Vector2.js';
 import { Image } from '../../../scenery/js/imports.js';
-import { SnackType } from './view/SharingScreenView.js';
+import Snack from '../common/model/Snack.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
-import Vector2 from '../../../dot/js/Vector2.js';
-import Snack from '../common/model/Snack.js';
+import { SnackType } from './view/SharingScreenView.js';
 
 // constants
 const VERTICAL_SPACE_BETWEEN_APPLES = 4; // in screen coords, empirically determined

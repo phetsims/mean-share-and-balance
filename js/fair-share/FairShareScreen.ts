@@ -6,20 +6,20 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import FairShareScreenView from './view/FairShareScreenView.js';
-import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
-import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
-import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
-import FairShareModel from './model/FairShareModel.js';
 import { Image } from '../../../scenery/js/imports.js';
-import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import fairShareHomeScreenIcon_svg from '../../images/fairShareHomeScreenIcon_svg.js';
 import fairShareNavBarIcon_svg from '../../images/fairShareNavBarIcon_svg.js';
-import FairShareKeyboardHelpNode from './view/FairShareKeyboardHelpNode.js';
+import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
+import FairShareModel from './model/FairShareModel.js';
+import FairShareKeyboardHelpNode from './view/FairShareKeyboardHelpNode.js';
+import FairShareScreenView from './view/FairShareScreenView.js';
 
 type SelfOptions = EmptySelfOptions;
 

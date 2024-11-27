@@ -11,28 +11,28 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import { AlignBox, GridBox, KeyboardListener, Line, Node, Text, TextOptions, VBox, HotkeyData } from '../../../../scenery/js/imports.js';
-import Utils from '../../../../dot/js/Utils.js';
-import Multilink from '../../../../axon/js/Multilink.js';
-import Property from '../../../../axon/js/Property.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import Bounds2 from '../../../../dot/js/Bounds2.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
-import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
-import Panel, { PanelOptions } from '../../../../sun/js/Panel.js';
+import Property from '../../../../axon/js/Property.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
+import Utils from '../../../../dot/js/Utils.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import CloseButton from '../../../../scenery-phet/js/buttons/CloseButton.js';
+import MixedFractionNode from '../../../../scenery-phet/js/MixedFractionNode.js';
+import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import { AlignBox, GridBox, HotkeyData, KeyboardListener, Line, Node, Text, TextOptions, VBox } from '../../../../scenery/js/imports.js';
 import ButtonNode from '../../../../sun/js/buttons/ButtonNode.js';
+import Panel, { PanelOptions } from '../../../../sun/js/Panel.js';
 import ToggleNode from '../../../../sun/js/ToggleNode.js';
-import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
+import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 export type MeanDisplayType = 'decimal' | 'mixedFraction' | 'remainder';
 

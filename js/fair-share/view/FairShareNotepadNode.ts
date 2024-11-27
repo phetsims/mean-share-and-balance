@@ -7,23 +7,23 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import TEmitter from '../../../../axon/js/TEmitter.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import { AlignBox, Image, Text } from '../../../../scenery/js/imports.js';
+import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
+import nullSoundPlayer from '../../../../tambo/js/nullSoundPlayer.js';
+import soundManager from '../../../../tambo/js/soundManager.js';
+import collectionArea_svg from '../../../images/collectionArea_svg.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
-import FairShareModel, { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
-import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
-import { AlignBox, Image, Text } from '../../../../scenery/js/imports.js';
-import Property from '../../../../axon/js/Property.js';
-import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
-import collectionArea_svg from '../../../images/collectionArea_svg.js';
-import soundManager from '../../../../tambo/js/soundManager.js';
-import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
-import nullSoundPlayer from '../../../../tambo/js/nullSoundPlayer.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import TEmitter from '../../../../axon/js/TEmitter.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import FairShareModel, { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
+import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
 
 type FairShareNotepadNodeOptions = EmptySelfOptions & WithRequired<NotepadNodeOptions, 'tandem'>;
 export default class FairShareNotepadNode extends NotepadNode {

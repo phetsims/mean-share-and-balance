@@ -8,22 +8,22 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import { AlignGroup, Node, NodeOptions } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import NumberSpinnerControl from './NumberSpinnerControl.js';
 import Property from '../../../../axon/js/Property.js';
 import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
-import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import Range from '../../../../dot/js/Range.js';
+import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
+import { AlignGroup, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
+import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
+import NumberSpinnerControl from './NumberSpinnerControl.js';
 
 type SelfOptions = {
   numberSpinnerOptions: NumberSpinnerOptions;

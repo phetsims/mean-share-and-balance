@@ -7,15 +7,15 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import meanShareAndBalance from '../meanShareAndBalance.js';
-import Range from '../../../dot/js/Range.js';
-import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
-import { LinearGradient } from '../../../scenery/js/imports.js';
-import ScreenView from '../../../joist/js/ScreenView.js';
-import Matrix3 from '../../../dot/js/Matrix3.js';
-import Vector2 from '../../../dot/js/Vector2.js';
 import Dimension2 from '../../../dot/js/Dimension2.js';
+import Matrix3 from '../../../dot/js/Matrix3.js';
+import Range from '../../../dot/js/Range.js';
+import Vector2 from '../../../dot/js/Vector2.js';
+import ScreenView from '../../../joist/js/ScreenView.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
+import { LinearGradient } from '../../../scenery/js/imports.js';
+import meanShareAndBalance from '../meanShareAndBalance.js';
+import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 
 const DEFAULT_MARGIN = 15;
 const CONTROLS_MAX_TEXT_WIDTH = 175;

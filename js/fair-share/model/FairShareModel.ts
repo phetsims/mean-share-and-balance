@@ -9,30 +9,30 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
-import Apple from './Apple.js';
-import EnumerationValue from '../../../../phet-core/js/EnumerationValue.js';
-import Enumeration from '../../../../phet-core/js/Enumeration.js';
+import createObservableArray, { ObservableArray, ObservableArrayIO } from '../../../../axon/js/createObservableArray.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 import EnumerationProperty from '../../../../axon/js/EnumerationProperty.js';
-import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
-import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import SnackStacker from '../../common/SnackStacker.js';
-import Fraction from '../../../../phetcommon/js/model/Fraction.js';
+import Multilink from '../../../../axon/js/Multilink.js';
+import stepTimer from '../../../../axon/js/stepTimer.js';
 import { TimerListener } from '../../../../axon/js/Timer.js';
+import LocalizedStringProperty from '../../../../chipper/js/LocalizedStringProperty.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { SnackOptions } from '../../common/model/Snack.js';
-import createObservableArray, { ObservableArray, ObservableArrayIO } from '../../../../axon/js/createObservableArray.js';
-import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
+import Enumeration from '../../../../phet-core/js/Enumeration.js';
+import EnumerationValue from '../../../../phet-core/js/EnumerationValue.js';
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
-import stepTimer from '../../../../axon/js/stepTimer.js';
+import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
-import Multilink from '../../../../axon/js/Multilink.js';
-import Emitter from '../../../../axon/js/Emitter.js';
+import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
+import { SnackOptions } from '../../common/model/Snack.js';
+import SnackStacker from '../../common/SnackStacker.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
+import Apple from './Apple.js';
 
 type SelfOptions = EmptySelfOptions;
 type FairShareModelOptions = SelfOptions & PickRequired<SharingModelOptions, 'tandem'>;

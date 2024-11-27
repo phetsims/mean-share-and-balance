@@ -7,19 +7,19 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
-import optionize from '../../../../phet-core/js/optionize.js';
-import VSlider, { VSliderOptions } from '../../../../sun/js/VSlider.js';
-import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import Range from '../../../../dot/js/Range.js';
 import Property from '../../../../axon/js/Property.js';
-import Dimension2 from '../../../../dot/js/Dimension2.js';
-import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
-import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import WaterLevelSoundPlayer from './WaterLevelSoundPlayer.js';
+import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Range from '../../../../dot/js/Range.js';
+import optionize from '../../../../phet-core/js/optionize.js';
+import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
+import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
+import VSlider, { VSliderOptions } from '../../../../sun/js/VSlider.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
+import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
+import WaterLevelSoundPlayer from './WaterLevelSoundPlayer.js';
 
 type SelfOptions = {
 

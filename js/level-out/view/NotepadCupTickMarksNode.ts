@@ -7,10 +7,10 @@
  * @author Sam Reid (PhET Interactive Simulations)
  */
 
-import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
+import { Line, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type TickMarksNodeOptions = WithRequired<NodeOptions, 'visibleProperty'>;
 
