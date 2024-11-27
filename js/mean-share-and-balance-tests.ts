@@ -6,7 +6,7 @@
  * @author Marla Schulz (PhET Interactive Simulations)
  */
 
-import qunitStart from '../../chipper/js/sim-tests/qunitStart.js';
+import qunitStart from '../../chipper/js/browser/sim-tests/qunitStart.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import Cup from './level-out/model/Cup.js';
 import LevelOutModel from './level-out/model/LevelOutModel.js';
