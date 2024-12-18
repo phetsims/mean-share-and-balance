@@ -13,7 +13,6 @@ import { TimerListener } from '../../../../axon/js/Timer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
@@ -26,6 +25,7 @@ import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
+import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type AllocationModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
@@ -103,7 +103,7 @@ class AllocationModeSoundGenerator extends SoundGenerator {
         shareCompletedSoundTimer = null;
       }
 
-      if ( !ResetAllButton.isResettingAllProperty.value ) {
+      if ( !isResettingAllProperty.value ) {
         if ( mode === DistributionMode.SYNC ) {
           syncSoundClip.play();
         }

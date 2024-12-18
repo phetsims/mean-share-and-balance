@@ -13,7 +13,7 @@ import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Utils from '../../../../dot/js/Utils.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 import NoiseGenerator, { NoiseGeneratorOptions } from '../../../../tambo/js/sound-generators/NoiseGenerator.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
@@ -61,7 +61,7 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
     this.changeRateUpdateTime = this.audioContext.currentTime;
 
     // Turn off sound generation when a reset occurs.
-    ResetAllButton.isResettingAllProperty.lazyLink( () => {
+    isResettingAllProperty.lazyLink( () => {
       this.stop( this.audioContext.currentTime + NOISE_OFF_TIME );
       this.setOutputLevel( 0, NOISE_STOP_TIME_CONSTANT );
       this.predictionChangeRate = 0;
@@ -72,7 +72,7 @@ class MeanPredictionChangeSoundGenerator extends NoiseGenerator {
     // generation, and the step function will turn it off later once the interaction ends.
     meanPredictionProperty.lazyLink( ( newPrediction, oldPrediction ) => {
 
-      if ( !ResetAllButton.isResettingAllProperty.value ) {
+      if ( !isResettingAllProperty.value ) {
 
         const now = this.audioContext.currentTime;
 

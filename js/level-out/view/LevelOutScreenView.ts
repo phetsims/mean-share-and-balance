@@ -15,7 +15,6 @@ import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import { AlignBox, Node } from '../../../../scenery/js/imports.js';
 import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
@@ -33,6 +32,7 @@ import NotepadCupNode from './NotepadCupNode.js';
 import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
+import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
@@ -190,7 +190,7 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     const switchToRightSoundPlayer = sharedSoundPlayers.get( 'switchToRight' );
 
     model.pipesOpenProperty.lazyLink( pipesOpen => {
-      if ( !ResetAllButton.isResettingAllProperty.value ) {
+      if ( !isResettingAllProperty.value ) {
         pipesOpen ? switchToRightSoundPlayer.play() : switchToLeftSoundPlayer.play();
       }
     } );

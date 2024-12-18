@@ -10,7 +10,7 @@
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
+import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
@@ -38,7 +38,7 @@ class BeamTiltSoundGenerator extends SoundGenerator {
     let timeOfLastPlay = Number.NEGATIVE_INFINITY;
 
     beamTiltProperty.lazyLink( tiltAngle => {
-      if ( !ResetAllButton.isResettingAllProperty.value &&
+      if ( !isResettingAllProperty.value &&
            beamTiltProperty.value !== 0 &&
            ( fulcrumIsDraggingProperty.value || isBeamAnimating() ) &&
            phet.joist.elapsedTime > timeOfLastPlay + MIN_TIME_BETWEEN_CREAK_PLAYS ) {
