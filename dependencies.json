@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "a78018090358d226ba0e79fbbaa5cf14448742fb",
+    "sha": "4c021cf6b053ee34d90cb27e35c3081b93fc5363",
     "branch": "HEAD"
   },
   "dot": {
@@ -25,7 +25,7 @@
     "branch": "HEAD"
   },
   "joist": {
-    "sha": "8256840e2f16cdc1550bebe5ff47f836aeb656d9",
+    "sha": "bd73406d8b751f78cbebfe43432ed4760846bef2",
     "branch": "HEAD"
   },
   "kite": {
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "1f4cd6ea156f54fbe2b9a768517c4edc2e9386e7",
+    "sha": "f460e6769fdaad4fcc7bc48b0c05f44dec6d7346",
     "branch": "1.1"
   },
   "perennial-alias": {
