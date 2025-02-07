@@ -11,7 +11,7 @@ import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import { Image } from '../../../scenery/js/imports.js';
+import Image from '../../../scenery/js/nodes/Image.js';
 import distributeHomeScreenIcon_svg from '../../images/distributeHomeScreenIcon_svg.js';
 import distributeNavBarIcon_svg from '../../images/distributeNavBarIcon_svg.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';

@@ -14,7 +14,8 @@ import TModel from '../../../../joist/js/TModel.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import { Node, TColor } from '../../../../scenery/js/imports.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
+import TColor from '../../../../scenery/js/util/TColor.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 

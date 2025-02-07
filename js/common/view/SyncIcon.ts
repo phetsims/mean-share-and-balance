@@ -9,7 +9,7 @@
  */
 
 import LineArrowNode, { LineArrowNodeOptions } from '../../../../scenery-phet/js/LineArrowNode.js';
-import { Node } from '../../../../scenery/js/imports.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 const ARROW_LENGTH = 30;

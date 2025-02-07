@@ -7,7 +7,7 @@
  */
 
 import Vector2 from '../../../dot/js/Vector2.js';
-import { Image } from '../../../scenery/js/imports.js';
+import Image from '../../../scenery/js/nodes/Image.js';
 import Snack from '../common/model/Snack.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';

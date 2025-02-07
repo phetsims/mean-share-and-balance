@@ -9,7 +9,7 @@
 
 import LocalizedImageProperty from '../../../../joist/js/i18n/LocalizedImageProperty.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import { Image, ImageOptions } from '../../../../scenery/js/imports.js';
+import Image, { ImageOptions } from '../../../../scenery/js/nodes/Image.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Snack from '../../common/model/Snack.js';
 import TablePlateNode from '../../common/view/TablePlateNode.js';

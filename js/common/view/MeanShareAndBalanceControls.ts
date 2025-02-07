@@ -15,7 +15,8 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
-import { AlignGroup, Node, NodeOptions } from '../../../../scenery/js/imports.js';
+import AlignGroup from '../../../../scenery/js/layout/constraints/AlignGroup.js';
+import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';

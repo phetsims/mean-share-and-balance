@@ -13,7 +13,7 @@ import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
-import { Node, NodeOptions, NodeTransformOptions } from '../../../../scenery/js/imports.js';
+import Node, { NodeOptions, NodeTransformOptions } from '../../../../scenery/js/nodes/Node.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';

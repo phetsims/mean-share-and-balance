@@ -13,7 +13,7 @@ import Range from '../../../dot/js/Range.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import ScreenView from '../../../joist/js/ScreenView.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
-import { LinearGradient } from '../../../scenery/js/imports.js';
+import LinearGradient from '../../../scenery/js/util/LinearGradient.js';
 import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 

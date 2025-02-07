@@ -18,7 +18,10 @@ import LocalizedStringProperty from '../../../../chipper/js/browser/LocalizedStr
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize from '../../../../phet-core/js/optionize.js';
-import { AlignBox, Node, PDOMValueType, TColor } from '../../../../scenery/js/imports.js';
+import { PDOMValueType } from '../../../../scenery/js/accessibility/pdom/ParallelDOM.js';
+import AlignBox from '../../../../scenery/js/layout/nodes/AlignBox.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
+import TColor from '../../../../scenery/js/util/TColor.js';
 import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 import PersonImage from '../../distribute/view/PersonImage.js';

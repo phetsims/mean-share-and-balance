@@ -11,7 +11,8 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import QuestionBar from '../../../../scenery-phet/js/QuestionBar.js';
-import { AlignBox, Text } from '../../../../scenery/js/imports.js';
+import AlignBox from '../../../../scenery/js/layout/nodes/AlignBox.js';
+import Text from '../../../../scenery/js/nodes/Text.js';
 import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
 import BackgroundNode from '../../../../soccer-common/js/view/BackgroundNode.js';
 import KickButton, { KICK_BUTTON_FONT } from '../../../../soccer-common/js/view/KickButton.js';

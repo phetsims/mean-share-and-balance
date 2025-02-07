@@ -13,7 +13,10 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { DragListener, Image, Node, NodeOptions, SceneryEvent } from '../../../../scenery/js/imports.js';
+import SceneryEvent from '../../../../scenery/js/input/SceneryEvent.js';
+import DragListener from '../../../../scenery/js/listeners/DragListener.js';
+import Image from '../../../../scenery/js/nodes/Image.js';
+import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import pencil_png from '../../../images/pencil_png.js';

@@ -8,7 +8,8 @@
 
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import { Image, ImageOptions, NodeOptions } from '../../../../scenery/js/imports.js';
+import Image, { ImageOptions } from '../../../../scenery/js/nodes/Image.js';
+import { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import partyTable_svg from '../../../images/partyTable_svg.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 

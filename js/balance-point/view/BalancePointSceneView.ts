@@ -7,7 +7,7 @@
  */
 
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { Node } from '../../../../scenery/js/imports.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import { SoccerBallPhase } from '../../../../soccer-common/js/model/SoccerBallPhase.js';
 import KickerImageSets from '../../../../soccer-common/js/view/KickerImageSets.js';
 import SoccerSceneView, { SoccerSceneViewOptions } from '../../../../soccer-common/js/view/SoccerSceneView.js';

@@ -11,7 +11,7 @@ import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import optionize, { EmptySelfOptions } from '../../../phet-core/js/optionize.js';
 import PickRequired from '../../../phet-core/js/types/PickRequired.js';
-import { Image } from '../../../scenery/js/imports.js';
+import Image from '../../../scenery/js/nodes/Image.js';
 import balancePointHomeScreenIcon_svg from '../../images/balancePointHomeScreenIcon_svg.js';
 import balancePointNavBarIcon_svg from '../../images/balancePointNavBarIcon_svg.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';

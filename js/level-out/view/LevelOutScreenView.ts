@@ -10,12 +10,14 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { ScreenViewOptions } from '../../../../joist/js/ScreenView.js';
-import { Shape } from '../../../../kite/js/imports.js';
+import Shape from '../../../../kite/js/Shape.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
-import { AlignBox, Node } from '../../../../scenery/js/imports.js';
+import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
+import AlignBox from '../../../../scenery/js/layout/nodes/AlignBox.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
@@ -32,7 +34,6 @@ import NotepadCupNode from './NotepadCupNode.js';
 import PipeNode from './PipeNode.js';
 import TableCupNode from './TableCupNode.js';
 import WaterBalanceSoundGenerator from './WaterBalanceSoundGenerator.js';
-import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 
 type LevelOutScreenViewOptions = PickRequired<MeanShareAndBalanceScreenViewOptions, 'tandem'> & StrictOmit<ScreenViewOptions, 'children'>;
 
