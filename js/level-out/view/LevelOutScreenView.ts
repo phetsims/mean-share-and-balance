@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2022-2025, University of Colorado Boulder
 /**
  * Representation for the Level Out Screen, displaying table/notepad water cups, pipes, and various interactive options.
  *

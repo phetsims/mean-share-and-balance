@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * SnackStacker is a utility class used to position both model and view elements that represent snack foods into stacks.

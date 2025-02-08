@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2022-2025, University of Colorado Boulder
 
 /**
  * TablePlateNode is a graphical representation of a plate upon which items - generally called "snacks" in this sim -

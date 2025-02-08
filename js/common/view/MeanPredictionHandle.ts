@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 /**
  * A pencil image creates the handle for the draggable "predict mean" line. The drag listener is defined and added in
  * this class as well.

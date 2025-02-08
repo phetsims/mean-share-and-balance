@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2022-2025, University of Colorado Boulder
 
 /**
  * DistributeNotepadPlateNode displays the plate and the outlined candy bars in the notepad for the Distribute

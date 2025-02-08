@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2022-2025, University of Colorado Boulder
 
 /**
  * Representation for the Distribute Screen. Contains a table with people, each of whom have a plate with candy bars

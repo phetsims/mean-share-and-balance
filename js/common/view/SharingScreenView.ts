@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 /**
  * The base screen view for the Distribute Screen and the Fair Share Screen.
  * Both screens have:

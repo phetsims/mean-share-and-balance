@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * PartyTableNode renders an image of a table with a tablecloth over it.

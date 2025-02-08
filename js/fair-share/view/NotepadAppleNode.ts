@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * NotepadAppleNode is the graphical representation of an Apple that is shown on the notepad in this sim.  It is meant

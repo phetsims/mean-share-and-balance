@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * The FixedFulcrumIcon has a line on top of the fulcrum triangle and is fully filled in.

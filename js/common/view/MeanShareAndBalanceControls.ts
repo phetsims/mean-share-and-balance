@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * MeanShareAndBalanceControls is the base class for all controls across all four screens in Mean Share and Balance.

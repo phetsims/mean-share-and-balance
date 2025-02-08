@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2022-2025, University of Colorado Boulder
 
 /**
  * Sync icon takes the form of two side-by-side straight arrows, one pointing down and the other pointing up.

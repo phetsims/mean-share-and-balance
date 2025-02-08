@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * The MovableFulcrumIcon has two arrows on each side of the fulcrum triangle to indicate the direction that

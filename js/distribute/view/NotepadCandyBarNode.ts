@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * An individual candy bar node. These candy bars are draggable, and must stay within the notepad bounds.
