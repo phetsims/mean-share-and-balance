@@ -129,7 +129,6 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     }, {
       tandem: options.tandem.createTandem( 'totalKickDistanceProperty' ),
       phetioValueType: NumberIO,
-      phetioReadOnly: true,
       phetioState: false,
       phetioFeatured: true
     } );
