@@ -13,7 +13,7 @@ import { TimerListener } from '../../../../axon/js/Timer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
+import erase_mp3 from '../../../../tambo/sounds/erase_mp3.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';

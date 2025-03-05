@@ -12,11 +12,10 @@ import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js'
 import Property from '../../../../axon/js/Property.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
-import erase_mp3 from '../../../../scenery-phet/sounds/erase_mp3.js';
 import { PDOMValueType } from '../../../../scenery/js/accessibility/pdom/ParallelDOM.js';
 import AlignBox from '../../../../scenery/js/layout/nodes/AlignBox.js';
 import VBox, { VBoxOptions } from '../../../../scenery/js/layout/nodes/VBox.js';
-import SoundClipPlayer from '../../../../tambo/js/sound-generators/SoundClipPlayer.js';
+import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
@@ -85,9 +84,7 @@ export default class SharingControls extends MeanShareAndBalanceControls {
         enabledProperty: DerivedProperty.not( model.activePlatesInSyncProperty ),
         touchAreaXDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
         touchAreaYDilation: MeanShareAndBalanceConstants.TOUCH_AREA_DILATION,
-        soundPlayer: new SoundClipPlayer( erase_mp3, {
-          soundClipOptions: { initialOutputLevel: 0.22 }
-        } ),
+        soundPlayer: sharedSoundPlayers.get( 'erase' ),
         tandem: options.tandem.createTandem( 'syncButton' )
       } );
 
