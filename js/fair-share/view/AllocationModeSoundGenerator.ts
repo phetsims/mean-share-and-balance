@@ -13,10 +13,11 @@ import { TimerListener } from '../../../../axon/js/Timer.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import erase_mp3 from '../../../../tambo/sounds/erase_mp3.js';
+import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
-import collectSound_mp3 from '../../../sounds/collectSound_mp3.js';
+import collect_mp3 from '../../../../tambo/sounds/collect_mp3.js';
+import erase_mp3 from '../../../../tambo/sounds/erase_mp3.js';
 import shareCompleteLargeAmount_mp3 from '../../../sounds/shareCompleteLargeAmount_mp3.js';
 import shareCompleteMediumAmount_mp3 from '../../../sounds/shareCompleteMediumAmount_mp3.js';
 import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmount_mp3.js';
@@ -25,7 +26,6 @@ import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
-import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 
 type SelfOptions = EmptySelfOptions;
 type AllocationModeSoundPlayerOptions = SoundGeneratorOptions & SelfOptions;
@@ -61,7 +61,7 @@ class AllocationModeSoundGenerator extends SoundGenerator {
 
     super( options );
 
-    const collectSoundClip = new SoundClip( collectSound_mp3 );
+    const collectSoundClip = new SoundClip( collect_mp3 );
     collectSoundClip.connect( this.mainGainNode );
     const syncSoundClip = new SoundClip( erase_mp3 );
     syncSoundClip.connect( this.mainGainNode );
