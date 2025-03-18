@@ -97,10 +97,11 @@ export default class TablePlateNode<T extends Snack> extends Node {
           return value - 1;
         },
 
-        // These options create a "displayMode" for the Number Picker when it is disabled.
+        // These 3 options implement a "displayMode" for the NumberPicker when it is disabled.
         disabledOpacity: 1,
         arrowDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
-        backgroundDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
+        backgroundStrokeDisabledOpacity: SceneryConstants.DISABLED_OPACITY,
+
         accessibleName: options.numberPickerAccessibleName,
 
         // phet-io
