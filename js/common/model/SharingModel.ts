@@ -17,6 +17,7 @@ import Range from '../../../../dot/js/Range.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import TModel from '../../../../joist/js/TModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
+import IntentionalAny from '../../../../phet-core/js/types/IntentionalAny.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
@@ -358,7 +359,7 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
 
   public static readonly INTER_PLATE_DISTANCE = INTER_PLATE_DISTANCE;
 
-  private static readonly SharingModelIO = new IOType( 'SharingModelIO', {
+  private static readonly SharingModelIO = new IOType<IntentionalAny, IntentionalAny>( 'SharingModelIO', {
     valueType: SharingModel,
     methods: {
       setDataPoints: {

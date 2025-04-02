@@ -19,6 +19,7 @@ import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import IntentionalAny from '../../../../phet-core/js/types/IntentionalAny.js';
 import KickDistributionStrategy from '../../../../soccer-common/js/model/KickDistributionStrategy.js';
 import NumberTone from '../../../../soccer-common/js/model/NumberTone.js';
 import SoccerBall from '../../../../soccer-common/js/model/SoccerBall.js';
@@ -97,7 +98,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
         distanceByIndexDocumentationValues: '[5,9,10,2,7,3,4]',
         valuesRange: MeanShareAndBalanceConstants.SOCCER_BALL_RANGE,
         maxKicks: MeanShareAndBalanceConstants.MAXIMUM_NUMBER_OF_DATA_SETS,
-        
+
         // phet-io
         tandem: options.tandem.createTandem( 'kickDistributionStrategy' ),
         phetioFeatured: true
@@ -449,7 +450,7 @@ export class BalanceBeamEndpointYValues {
    * Handles serialization of BalanceBeamEndpointYValues. It implements 'Data Type Serialization', as described in
    * https://github.com/phetsims/phet-io/blob/main/doc/phet-io-instrumentation-technical-guide.md#serialization.
    */
-  public static readonly BalanceBeamEndpointYValuesIO = new IOType( 'BalanceBeamEndpointYValuesIO', {
+  public static readonly BalanceBeamEndpointYValuesIO = new IOType<IntentionalAny, IntentionalAny>( 'BalanceBeamEndpointYValuesIO', {
     valueType: BalanceBeamEndpointYValues,
     documentation: 'Left and right Y values for the endpoints of the balance beam.',
     stateSchema: {

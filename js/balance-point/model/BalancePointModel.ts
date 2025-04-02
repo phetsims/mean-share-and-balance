@@ -11,6 +11,7 @@ import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import IntentionalAny from '../../../../phet-core/js/types/IntentionalAny.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import SoccerCommonGroupSortInteractionModel from '../../../../soccer-common/js/model/SoccerCommonGroupSortInteractionModel.js';
 import SoccerModel, { SoccerModelOptions } from '../../../../soccer-common/js/model/SoccerModel.js';
@@ -114,7 +115,7 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
 
   public static readonly NUMBER_OF_KICKS_RANGE_PROPERTY = NUMBER_OF_KICKS_RANGE_PROPERTY;
 
-  private static readonly BalancePointModelIO = new IOType( 'BalancePointModelIO', {
+  private static readonly BalancePointModelIO = new IOType<IntentionalAny, IntentionalAny>( 'BalancePointModelIO', {
     valueType: BalancePointModel,
     methods: {
       setDataPoints: {

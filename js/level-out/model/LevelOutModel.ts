@@ -17,6 +17,7 @@ import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
 import TModel from '../../../../joist/js/TModel.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import IntentionalAny from '../../../../phet-core/js/types/IntentionalAny.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import ArrayIO from '../../../../tandem/js/types/ArrayIO.js';
@@ -509,7 +510,7 @@ export default class LevelOutModel extends PhetioObject implements TModel {
     } );
   }
 
-  private static readonly LevelOutModelIO = new IOType( 'LevelOutModelIO', {
+  private static readonly LevelOutModelIO = new IOType<IntentionalAny, IntentionalAny>( 'LevelOutModelIO', {
     valueType: LevelOutModel,
     methods: {
       setDataPoints: {
