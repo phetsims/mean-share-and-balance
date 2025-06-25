@@ -7,7 +7,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
-import LocalizedStringProperty from '../../../../chipper/js/browser/LocalizedStringProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
@@ -27,7 +27,7 @@ export default class NumberSpinnerControl extends VBox {
 
   public constructor( numberProperty: Property<number>,
                       rangeProperty: Property<Range>,
-                      stringProperty: LocalizedStringProperty,
+                      stringProperty: TReadOnlyProperty<string>,
                       providedOptions: NumberSpinnerVBoxOptions ) {
 
     const options = optionize<NumberSpinnerVBoxOptions, SelfOptions, VBoxOptions>()( {

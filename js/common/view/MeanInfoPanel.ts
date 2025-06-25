@@ -16,7 +16,6 @@ import Multilink from '../../../../axon/js/Multilink.js';
 import PatternStringProperty from '../../../../axon/js/PatternStringProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
-import LocalizedStringProperty from '../../../../chipper/js/browser/LocalizedStringProperty.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
@@ -50,7 +49,7 @@ type SelfOptions = {
   calculatedMeanDisplayMode?: MeanDisplayType;
 
   // If the data set is empty, this message will be displayed instead of the calculations.
-  zeroDataMessageProperty?: LocalizedStringProperty | null;
+  zeroDataMessageProperty?: TReadOnlyProperty<string> | null;
   meanWithRemainderProperty?: TReadOnlyProperty<MeanWithRemainder> | null;
 };
 export type MeanInfoPanelOptions = SelfOptions & WithRequired<PanelOptions, 'tandem'>;

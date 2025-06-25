@@ -9,7 +9,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
-import LocalizedStringProperty from '../../../../chipper/js/browser/LocalizedStringProperty.js';
+import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
 import Range from '../../../../dot/js/Range.js';
 import optionize, { combineOptions } from '../../../../phet-core/js/optionize.js';
 import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
@@ -56,7 +56,7 @@ export default class MeanShareAndBalanceControls extends Node {
     controlsVBox: Node,
     numberOfObjectsProperty: Property<number>,
     numberOfObjectsRangeProperty: Property<Range>,
-    numberOfObjectsStringProperty: LocalizedStringProperty,
+    numberOfObjectsStringProperty: TReadOnlyProperty<string>,
     notepadNodeBottom: number,
     providedOptions: MeanShareAndBalanceControlsOptions
   ) {
