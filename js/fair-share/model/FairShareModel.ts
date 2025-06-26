@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * Model for the "Fair Share" Screen.  This models a variable number of plates on a table and another set of plates on a
