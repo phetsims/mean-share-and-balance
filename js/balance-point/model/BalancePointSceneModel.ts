@@ -108,7 +108,7 @@ export default class BalancePointSceneModel extends SoccerSceneModel {
     const kickRange = MeanShareAndBalanceConstants.SOCCER_BALL_RANGE;
 
     const createSoccerBall = ( isFirstSoccerBall: boolean, tandem: Tandem ) => {
-      return new SoccerBall( isFirstSoccerBall, tandem );
+      return new SoccerBall( isFirstSoccerBall, kickRange, tandem );
     };
 
     super(
