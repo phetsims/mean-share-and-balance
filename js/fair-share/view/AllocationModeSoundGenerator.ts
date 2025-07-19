@@ -22,7 +22,7 @@ import shareCompleteLargeAmount_mp3 from '../../../sounds/shareCompleteLargeAmou
 import shareCompleteMediumAmount_mp3 from '../../../sounds/shareCompleteMediumAmount_mp3.js';
 import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmount_mp3.js';
 import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
-import shareWhooshSound_mp3 from '../../../sounds/shareWhooshSound_mp3.js';
+import shareWhooshSound_mp3 from '../../../../tambo/sounds/shareWhooshSound_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
