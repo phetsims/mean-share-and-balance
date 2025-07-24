@@ -357,7 +357,7 @@ export default class MeanInfoPanel extends Panel {
   }
 
   public static readonly ESCAPE_HOTKEY_DATA = new HotkeyData( {
-    keyStringProperties: [ new Property( 'escape' ) ],
+    keys: [ 'escape' ],
     binderName: 'Close info panel',
     repoName: meanShareAndBalance.name,
     global: true
