@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * BeamTiltSoundGenerator is a sound generator for balance beam.  It creates a sound somewhat like a creaking door, and

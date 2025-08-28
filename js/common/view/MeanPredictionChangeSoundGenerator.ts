@@ -1,4 +1,4 @@
-// Copyright 2022-2024, University of Colorado Boulder
+// Copyright 2022-2025, University of Colorado Boulder
 
 /**
  * MeanPredictionChangeSoundGenerator is used to produce a sound for the movement of the pencil and the line that

@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * Sound generator for the water cup levels. The pitch of the tone is scaled based on the mean value of all the cups,

@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2025, University of Colorado Boulder
 
 /**
  * FulcrumSliderSoundPlayer is used to produce sounds when the fulcrum beneath the balance beam is moved by the user.
