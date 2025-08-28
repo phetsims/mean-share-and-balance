@@ -10,7 +10,7 @@
 import stepTimer from '../../../../axon/js/stepTimer.js';
 import TEmitter from '../../../../axon/js/TEmitter.js';
 import { TimerListener } from '../../../../axon/js/Timer.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';

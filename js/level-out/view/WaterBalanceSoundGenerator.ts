@@ -10,7 +10,7 @@
 
 import Multilink from '../../../../axon/js/Multilink.js';
 import stepTimer from '../../../../axon/js/stepTimer.js';
-import TReadOnlyProperty from '../../../../axon/js/TReadOnlyProperty.js';
+import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import LinearFunction from '../../../../dot/js/LinearFunction.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
