@@ -54,7 +54,6 @@ export default class MeanShareAndBalanceScreenView extends ScreenView {
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
-        this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
         this.reset();
       },

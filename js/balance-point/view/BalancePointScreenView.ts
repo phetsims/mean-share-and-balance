@@ -106,7 +106,6 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
 
     const resetAllButton = new ResetAllButton( {
       listener: () => {
-        this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
         notepadNode.reset();
       },
