@@ -98,7 +98,7 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
       soundGenerator: sliderSoundGenerator,
 
       // Necessary to remove rounding errors and apply the constrainValue option during shift steps. https://github.com/phetsims/sun/issues/837
-      pdomMapValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
+      mapPropertyValue: value => Utils.roundToInterval( value, MeanShareAndBalanceConstants.MEAN_ROUNDING_INTERVAL ),
       accessibleName: MeanShareAndBalanceStrings.a11y.findBalancePointStringProperty,
       trackSize: new Dimension2( MeanShareAndBalanceConstants.CHART_VIEW_WIDTH, 0 ),
       startDrag: () => { this.isDraggingProperty.value = true; },
