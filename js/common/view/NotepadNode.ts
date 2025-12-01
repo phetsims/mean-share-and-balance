@@ -136,7 +136,7 @@ export default class NotepadNode extends Node {
     // The notepad is under the mean info panel, so UI components on this notepad should be removed from the
     // traversal order when the mean info panel is visible.
     if ( options.meanInfoPanelVisibleProperty ) {
-      this.pdomVisibleProperty = DerivedProperty.not( options.meanInfoPanelVisibleProperty );
+      this.accessibleVisibleProperty = DerivedProperty.not( options.meanInfoPanelVisibleProperty );
     }
 
     // Make the rings node available to subclasses for layering adjustments.
