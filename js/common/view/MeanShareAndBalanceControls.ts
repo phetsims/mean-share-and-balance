@@ -140,11 +140,13 @@ class InfoButtonSoundPlayer implements TSoundPlayer {
   }
 
   public play(): void {
+
+    // The playing of the sound occurs just after the button has fired, so dialog visibility has already changed.
     if ( this.dialogVisibleProperty.value ) {
-      this.generalCloseSoundPlayer.play();
+      this.generalOpenSoundPlayer.play();
     }
     else {
-      this.generalOpenSoundPlayer.play();
+      this.generalCloseSoundPlayer.play();
     }
   }
 
