@@ -41,7 +41,6 @@ import SnackStacker from '../../common/SnackStacker.js';
 import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
 import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import DistributeModel, { NOTEPAD_PLATE_BOTTOM_Y } from '../model/DistributeModel.js';
 import DistributeNotepadPlateNode from './DistributeNotepadPlateNode.js';
@@ -495,5 +494,3 @@ export default class DistributeScreenView extends SharingScreenView<Snack> {
     }
   }
 }
-
-meanShareAndBalance.register( 'DistributeScreenView', DistributeScreenView );

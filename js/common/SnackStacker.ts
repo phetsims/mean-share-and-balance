@@ -9,7 +9,6 @@
 import Vector2 from '../../../dot/js/Vector2.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import Snack from '../common/model/Snack.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from './MeanShareAndBalanceConstants.js';
 import Plate from './model/Plate.js';
 import { SnackType } from './view/SharingScreenView.js';
@@ -91,5 +90,4 @@ class SnackStacker {
   }
 }
 
-meanShareAndBalance.register( 'SnackStacker', SnackStacker );
 export default SnackStacker;

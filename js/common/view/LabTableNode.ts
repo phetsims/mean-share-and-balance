@@ -13,7 +13,6 @@ import Image from '../../../../scenery/js/nodes/Image.js';
 import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import labDesk_svg from '../../../images/labDesk_svg.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -38,5 +37,3 @@ export default class LabTableNode extends Node {
     super( options );
   }
 }
-
-meanShareAndBalance.register( 'LabTableNode', LabTableNode );

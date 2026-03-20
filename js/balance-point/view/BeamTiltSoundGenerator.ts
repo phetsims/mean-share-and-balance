@@ -14,7 +14,6 @@ import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllPr
 import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import SoundGenerator, { SoundGeneratorOptions } from '../../../../tambo/js/sound-generators/SoundGenerator.js';
 import boundaryReached_mp3 from '../../../../tambo/sounds/boundaryReached_mp3.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type BeamTiltSoundGeneratorOptions = SoundGeneratorOptions & SelfOptions;
@@ -57,7 +56,5 @@ class BeamTiltSoundGenerator extends SoundGenerator {
     } );
   }
 }
-
-meanShareAndBalance.register( 'BeamTiltSoundGenerator', BeamTiltSoundGenerator );
 
 export default BeamTiltSoundGenerator;

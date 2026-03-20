@@ -21,7 +21,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import LimitedResolutionNumberProperty from './LimitedResolutionNumberProperty.js';
 
 type SelfOptions = {
@@ -110,5 +109,3 @@ export default class Cup {
     Disposable.assertNotDisposable();
   }
 }
-
-meanShareAndBalance.register( 'Cup', Cup );

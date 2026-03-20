@@ -15,7 +15,6 @@ import fairShareHomeScreenIcon_svg from '../../images/fairShareHomeScreenIcon_sv
 import fairShareNavBarIcon_svg from '../../images/fairShareNavBarIcon_svg.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import FairShareModel from './model/FairShareModel.js';
 import FairShareKeyboardHelpNode from './view/FairShareKeyboardHelpNode.js';
@@ -41,5 +40,3 @@ export default class FairShareScreen extends Screen<FairShareModel, FairShareScr
     );
   }
 }
-
-meanShareAndBalance.register( 'FairShareScreen', FairShareScreen );

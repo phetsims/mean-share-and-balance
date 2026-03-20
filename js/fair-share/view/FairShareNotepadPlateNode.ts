@@ -14,7 +14,6 @@ import Image from '../../../../scenery/js/nodes/Image.js';
 import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Apple from '../model/Apple.js';
 import { DistributionMode } from '../model/FairShareModel.js';
 
@@ -45,5 +44,3 @@ export default class FairShareNotepadPlateNode extends Image {
     } );
   }
 }
-
-meanShareAndBalance.register( 'FairShareNotepadPlateNode', FairShareNotepadPlateNode );

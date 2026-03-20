@@ -16,7 +16,6 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 import SoundUtils from '../../../../tambo/js/SoundUtils.js';
 import glassLevelSoundA_mp3 from '../../../sounds/glassLevelSoundA_mp3.js';
 import glassLevelSoundB_mp3 from '../../../sounds/glassLevelSoundB_mp3.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
 
@@ -62,7 +61,5 @@ class WaterLevelSoundPlayer extends ValueChangeSoundPlayer {
     } );
   }
 }
-
-meanShareAndBalance.register( 'WaterLevelSoundPlayer', WaterLevelSoundPlayer );
 
 export default WaterLevelSoundPlayer;

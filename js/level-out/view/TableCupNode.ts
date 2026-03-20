@@ -16,7 +16,6 @@ import BeakerNode from '../../../../scenery-phet/js/BeakerNode.js';
 import Node, { NodeOptions, NodeTransformOptions } from '../../../../scenery/js/nodes/Node.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Cup from '../model/Cup.js';
 import LevelOutModel from '../model/LevelOutModel.js';
@@ -95,5 +94,3 @@ export default class TableCupNode extends Node {
     } );
   }
 }
-
-meanShareAndBalance.register( 'TableCupNode', TableCupNode );

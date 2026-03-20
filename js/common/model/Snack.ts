@@ -15,7 +15,6 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import Animation from '../../../../twixt/js/Animation.js';
 import Easing from '../../../../twixt/js/Easing.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   initiallyActive?: boolean;
@@ -143,5 +142,3 @@ export default class Snack extends PhetioObject {
     }
   }
 }
-
-meanShareAndBalance.register( 'Snack', Snack );

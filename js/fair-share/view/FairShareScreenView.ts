@@ -16,7 +16,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import SharingScreenView, { SharingScreenViewOptions } from '../../common/view/SharingScreenView.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Apple from '../model/Apple.js';
 import FairShareModel from '../model/FairShareModel.js';
@@ -103,5 +102,3 @@ export default class FairShareScreenView extends SharingScreenView<Apple> {
     } );
   }
 }
-
-meanShareAndBalance.register( 'FairShareScreenView', FairShareScreenView );

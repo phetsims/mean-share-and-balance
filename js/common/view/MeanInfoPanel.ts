@@ -363,5 +363,3 @@ export default class MeanInfoPanel extends Panel {
     global: true
   } );
 }
-
-meanShareAndBalance.register( 'MeanInfoPanel', MeanInfoPanel );

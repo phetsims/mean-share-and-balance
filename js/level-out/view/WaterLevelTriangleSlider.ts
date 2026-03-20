@@ -18,7 +18,6 @@ import TriangleNode from '../../../../scenery-phet/js/TriangleNode.js';
 import VSlider, { VSliderOptions } from '../../../../sun/js/VSlider.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import WaterLevelSoundPlayer from './WaterLevelSoundPlayer.js';
 
 type SelfOptions = {
@@ -81,5 +80,3 @@ export default class WaterLevelTriangleSlider extends VSlider {
     thumbNode.touchArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
   }
 }
-
-meanShareAndBalance.register( 'WaterLevelTriangleSlider', WaterLevelTriangleSlider );

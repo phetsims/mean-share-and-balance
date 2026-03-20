@@ -26,7 +26,6 @@ import LabTableNode from '../../common/view/LabTableNode.js';
 import MeanPredictionLine from '../../common/view/MeanPredictionLine.js';
 import MeanShareAndBalanceScreenView, { MeanShareAndBalanceScreenViewOptions } from '../../common/view/MeanShareAndBalanceScreenView.js';
 import NotepadNode from '../../common/view/NotepadNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import LevelOutModel from '../model/LevelOutModel.js';
 import LevelOutControls from './LevelOutControls.js';
@@ -213,5 +212,3 @@ export default class LevelOutScreenView extends MeanShareAndBalanceScreenView {
     super.reset();
   }
 }
-
-meanShareAndBalance.register( 'LevelOutScreenView', LevelOutScreenView );

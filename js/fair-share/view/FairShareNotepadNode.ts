@@ -22,7 +22,6 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 import collectionArea_svg from '../../../images/collectionArea_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import FairShareModel, { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
 import AllocationModeSoundGenerator from './AllocationModeSoundGenerator.js';
@@ -92,5 +91,3 @@ export default class FairShareNotepadNode extends NotepadNode {
     ) );
   }
 }
-
-meanShareAndBalance.register( 'FairShareNotepadNode', FairShareNotepadNode );

@@ -16,7 +16,6 @@ import levelOutHomeScreenIcon_svg from '../../images/levelOutHomeScreenIcon_svg.
 import levelOutNavBarIcon_svg from '../../images/levelOutNavBarIcon_svg.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import LevelOutModel from './model/LevelOutModel.js';
 import LevelOutKeyboardHelpNode from './view/LevelOutKeyboardHelpNode.js';
@@ -42,5 +41,3 @@ export default class LevelOutScreen extends Screen<LevelOutModel, LevelOutScreen
     );
   }
 }
-
-meanShareAndBalance.register( 'LevelOutScreen', LevelOutScreen );

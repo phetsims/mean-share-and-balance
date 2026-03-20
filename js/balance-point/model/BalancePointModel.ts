@@ -20,7 +20,6 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import VoidIO from '../../../../tandem/js/types/VoidIO.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointSceneModel from './BalancePointSceneModel.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -150,5 +149,3 @@ export default class BalancePointModel extends SoccerModel<BalancePointSceneMode
     }
   } );
 }
-
-meanShareAndBalance.register( 'BalancePointModel', BalancePointModel );

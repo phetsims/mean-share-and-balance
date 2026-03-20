@@ -15,7 +15,6 @@ import Utils from '../../../../dot/js/Utils.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import isResettingAllProperty from '../../../../scenery-phet/js/isResettingAllProperty.js';
 import NoiseGenerator, { NoiseGeneratorOptions } from '../../../../tambo/js/sound-generators/NoiseGenerator.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type MotionState = 'unchanging' | 'increasing' | 'decreasing';
 
@@ -191,7 +190,5 @@ const mapChangeRateToFilterFrequency = ( changeRate: number, direction: MotionSt
   const multiplier = Math.abs( changeRate ) / MAX_CHANGE_RATE;
   return minFrequency + 500 * multiplier;
 };
-
-meanShareAndBalance.register( 'MeanPredictionChangeSoundGenerator', MeanPredictionChangeSoundGenerator );
 
 export default MeanPredictionChangeSoundGenerator;

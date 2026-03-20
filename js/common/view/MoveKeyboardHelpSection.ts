@@ -11,7 +11,6 @@ import KeyboardHelpIconFactory from '../../../../scenery-phet/js/keyboard/help/K
 import KeyboardHelpSection, { KeyboardHelpSectionOptions } from '../../../../scenery-phet/js/keyboard/help/KeyboardHelpSection.js';
 import KeyboardHelpSectionRow from '../../../../scenery-phet/js/keyboard/help/KeyboardHelpSectionRow.js';
 import LetterKeyNode from '../../../../scenery-phet/js/keyboard/LetterKeyNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = {
   headingStringProperty: TReadOnlyProperty<string>;
@@ -33,5 +32,3 @@ export default class MoveKeyboardHelpSection extends KeyboardHelpSection {
     super( providedOptions.headingStringProperty, [ sectionRow ] );
   }
 }
-
-meanShareAndBalance.register( 'MoveKeyboardHelpSection', MoveKeyboardHelpSection );

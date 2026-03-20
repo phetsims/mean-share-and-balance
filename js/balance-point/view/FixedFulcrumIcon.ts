@@ -13,7 +13,6 @@ import Line from '../../../../scenery/js/nodes/Line.js';
 import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 // constants
 const LINE_WIDTH = 1.5;
@@ -47,5 +46,3 @@ export default class FixedFulcrumIcon extends Node {
     icon.center = this.center;
   }
 }
-
-meanShareAndBalance.register( 'FixedFulcrumIcon', FixedFulcrumIcon );

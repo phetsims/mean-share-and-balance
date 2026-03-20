@@ -27,7 +27,6 @@ import pillarsRemoved_mp3 from '../../../sounds/pillarsRemoved_mp3.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import NotepadNode, { NotepadNodeOptions } from '../../common/view/NotepadNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 import BalanceBeamNode from './BalanceBeamNode.js';
@@ -159,5 +158,3 @@ class PillarsRemovedSoundPlayer implements TSoundPlayer {
     this.pillarsRemovedSoundClip.stop();
   }
 }
-
-meanShareAndBalance.register( 'BalancePointNotepadNode', BalancePointNotepadNode );

@@ -13,7 +13,6 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import ABSwitch, { ABSwitchOptions } from '../../../../sun/js/ABSwitch.js';
 import nullSoundPlayer from '../../../../tambo/js/nullSoundPlayer.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import ValveNode from './ValveNode.js';
 
@@ -46,5 +45,3 @@ export default class PipeSwitch extends ABSwitch<boolean> {
     super( pipesOpenProperty, false, closedValveIcon, true, openValveIcon, options );
   }
 }
-
-meanShareAndBalance.register( 'PipeSwitch', PipeSwitch );

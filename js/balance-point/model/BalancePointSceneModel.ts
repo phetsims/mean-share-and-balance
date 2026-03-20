@@ -29,7 +29,6 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from './BalancePointModel.js';
 
 type BalancePointSceneModelOptions = SoccerSceneModelOptions;
@@ -461,5 +460,3 @@ export class BalanceBeamEndpointYValues {
     fromStateObject: stateObject => BalanceBeamEndpointYValues.fromStateObject( stateObject )
   } );
 }
-
-meanShareAndBalance.register( 'BalancePointSceneModel', BalancePointSceneModel );

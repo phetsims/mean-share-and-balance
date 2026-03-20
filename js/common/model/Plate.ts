@@ -23,7 +23,6 @@ import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import PhetioObject, { PhetioObjectOptions } from '../../../../tandem/js/PhetioObject.js';
 import IOType from '../../../../tandem/js/types/IOType.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import SnackStacker from '../SnackStacker.js';
 import Snack from './Snack.js';
@@ -417,5 +416,3 @@ export default class Plate<T extends Snack> extends PhetioObject {
     this.syncNotepadToTable();
   }
 }
-
-meanShareAndBalance.register( 'Plate', Plate );

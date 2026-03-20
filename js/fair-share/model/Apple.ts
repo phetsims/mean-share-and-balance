@@ -11,7 +11,6 @@ import Property from '../../../../axon/js/Property.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Fraction from '../../../../phetcommon/js/model/Fraction.js';
 import Snack, { SnackOptions } from '../../common/model/Snack.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type AppleOptions = SelfOptions & SnackOptions;
@@ -38,5 +37,3 @@ export default class Apple extends Snack {
     } );
   }
 }
-
-meanShareAndBalance.register( 'Apple', Apple );

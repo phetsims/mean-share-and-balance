@@ -10,7 +10,6 @@
 import NumberProperty, { NumberPropertyOptions } from '../../../../axon/js/NumberProperty.js';
 import Utils from '../../../../dot/js/Utils.js';
 import { combineOptions } from '../../../../phet-core/js/optionize.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 export default class LimitedResolutionNumberProperty extends NumberProperty {
 
@@ -46,5 +45,3 @@ export default class LimitedResolutionNumberProperty extends NumberProperty {
     super.set( value );
   }
 }
-
-meanShareAndBalance.register( 'LimitedResolutionNumberProperty', LimitedResolutionNumberProperty );

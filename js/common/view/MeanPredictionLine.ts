@@ -25,7 +25,6 @@ import SoundClip from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio009_mp3.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import MeanPredictionHandle from './MeanPredictionHandle.js';
@@ -159,5 +158,3 @@ export default class MeanPredictionLine extends Node {
     this.centerX = this.modelViewTransform.modelToViewX( 0 ) + this.predictMeanHandle.width / 2;
   }
 }
-
-meanShareAndBalance.register( 'MeanPredictionLine', MeanPredictionLine );

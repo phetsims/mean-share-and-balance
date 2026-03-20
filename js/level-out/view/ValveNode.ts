@@ -16,7 +16,6 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import RadialGradient from '../../../../scenery/js/util/RadialGradient.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 const LINE_WIDTH = 1;
 
@@ -65,5 +64,3 @@ export default class ValveNode extends Node {
     } );
   }
 }
-
-meanShareAndBalance.register( 'ValveNode', ValveNode );

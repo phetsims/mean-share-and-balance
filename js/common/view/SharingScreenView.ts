@@ -25,7 +25,6 @@ import TColor from '../../../../scenery/js/util/TColor.js';
 import SoccerCommonImages from '../../../../soccer-common/js/SoccerCommonImages.js';
 import { MeanWithRemainder } from '../../distribute/model/DistributeModel.js';
 import PersonImage from '../../distribute/view/PersonImage.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import SharingModel from '../model/SharingModel.js';
@@ -219,5 +218,3 @@ export default class SharingScreenView<T extends Snack> extends MeanShareAndBala
     );
   }
 }
-
-meanShareAndBalance.register( 'SharingScreenView', SharingScreenView );

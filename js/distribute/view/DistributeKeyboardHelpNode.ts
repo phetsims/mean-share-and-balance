@@ -12,7 +12,6 @@ import SliderControlsKeyboardHelpSection from '../../../../scenery-phet/js/keybo
 import SpinnerControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/SpinnerControlsKeyboardHelpSection.js';
 import MeanShareAndBalanceKeyboardHelpNode from '../../common/view/MeanShareAndBalanceKeyboardHelpNode.js';
 import MoveKeyboardHelpSection from '../../common/view/MoveKeyboardHelpSection.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 
@@ -39,5 +38,3 @@ export default class DistributeKeyboardHelpNode extends MeanShareAndBalanceKeybo
       } ) );
   }
 }
-
-meanShareAndBalance.register( 'DistributeKeyboardHelpNode', DistributeKeyboardHelpNode );

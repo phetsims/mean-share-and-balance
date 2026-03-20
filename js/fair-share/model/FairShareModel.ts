@@ -30,7 +30,6 @@ import Plate from '../../common/model/Plate.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 import { SnackOptions } from '../../common/model/Snack.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Apple from './Apple.js';
 
@@ -585,5 +584,3 @@ export default class FairShareModel extends SharingModel<Apple> {
   public static readonly NOTEPAD_PLATE_CENTER_Y = 300;
   public static readonly COLLECTION_AREA_SIZE = COLLECTION_AREA_SIZE;
 }
-
-meanShareAndBalance.register( 'FairShareModel', FairShareModel );

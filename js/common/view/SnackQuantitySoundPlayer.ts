@@ -18,7 +18,6 @@ import hollowThud_mp3 from '../../../../tambo/sounds/hollowThud_mp3.js';
 import candyBarWrapper01_mp3 from '../../../sounds/candyBarWrapper01_mp3.js';
 import candyBarWrapper02_mp3 from '../../../sounds/candyBarWrapper02_mp3.js';
 import candyBarWrapper03_mp3 from '../../../sounds/candyBarWrapper03_mp3.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import { SnackType } from './SharingScreenView.js';
 
@@ -111,7 +110,5 @@ class SnackQuantitySoundPlayer extends SoundGenerator implements TSoundPlayer {
     return SOUND_EFFECT_PLAYBACK_RATE_RANGE.expandNormalizedValue( normalizedValue );
   }
 }
-
-meanShareAndBalance.register( 'SnackQuantitySoundPlayer', SnackQuantitySoundPlayer );
 
 export default SnackQuantitySoundPlayer;

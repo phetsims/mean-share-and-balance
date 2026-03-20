@@ -13,7 +13,6 @@ import Image, { ImageOptions } from '../../../../scenery/js/nodes/Image.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Snack from '../../common/model/Snack.js';
 import TablePlateNode from '../../common/view/TablePlateNode.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type PersonImageOptions = SelfOptions & ImageOptions;
@@ -33,5 +32,3 @@ export default class PersonImage<T extends Snack> extends Image {
     super( image, options );
   }
 }
-
-meanShareAndBalance.register( 'PersonImage', PersonImage );

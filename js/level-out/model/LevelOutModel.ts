@@ -25,7 +25,6 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import VoidIO from '../../../../tandem/js/types/VoidIO.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Cup, { WATER_LEVEL_ROUNDING_INTERVAL } from './Cup.js';
 import Pipe from './Pipe.js';
 
@@ -538,5 +537,3 @@ function calculateMean( values: number[] ): number {
   assert && assert( values.length > 0, 'calculateMean requires at least one value' );
   return _.mean( values );
 }
-
-meanShareAndBalance.register( 'LevelOutModel', LevelOutModel );

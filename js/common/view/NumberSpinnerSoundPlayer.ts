@@ -12,7 +12,6 @@ import Property from '../../../../axon/js/Property.js';
 import SoundClip, { SoundClipOptions } from '../../../../tambo/js/sound-generators/SoundClip.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import WrappedAudioBuffer from '../../../../tambo/js/WrappedAudioBuffer.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 export default class NumberSpinnerSoundPlayer {
   private readonly soundClip: SoundClip;
@@ -50,5 +49,3 @@ export default class NumberSpinnerSoundPlayer {
     this.soundClip.stop();
   }
 }
-
-meanShareAndBalance.register( 'NumberSpinnerSoundPlayer', NumberSpinnerSoundPlayer );

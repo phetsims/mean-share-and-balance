@@ -14,7 +14,6 @@ import SpinnerControlsKeyboardHelpSection from '../../../../scenery-phet/js/keyb
 import SoccerCommonStrings from '../../../../soccer-common/js/SoccerCommonStrings.js';
 import MeanShareAndBalanceKeyboardHelpNode from '../../common/view/MeanShareAndBalanceKeyboardHelpNode.js';
 import MoveKeyboardHelpSection from '../../common/view/MoveKeyboardHelpSection.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 
 export default class BalancePointKeyboardHelpNode extends MeanShareAndBalanceKeyboardHelpNode {
@@ -41,5 +40,3 @@ export default class BalancePointKeyboardHelpNode extends MeanShareAndBalanceKey
       } ) );
   }
 }
-
-meanShareAndBalance.register( 'BalancePointKeyboardHelpNode', BalancePointKeyboardHelpNode );

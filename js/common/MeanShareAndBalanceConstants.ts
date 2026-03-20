@@ -14,7 +14,6 @@ import Vector2 from '../../../dot/js/Vector2.js';
 import ScreenView from '../../../joist/js/ScreenView.js';
 import PhetFont from '../../../scenery-phet/js/PhetFont.js';
 import LinearGradient from '../../../scenery/js/util/LinearGradient.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from './MeanShareAndBalanceColors.js';
 
 const DEFAULT_MARGIN = 15;
@@ -114,5 +113,4 @@ const MeanShareAndBalanceConstants = {
   DEFAULT_FONT: new PhetFont( 16 )
 };
 
-meanShareAndBalance.register( 'MeanShareAndBalanceConstants', MeanShareAndBalanceConstants );
 export default MeanShareAndBalanceConstants;

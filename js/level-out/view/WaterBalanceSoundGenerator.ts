@@ -23,7 +23,6 @@ import soundConstants from '../../../../tambo/js/soundConstants.js';
 import isSettingPhetioStateProperty from '../../../../tandem/js/isSettingPhetioStateProperty.js';
 import waterBalanceFluteChordLoop_mp3 from '../../../sounds/waterBalanceFluteChordLoop_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Cup from '../model/Cup.js';
 
 type SelfOptions = {
@@ -306,7 +305,5 @@ class WaterBalanceSoundGenerator extends SoundClip {
     super.dispose();
   }
 }
-
-meanShareAndBalance.register( 'WaterBalanceSoundGenerator', WaterBalanceSoundGenerator );
 
 export default WaterBalanceSoundGenerator;

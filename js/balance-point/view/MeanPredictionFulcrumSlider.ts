@@ -21,7 +21,6 @@ import Color from '../../../../scenery/js/util/Color.js';
 import HSlider, { HSliderOptions } from '../../../../sun/js/HSlider.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import { FULCRUM_LINE_WIDTH } from './BalanceBeamNode.js';
 import FulcrumSliderSoundPlayer from './FulcrumSliderSoundPlayer.js';
@@ -127,5 +126,3 @@ export default class MeanPredictionFulcrumSlider extends HSlider {
     thumbNode.touchArea = thumbNode.localBounds.dilated( MeanShareAndBalanceConstants.TOUCH_AREA_DILATION );
   }
 }
-
-meanShareAndBalance.register( 'MeanPredictionFulcrumSlider', MeanPredictionFulcrumSlider );

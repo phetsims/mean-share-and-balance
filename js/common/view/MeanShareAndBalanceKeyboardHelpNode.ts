@@ -9,7 +9,6 @@
 import BasicActionsKeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/BasicActionsKeyboardHelpSection.js';
 import KeyboardHelpSection from '../../../../scenery-phet/js/keyboard/help/KeyboardHelpSection.js';
 import TwoColumnKeyboardHelpContent from '../../../../scenery-phet/js/keyboard/help/TwoColumnKeyboardHelpContent.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 
 export default class MeanShareAndBalanceKeyboardHelpNode extends TwoColumnKeyboardHelpContent {
@@ -20,5 +19,3 @@ export default class MeanShareAndBalanceKeyboardHelpNode extends TwoColumnKeyboa
    } ) ] );
   }
 }
-
-meanShareAndBalance.register( 'MeanShareAndBalanceKeyboardHelpNode', MeanShareAndBalanceKeyboardHelpNode );

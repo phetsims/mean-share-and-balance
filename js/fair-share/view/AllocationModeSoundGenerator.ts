@@ -24,7 +24,6 @@ import shareCompleteSmallAmount_mp3 from '../../../sounds/shareCompleteSmallAmou
 import shareFractionalizeSound_mp3 from '../../../sounds/shareFractionalizeSound_mp3.js';
 import shareWhooshSound_mp3 from '../../../../tambo/sounds/shareWhooshSound_mp3.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import { ApplesAnimationState, DistributionMode } from '../model/FairShareModel.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -141,7 +140,5 @@ class AllocationModeSoundGenerator extends SoundGenerator {
     } );
   }
 }
-
-meanShareAndBalance.register( 'AllocationModeSoundGenerator', AllocationModeSoundGenerator );
 
 export default AllocationModeSoundGenerator;

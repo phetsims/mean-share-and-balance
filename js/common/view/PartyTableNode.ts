@@ -11,7 +11,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import Image, { ImageOptions } from '../../../../scenery/js/nodes/Image.js';
 import { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import partyTable_svg from '../../../images/partyTable_svg.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type PartyTableNodeOptions = SelfOptions & StrictOmit<ImageOptions, 'maxWidth'>;
@@ -29,5 +28,3 @@ export default class PartyTableNode extends Image {
     super( partyTable_svg, options );
   }
 }
-
-meanShareAndBalance.register( 'PartyTableNode', PartyTableNode );

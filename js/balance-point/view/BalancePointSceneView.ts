@@ -13,7 +13,6 @@ import KickerImageSets from '../../../../soccer-common/js/view/KickerImageSets.j
 import SoccerSceneView, { SoccerSceneViewOptions } from '../../../../soccer-common/js/view/SoccerSceneView.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
 
@@ -39,5 +38,3 @@ export default class BalancePointSceneView extends SoccerSceneView<BalancePointS
     super( model, sceneModel, keyboardSortCueNode, modelViewTransform, physicalRange, KickerImageSets, options );
   }
 }
-
-meanShareAndBalance.register( 'BalancePointSceneView', BalancePointSceneView );

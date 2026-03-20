@@ -115,5 +115,4 @@ const meanShareAndBalanceColors = {
   } )
 };
 
-meanShareAndBalance.register( 'meanShareAndBalanceColors', meanShareAndBalanceColors );
 export default meanShareAndBalanceColors;

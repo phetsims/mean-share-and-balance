@@ -14,7 +14,6 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import VBox, { VBoxOptions } from '../../../../scenery/js/layout/nodes/VBox.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import NumberSpinner, { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
 type SelfOptions = {
@@ -74,5 +73,3 @@ export default class NumberSpinnerControl extends VBox {
     super( superOptions );
   }
 }
-
-meanShareAndBalance.register( 'NumberSpinnerControl', NumberSpinnerControl );

@@ -12,7 +12,6 @@ import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import { CheckboxOptions } from '../../../../sun/js/Checkbox.js';
 import VerticalCheckboxGroup, { VerticalCheckboxGroupItem, VerticalCheckboxGroupOptions } from '../../../../sun/js/VerticalCheckboxGroup.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
@@ -82,5 +81,3 @@ export default class MeanShareAndBalanceCheckboxGroup extends VerticalCheckboxGr
     super( checkboxItems, options );
   }
 }
-
-meanShareAndBalance.register( 'MeanShareAndBalanceCheckboxGroup', MeanShareAndBalanceCheckboxGroup );

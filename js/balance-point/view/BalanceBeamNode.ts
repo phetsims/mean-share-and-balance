@@ -38,7 +38,6 @@ import selectionArpeggio009_mp3 from '../../../../tambo/sounds/selectionArpeggio
 import sketchedDataPointFill_svg from '../../../images/sketchedDataPointFill_svg.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import BalancePointSceneModel, { FULCRUM_HEIGHT } from '../model/BalancePointSceneModel.js';
 import BeamTiltSoundGenerator from './BeamTiltSoundGenerator.js';
 import MeanPredictionFulcrumSlider from './MeanPredictionFulcrumSlider.js';
@@ -391,5 +390,3 @@ export default class BalanceBeamNode extends Node {
     this.fulcrumSlider.reset();
   }
 }
-
-meanShareAndBalance.register( 'BalanceBeamNode', BalanceBeamNode );

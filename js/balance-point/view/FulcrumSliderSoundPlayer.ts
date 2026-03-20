@@ -13,7 +13,6 @@ import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import ValueChangeSoundPlayer, { ValueChangeSoundPlayerOptions } from '../../../../tambo/js/sound-generators/ValueChangeSoundPlayer.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type SelfOptions = EmptySelfOptions;
 type FulcrumSliderSoundPlayerOptions = SelfOptions & ValueChangeSoundPlayerOptions;
@@ -43,7 +42,5 @@ class FulcrumSliderSoundPlayer extends ValueChangeSoundPlayer {
     }
   }
 }
-
-meanShareAndBalance.register( 'FulcrumSliderSoundPlayer', FulcrumSliderSoundPlayer );
 
 export default FulcrumSliderSoundPlayer;

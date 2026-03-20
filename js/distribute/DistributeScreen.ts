@@ -16,7 +16,6 @@ import distributeHomeScreenIcon_svg from '../../images/distributeHomeScreenIcon_
 import distributeNavBarIcon_svg from '../../images/distributeNavBarIcon_svg.js';
 import MeanShareAndBalanceColors from '../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../MeanShareAndBalanceStrings.js';
 import DistributeModel from './model/DistributeModel.js';
 import DistributeKeyboardHelpNode from './view/DistributeKeyboardHelpNode.js';
@@ -42,5 +41,3 @@ export default class DistributeScreen extends Screen<DistributeModel, Distribute
     );
   }
 }
-
-meanShareAndBalance.register( 'DistributeScreen', DistributeScreen );

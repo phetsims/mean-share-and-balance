@@ -14,7 +14,6 @@ import TriangleNode, { TriangleNodeOptions } from '../../../../scenery-phet/js/T
 import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 // constants
 const ARROW_LENGTH = 9;
@@ -62,5 +61,3 @@ export default class MovableFulcrumIcon extends Node {
     icon.center = this.center;
   }
 }
-
-meanShareAndBalance.register( 'MovableFulcrumIcon', MovableFulcrumIcon );

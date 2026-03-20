@@ -17,7 +17,6 @@ import AlignBox from '../../../../scenery/js/layout/nodes/AlignBox.js';
 import VBox, { VBoxOptions } from '../../../../scenery/js/layout/nodes/VBox.js';
 import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import numberOfPlatesV6_mp3 from '../../../sounds/numberOfPlatesV6_mp3.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import SharingModel from '../model/SharingModel.js';
@@ -114,5 +113,3 @@ export default class SharingControls extends MeanShareAndBalanceControls {
       MeanShareAndBalanceStrings.numberOfPeopleStringProperty, notepadNodeBottom, superOptions );
   }
 }
-
-meanShareAndBalance.register( 'SharingControls', SharingControls );

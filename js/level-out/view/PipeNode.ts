@@ -23,7 +23,6 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Pattern from '../../../../scenery/js/util/Pattern.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import Pipe from '../model/Pipe.js';
 import ValveNode from './ValveNode.js';
@@ -139,5 +138,3 @@ export default class PipeNode extends InteractiveHighlighting( Node ) {
     this.valveNode = valveNode;
   }
 }
-
-meanShareAndBalance.register( 'PipeNode', PipeNode );

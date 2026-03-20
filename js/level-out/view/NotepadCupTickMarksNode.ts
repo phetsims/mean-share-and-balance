@@ -11,7 +11,6 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import WithRequired from '../../../../phet-core/js/types/WithRequired.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
 import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type TickMarksNodeOptions = WithRequired<NodeOptions, 'visibleProperty'>;
 
@@ -40,5 +39,3 @@ export default class NotepadCupTickMarksNode extends Node {
     this.addChild( tickMark );
   }
 }
-
-meanShareAndBalance.register( 'NotepadCupTickMarksNode', NotepadCupTickMarksNode );

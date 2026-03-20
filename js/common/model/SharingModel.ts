@@ -26,7 +26,6 @@ import IOType from '../../../../tandem/js/types/IOType.js';
 import NumberIO from '../../../../tandem/js/types/NumberIO.js';
 import ReferenceIO from '../../../../tandem/js/types/ReferenceIO.js';
 import VoidIO from '../../../../tandem/js/types/VoidIO.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Plate from './Plate.js';
 import Snack, { SnackOptions } from './Snack.js';
@@ -382,5 +381,3 @@ export default class SharingModel<T extends Snack> extends PhetioObject implemen
     }
   } );
 }
-
-meanShareAndBalance.register( 'SharingModel', SharingModel );

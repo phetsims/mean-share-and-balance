@@ -20,7 +20,6 @@ import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import AccessibleSlider, { AccessibleSliderOptions } from '../../../../sun/js/accessibility/AccessibleSlider.js';
 import soundManager from '../../../../tambo/js/soundManager.js';
 import pencil_png from '../../../images/pencil_png.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanPredictionChangeSoundGenerator from './MeanPredictionChangeSoundGenerator.js';
 
@@ -74,5 +73,3 @@ export default class MeanPredictionHandle extends AccessibleSlider( Node, 0 ) {
     this.addInputListener( dragListener );
   }
 }
-
-meanShareAndBalance.register( 'MeanPredictionHandle', MeanPredictionHandle );

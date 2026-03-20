@@ -20,7 +20,6 @@ import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConsta
 import MeanShareAndBalanceCheckboxGroup from '../../common/view/MeanShareAndBalanceCheckboxGroup.js';
 import MeanShareAndBalanceControls, { MeanShareAndBalanceControlsOptions } from '../../common/view/MeanShareAndBalanceControls.js';
 import NumberSpinnerSoundPlayer from '../../common/view/NumberSpinnerSoundPlayer.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import PipeSwitch from './PipeSwitch.js';
 
@@ -82,5 +81,3 @@ export default class LevelOutControls extends MeanShareAndBalanceControls {
       MeanShareAndBalanceStrings.numberOfCupsStringProperty, notepadNodeBottom, options );
   }
 }
-
-meanShareAndBalance.register( 'LevelOutControls', LevelOutControls );

@@ -20,7 +20,6 @@ import SoccerScreenView, { SoccerScreenViewOptions } from '../../../../soccer-co
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import MeanInfoPanel from '../../common/view/MeanInfoPanel.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import BalancePointModel from '../model/BalancePointModel.js';
 import BalancePointSceneModel from '../model/BalancePointSceneModel.js';
@@ -197,5 +196,3 @@ export default class BalancePointScreenView extends SoccerScreenView<BalancePoin
     ] );
   }
 }
-
-meanShareAndBalance.register( 'BalancePointScreenView', BalancePointScreenView );

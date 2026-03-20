@@ -26,7 +26,6 @@ import Plate from '../../common/model/Plate.js';
 import SharingModel, { SharingModelOptions } from '../../common/model/SharingModel.js';
 import Snack, { SnackOptions } from '../../common/model/Snack.js';
 import SnackStacker from '../../common/SnackStacker.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 export type MeanWithRemainder = {
   wholeNumber: number;
@@ -339,5 +338,3 @@ export default class DistributeModel extends SharingModel<Snack> {
     this.groupSortInteractionModel.reset();
   }
 }
-
-meanShareAndBalance.register( 'DistributeModel', DistributeModel );

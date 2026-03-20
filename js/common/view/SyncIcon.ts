@@ -10,7 +10,6 @@
 
 import LineArrowNode, { LineArrowNodeOptions } from '../../../../scenery-phet/js/LineArrowNode.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 const ARROW_LENGTH = 30;
 const ARROW_SPACING = 15;
@@ -31,4 +30,3 @@ export default class SyncIcon extends Node {
     super( { children: [ downArrow, upArrow ], scale: 0.5, isDisposable: false } );
   }
 }
-meanShareAndBalance.register( 'SyncIcon', SyncIcon );

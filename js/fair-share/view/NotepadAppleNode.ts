@@ -20,7 +20,6 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import sketchedAppleFill_svg from '../../../images/sketchedAppleFill_svg.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Apple from '../model/Apple.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -109,5 +108,3 @@ export default class NotepadAppleNode extends Node {
     } );
   }
 }
-
-meanShareAndBalance.register( 'NotepadAppleNode', NotepadAppleNode );

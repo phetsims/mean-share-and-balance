@@ -20,7 +20,6 @@ import Pattern from '../../../../scenery/js/util/Pattern.js';
 import graphiteTexture_png from '../../../images/graphiteTexture_png.js';
 import MeanShareAndBalanceColors from '../../common/MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import Cup from '../model/Cup.js';
 import NotepadCupTickMarksNode from './NotepadCupTickMarksNode.js';
 
@@ -93,5 +92,3 @@ export default class NotepadCupNode extends Node {
     } );
   }
 }
-
-meanShareAndBalance.register( 'NotepadCupNode', NotepadCupNode );

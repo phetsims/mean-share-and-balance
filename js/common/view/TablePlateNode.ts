@@ -23,7 +23,6 @@ import soundManager from '../../../../tambo/js/soundManager.js';
 import candyBar_svg from '../../../images/candyBar_svg.js';
 import greenApple_svg from '../../../images/greenApple_svg.js';
 import plate_svg from '../../../images/plate_svg.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 import Plate from '../model/Plate.js';
@@ -166,5 +165,3 @@ export default class TablePlateNode<T extends Snack> extends Node {
     } );
   }
 }
-
-meanShareAndBalance.register( 'TablePlateNode', TablePlateNode );

@@ -18,7 +18,6 @@ import notepadPlateSketch_svg from '../../../images/notepadPlateSketch_svg.js';
 import MeanShareAndBalanceConstants from '../../common/MeanShareAndBalanceConstants.js';
 import Plate from '../../common/model/Plate.js';
 import Snack from '../../common/model/Snack.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 
 type NotepadPlateNodeOptions = StrictOmit<NodeOptions, 'children'>;
 
@@ -52,5 +51,3 @@ export default class DistributeNotepadPlateNode extends Node {
     } );
   }
 }
-
-meanShareAndBalance.register( 'DistributeNotepadPlateNode', DistributeNotepadPlateNode );

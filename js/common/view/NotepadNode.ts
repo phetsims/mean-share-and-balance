@@ -21,7 +21,6 @@ import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import notepadRing_svg from '../../../images/notepadRing_svg.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
 
@@ -143,5 +142,3 @@ export default class NotepadNode extends Node {
     this.ringsNode = ringsNode;
   }
 }
-
-meanShareAndBalance.register( 'NotepadNode', NotepadNode );

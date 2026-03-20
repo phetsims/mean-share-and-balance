@@ -20,7 +20,6 @@ import Node, { NodeOptions } from '../../../../scenery/js/nodes/Node.js';
 import { NumberSpinnerOptions } from '../../../../sun/js/NumberSpinner.js';
 import sharedSoundPlayers from '../../../../tambo/js/sharedSoundPlayers.js';
 import TSoundPlayer from '../../../../tambo/js/TSoundPlayer.js';
-import meanShareAndBalance from '../../meanShareAndBalance.js';
 import MeanShareAndBalanceStrings from '../../MeanShareAndBalanceStrings.js';
 import MeanShareAndBalanceColors from '../MeanShareAndBalanceColors.js';
 import MeanShareAndBalanceConstants from '../MeanShareAndBalanceConstants.js';
@@ -155,5 +154,3 @@ class InfoButtonSoundPlayer implements TSoundPlayer {
     this.generalCloseSoundPlayer.stop();
   }
 }
-
-meanShareAndBalance.register( 'MeanShareAndBalanceControls', MeanShareAndBalanceControls );
