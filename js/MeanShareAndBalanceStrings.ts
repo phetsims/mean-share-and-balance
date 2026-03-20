@@ -100,4 +100,6 @@ type StringsType = {
 
 const MeanShareAndBalanceStrings = getStringModule( 'MEAN_SHARE_AND_BALANCE' ) as StringsType;
 
+meanShareAndBalance.register( 'MeanShareAndBalanceStrings', MeanShareAndBalanceStrings );
+
 export default MeanShareAndBalanceStrings;
