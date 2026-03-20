@@ -17,7 +17,7 @@
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "209072700e960a17572fe252c89d75a78d9b2844",
+    "sha": "fca24edd81aeeb3ad4419d9adc11199e672feb4a",
     "branch": "HEAD"
   },
   "dot": {
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "750e8565a133c785d16a37091a5d8ef5b3df8bec",
+    "sha": "ccb52bd2dcc14b543cc0e884a5f4580e516ff0c3",
     "branch": "1.1"
   },
   "perennial-alias": {
