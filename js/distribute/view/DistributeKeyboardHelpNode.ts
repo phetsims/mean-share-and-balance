@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2026, University of Colorado Boulder
 /**
  * The keyboard help content for the Distribute screen includes slider controls, grab or release,
  * item movement, and spinner controls.

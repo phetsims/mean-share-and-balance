@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2026, University of Colorado Boulder
 
 /**
  * NumberSpinnerSoundPlayer plays customs sounds for the level out and sharing screens number spinners.

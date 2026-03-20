@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2026, University of Colorado Boulder
 
 /**
  * The keyboard help content for the Balance Point screen includes slider controls, grab or release, and item movement

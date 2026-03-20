@@ -1,4 +1,4 @@
-// Copyright 2024, University of Colorado Boulder
+// Copyright 2024-2026, University of Colorado Boulder
 
 /**
  * The Apple class models an apple that can appear on plates in the notepad of the Fair Share screen.
