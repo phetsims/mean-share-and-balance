@@ -25,7 +25,7 @@
     "branch": "HEAD"
   },
   "joist": {
-    "sha": "3d14551890a4bd9f4d4b537b83e3e4cfac9f9d76",
+    "sha": "80fd68531de0967716dfb0fbf47b5cff792b43c6",
     "branch": "HEAD"
   },
   "kite": {
@@ -33,7 +33,7 @@
     "branch": "HEAD"
   },
   "mean-share-and-balance": {
-    "sha": "bd3fc9f02ac660505fe9f060381be479cf9339f0",
+    "sha": "be86d06ee0abc8893cd88ace0fd98d90694ec6a3",
     "branch": "1.1"
   },
   "perennial-alias": {
