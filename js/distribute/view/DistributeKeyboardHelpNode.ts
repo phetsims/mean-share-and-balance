@@ -33,8 +33,7 @@ export default class DistributeKeyboardHelpNode extends MeanShareAndBalanceKeybo
       new SpinnerControlsKeyboardHelpSection( {
         headingStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.distributeScreen.numberSpinnerHeadingStringProperty,
         verbStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerVerbStringProperty,
-        sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty,
-        includeSmallerStepsRow: false
+        sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty
       } ) );
   }
 }

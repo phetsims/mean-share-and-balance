@@ -18,8 +18,7 @@ export default class FairShareKeyboardHelpNode extends MeanShareAndBalanceKeyboa
      new SpinnerControlsKeyboardHelpSection( {
        headingStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.fairShareScreen.numberSpinnerHeadingStringProperty,
        verbStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerVerbStringProperty,
-       sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty,
-       includeSmallerStepsRow: false
+       sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty
      } )
    ] );
   }

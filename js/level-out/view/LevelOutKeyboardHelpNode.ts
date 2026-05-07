@@ -23,8 +23,7 @@ export default class LevelOutKeyboardHelpNode extends MeanShareAndBalanceKeyboar
       new SpinnerControlsKeyboardHelpSection( {
         headingStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.levelOutScreen.numberSpinnerHeadingStringProperty,
         verbStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerVerbStringProperty,
-        sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty,
-        includeSmallerStepsRow: false
+        sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty
       } )
     ] );
   }

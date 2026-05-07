@@ -35,8 +35,7 @@ export default class BalancePointKeyboardHelpNode extends MeanShareAndBalanceKey
       new SpinnerControlsKeyboardHelpSection( {
         headingStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.balancePointScreen.numberSpinnerHeadingStringProperty,
         verbStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerVerbStringProperty,
-        sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty,
-        includeSmallerStepsRow: false
+        sliderStringProperty: MeanShareAndBalanceStrings.keyboardHelpDialog.numberSpinnerNounStringProperty
       } ) );
   }
 }
